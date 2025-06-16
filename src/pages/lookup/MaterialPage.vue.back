@@ -1,0 +1,185 @@
+<template>
+    import type {Court} from "src/features/lookup/court/stores/types";
+    import type {Judge} from "src/features/lookup/judge/stores/types";
+    import type {Company} from "src/features/lookup/company/stores/types";
+    import type {Region} from "src/features/lookup/region/stores/types";
+    import {Material} from "src/features/lookup/material/stores/types";
+    import {Standard} from "src/features/lookup/standard/stores/types";
+    import { Defect, Flaw } from 'src/features/defect/flaw/stores/types'
+    <div class="q-pa-md">
+        <q-table flat bordered title="Материалы" :rows="rows" :columns="columns" row-key="name"
+            v-model:pagination="pagination" hide-pagination no-data-label="Нет данных" :filter="filter"
+            separator="cell">
+            <template v-slot:top>
+                <div class="table-header row items-center full-width">
+                    <div class="q-table__title ">Материалы</div>
+                    <q-btn :color="showForm ? 'secondary' : 'primary'" :icon="showForm ? 'close' : 'add'"
+                        :label="showForm ? 'Скрыть' : 'Добавить'" @click="showForm = !showForm" size="sm" />
+                    <q-space />
+                    <q-input outlined dense debounce="300" color="primary" v-model="filter">
+                        <template v-slot:append>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input>
+                </div>
+                <template v-if="showForm">
+                    <AddForm :fields="formFields" @submit="addItem($event)" />
+                </template>
+            </template>
+
+            <template v-slot:body-cell="props">
+                <q-td :props="props" :key="props.col.name">
+                    {{ props.row.name }}
+                    <q-popup-edit v-model="props.row.name"
+                        @update:model-value="(newVal) => updateItem({ ...props.row, name: newVal })" class="popup-edit"
+                        v-slot="scope">
+                        <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set">
+                            <template v-slot:append>
+                                <q-btn label="OK" color="primary" flat @click="scope.set" />
+                            </template>
+                        </q-input>
+                    </q-popup-edit>
+                    <!-- <q-popup-edit v-model="props.row.name" v-slot="scope" buttons class="popup-edit">
+                        <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
+                    </q-popup-edit> -->
+                </q-td>
+            </template>
+            <!-- Кноки редактирования -->
+            <template v-slot:header-cell-action>
+                <q-th style="width: 82px;border-left: 0"></q-th>
+            </template>
+            <template v-slot:body-cell-action="props">
+                <q-td style="border-left: 0">
+                    <q-btn class="action-btn" size="sm" flat color="negative" icon="delete"
+                        @click.stop="confirmDelete(props.row)" />
+                </q-td>
+            </template>
+            <div class="row justify-center q-mt-md">
+                <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="sm" />
+            </div>
+        </q-table>
+    </div>
+</template>
+<script setup lang="ts">
+import { ref, watch, onMounted, computed } from 'vue'
+import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
+import AddForm from 'src/features/lookup/components/AddForm.vue'
+import { useQuasar } from 'quasar'
+const materialStore = useMaterialStore()
+const $q = useQuasar()
+const columns = [
+    {
+        name: 'name',
+        required: true,
+        label: 'Название' as string,
+        align: 'left' as 'left' | 'center' | 'right',
+        field: (row: { name: string }) => row.name,
+        format: (val: string) => `${val}`,
+        sortable: true,
+    },
+    {
+        name: 'action',
+        required: false,
+        label: '' as string,
+        align: 'left' as 'left' | 'center' | 'right',
+        field: (row: { name: string }) => row.name,
+        format: (val: string) => `${val}`,
+        sortable: true,
+    }
+]
+
+const rows = ref([...materialStore.items])
+const filter = ref('')
+
+const pagination = ref({
+    sortBy: 'desc',
+    descending: false,
+    page: 1,
+    rowsPerPage: 15
+    // rowsNumber: xx if getting data from a server
+})
+const pagesNumber = computed(() => Math.ceil(rows.value.length / pagination.value.rowsPerPage))
+watch(
+    () => materialStore.items,
+    (newItems) => {
+        rows.value = [...newItems]
+    },
+    { deep: true }
+)
+
+const showForm = ref(false)
+const formFields = [
+    {
+        name: 'name',
+        label: 'Название',
+        type: 'text' as const,
+        required: true
+    }
+]
+
+// Добавление нового материала
+const addItem = async (formData: { name: string }) => {
+    await materialStore.addItem(formData)
+}
+const updateItem = async (formData: { id: number; name: string }) => {
+    console.log('update', formData);
+
+    await materialStore.updateItem(formData.id, formData)
+}
+onMounted(async () => {
+    await materialStore.requestLookup()
+})
+
+const confirmDelete = (row: { id: number; name: string }) => {
+    $q.dialog({
+        title: 'Подтвердите удаление',
+        message: 'Вы действительно хотите удалить ' + row.name + '?',
+        cancel: true,
+    }).onOk(async () => {
+        //TODO
+        await materialStore.deleteItem(row.id)
+    })
+}
+</script>
+<style scoped lang="scss">
+.content {
+    padding-left: 300px;
+}
+
+.left-menu {
+    width: 300px;
+    transform: translateX(0px);
+    top: 81px;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: #fff;
+    color: #697a8d !important;
+}
+
+.navigation-item {
+    border-radius: 5px;
+    min-height: 44px !important;
+
+}
+
+.table-header {
+    gap: 40px;
+}
+
+.action-btn {
+    opacity: 0;
+    transition: .25s ease-in-out;
+}
+
+.q-table tr:hover .action-btn {
+    opacity: 1;
+}
+</style>
+<style>
+.popup-edit {
+    width: 300px !important;
+    min-width: 0 !important;
+}
+</style>

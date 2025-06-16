@@ -1,0 +1,191 @@
+// app global css in SCSS form
+// https://gwfh.mranftl.com/fonts
+// <link rel="preload" as="font" type="font/woff2" href="assets/template/fonts/oswald-v49-cyrillic_latin-regular.woff2" crossorigin>
+/* roboto-300 - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: url('./fonts/roboto-v47-cyrillic_latin-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* roboto-regular - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/roboto-v47-cyrillic_latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* roboto-500 - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: url('./fonts/roboto-v47-cyrillic_latin-500.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* roboto-600 - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 600;
+  src: url('./fonts/roboto-v47-cyrillic_latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* roboto-700 - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: url('./fonts/roboto-v47-cyrillic_latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+body {
+  font-feature-settings: 'kern', 'liga', 'clig', 'calt', 'cyrl';
+  text-rendering: optimizeLegibility;
+}
+.card_style {
+  border-radius: 12px;
+}
+.title {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.q-checkbox__bg {
+  border: 1px solid #b0aaaa;
+}
+.q-checkbox__inner--truthy {
+  .q-checkbox__bg {
+    border-color: var(--q-secondary);
+  }
+}
+.gap-md {
+  gap: 16px;
+}
+.gap-sm {
+  gap: 8px;
+}
+.bg-primary-15 {
+  background-color: var(--q-primary-15);
+}
+
+/*:root {
+  --q-black: #01161e;
+  --q-black: #232333;
+  --q-light: #f3f3f7;
+  --q-primary: #1976d2;
+  --q-primary-15: hsl(245deg 82% 67% / 15%);
+  !*--q-secondary: #F49390;*!
+  !*--q-secondary: #EF798A;*!
+  --q-secondary: #26a69a;
+  --q-accent: #9c27b0;
+  --q-dark: #2f3349;
+  --q-positive: #21ba45;
+  --q-negative: #c10015;
+  --q-info: #31ccec;
+  --q-warning: #f2c037;
+  --q-dark-page: #2f3349;
+}*/
+
+:root {
+  --q-black: #01161e;
+  --q-black: #232333;
+  --q-background: #fafcff;
+  --q-light: #f3f3f7;
+  --q-primary: #7367f0;
+  --q-primary-15: hsl(245deg 82% 67% / 15%);
+  --q-secondary: #f49390;
+  /*--q-secondary: #EF798A;*/
+  --q-accent: #9c27b0;
+  --q-dark: #2f3349;
+  --q-positive: #21ba45;
+  --q-negative: #ff1644;
+  --q-info: #31ccec;
+  --q-warning: #f2c037;
+  --q-dark-page: #2f3349;
+  --q-chip1: #fdf5bf;
+  --q-chip2: #bce7fd;
+  --q-chip3: #74d3ae;
+}
+
+
+/*:root {
+  --q-black: #01161e;
+  --q-black: #232333;
+  --q-background: #fafcff;
+  --q-light: #f3f3f7;
+  --q-primary: #7367f0;
+  --q-primary-15: hsl(245deg 82% 67% / 15%);
+  --q-secondary: #f49390;
+  !*--q-secondary: #EF798A;*!
+  --q-accent: #9c27b0;
+  --q-dark: #2f3349;
+  --q-positive: #21ba45;
+  --q-negative: #c10015;
+  --q-info: #31ccec;
+  --q-warning: #f2c037;
+  --q-dark-page: #2f3349;
+  --q-chip1: #fdf5bf;
+  --q-chip2: #bce7fd;
+  --q-chip3: #74d3ae;
+}*/
+
+.theme-2 {
+  --q-black: #2e475d;
+  --q-light: #f6f9fc;
+  --q-primary: #180bb1;
+  --q-primary-15: hsl(245deg 82% 67% / 15%);
+  --q-secondary: #a8aaae;
+  --q-accent: #63d471;
+  --q-dark: #2f3349;
+  --q-positive: #21ba45;
+  --q-negative: #c10015;
+  --q-info: #31ccec;
+  --q-warning: #f2c037;
+  --q-dark-page: #2f3349;
+}
+.theme-3 {
+  --q-black: #0c0910;
+  --q-light: #f6f9fc;
+  --q-primary: #73648a;
+  --q-primary-15: hsl(245deg 82% 67% / 15%);
+  --q-secondary: #a8aaae;
+  --q-accent: #f24236;
+  --q-dark: #2f3349;
+  --q-positive: #21ba45;
+  --q-negative: #c10015;
+  --q-info: #31ccec;
+  --q-warning: #f2c037;
+  --q-dark-page: #2f3349;
+}
+.theme-4 {
+  --q-black: #141b41;
+  --q-light: #f6f9fc;
+  --q-primary: #306bac;
+  --q-primary-15: hsl(245deg 82% 67% / 15%);
+  --q-secondary: #a8aaae;
+  --q-accent: #918ef4;
+  --q-dark: #2f3349;
+  --q-positive: #21ba45;
+  --q-negative: #c10015;
+  --q-info: #31ccec;
+  --q-warning: #f2c037;
+  --q-dark-page: #2f3349;
+}
+.theme-5 {
+  --q-black: #373f51;
+  --q-light: #f6f9fc;
+  --q-primary: #008dd5;
+  --q-primary-15: hsl(245deg 82% 67% / 15%);
+  --q-secondary: #a8aaae;
+  --q-accent: #e43f6f;
+  --q-dark: #2f3349;
+  --q-positive: #21ba45;
+  --q-negative: #c10015;
+  --q-info: #31ccec;
+  --q-warning: #f2c037;
+  --q-dark-page: #2f3349;
+}

@@ -1,0 +1,218 @@
+<template>
+    <div class="q-pa-md">
+        <q-table flat bordered title="Судьи" :rows="rows" :columns="columns" row-key="name"
+            v-model:pagination="pagination" hide-pagination no-data-label="Нет данных" :filter="filter"
+            separator="cell">
+            <template v-slot:top>
+                <div class="table-header row items-center full-width">
+                    <div class="q-table__title ">Судьи</div>
+                    <q-btn :color="showForm ? 'secondary' : 'primary'" :icon="showForm ? 'close' : 'add'"
+                        :label="showForm ? 'Скрыть' : 'Добавить'" @click="showForm = !showForm" size="sm" />
+                    <q-space />
+                    <q-input outlined dense debounce="300" color="primary" v-model="filter">
+                        <template v-slot:append>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input>
+                </div>
+                <template v-if="showForm">
+                    <AddForm :fields="formFields" @submit="addItem($event)" />
+                </template>
+            </template>
+
+            <template v-slot:body-cell="props">
+                <q-td :props="props" :key="props.col.name">
+                    {{ props.value }}
+                    <q-popup-edit v-model="props.row.name" class="popup-edit" v-slot="scope">
+                        <q-input v-model="scope.value" dense autofocus outlined2 @keyup.enter="scope.set">
+                            <template v-slot:append>
+                                <q-btn label="OK" color="primary" flat @click="scope.set" />
+                            </template>
+                        </q-input>
+                    </q-popup-edit>
+                </q-td>
+            </template>
+
+            <!-- Кноки редактирования -->
+            <template v-slot:header-cell-action>
+                <q-th style="width: 82px;border-left: 0"></q-th>
+            </template>
+            <template v-slot:body-cell-action="props">
+                <q-td style="border-left: 0">
+                    <q-btn class="action-btn" size="sm" flat color="negative" icon="delete"
+                        @click.stop="confirmDelete(props.row)" />
+                </q-td>
+            </template>
+            <div class="row justify-center q-mt-md">
+                <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="sm" />
+            </div>
+        </q-table>
+    </div>
+</template>
+<script setup lang="ts">
+import { ref, watch, onMounted, computed } from 'vue'
+import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
+import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
+import AddForm from 'src/features/lookup/components/AddForm.vue'
+import { useQuasar } from 'quasar'
+const judgeStore = useJudgeStore()
+const courtStore = useCourtStore()
+const $q = useQuasar()
+
+const columns = [
+    {
+        name: 'fullName',
+        required: true,
+        label: 'Имя' as string,
+        align: 'left' as 'left' | 'center' | 'right',
+        field: (row: any) => `${row.lastName} ${row.firstName} ${row.middleName || ''}`,
+        format: (val: string) => `${val}`,
+        sortable: true,
+        // classes: 'full-width' // Или через класс
+    },
+    {
+        name: 'court',
+        required: true,
+        label: 'Суд' as string,
+        align: 'left' as 'left' | 'center' | 'right',
+        field: (row: any) => row.court?.name,
+        format: (val: string) => `${val}`,
+        sortable: true,
+        // classes: 'full-width' // Или через класс
+    },
+    {
+        name: 'city',
+        required: true,
+        label: 'Город' as string,
+        align: 'left' as 'left' | 'center' | 'right',
+        field: (row: any) => row.court?.region,
+        format: (val: string) => `${val}`,
+        sortable: true,
+        // classes: 'full-width' // Или через класс
+    },
+    {
+        name: 'action',
+        required: false,
+        label: '' as string,
+        align: 'left' as 'left' | 'center' | 'right',
+        field: (row: { name: string }) => row.name,
+        format: (val: string) => `${val}`,
+        sortable: true,
+    }
+]
+
+const rows = ref([...judgeStore.items])
+const filter = ref('')
+
+const pagination = ref({
+    sortBy: 'desc',
+    descending: false,
+    page: 1,
+    rowsPerPage: 15
+    // rowsNumber: xx if getting data from a server
+})
+const pagesNumber = computed(() => Math.ceil(rows.value.length / pagination.value.rowsPerPage))
+
+watch(
+    () => judgeStore.items,
+    (newItems) => {
+        rows.value = [...newItems]
+    },
+    { deep: true }
+)
+
+const showForm = ref(false)
+
+const courtOptions = courtStore.items.map(item => ({
+    label: item.name,
+    value: item.id!!,
+}))
+
+const formFields = [
+    {
+        name: 'lastName',
+        label: 'Фамилия',
+        type: 'text' as const,
+        required: true
+    },
+    {
+        name: 'firstName',
+        label: 'Имя',
+        type: 'text' as const,
+        required: true
+    },
+    {
+        name: 'middleName',
+        label: 'Отчество',
+        type: 'text' as const
+    },
+    {
+        name: 'court',
+        label: 'Суд',
+        type: 'select' as const,
+        options: courtOptions
+    }
+]
+
+const addItem = (formData: { id?: string; court: { id?: number; name: string; postalCode?: string; region: string; }; firstName: string; middleName?: string; lastName: string; }) => {
+    rows.value.push(formData)
+}
+
+onMounted(async () => {
+    await judgeStore.requestLookup()
+    await courtStore.requestLookup()
+})
+
+const confirmDelete = (row: { id: number; name: string }) => {
+    $q.dialog({
+        title: 'Подтвердите удаление',
+        message: 'Вы действительно хотите удалить ' + row.name + '?',
+        cancel: true,
+    }).onOk(async () => {
+        //TODO
+        await judgeStore.deleteItem(row.id)
+    })
+}
+</script>
+<style scoped lang="scss">
+.content {
+    padding-left: 300px;
+}
+
+.left-menu {
+    width: 300px;
+    transform: translateX(0px);
+    top: 81px;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: #fff;
+    color: #697a8d !important;
+}
+
+.navigation-item {
+    border-radius: 5px;
+    min-height: 44px !important;
+
+}
+
+.table-header {
+    gap: 40px;
+}
+
+.action-btn {
+    opacity: 0;
+    transition: .25s ease-in-out;
+}
+
+.q-table tr:hover .action-btn {
+    opacity: 1;
+}
+</style>
+<style>
+.popup-edit {
+    width: 300px !important;
+    min-width: 0 !important;
+}
+</style>
