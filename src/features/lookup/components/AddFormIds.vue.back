@@ -1,29 +1,21 @@
 <template>
     <q-form ref="formRef" @submit.prevent="submit">
         <div class="q-gutter-md row no-wrap align-center add-form-container" style="margin-top: -8px;">
+            {{ formData }}
             <template v-for="(field, index) in fields" :key="index">
-                <q-select v-if="field.type === 'select'" :id="field.name"
-                    :model-value="formData[field.name]"
-                    @update:model-value="(newVal) => formData[field.name] = newVal"
-                    :options="field.options"
-                    option-value="id"
-                    option-label="name" 
-                    :label="field.label" 
-                    style="min-width: 120px;"
-                    map-options dense emit-value2 outlined />
-                <q-select v-else-if="field.type === 'select-multiple'"
-                    :model-value="formData[field.name]"
-                    @update:model-value="(newVal) => formData[field.name] = newVal"
-                    :options="field.options"
-                    option-value="id"
-                    option-label="name"
-                    :label="field.label"
-                    style="min-width: 120px;width: 100%;"
-                    multiple
-                    map-options
-                    dense
-                    outlined 
-                />
+                <!-- <q-select v-if="field.type === 'select'" :id="field.name"
+                                :model-value="formData[field.name] ? formData[field.name][field.selectValueField!] : ''"
+                                @update:model-value="(newVal) => formData[field.name] = field.options?.find(opt => opt.id === newVal.value)"
+                                :options="field.options?.map((item) => ({ label: item.name, value: item.id!! }))"
+                                option-value="id" option-label="label" :label="field.label" style="min-width: 120px;"
+                                map-options dense emit-value outlined /> -->
+                <q-select v-if="field.type === 'select'" :id="field.name" v-model="formData[field.name]"
+                    :options="field.options?.map((item) => ({ label: item.name, value: item.id!! }))"
+                    :label="field.label" style="min-width: 120px;" map-options dense emit-value outlined />
+                <q-select v-else-if="field.type === 'select-multiple'" :id="field.name" v-model="formData[field.name]" multiple
+                    :options="field.options?.map((item) => ({ label: item.name, value: item.id!! }))"
+                    :label="field.label" style="min-width: 120px;width: 100%;" map-options dense emit-value
+                    outlined />
                 <q-checkbox v-else-if="field.type === 'checkbox'" color="secondary" :false-value="false" :true-value="true" :indeterminate="false"
                     v-model="formData[field.name]" :label="field.label" :key="index" :id="field.name" />
                 <q-input v-else :required="field.required" :key="field.name" v-model="formData[field.name]"

@@ -1,5 +1,5 @@
 <template>
-    <GenericCrudTable title="Объекты осмотра" :columns="columns" :items="spotStore.items" :formFields="formFields"
+    <GenericCrudTable title="Локации" :columns="columns" :items="spotStore.items" :formFields="formFields"
         :store="spotStore" />
 </template>
 
