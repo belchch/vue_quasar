@@ -1,13 +1,13 @@
 <template>
 
     <div class="row q-col-gutter-lg text">
-        <template v-if="caseData">
+        <template v-if="selectedCase">
             <div class="col-9">
                 <q-card class="shadow_custom rounded-borders text-grey-8" bordered>
                     <InspectionInformationBlock title="Общая информация" template="8-4">
                         <template #s1>
                             <div style="color:var(--q-accent)" class="text-weight-medium q-mb-sm">Дело № {{
-                                props.case?.number }}</div>
+                                selectedCase?.number }}</div>
                             <div class="grid-2 items-center" style="column-gap: 8px;grid-template-columns: 150px auto;">
                                 <div>Дата создания:</div>
                                 <span>{{ createdAt.format('DD.MM.YYYY') }}</span>
@@ -17,7 +17,7 @@
                                     <q-btn v-if="isEditMode" icon="event" flat2 no-caps round2 color="accent"
                                         class=" q-ml-sm" size="xs" style="margin-top: -3px;">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date color="grey" v-model="caseData.deadline" minimal>
+                                            <q-date color="grey" v-model="selectedCase.deadline" minimal>
                                                 <div class="row items-center justify-end q-gutter-sm">
                                                     <q-btn label="Отмена" color="primary" flat v-close-popup />
                                                     <q-btn label="OK" color="primary" flat v-close-popup />
@@ -27,7 +27,7 @@
                                     </q-btn>
                                 </span>
                                 <span>Адрес:</span>
-                                <TextToInput :isEditMode="isEditMode" v-model="caseData.facilityAddress" />
+                                <TextToInput :isEditMode="isEditMode" v-model="selectedCase.facilityAddress" />
                             </div>
                             <div class="grid-2 q-mt-md items-center2"
                                 style="column-gap: 8px;grid-template-columns: 150px auto;">
@@ -48,7 +48,7 @@
                                 <span :class="statusClass">{{ statusLabel }}</span>
                                 <span>Приоритет:</span>
                                 <span :class="priorityClass">{{ priorityLabel
-                                    }}</span>
+                                }}</span>
                             </div>
                         </template>
                     </InspectionInformationBlock>
@@ -56,12 +56,12 @@
                     <InspectionInformationBlock title="Организация" template="4-4-4">
                         <template #s1>
                             ИНН
-                            <div>{{ caseData.company.inn }}</div>
+                            <div>{{ selectedCase.company.inn }}</div>
                         </template>
                         <template #s2>
                             Наименовние
                             <div>
-                                <TextToSelect :isEditMode="isEditMode" classnames="title" v-model="caseData.company"
+                                <TextToSelect :isEditMode="isEditMode" classnames="title" v-model="selectedCase.company"
                                     :options="companyOptions" />
                             </div>
                         </template>
@@ -79,7 +79,7 @@
                         <template #s2>
                             Адрес осмотра
                             <div>
-                                <TextToInput :isEditMode="isEditMode" v-model="caseData.facilityAddress" />
+                                <TextToInput :isEditMode="isEditMode" v-model="selectedCase.facilityAddress" />
                             </div>
                         </template>
                     </InspectionInformationBlock>
@@ -98,7 +98,7 @@
                                     <q-btn v-if="isEditMode" icon="event" flat2 no-caps round2 color="accent"
                                         class=" q-ml-sm" size="xs" style="margin-top: -3px;">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date color="grey" v-model="caseData.deadline" minimal>
+                                            <q-date color="grey" v-model="selectedCase.deadline" minimal>
                                                 <div class="row items-center justify-end q-gutter-sm">
                                                     <q-btn label="Отмена" color="primary" flat v-close-popup />
                                                     <q-btn label="OK" color="primary" flat v-close-popup />
@@ -108,14 +108,14 @@
                                     </q-btn>
                                 </span>
                                 <span>Адрес суда:</span>
-                                <TextToInput :isEditMode="isEditMode" v-model="caseData.facilityAddress" />
+                                <TextToInput :isEditMode="isEditMode" v-model="selectedCase.facilityAddress" />
                             </div>
                         </template>
                         <template #s2>
                             <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Судья</q-toolbar-title>
                             <div class="grid-2 items-center gap-sm2">
                                 <div>Судья:</div>
-                                <TextToSelect :isEditMode="isEditMode" v-model="caseData.judge"
+                                <TextToSelect :isEditMode="isEditMode" v-model="selectedCase.judge"
                                     :options="judgeOptions" />
                                 <!-- <span class="text-weight-medium relative">{{ judgeLabel }}</span> -->
                                 <div>ФИО контактного лица:</div>
@@ -128,22 +128,22 @@
                         </template>
                     </InspectionInformationBlock>
                     <q-btn v-if="isEditMode" icon="check" label="Сохранить" class="main-save" color="positive"
-                        @click="isEditMode = !isEditMode" />
+                        @click="handleSave" />
                 </q-card>
             </div>
             <div class="col-3">
                 <q-card bordered class="shadow_custom rounded-borders text-grey-8">
                     <q-card-section class="row card-wrapper" style="border-bottom: 1px solid lightgrey;">
                         <q-btn v-if="!isEditMode" icon="edit" label="Редактировать" class="full-width" color="primary"
-                            @click="isEditMode = !isEditMode" no-caps />
+                            @click="isEditMode = true" />
                         <q-btn v-else icon="check" label="Сохранить" class="full-width" color="positive"
-                            @click="isEditMode = !isEditMode" />
+                            @click="handleSave" />
                         <div class="col-6 q-mt-none q-pt-lg">
                             <div class="text-grey-8 text-weight-medium title q-pa-sm">Статус</div>
                             <q-option-group square dense2 size="sm" color="secondary" type="radio" class="text-grey-8"
-                                v-model="caseData.status" :options="statusOptions" />
-                            <q-toggle v-model="localPriority" label="Срочный" color="secondary" true-value="HIGH"
-                                false-value="LOW" />
+                                v-model="selectedCase.status" :options="statusOptions" @update:model-value="onChange" />
+                            <q-toggle v-model="selectedCase.priority" label="Срочный" color="secondary"
+                                true-value="HIGH" false-value="LOW" @update:model-value="onChange" />
                         </div>
                     </q-card-section>
                 </q-card>
@@ -162,18 +162,33 @@ import { useUserStore } from 'src/features/user/stores/user-store'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
 import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
 import InspectionInformationBlock from './InspectionInformationBlock.vue'
+import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store';
+import { storeToRefs } from 'pinia';
+import { useSelectedCaseService } from 'src/features/case/composables/selected-case';
 
-const props = defineProps<{
-    case: Case | undefined,
-}>();
+const { selectedCase } = storeToRefs(useSelectedCaseStore())
+const { updateCase } = useSelectedCaseService()
 
-const deadline = computed(() => dayjs(props.case?.deadline))
-const createdAt = computed(() => dayjs(props.case?.createdAt))
+const deadline = computed(() => dayjs(selectedCase.value?.deadline))
+const createdAt = computed(() => dayjs(selectedCase.value?.createdAt))
 const isEditMode = ref(false)
-const caseData = ref<Case | null>(null)
 const userStore = useUserStore()
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
+
+const save = async () => {
+    console.log(selectedCase.value)
+    await updateCase()
+}
+
+const handleSave = async () => {
+    isEditMode.value = false
+    await save()
+}
+
+const onChange = async () => {
+    await save()
+}
 
 const companyOptions = companyStore.items.map(item => ({
     label: item.name,
@@ -184,14 +199,6 @@ const judgeOptions = judgeStore.items.map(item => ({
     label: item.firstName + ' ' + item.lastName + ' ' + item.middleName,
     value: item.id
 }))
-// Инициализируем данные
-watch(() => props.case, (newVal) => {
-    if (newVal) {
-        caseData.value = { ...newVal }
-    } else {
-        caseData.value = null
-    }
-}, { immediate: true })
 
 const statusOptions = [
     {
@@ -208,15 +215,14 @@ const statusOptions = [
     },
 ]
 const statusLabel = computed(() => {
-    return statusOptions.find(option => option.value === caseData.value?.status)?.label || ''
+    return statusOptions.find(option => option.value === selectedCase.value?.status)?.label || ''
 })
 const priorityLabel = computed(() => {
-    return localPriority.value == 'HIGH' ? 'Срочный' : 'Не срочный'
-    // return caseData.value?.priority == 'HIGH' ? 'Срочный' : 'Не срочный'
+    return selectedCase.value?.priority == 'HIGH' ? 'Срочный' : 'Не срочный'
 })
-const localPriority = ref(caseData.value?.priority)
+
 const priorityClass = computed(() => {
-    switch (caseData.value?.priority) {
+    switch (selectedCase.value?.priority) {
         case 'HIGH':
             return 'text-negative text-weight-medium'
         default:
@@ -224,7 +230,7 @@ const priorityClass = computed(() => {
     }
 })
 const computeStatusClass = () => {
-    switch (props.case?.status) {
+    switch (selectedCase.value?.status) {
         case 'OPEN':
             return ''
         case 'IN_PROGRESS':
@@ -236,7 +242,7 @@ const computeStatusClass = () => {
 
 const statusClass = computed(() => computeStatusClass())
 const judgeLabel = computed(() => {
-    const judge = judgeStore.items.find(option => option.id === caseData.value?.judge?.id) || null
+    const judge = judgeStore.items.find(option => option.id === selectedCase.value?.judge?.id) || null
     if (!judge) return ''
     return `${judge.firstName} ${judge.middleName} ${judge.lastName}`
 })

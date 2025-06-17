@@ -23,3 +23,18 @@ export type CaseCreateRequest = {
   regionId: number,
   deadline: string
 }
+
+export type CaseUpdateRequest = {
+  id: number,
+  number: string,
+  status: CaseStatus,
+  priority: CasePriority,
+  facilityAddress: string,
+  courtId?: number | undefined,
+  judgeId?: number | undefined,
+  companyId: number,
+  regionId: number,
+  createdById: number,
+  createdAt: string,
+  deadline: string
+}

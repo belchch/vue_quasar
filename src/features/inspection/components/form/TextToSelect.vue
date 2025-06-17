@@ -22,6 +22,8 @@ const props = defineProps<{
     classnames?: string
 }>()
 
+console.log('props', props)
+
 const emit = defineEmits(['update:modelValue'])
 
 const selectedOption = computed({

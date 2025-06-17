@@ -1,6 +1,6 @@
 import { api } from 'boot/axios'
 import type { Case } from 'src/features/case/stores/types'
-import { CaseCreateRequest, CaseFilterRequest } from 'src/features/case/api/types'
+import { CaseCreateRequest, CaseFilterRequest, CaseUpdateRequest } from 'src/features/case/api/types'
 
 export const CaseApi = {
   async searchCases(filter: CaseFilterRequest) {
@@ -16,4 +16,8 @@ export const CaseApi = {
   async createCase(request: CaseCreateRequest) {
     return api.post(`/api/cases`, request)
   },
+
+  async updateCase(request: CaseUpdateRequest) {
+    return api.put<Case>(`/api/cases/${request.id}`, request)
+  }
 }
