@@ -13,6 +13,17 @@ export type Defect = {
   hasCause: boolean
 }
 
+export type DefectUpdateRequest = {
+  id: number,
+  template: string,
+  structElemId: number,
+  materialId?: number | undefined,
+  flawId?: number | undefined,
+  standardId?: number | undefined,
+  hasValue: boolean,
+  hasCause: boolean
+}
+
 export type Flaw = {
   id?: number,
   name: string

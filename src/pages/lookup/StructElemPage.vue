@@ -45,6 +45,14 @@ const formFields = computed((): Field[] => [
     },
 ])
 
+const onAdd = () => {
+
+}
+
+const onUpdate = () => {
+    
+}
+
 onMounted(async () => {
     await structElemStore.requestLookup()
     await materialStore.requestLookup()

@@ -2,6 +2,8 @@ import { defineBoot } from '#q-app/wrappers'
 import axios, { type AxiosInstance } from 'axios'
 import {Credentials} from "src/features/auth/composables/credentials";
 import qs from 'qs'
+import { error } from 'console';
+import { Notify } from 'quasar';
 
 declare module 'vue' {
   interface ComponentCustomProperties {
@@ -22,6 +24,7 @@ const api = axios.create({
     return qs.stringify(params, { arrayFormat: 'comma' });
   },
 })
+
 api.interceptors.request.use(
   (config) => {
     const accessToken = Credentials.getAccessToken()
@@ -31,6 +34,18 @@ api.interceptors.request.use(
     }
 
     return config
+  }
+)
+
+api.interceptors.response.use(
+  response => response,
+  error => {
+  
+    Notify.create({
+      type: 'negative',
+      message: error.message
+    })
+    throw error
   }
 )
 
