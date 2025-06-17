@@ -1,4 +1,13 @@
 import { defineLookupStore } from 'src/features/lookup/base/store/lookup-store'
-import { Court } from 'src/features/lookup/court/stores/types'
+import { Court, CourtUpdateRequest } from 'src/features/lookup/court/stores/types'
 
-export const useCourtStore = defineLookupStore<Court>('courts')
+const requestMappingFn = (item: Court): CourtUpdateRequest => {
+    return {
+        id: item.id!!,
+        name: item.name,
+        postalCode: item.postalCode,
+        regionId: item.region.id!!
+    }
+}
+
+export const useCourtStore = defineLookupStore<Court, CourtUpdateRequest>('courts', requestMappingFn)

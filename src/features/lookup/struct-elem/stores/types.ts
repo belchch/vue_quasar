@@ -4,3 +4,9 @@ export type StructElem = {
   name: string
   materials: Material[]
 }
+
+export type StructElemUpdateRequest = {
+  id: number
+  name: string
+  materialIds: number[]
+}

@@ -2,10 +2,10 @@ import { defineStore } from 'pinia'
 import { lookupApi } from 'src/features/lookup/base/api/lookup-api'
 import { ref } from 'vue'
 
-export const defineLookupStore = <T>(name: string) =>
+export const defineLookupStore = <Item, Request>(name: string, requestMappingFn: (item: Item) => Request | Item = (item: Item) => (item)) =>
   defineStore(name, () => {
-    const items = ref<T[]>([])
-    const api = lookupApi<T>(name)
+    const items = ref<Item[]>([])
+    const api = lookupApi<Item, Request>(name)
 
     const requestLookup = async () => {
       const response = await api.getAllItems()
@@ -17,13 +17,15 @@ export const defineLookupStore = <T>(name: string) =>
       await requestLookup()
     }
 
-    const addItem = async (item: T) => {
-      await api.createItem(item)
+    const addItem = async (item: Item) => {
+      const request = requestMappingFn(item)
+      await api.createItem(request)
       await requestLookup()
     }
 
-    const updateItem = async (id: number, item: T) => {
-      await api.updateItem(id, item)
+    const updateItem = async (id: number, item: Item) => {
+      const request = requestMappingFn(item)
+      await api.updateItem(id, request)
       await requestLookup()
     }
 
