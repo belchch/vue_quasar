@@ -1,0 +1,42 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "prod"
+    - if: $CI_COMMIT_BRANCH == "stage"
+    - if: $CI_COMMIT_BRANCH == "dev"
+    - if: $CI_COMMIT_BRANCH =~ /^hotfix\/.+$/
+    - when: never
+
+include:
+  - local: .gitlab/prod.gitlab-ci.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH == "prod"
+  - local: .gitlab/stage.gitlab-ci.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH == "stage"
+  - local: .gitlab/dev.gitlab-ci.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH == "dev"
+  - local: .gitlab/hotfix.gitlab-ci.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH =~ /^hotfix\/.+$/
+
+dummy_job:
+  stage: validate
+  script:
+    - echo "This job is never meant to run"
+  rules:
+    - when: never
+
+variables:
+  NODE_ENV: "production"
+  NPM_CONFIG_CACHE: ${CI_PROJECT_DIR}/.npm
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375
+  GIT_STRATEGY: clone
+  GIT_CLEAN_FLAGS: -ffdx
+
+# Default git configuration
+.setup_git: &setup_git |
+  git config --global core.autocrlf input
+  git config --global core.ignorecase false
+  git config --global fetch.prune true

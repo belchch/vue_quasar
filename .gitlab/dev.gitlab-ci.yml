@@ -1,0 +1,158 @@
+variables:
+  YC_SERVICE_ACCOUNT_KEY: ${DEV_YC_SERVICE_ACCOUNT_KEY}
+  YC_FOLDER_ID: ${DEV_YC_FOLDER_ID}
+  YC_CONTAINER_ID: ${DEV_YC_CONTAINER_ID}
+  YC_SERVICE_ACCOUNT_ID: ${DEV_YC_SERVICE_ACCOUNT_ID}
+  YC_REGISTRY_ID: ${DEV_YC_REGISTRY_ID}
+  YC_NETWORK_ID: ${DEV_YC_NETWORK_ID}
+  YC_REGISTRY_REPO_NAME: ${DEV_YC_REGISTRY_REPO_NAME}
+  DOCKER_IMAGE: ${CI_YC_REGISTRY}/${DEV_YC_REGISTRY_REPO_NAME}:${CI_COMMIT_SHA}
+  SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
+  # Переменные окружения Vue
+  VUE_APP_API_URL: ${DEV_API_URL}
+  NODE_ENV: "dev"
+  LOG_GROUP_NAME: ${DEV_YC_LOG_GROUP_NAME}
+
+# Общие настройки для Yandex Cloud
+.setup_yc: &setup_yc
+  - curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+  - export PATH=$PATH:/root/yandex-cloud/bin
+  - echo "$YC_SERVICE_ACCOUNT_KEY" | base64 -d > ${SERVICE_ACCOUNT_KEY_FILE}
+  - yc config set service-account-key ${SERVICE_ACCOUNT_KEY_FILE}
+  - yc config set folder-id ${YC_FOLDER_ID}
+
+.cleanup: &cleanup
+  - rm -f ${SERVICE_ACCOUNT_KEY_FILE}
+
+# Определяем использование кэша для node_modules
+.node_cache: &node_cache
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+    - .npm/
+
+stages:
+  - validate
+  - build
+  - test
+  - push
+  - deploy
+
+validate-node:
+  stage: validate
+  image: node:18-alpine
+  script:
+    - node --version
+    - npm --version
+    # Проверяем зависимости и конфигурацию
+    - npm ci
+    # Проверяем наличие всех критических файлов
+    - |
+      for file in package.json vue.config.js src/main.js src/App.vue; do
+        if [ -f "$file" ]; then
+          echo "✓ $file exists"
+        else
+          echo "✗ $file is missing"
+          exit 1
+        fi
+      done
+  cache:
+    <<: *node_cache
+  tags:
+    - dev
+
+build:
+  stage: build
+  image: node:18-alpine
+  script:
+    # Устанавливаем все зависимости, включая devDependencies
+    - npm ci --include=dev
+    # Оптимизируем сборку для production
+    - export NODE_OPTIONS=--max_old_space_size=4096
+    - npm run build
+  variables:
+    NODE_ENV: "production"
+  cache:
+    <<: *node_cache
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
+  tags:
+    - dev
+
+test:
+  stage: test
+  image: node:18-alpine
+  script:
+    - npm ci --include=dev
+    - npm run lint
+  cache:
+    <<: *node_cache
+  tags:
+    - dev
+
+push:
+  stage: push
+  image: docker:latest
+  services:
+    - name: docker:dind
+      alias: docker
+      command: ["--tls=false"]
+  before_script:
+    - apk add --no-cache curl python3 py3-pip jq bash
+    - *setup_yc
+  script:
+    - >
+      docker build 
+      --build-arg VUE_APP_API_URL=${VUE_APP_API_URL}
+      -t $DOCKER_IMAGE .
+    - docker login $CI_YC_REGISTRY --username iam --password-stdin < <(yc iam create-token)
+    - docker push $DOCKER_IMAGE
+  after_script:
+    - *cleanup
+  tags:
+    - dev
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl python3 py3-pip jq bash
+    - *setup_yc
+  script:
+    # Создаем или проверяем группу логов
+    - |
+      if ! yc logging group get ${LOG_GROUP_NAME} &>/dev/null; then
+        echo "Creating dev log group..."
+        yc logging group create \
+          --name ${LOG_GROUP_NAME} \
+          --description "Frontend development environment logs" \
+          --labels env=dev,app=frontend,version=${CI_COMMIT_SHA}
+      fi
+    
+    # Деплоим с настройкой логирования и переменными окружения
+    - |
+      yc serverless container revision deploy \
+        --container-id $YC_CONTAINER_ID \
+        --image $DOCKER_IMAGE \
+        --service-account-id $YC_SERVICE_ACCOUNT_ID \
+        --cores 1 \
+        --memory 512MB \
+        --concurrency 1 \
+        --execution-timeout 30s \
+        --network-id $YC_NETWORK_ID \
+        --log-group-name ${LOG_GROUP_NAME} \
+        --environment NODE_ENV=production \
+        --environment VUE_APP_API_URL=$VUE_APP_API_URL
+    # Разрешаем публичный доступ временно
+    # - yc serverless container allow-unauthenticated-invoke --id $YC_CONTAINER_ID
+  after_script:
+    - *cleanup
+  environment:
+    name: dev
+    url: https://frontend.epse-dev.cbse1.ru
+  tags:
+    - dev
