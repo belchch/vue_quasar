@@ -1,16 +1,16 @@
 import { api } from 'boot/axios'
 
-export const lookupApi = <T>(lookupName: string) => ({
+export const lookupApi = <Response, Request>(lookupName: string) => ({
   async getAllItems() {
-    return api.get<T[]>(`/api/${lookupName}`)
+    return api.get<Response[]>(`/api/${lookupName}`)
   },
 
-  async updateItem(id: number, item: T) {
-    return api.put<T>(`/api/${lookupName}/${id}`, item)
+  async updateItem(id: number, item: Request | Response) {
+    return api.put<Response>(`/api/${lookupName}/${id}`, item)
   },
 
-  async createItem(item: T) {
-    return api.post<T>(`/api/${lookupName}`, item)
+  async createItem(item: Request | Response) {
+    return api.post<Response>(`/api/${lookupName}`, item)
   },
 
   async deleteItem(id: number) {

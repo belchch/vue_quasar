@@ -1,5 +1,5 @@
 export type Region = {
-  id?: string,
+  id?: number,
   code: string,
   name: string
 }
