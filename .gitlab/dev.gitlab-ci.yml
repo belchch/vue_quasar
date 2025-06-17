@@ -46,6 +46,7 @@ validate-node:
   script:
     - node --version
     - npm --version
+    - npm i -g @quasar/cli
     # Проверяем зависимости и конфигурацию
     - npm ci
     # Проверяем наличие всех критических файлов
