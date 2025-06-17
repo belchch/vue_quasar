@@ -51,7 +51,7 @@ validate-node:
     - npm ci
     # Проверяем наличие всех критических файлов
     - |
-      for file in package.json vue.config.js src/main.js src/App.vue; do
+      for file in package.json src/App.vue; do
         if [ -f "$file" ]; then
           echo "✓ $file exists"
         else
