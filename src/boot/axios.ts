@@ -10,7 +10,7 @@ declare module 'vue' {
   }
 }
 
-const apiUrl = process.env.API_URL
+const apiUrl = process.env.VUE_APP_API_URL
 
 if (!apiUrl) {
   throw Error('No API_URL environment variable')
