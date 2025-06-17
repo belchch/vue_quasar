@@ -68,6 +68,7 @@ build:
   image: node:18-alpine
   script:
     # Устанавливаем все зависимости, включая devDependencies
+    - npm i -g @quasar/cli
     - npm ci --include=dev
     # Оптимизируем сборку для production
     - export NODE_OPTIONS=--max_old_space_size=4096
@@ -106,7 +107,7 @@ push:
     - *setup_yc
   script:
     - >
-      docker build 
+      docker build
       --build-arg VUE_APP_API_URL=${VUE_APP_API_URL}
       -t $DOCKER_IMAGE .
     - docker login $CI_YC_REGISTRY --username iam --password-stdin < <(yc iam create-token)
@@ -132,7 +133,7 @@ deploy:
           --description "Frontend development environment logs" \
           --labels env=dev,app=frontend,version=${CI_COMMIT_SHA}
       fi
-    
+
     # Деплоим с настройкой логирования и переменными окружения
     - |
       yc serverless container revision deploy \
