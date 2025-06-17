@@ -46,6 +46,6 @@ const login = async () => {
     password: password.value
   })
 
-  await router.push('/')
+  //await router.push('/')
 }
 </script>

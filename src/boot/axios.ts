@@ -40,10 +40,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   error => {
-  
     Notify.create({
       type: 'negative',
-      message: error.message
+      message: error.response.data.message || error.message
     })
     throw error
   }
