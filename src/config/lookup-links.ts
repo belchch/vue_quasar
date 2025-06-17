@@ -12,5 +12,5 @@ export const menuLinks = [
   { name: 'Судьи', route: 'lookup.judge' },
   { name: 'Организации', route: 'lookup.companies' },
   { name: 'Регионы', route: 'lookup.regions' },
-  { name: 'Объекты осмотра', route: 'lookup.spots' },
+  { name: 'Локации', route: 'lookup.spots' },
 ]
