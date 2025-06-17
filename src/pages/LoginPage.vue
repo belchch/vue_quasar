@@ -10,7 +10,7 @@
     </q-card-section>
 
     <q-card-section class="q-px-lg">
-      <form @submit="login">
+      <form @submit.prevent="login">
         <div class="q-px-sm q-py-xs">
           <q-input v-model="username" label="Email" outlined dense />
         </div>
@@ -46,6 +46,6 @@ const login = async () => {
     password: password.value
   })
 
-  //await router.push('/')
+  await router.push('/')
 }
 </script>
