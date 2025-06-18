@@ -68,6 +68,7 @@ build:
   stage: build
   image: node:18-alpine
   script:
+    - echo "VUE_APP_API_URL=$VUE_APP_API_URL" > .env
     # Устанавливаем все зависимости, включая devDependencies
     - npm i -g @quasar/cli
     - npm ci --include=dev
