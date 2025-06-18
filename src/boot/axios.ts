@@ -30,7 +30,7 @@ api.interceptors.request.use(
     const accessToken = Credentials.getAccessToken()
 
     if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`
+        config.headers['X-Authorization'] = `Bearer ${accessToken}`
     }
 
     return config
