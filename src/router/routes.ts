@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
     redirect: '/cases',
   },
   {
-    path: '/case/:caseId',
+    path: '/cases/:caseId',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {

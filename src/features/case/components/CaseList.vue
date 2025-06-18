@@ -13,7 +13,7 @@ const caseStore = useCasesStore()
 const router = useRouter()
 
 const selectCase = async (cse: Case) => {
-  await router.push(`/case/${cse.id}`)
+  await router.push(`/cases/${cse.id}`)
 }
 
 </script>
