@@ -3,7 +3,7 @@
     <q-uploader :factory="uploadFactory" multiple method="PUT" :send-raw="true" class="img-uploader"
       @uploaded="onUploaded" @factory-failed="onFactoryFailed" thumbnail-fit="contain" />
   </q-dialog>
-  <q-btn color="primary" icon="sym_o_upload" @click="onOpenUpload" style="font-variation-settings: 'wght' 400;"/>
+  <q-btn color="primary" icon="upload" @click="onOpenUpload" style="font-variation-settings: 'wght' 400;"/>
 </template>
 
 <script setup lang="ts">
