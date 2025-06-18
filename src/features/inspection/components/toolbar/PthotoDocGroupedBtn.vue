@@ -1,5 +1,6 @@
 <template>
     <q-btn-dropdown flat
+        style="font-variation-settings: 'wght' 400;"
         :label="useToolbar.isGrouped ? useToolbar.isGroupedBy == 'location' ? 'по локации' : 'по типу' : 'группировать'"
         icon="sym_o_view_agenda" size="sm" class="q-px-sm">
         <q-list>
