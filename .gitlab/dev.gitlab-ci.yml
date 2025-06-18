@@ -72,6 +72,7 @@ build:
     - npm i -g @quasar/cli
     - npm ci --include=dev
     # Оптимизируем сборку для production
+    - echo "VUE_APP_API_URL=$VUE_APP_API_URL" > .env
     - export NODE_OPTIONS=--max_old_space_size=4096
     - npm run build
   variables:

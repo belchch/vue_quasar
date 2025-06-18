@@ -18,7 +18,8 @@ COPY . .
 # Собираем приложение
 ARG VUE_APP_API_URL
 ENV VUE_APP_API_URL=${VUE_APP_API_URL}
-RUN npm run build
+#RUN npm run build
+RUN echo "VUE_APP_API_URL=${VUE_APP_API_URL}" > .env && npm run build
 
 # Production stage
 FROM nginx:stable-alpine
