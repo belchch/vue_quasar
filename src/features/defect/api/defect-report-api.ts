@@ -1,5 +1,6 @@
 import { api } from 'boot/axios'
 import {DefectReportPhotoModel} from "src/features/defect/stores/defect-report-types";
+import { FileInfo } from './types';
 
 export const DefectReportApi = {
   async buildReport(inspectionId: number, useTechnicalReport: boolean) {
@@ -46,6 +47,14 @@ export const DefectReportApi = {
     return api.post<DefectReportPhotoModel[]>('/api/defect-report/use-photo', {}, {
       params: {
         photoId, use, scope
+      }
+    })
+  },
+
+  buildDocx(inspectionId: number) {
+    return api.post<FileInfo>(`/api/defect-report/build-docx`, {}, {
+      params: {
+        inspectionId
       }
     })
   }
