@@ -23,7 +23,7 @@
             <q-avatar square size="md" :class="inspectionStageStyle" icon="photo_camera">
               <q-tooltip>Осмотр</q-tooltip>
             </q-avatar>
-            <q-avatar square size="md" :class="generalViewStageStyle" icon="article">
+            <q-avatar square size="md" :class="generalViewStageStyle" icon="image">
               <q-tooltip>Отчет по общим видам</q-tooltip>
             </q-avatar>
             <q-avatar square size="md" :class="defectStageStyle" icon="home_repair_service" style="">
@@ -97,9 +97,9 @@ const stageIconStyle = (completed: () => boolean) => {
 const inspectionStageStyle = computed(() =>
   stageIconStyle(() => props.case.stages.inspection),
 )
-const generalViewStageStyle = stageIconStyle(() => false)
+const generalViewStageStyle = stageIconStyle(() => props.case.stages.generalView)
 const defectStageStyle = stageIconStyle(() => props.case.stages.defect)
-const boqStageStyle = stageIconStyle(() => false)
+const boqStageStyle = stageIconStyle(() => props.case.stages.workVolume)
 
 const daysRemainingStyle = computed(() => {
   if (daysRemaining.value < 3) {
