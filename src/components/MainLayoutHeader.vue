@@ -27,8 +27,7 @@
       </q-item> -->
 
       <q-list class="row items-center menu q-gutter-md">
-        <q-item class="menu-item" clickable v-ripple active-class="active"
-          exact-active-class="q-router-link--exact-active" :to="{ name: 'cases' }">
+        <q-item class="menu-item" clickable v-ripple :class="{ active: isCasesActive }" :to="{ name: 'cases' }">
           <q-item-section> Экспертизы</q-item-section>
         </q-item>
         <q-item class="menu-item" clickable v-ripple :class="{ active: isLookupActive }">
@@ -109,9 +108,11 @@ const logout = async () => {
 }
 
 const isLookupActive = computed(() => {
-  // console.log('isLookupActive');
   return router.currentRoute.value.path.startsWith('/lookup');
-  // return lookupRoutes.some(r => router.currentRoute.name?.toString().startsWith(r.replace('.index', '')))
+})
+
+const isCasesActive = computed(() => {
+  return router.currentRoute.value.path.startsWith('/cases')
 })
 </script>
 

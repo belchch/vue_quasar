@@ -16,7 +16,7 @@
           </q-tab-panel>
           <q-tab-panel name="information">
             <div class="q-pa-md">
-              <InspectionInformation v-if="selectedCase" :case="selectedCase" />
+              <InspectionInformation  />
             </div>
           </q-tab-panel>
         </q-tab-panels>

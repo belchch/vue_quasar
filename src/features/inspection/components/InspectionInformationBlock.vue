@@ -1,8 +1,9 @@
 <template>
     <q-card-section class="row card-wrapper" style="border-bottom: 1px solid lightgrey;">
 
-        <div v-if="title" class="col-12">
-            <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">{{ title }}</q-toolbar-title>
+        <div v-if="title" class="col-12 row">
+            <q-toolbar-title ellipsis class="q-pb-lg">{{ title }}</q-toolbar-title>
+            <slot name="appendTitle"></slot>
         </div>
 
         <template v-if="template == '8-4'">

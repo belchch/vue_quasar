@@ -1,10 +1,18 @@
 <template>
-
     <div class="row q-col-gutter-lg text">
         <template v-if="selectedCase">
             <div class="col-9">
                 <q-card class="shadow_custom rounded-borders text-grey-8" bordered>
                     <InspectionInformationBlock title="Общая информация" template="8-4">
+                        <template #appendTitle>
+                            <q-btn
+                                icon="edit" 
+                                class="edit-btn" 
+                                size="sm" 
+                                color="primary"
+                                @click="openDialog"
+                            />
+                        </template>
                         <template #s1>
                             <div style="color:var(--q-accent)" class="text-weight-medium q-mb-sm">Дело № {{
                                 selectedCase?.number }}</div>
@@ -12,33 +20,20 @@
                                 <div>Дата создания:</div>
                                 <span>{{ createdAt.format('DD.MM.YYYY') }}</span>
                                 <div>Дата сдачи: </div>
-                                <span style="width: fit-content;">{{
-                                    deadline.format('DD.MM.YYYY') }}
-                                    <q-btn v-if="isEditMode" icon="event" flat2 no-caps round2 color="accent"
-                                        class=" q-ml-sm" size="xs" style="margin-top: -3px;">
-                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date color="grey" v-model="selectedCase.deadline" minimal>
-                                                <div class="row items-center justify-end q-gutter-sm">
-                                                    <q-btn label="Отмена" color="primary" flat v-close-popup />
-                                                    <q-btn label="OK" color="primary" flat v-close-popup />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-btn>
-                                </span>
+                                <span style="width: fit-content;">{{ deadline.format('DD.MM.YYYY') }}</span>
                                 <span>Адрес:</span>
-                                <TextToInput :isEditMode="isEditMode" v-model="selectedCase.facilityAddress" />
+                                <span>{{ selectedCase.facilityAddress }}</span>
                             </div>
                             <div class="grid-2 q-mt-md items-center2"
                                 style="column-gap: 8px;grid-template-columns: 150px auto;">
                                 <span>Автор:</span>
-                                <span>Дементьев Дмитрий Сергеевич</span>
+                                <span>{{ selectedCase.createdBy?.username }}</span>
                                 <span>Менеджер:</span>
                                 <span>-</span>
                                 <span>Руководитель:</span>
                                 <span>-</span>
                                 <span>Эксперт:</span>
-                                <span>Захаров Игорь Сергеевич</span>
+                                <span></span>
                             </div>
                         </template>
                         <template #s2>
@@ -56,18 +51,15 @@
                     <InspectionInformationBlock title="Организация" template="4-4-4">
                         <template #s1>
                             ИНН
-                            <div>{{ selectedCase.company.inn }}</div>
+                            <div>{{ selectedCase.company?.inn }}</div>
                         </template>
                         <template #s2>
                             Наименовние
-                            <div>
-                                <TextToSelect :isEditMode="isEditMode" classnames="title" v-model="selectedCase.company"
-                                    :options="companyOptions" />
-                            </div>
+                            <div>{{ selectedCase.company?.name }}</div>
                         </template>
                         <template #s3>
                             Регион
-                            <div>Москва</div>
+                            <div>-</div>
                         </template>
                     </InspectionInformationBlock>
 
@@ -78,9 +70,7 @@
                         </template>
                         <template #s2>
                             Адрес осмотра
-                            <div>
-                                <TextToInput :isEditMode="isEditMode" v-model="selectedCase.facilityAddress" />
-                            </div>
+                            <div>{{ selectedCase.facilityAddress }}</div>
                         </template>
                     </InspectionInformationBlock>
 
@@ -93,55 +83,39 @@
                                 <div>Количетво томов:</div>
                                 <span>1</span>
                                 <div>Дата определения: </div>
-                                <span style="width: fit-content;">{{
-                                    deadline.format('DD.MM.YYYY') }}
-                                    <q-btn v-if="isEditMode" icon="event" flat2 no-caps round2 color="accent"
-                                        class=" q-ml-sm" size="xs" style="margin-top: -3px;">
-                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date color="grey" v-model="selectedCase.deadline" minimal>
-                                                <div class="row items-center justify-end q-gutter-sm">
-                                                    <q-btn label="Отмена" color="primary" flat v-close-popup />
-                                                    <q-btn label="OK" color="primary" flat v-close-popup />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-btn>
-                                </span>
-                                <span>Адрес суда:</span>
-                                <TextToInput :isEditMode="isEditMode" v-model="selectedCase.facilityAddress" />
+                                <span>-</span>
+                                <span>Суд:</span>
+                                <span>{{ selectedCase.court?.name }}</span>
                             </div>
                         </template>
                         <template #s2>
                             <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Судья</q-toolbar-title>
                             <div class="grid-2 items-center gap-sm2">
                                 <div>Судья:</div>
-                                <TextToSelect :isEditMode="isEditMode" v-model="selectedCase.judge"
-                                    :options="judgeOptions" />
+                                <span>{{ selectedCase.judge ? judgeName(selectedCase.judge) : '' }}</span>
+                                <!-- <TextToSelect :isEditMode=false v-model="selectedCase.judge"
+                                    :options="judgeOptions" /> -->
                                 <!-- <span class="text-weight-medium relative">{{ judgeLabel }}</span> -->
                                 <div>ФИО контактного лица:</div>
                                 <span class="text-weight-medium relative">-</span>
                                 <div>Телефон контактного лица:</div>
-                                <span class="text-weight-medium relative">+7 (948) 874-83-01</span>
+                                <span class="text-weight-medium relative"></span>
                                 <div>Email контактного лица:</div>
-                                <span class="text-weight-medium relative">email@email.com</span>
+                                <span class="text-weight-medium relative"></span>
                             </div>
                         </template>
                     </InspectionInformationBlock>
-                    <q-btn v-if="isEditMode" icon="check" label="Сохранить" class="main-save" color="positive"
-                        @click="handleSave" />
                 </q-card>
             </div>
             <div class="col-3">
                 <q-card bordered class="shadow_custom rounded-borders text-grey-8">
                     <q-card-section class="row card-wrapper" style="border-bottom: 1px solid lightgrey;">
-                        <q-btn v-if="!isEditMode" icon="edit" label="Редактировать" class="full-width" color="primary"
-                            @click="isEditMode = true" />
-                        <q-btn v-else icon="check" label="Сохранить" class="full-width" color="positive"
-                            @click="handleSave" />
-                        <div class="col-6 q-mt-none q-pt-lg">
-                            <div class="text-grey-8 text-weight-medium title q-pa-sm">Статус</div>
+                        <div class="col-12">
+                            <q-toolbar-title ellipsis class="q-pb-sm">Статус</q-toolbar-title>
                             <q-option-group square dense2 size="sm" color="secondary" type="radio" class="text-grey-8"
                                 v-model="selectedCase.status" :options="statusOptions" @update:model-value="onChange" />
+                            
+                            <q-toolbar-title ellipsis class="q-pb-sm q-pl-none q-mt-lg">Приоритет</q-toolbar-title>
                             <q-toggle v-model="selectedCase.priority" label="Срочный" color="secondary"
                                 true-value="HIGH" false-value="LOW" @update:model-value="onChange" />
                         </div>
@@ -150,55 +124,83 @@
             </div>
         </template>
     </div>
+
+    <q-dialog v-if="selectedCase" v-model="createDialogOpen" style="width: 100%">
+        <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+            <UpdateForm 
+                v-model="selectedCase" 
+                :statusOptions="statusOptions" 
+                @save="handleSave"
+                @reset="resetForm"
+            />
+        </q-card>
+    </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { Case, CaseStatus } from 'src/features/case/stores/types'
-import { computed, ref, watch } from 'vue'
+import { computed, ref,onMounted } from 'vue'
 import dayjs from 'dayjs'
-import TextToInput from './form/TextToInput.vue';
-import TextToSelect from './form/TextToSelect.vue';
+
 import { useUserStore } from 'src/features/user/stores/user-store'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
 import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
+import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
+import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
 import InspectionInformationBlock from './InspectionInformationBlock.vue'
-import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store';
+import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store'
 import { storeToRefs } from 'pinia';
-import { useSelectedCaseService } from 'src/features/case/composables/selected-case';
-
+import { useSelectedCaseService } from 'src/features/case/composables/selected-case'
+import _ from 'lodash'
+import { judgeName } from 'src/features/lookup/judge/stores/types'
+import UpdateForm from './form/UpdateForm.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 
 const deadline = computed(() => dayjs(selectedCase.value?.deadline))
 const createdAt = computed(() => dayjs(selectedCase.value?.createdAt))
-const isEditMode = ref(false)
 const userStore = useUserStore()
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
+const courtStore = useCourtStore()
+const regionStore = useRegionStore()
+
+onMounted(async () => {
+  await courtStore.requestLookup()
+  await judgeStore.requestLookup()
+  await companyStore.requestLookup()
+  await regionStore.requestLookup()
+})
+
+
+const createDialogOpen = ref(false)
+
+
+const openDialog = () => {  
+  createDialogOpen.value = true
+};
+
 
 const save = async () => {
     console.log(selectedCase.value)
     await updateCase()
 }
 
-const handleSave = async () => {
-    isEditMode.value = false
-    await save()
+const handleSave = async (localCase: any) => {
+    if (localCase) {
+        selectedCase.value = localCase
+        await save()
+    }
+    console.log('handleSave', localCase)
+    createDialogOpen.value = false;
 }
 
 const onChange = async () => {
     await save()
 }
+const resetForm = () => {
+  createDialogOpen.value = false
+}
 
-const companyOptions = companyStore.items.map(item => ({
-    label: item.name,
-    value: item.id,
-    inn: item.inn
-}))
-const judgeOptions = judgeStore.items.map(item => ({
-    label: item.firstName + ' ' + item.lastName + ' ' + item.middleName,
-    value: item.id
-}))
 
 const statusOptions = [
     {
@@ -246,16 +248,11 @@ const judgeLabel = computed(() => {
     if (!judge) return ''
     return `${judge.firstName} ${judge.middleName} ${judge.lastName}`
 })
+
+
 </script>
 
 <style scoped lang="scss">
-.text {
-    // font-size: 1rem;
-    // font-weight: 400;
-    // line-height: 1.75rem;
-    // letter-spacing: 0.00937em;
-}
-
 .grid-2 {
     display: grid;
     grid-template-columns: 200px auto;
@@ -281,6 +278,11 @@ const judgeLabel = computed(() => {
     }
 }
 
+.edit-btn {
+    align-self: flex-start;
+    aspect-ratio: 1;
+    width: 32px;
+}
 .card-wrapper {
     padding: 32px 32px 40px;
 }
@@ -296,10 +298,6 @@ const judgeLabel = computed(() => {
     margin-inline: auto;
     display: flex;
     margin-block: 16px;
-}
-
-.text {
-    // font-size: 16px;
 }
 </style>
 <style lang="scss">
