@@ -3,7 +3,7 @@
     <q-card flat>
       <div class="row justify-between">
         <q-card-section>
-          <q-btn label="Сформировать отчет" @click="buildReport" color="primary" />
+          <q-btn label="Сформировать отчет" @click="confirmOpen = true" color="primary" />
         </q-card-section>
         <DownloadReportButton label="Скачать" :api-fn="buildDocx" :disable="!generalViewReport" />        
       </div>
@@ -21,6 +21,7 @@
       </template>
     </q-splitter>
   </q-card>
+  <GeneralViewFormatConfirmDialog v-model:open="confirmOpen" v-model:format="format" @confirm="buildReport"/>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
@@ -33,6 +34,8 @@ import { storeToRefs } from 'pinia';
 import { useGeneralViewReportStore } from '../store/general-view-store';
 import { GeneralViewReportApi } from '../api/general-view-report-api';
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
+import GeneralViewFormatConfirmDialog from './GeneralViewFormatConfirmDialog.vue';
+import { ReportFormat } from '../api/types';
 
 const { buildGeneralViewReport, requestGeneralViewReport } = useGeneralViewReportService()
 const { requestGallery } = useGeneralViewGalleryService()
@@ -41,13 +44,17 @@ const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const split = ref(60)
 
+const confirmOpen = ref<boolean>(false)
+const format = ref<ReportFormat>('SINGLE_SPOT_ROW')
+
 const buildDocx = async () => {
   const response = await GeneralViewReportApi.buildDocx(selectedInspectionId.value!!)
   return response.data
 }
 
 const buildReport = async () => {
-  await buildGeneralViewReport()
+  confirmOpen.value = false
+  await buildGeneralViewReport(format.value)
   await requestGeneralViewReport()
   await requestGallery()
 }

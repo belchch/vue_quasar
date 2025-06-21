@@ -3,6 +3,7 @@ import { GeneralViewReportApi } from "../api/general-view-report-api"
 import { useGeneralViewReportStore } from "../store/general-view-store"
 import { storeToRefs } from "pinia"
 import { GeneralViewReport } from "../store/types"
+import { ReportFormat } from "../api/types"
 
 
 export const useGeneralViewReportService = () => {
@@ -14,8 +15,8 @@ export const useGeneralViewReportService = () => {
         generalViewReport.value = response.data
     }
 
-    const buildGeneralViewReport = async () => {
-        await GeneralViewReportApi.buildReport(selectedInspectionId.value!!)
+    const buildGeneralViewReport = async (format: ReportFormat) => {
+        await GeneralViewReportApi.buildReport(selectedInspectionId.value!!, format)
     }
 
     const updateGeneralViewReport = async () => {

@@ -1,12 +1,14 @@
 import { api } from 'boot/axios'
 import { GeneralViewReport, GeneralViewReportGalleryGroup } from '../store/types'
 import { FileInfo } from 'src/common/types'
+import { ReportFormat } from './types'
 
 export const GeneralViewReportApi = {
-    buildReport: (inspectionId: number) => {
+    buildReport: (inspectionId: number, format: ReportFormat) => {
         return api.post(`/api/general-view-report/build`, {}, {
             params: {
-                inspectionId
+                inspectionId,
+                format
             }
         })
     },
