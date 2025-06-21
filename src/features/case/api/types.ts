@@ -13,6 +13,10 @@ export type CaseFilterRequest = {
   createdAtTo?: string | undefined
   deadlineFrom?: string | undefined
   deadlineTo?: string | undefined
+  createdById?: number[] | undefined
+  expertId?: number[] | undefined
+  managerId?: number[] | undefined
+  headId?: number[] | undefined
 }
 
 
@@ -36,5 +40,8 @@ export type CaseUpdateRequest = {
   regionId: number,
   createdById: number,
   createdAt: string,
-  deadline: string
+  deadline: string,
+  expertId?: number | undefined,
+  managerId?: number| undefined,
+  headId?: number | undefined
 }
