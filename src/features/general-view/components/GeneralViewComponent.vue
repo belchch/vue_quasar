@@ -26,14 +26,17 @@ import { ref } from 'vue';
 import GeneralViewGallery from './GeneralViewGallery.vue';
 import GeneralViewReport from './GeneralViewReport.vue';
 import { useGeneralViewReportService } from '../composables/general-view';
+import { useGeneralViewGalleryService } from '../composables/gallery';
 
 const { buildGeneralViewReport, requestGeneralViewReport } = useGeneralViewReportService()
+const { requestGallery } = useGeneralViewGalleryService()
 
 const split = ref(60)
 
 const buildReport = async () => {
     await buildGeneralViewReport()
     await requestGeneralViewReport()
+    await requestGallery()
 }
 </script>
 <style scoped>

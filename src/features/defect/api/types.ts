@@ -22,3 +22,9 @@ export const technicalReportRowToUpdateRequest = (technicalReportRow: TechnicalR
   photoDocId: technicalReportRow.photoDoc?.id,
   technicalReportId: technicalReportRow.technicalReportId
 })
+
+
+export type FileInfo = {
+    fileName: string
+    fileLink: string
+}
