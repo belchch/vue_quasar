@@ -23,7 +23,7 @@
                     <q-card bordered flat>
                         <div class="cursor-pointer text-center text-caption">
                             {{ item.text }}
-                            <q-popup-edit v-model="item.text" auto-save v-slot="scope">
+                            <q-popup-edit v-model="item.text" auto-save v-slot="scope" @update:model-value="refresh">
                                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
                             </q-popup-edit>
                         </div>                    

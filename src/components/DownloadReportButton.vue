@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import axios from 'axios';
-import { FileInfo } from 'src/features/defect/api/types';
+import { FileInfo } from 'src/common/types';
 import { ref } from 'vue';
 
 const props = defineProps<{
