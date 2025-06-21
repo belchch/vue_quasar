@@ -1,0 +1,143 @@
+<template>
+    <q-card-section v-if="localCase">
+        <q-form class="q-gutter-sm" @submit="handleSave">
+            <div class="row q-col-gutter-lg">
+                <div class="col-6">
+                    <FormInput v-model="localCase.number" label="Номер дела" title="Дело" :required="true"/>
+                    <FormInput v-model="localCase.facilityAddress" label="Адрес" :required="true"/>
+                    <FormList 
+                        label="Регион" 
+                        v-model="localCase.region"
+                        :options="regionStore.items"
+                        :required="true"/>
+                </div>
+                <div class="col-6">
+                    <FormList 
+                        label="Суд" 
+                        v-model="localCase.court"
+                        :options="courtStore.items"
+                        />
+                    <div style="margin-block: 20px;">                        
+                        <div class="text-subtitle1 q-mb-xs">Судья</div>
+                            <q-select
+                                use-input
+                                dense
+                                outlined
+                                v-model="localCase.judge"
+                                :options="judgeOptions"
+                                option-label="label"
+                                option-value="value"
+                                emit-value
+                                map-options
+                                label="Судья"
+                            />
+                    </div>
+                    <FormList 
+                        label="Организация" 
+                        v-model="localCase.company"
+                        :options="companyStore.items"
+                        />
+                </div>
+            </div>
+            <div class="row q-col-gutter-lg q-mt-md" style="row">
+                <div class="col-6">
+                    <FormList 
+                        label="Автор (createdById)" 
+                        v-model="localCase.company"
+                        :options="companyStore.items"
+                        />
+                </div>
+                <div class="col-6">
+                    <FormList 
+                        label="Менеджер" 
+                        v-model="localCase.company"
+                        :options="companyStore.items"
+                        />
+                </div>
+                <div class="col-6">
+                    <FormList 
+                        label="Руководитель" 
+                        v-model="localCase.company"
+                        :options="companyStore.items"
+                        />
+                </div>
+                <div class="col-6">
+                    <FormList 
+                        label="Эксперт" 
+                        v-model="localCase.company"
+                        :options="companyStore.items"
+                        />
+                </div>
+            
+            </div>
+        <div class="row justify-between items-end q-ml-none q-mt-lg">
+            <div>
+                <FormDate 
+                    v-model="localCase.createdAt"
+                    title="Дата создания"
+                />
+            </div>
+            <div>
+                <FormDate 
+                    v-model="localCase.deadline"
+                    title="Срок сдачи"
+                />
+            </div>
+            <div>
+                <q-btn label="Сохранить" type="submit" color="primary" />
+                <q-btn label="Отмена" @click="resetForm" color="primary" flat class="q-ml-sm" />
+            </div>
+        </div>
+        </q-form>
+    </q-card-section>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
+import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
+import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
+import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
+import { judgeName } from 'src/features/lookup/judge/stores/types'
+import FormInput from './FormInput.vue'
+import FormList from './FormList.vue'
+import { Case } from 'src/features/case/stores/types'
+import FormDate from './FormDate.vue'
+
+const companyStore = useCompanyStore()
+const judgeStore = useJudgeStore()
+const courtStore = useCourtStore()
+const regionStore = useRegionStore()
+
+const localCase = ref<Case>()
+const selectedJudge = ref(null)
+const model = defineModel<Case>()
+
+defineProps({
+    statusOptions: Array
+})
+
+const emit = defineEmits(['update:modelValue', 'save', 'reset'])
+
+const handleSave = () => {
+    emit('save', localCase.value)
+}
+const resetForm = () => {
+    initLocalForm()
+    emit('reset')
+}
+
+const judgeOptions = judgeStore.items.map(j => ({
+  label: judgeName(j),
+  value: j 
+}))
+
+const initLocalForm = () => {
+    if (!model.value) return
+    localCase.value = { ...model.value }
+}
+onMounted(() => {
+    initLocalForm()
+})
+
+</script>

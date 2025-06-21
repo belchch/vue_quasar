@@ -6,7 +6,7 @@
       <span class="text-grey-7 text-caption">{{ props.case.createdBy?.username }}</span>
     </q-item>
     <q-item class="no-border row items-center">
-      <q-icon name="person" class="text-accent  q-pr-sm" />
+      <q-icon name="calendar_today" class="text-accent  q-pr-sm" />
       <span class="text-grey-7 text-caption  q-pr-xs">Дата создания:</span>
       <span class="text-grey-7 text-caption">{{ createdAt }}</span>
     </q-item>
@@ -28,7 +28,7 @@
     <q-item class="no-border row items-center">
       <q-icon name="gavel" class="text-accent q-pr-sm" />
       <span class="text-grey-7 text-caption  q-pr-xs">Судья:</span>
-      <span class="text-grey-7 text-caption">{{ props.case.judge?.firstName }}</span>
+      <span class="text-grey-7 text-caption">{{ props.case.judge? judgeName(props.case.judge) : '' }}</span>
     </q-item>
   </q-list>
 </template>
@@ -36,6 +36,7 @@
 import { Case } from 'src/features/case/stores/types'
 import { computed } from 'vue'
 import dayjs from 'dayjs'
+import { judgeName } from 'src/features/lookup/judge/stores/types'
 const props = defineProps<{
   case: Case
 }>()

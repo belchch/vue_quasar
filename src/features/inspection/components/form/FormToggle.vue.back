@@ -1,0 +1,15 @@
+<template>
+    <div>
+        <div class="text-subtitle1 q-mb-xs">{{ title ? title : label }}</div>
+        <q-toggle v-bind="$attrs" :label="label" v-model="model" color="secondary"/>
+    </div>
+</template>
+<script setup lang="ts">
+import _ from 'lodash'
+const model = defineModel()
+defineProps<{
+  label: string
+  title?: string
+}>()
+
+</script>
