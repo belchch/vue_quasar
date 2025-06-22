@@ -1,0 +1,1 @@
+export type ReportFormat = 'SINGLE_SPOT_ROW' | 'DOUBLE_SPOT_ROW'

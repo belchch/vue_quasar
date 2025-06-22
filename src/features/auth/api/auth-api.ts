@@ -10,5 +10,5 @@ export const AuthApi = {
 
   async logout(request: LogoutRequest) {
     return api.post(`/api/auth/logout`, request)
-  },
+  }
 };
