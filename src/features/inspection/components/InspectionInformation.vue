@@ -27,13 +27,13 @@
                             <div class="grid-2 q-mt-md items-center2"
                                 style="column-gap: 8px;grid-template-columns: 150px auto;">
                                 <span>Автор:</span>
-                                <span>{{ selectedCase.createdBy?.username }}</span>
+                                <span>{{ selectedCase.createdBy? userName(selectedCase.createdBy) : '' }}</span>
                                 <span>Менеджер:</span>
-                                <span>-</span>
+                                <span>{{ selectedCase.manager? userName(selectedCase.manager) : '' }}</span>
                                 <span>Руководитель:</span>
-                                <span>-</span>
+                                <span>{{ selectedCase.head? userName(selectedCase.head) : '' }}</span>
                                 <span>Эксперт:</span>
-                                <span></span>
+                                <span>{{ selectedCase.expert? userName(selectedCase.expert) : '' }}</span>
                             </div>
                         </template>
                         <template #s2>
@@ -150,6 +150,7 @@ import { storeToRefs } from 'pinia';
 import { useSelectedCaseService } from 'src/features/case/composables/selected-case'
 import _ from 'lodash'
 import { judgeName } from 'src/features/lookup/judge/stores/types'
+import { userName } from 'src/features/user/api/types'
 import UpdateForm from './form/UpdateForm.vue'
 import InspectionLocations from './InspectionLocations.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())

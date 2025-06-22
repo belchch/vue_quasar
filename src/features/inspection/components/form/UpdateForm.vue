@@ -103,6 +103,7 @@ import FormList from './FormList.vue'
 import { Case } from 'src/features/case/stores/types'
 import FormDate from './FormDate.vue'
 import { UserService } from 'src/features/user/api'
+import { userName } from 'src/features/user/api/types'
 
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
@@ -141,7 +142,7 @@ onMounted(async() => {
     initLocalForm()
     const gettedUsers = await UserService.getAllUsers()
     userOptions.value = gettedUsers.data.map(u => ({
-        label: u.lastName + ' ' + u.firstName + ' ' + u.middleName,
+        label: userName(u),
         value: u
     }))
 })

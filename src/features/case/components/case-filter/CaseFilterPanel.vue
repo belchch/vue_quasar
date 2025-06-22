@@ -73,6 +73,7 @@ import dayjs from "dayjs";
 import { useCasesStore } from "src/features/case/stores/case-store"
 import { wordDeclension } from 'src/support/word-declension'
 import { UserService } from 'src/features/user/api'
+import { userName } from 'src/features/user/api/types'
 
 const { requestCases, filter } = useCases()
 const courtStore = useCourtStore()
@@ -198,7 +199,7 @@ const clearFilters = async () => {
 onMounted(async() => {
     const gettedUsers = await UserService.getAllUsers()
     userOptions.value = gettedUsers.data.map(u => ({
-        label: u.lastName + ' ' + u.firstName + ' ' + u.middleName,
+        label: userName(u),
         value: u
     }))
 })
