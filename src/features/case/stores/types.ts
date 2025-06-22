@@ -18,7 +18,10 @@ export type Case = {
   createdAt: string,
   deadline: string,
   inspectionIds: number[],
-  stages: CaseStages
+  stages: CaseStages,
+  expert?: User,
+  manager?: User,
+  head?: User
 }
 
 export type CaseStages = {

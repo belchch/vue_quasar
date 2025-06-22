@@ -17,21 +17,15 @@
                         v-model="localCase.court"
                         :options="courtStore.items"
                         />
-                    <div style="margin-block: 20px;">                        
-                        <div class="text-subtitle1 q-mb-xs">Судья</div>
-                            <q-select
-                                use-input
-                                dense
-                                outlined
-                                v-model="localCase.judge"
-                                :options="judgeOptions"
-                                option-label="label"
-                                option-value="value"
-                                emit-value
-                                map-options
-                                label="Судья"
-                            />
-                    </div>
+                    <FormList
+                        label="Судья"
+                        v-model="localCase.judge"
+                        :options="judgeOptions"
+                        option-label="label"
+                        option-value="value"
+                        emit-value
+                        map-options
+                    />
                     <FormList 
                         label="Организация" 
                         v-model="localCase.company"
@@ -39,44 +33,49 @@
                         />
                 </div>
             </div>
-            <div class="row q-col-gutter-lg q-mt-md" style="row">
+            <div class="row q-col-gutter-lg q-mt-md">
                 <div class="col-6">
                     <FormList 
-                        label="Автор (createdById)" 
-                        v-model="localCase.company"
-                        :options="companyStore.items"
+                        label="Автор" 
+                        v-model="localCase.createdBy"
+                        :options="userOptions"
+                        option-label="label"
+                        option-value="value"
+                        emit-value
+                        map-options
+                        />
+                     <FormList 
+                        label="Руководитель" 
+                        v-model="localCase.head"
+                        :options="userOptions"
+                        option-label="label"
+                        option-value="value"
+                        emit-value
+                        map-options
                         />
                 </div>
                 <div class="col-6">
                     <FormList 
                         label="Менеджер" 
-                        v-model="localCase.company"
-                        :options="companyStore.items"
+                        v-model="localCase.manager"
+                        :options="userOptions"
+                        option-label="label"
+                        option-value="value"
+                        emit-value
+                        map-options
                         />
-                </div>
-                <div class="col-6">
-                    <FormList 
-                        label="Руководитель" 
-                        v-model="localCase.company"
-                        :options="companyStore.items"
-                        />
-                </div>
-                <div class="col-6">
                     <FormList 
                         label="Эксперт" 
-                        v-model="localCase.company"
-                        :options="companyStore.items"
+                        v-model="localCase.expert"
+                        :options="userOptions"
+                        option-label="label"
+                        option-value="value"
+                        emit-value
+                        map-options
                         />
-                </div>
-            
+                </div>            
             </div>
         <div class="row justify-between items-end q-ml-none q-mt-lg">
-            <div>
-                <FormDate 
-                    v-model="localCase.createdAt"
-                    title="Дата создания"
-                />
-            </div>
             <div>
                 <FormDate 
                     v-model="localCase.deadline"
@@ -103,6 +102,8 @@ import FormInput from './FormInput.vue'
 import FormList from './FormList.vue'
 import { Case } from 'src/features/case/stores/types'
 import FormDate from './FormDate.vue'
+import { UserService } from 'src/features/user/api'
+import { userName } from 'src/features/user/api/types'
 
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
@@ -131,13 +132,19 @@ const judgeOptions = judgeStore.items.map(j => ({
   label: judgeName(j),
   value: j 
 }))
+const userOptions = ref<any[]>()
 
 const initLocalForm = () => {
     if (!model.value) return
     localCase.value = { ...model.value }
 }
-onMounted(() => {
+onMounted(async() => {
     initLocalForm()
+    const gettedUsers = await UserService.getAllUsers()
+    userOptions.value = gettedUsers.data.map(u => ({
+        label: userName(u),
+        value: u
+    }))
 })
 
 </script>

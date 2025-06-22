@@ -1,4 +1,4 @@
-import { UserRole } from "../stores/types"
+import { User, UserRole } from "../stores/types"
 
 export type UserCreateRequest = {    
       username: string,
@@ -7,4 +7,8 @@ export type UserCreateRequest = {
       firstName: string,
       lastName: string,
       middleName?: string
+}
+
+export const userName = (user: User) => {
+  return `${user.firstName} ${user.middleName} ${user.lastName} `
 }
