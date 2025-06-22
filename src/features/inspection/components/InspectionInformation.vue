@@ -93,9 +93,6 @@
                             <div class="grid-2 items-center gap-sm2">
                                 <div>Судья:</div>
                                 <span>{{ selectedCase.judge ? judgeName(selectedCase.judge) : '' }}</span>
-                                <!-- <TextToSelect :isEditMode=false v-model="selectedCase.judge"
-                                    :options="judgeOptions" /> -->
-                                <!-- <span class="text-weight-medium relative">{{ judgeLabel }}</span> -->
                                 <div>ФИО контактного лица:</div>
                                 <span class="text-weight-medium relative">-</span>
                                 <div>Телефон контактного лица:</div>
@@ -245,11 +242,6 @@ const computeStatusClass = () => {
 }
 
 const statusClass = computed(() => computeStatusClass())
-const judgeLabel = computed(() => {
-    const judge = judgeStore.items.find(option => option.id === selectedCase.value?.judge?.id) || null
-    if (!judge) return ''
-    return `${judge.firstName} ${judge.middleName} ${judge.lastName}`
-})
 
 
 </script>

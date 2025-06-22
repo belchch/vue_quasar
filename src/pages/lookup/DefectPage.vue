@@ -1,6 +1,6 @@
 <template>
     <GenericCrudTable title="Недостатки" :columns="columns" :items="defectStore.items" :formFields="formFields"
-        :store="defectStore" :visibleColumns="visibleColumns" :addForm="{ classname: 'defect' }" />
+        :store="defectStore" :addForm="{ classname: 'defect' }" />
 </template>
 
 <script setup lang="ts">

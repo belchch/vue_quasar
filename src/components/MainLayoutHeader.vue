@@ -43,7 +43,7 @@
             </q-list>
           </q-menu>
         </q-item>
-        <q-item class="menu-item" clickable v-ripple :class="{ active: isAdminActive }" :to="{ name: 'cases' }">
+        <q-item class="menu-item" clickable v-ripple :class="{ active: isAdminActive }" :to="{ name: 'admin' }">
           <q-item-section>Администрирование</q-item-section>
         </q-item>
       </q-list>

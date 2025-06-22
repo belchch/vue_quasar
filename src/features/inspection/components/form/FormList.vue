@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-bottom: 20px;">
       <div class="text-subtitle1 q-mb-xs">{{ title ? title : label }}</div>
         <q-select v-if="required"
             v-bind="$attrs"
@@ -8,8 +8,8 @@
               dense
               outlined
               lazy-rules
-              option-value="id"
-              option-label="name"
+              :option-value="optionValue ? optionValue : 'id'"
+              :option-label="optionLabel ? optionLabel : 'name'"
               :label="label"
               :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
           />
@@ -19,8 +19,8 @@
               use-input
               dense
               outlined
-              option-value="id"
-              option-label="name"
+              :option-value="optionValue ? optionValue : 'id'"
+              :option-label="optionLabel ? optionLabel : 'name'"
               :label="label"
           />
     </div> 
@@ -32,6 +32,8 @@ defineProps<{
   label: string
   title?: string
   required?: boolean
+  optionValue?: string
+  optionLabel?: string
 }>()
 
 </script>

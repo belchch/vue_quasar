@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="text-subtitle1 q-mb-xs">{{ title ? title : label }}</div>
+      <div v-if="!hideTitle" class="text-subtitle1 q-mb-xs">{{ title ? title : label }}</div>
       <q-input v-if="required"
           v-bind="$attrs"
           dense
@@ -27,6 +27,7 @@ defineProps<{
   label: string
   title?: string
   required?: boolean
+  hideTitle?: boolean
 }>()
 
 </script>
