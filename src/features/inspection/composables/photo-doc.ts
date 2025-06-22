@@ -19,6 +19,7 @@ export const usePhotoDocs = () => {
       sources: photoDoc.sources,
       spotId: photoDoc.spot?.id,
       type: photoDoc.type,
+      spotNum: photoDoc.spotNum,
       defectInfo: {
         structElemId: photoDoc.defectInfo?.structElem?.id,
         materialId: photoDoc.defectInfo?.material?.id,

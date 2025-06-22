@@ -9,6 +9,7 @@ export type PhotoDocUpdateRequest = {
   id: number
   sources: string[]
   spotId?: number | undefined
+  spotNum?: number | undefined
   type?: PhotoDocType | undefined
   defectInfo?: PhotoDocDefectInfoUpdateRequest | undefined
 }
@@ -37,9 +38,14 @@ export type DefectSearchResponse = {
   defects: Defect[]
 }
 
+export type PhotoDocSpotSearchRequest = {
+  spotId: number,
+  spotNum?: number | undefined
+}
+
 export type PhotoDocSearchRequest = {
   type: string[]
-  spotId: number[]
+  spot: PhotoDocSpotSearchRequest[]
   structElemId: number[]
   materialId: number[]
   typeIsNull: boolean

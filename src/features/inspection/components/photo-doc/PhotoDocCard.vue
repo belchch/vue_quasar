@@ -27,9 +27,9 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-btn-dropdown :label="photoDoc.spot?.name" icon="house" size="sm" no-caps color="grey-8" flat square>
+        <q-btn-dropdown :label="displaySpotName(photoDoc)" icon="house" size="sm" no-caps color="grey-8" flat square>
           <q-list>
-            <q-item v-for="item in spotStore.items" :key="item.id!!" clickable v-close-popup
+            <q-item v-for="item in inspectionSpotOptions" :key="item.id!!" clickable v-close-popup
               @click="() => onSelectSpot(item)">
               <q-item-section>
                 <q-item-label>{{ item.name }}</q-item-label>
@@ -96,14 +96,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import {
   type PhotoDoc,
   type PhotoDocDefectInfo,
   type PhotoDocType,
   photoDocTypeDesc,
 } from 'src/features/inspection/store/types'
-import { useSpotStore } from 'src/features/lookup/spot/stores/spot-store'
 import { Spot } from 'src/features/lookup/spot/stores/types'
 import DefectInfo from 'src/features/inspection/components/photo-doc/DefectInfo.vue'
 import { useSelectedInspection } from 'src/features/inspection/composables/selected-inspection'
@@ -111,6 +110,9 @@ import { usePhotoDocsUnionStore } from '../../store/photo-doc-union-store'
 import _ from 'lodash'
 import { useQuasar } from 'quasar'
 import { useTechnicalReportService } from 'src/features/defect/composables/technical-report'
+import { buildInspectionSpotOptions, InspectionSpotOption } from '../../composables/inspection-spot'
+import { useInspectionSpotStore } from '../../store/inspection-spot-store'
+import { storeToRefs } from 'pinia'
 
 const unionStore = usePhotoDocsUnionStore()
 const $q = useQuasar()
@@ -120,7 +122,7 @@ const props = defineProps<{
   collapsed: boolean
 }>()
 const showLightbox = ref(false)
-const spotStore = useSpotStore()
+const {inspectionSpots} = storeToRefs(useInspectionSpotStore())
 const { requestTechnicalReport } = useTechnicalReportService()
 const selectedInspectionService = useSelectedInspection()
 const selected = ref([])
@@ -135,6 +137,17 @@ const confirmDelete = () => {
   })
 }
 
+const displaySpotName = (photoDoc: PhotoDoc) => {
+  return photoDoc.spotNum ? `${photoDoc.spot?.name} ${photoDoc.spotNum}` : photoDoc.spot?.name
+}
+
+const inspectionSpotOptions = computed(() => {
+  if (!inspectionSpots.value) {
+    return []
+  }
+  return buildInspectionSpotOptions(inspectionSpots.value)
+})
+
 const updatePhotoDoc = async (photoDoc: PhotoDoc) => {
   await selectedInspectionService.updatePhotoDoc(photoDoc)
   await selectedInspectionService.refreshPhotoDocs()
@@ -148,10 +161,11 @@ const ungroupPhotoDoc = async () => {
   await selectedInspectionService.ungroupPhotoDoc(props.photoDoc.id!!)
 }
 
-const onSelectSpot = async (spot: Spot) => {
+const onSelectSpot = async (option: InspectionSpotOption) => {
   await updatePhotoDoc({
     ...props.photoDoc,
-    spot: spot,
+    spot: option.spot,
+    spotNum: option.spotNum
   })
 }
 
@@ -174,9 +188,6 @@ function openLightbox(index = 0) {
   slide.value = index
   showLightbox.value = true
 }
-onMounted(() => {
-  console.log('spots', spotStore.items)
-})
 
 const startUnionMode = () => {
   unionStore.setMainPhotoDoc(props.photoDoc)

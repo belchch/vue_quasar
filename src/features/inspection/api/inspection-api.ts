@@ -12,9 +12,7 @@ export const InspectionApi = {
   },
 
   async searchPhotoDocs(inspectionId: number, searchRequest?: PhotoDocSearchRequest) {
-    return api.get<PhotoDoc[]>(`/api/inspections/${inspectionId}/photo-docs`, {
-      params: searchRequest
-    })
+    return api.post<PhotoDoc[]>(`/api/inspections/${inspectionId}/photo-docs/search`, searchRequest)
   },
 
   async createPhotoDoc(inspectionId: number, photoDoc: PhotoDoc) {
