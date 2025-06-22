@@ -17,6 +17,7 @@ import { useStandardStore } from "src/features/lookup/standard/stores/standard-s
 import { Case } from "../stores/types";
 import { CaseUpdateRequest } from "../api/types";
 import { useCompanyStore } from "src/features/lookup/company/stores/compay-store";
+import { useInspectionSpotService } from "src/features/inspection/composables/inspection-spot";
 
 export const useSelectedCaseService = () => {
   const { selectedCase, caseLoaded } = storeToRefs(useSelectedCaseStore())
@@ -30,6 +31,7 @@ export const useSelectedCaseService = () => {
   const flawStore = useFlawStore()
   const companyStore = useCompanyStore()
   const { requestTechnicalReport } = useTechnicalReportService()
+  const {requestInspectionSpots} = useInspectionSpotService()
 
   const selectCase = async (caseId: number) => {
     const caseResponse = await CaseApi.getCase(caseId)
@@ -45,6 +47,7 @@ export const useSelectedCaseService = () => {
     await standardStore.requestLookup()
     await requestTechnicalReport()
     await companyStore.requestLookup()
+    await requestInspectionSpots()
     caseLoaded.value = true
   }
 

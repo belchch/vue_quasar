@@ -121,7 +121,8 @@
                         </div>
                     </q-card-section>
                 </q-card>
-            </div>
+                <InspectionLocations/>
+            </div>        
         </template>
     </div>
 
@@ -153,6 +154,7 @@ import { useSelectedCaseService } from 'src/features/case/composables/selected-c
 import _ from 'lodash'
 import { judgeName } from 'src/features/lookup/judge/stores/types'
 import UpdateForm from './form/UpdateForm.vue'
+import InspectionLocations from './InspectionLocations.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 

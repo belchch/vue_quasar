@@ -3,11 +3,13 @@ import type {StructElem} from "src/features/lookup/struct-elem/stores/types";
 import type {Material} from "src/features/lookup/material/stores/types";
 import {Defect} from "src/features/defect/flaw/stores/types";
 import {Flaw} from "src/features/defect/flaw/stores/types";
+import { Spot } from 'src/features/lookup/spot/stores/types';
 
 export type PhotoDocUpdateRequest = {
   id: number
   sources: string[]
   spotId?: number | undefined
+  spotNum?: number | undefined
   type?: PhotoDocType | undefined
   defectInfo?: PhotoDocDefectInfoUpdateRequest | undefined
 }
@@ -36,13 +38,32 @@ export type DefectSearchResponse = {
   defects: Defect[]
 }
 
+export type PhotoDocSpotSearchRequest = {
+  spotId: number,
+  spotNum?: number | undefined
+}
+
 export type PhotoDocSearchRequest = {
   type: string[]
-  spotId: number[]
+  spot: PhotoDocSpotSearchRequest[]
   structElemId: number[]
   materialId: number[]
   typeIsNull: boolean
   spotIdIsNull: boolean
   materialIdIsNull: boolean
   structElemIdIsNull: boolean
+}
+
+export type InspectionSpot = {
+  id?: number | undefined,
+  spot: Spot,
+  count: number,
+  inUse: boolean
+}
+
+export type InspectionSpotUpdateRequest = {
+  id?: number | undefined,
+  spotId: number,
+  count: number,
+  inUse: boolean
 }

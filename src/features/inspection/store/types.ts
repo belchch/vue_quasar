@@ -16,6 +16,7 @@ export type PhotoDoc = {
   sources: string[]
   urls?: string[]
   spot?: Spot
+  spotNum?: number | undefined,
   type?: PhotoDocType
   defectInfo?: PhotoDocDefectInfo
 }
