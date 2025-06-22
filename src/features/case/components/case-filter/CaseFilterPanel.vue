@@ -32,6 +32,18 @@
         </q-item>
       </q-list>
     </q-card-section>
+    <q-card-section class="q-py-sm q-px-none q-ma-none full-width">
+      <q-list>
+        <q-separator />
+
+        <q-item class="q-mt-none text-grey-8 grid-2 q-py-md">
+          <ListFilter v-model="selectedAuthors" :options="userOptions" label="Автор" />
+          <ListFilter v-model="selectedExperts" :options="userOptions" label="Експерт" />
+          <ListFilter v-model="selectedManagers" :options="userOptions" label="Менеджер" />
+          <ListFilter v-model="selectedHeads" :options="userOptions" label="Руководитель" />
+        </q-item>
+      </q-list>
+    </q-card-section>
     <q-card-section class="row justify-center full-width q-gutter-x-md q-mt-none q-pt-none text-grey-8">
       {{ wordDeclension(casesStore.cases?.length || 0, ['Найдена', 'Найдено', 'Найдено']) }}
       {{ casesStore.cases?.length || 0 }}
@@ -47,7 +59,7 @@
 <script setup lang="ts">
 import { useCases } from 'src/features/case/composables/case'
 import _ from 'lodash'
-import { computed, ref, Ref } from 'vue'
+import { computed, ref, Ref, onMounted } from 'vue'
 import DateFilter from 'src/features/case/components/case-filter/DateFilter.vue'
 import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
 import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
@@ -60,6 +72,7 @@ import { CasePriority, CaseStatus } from 'src/features/case/stores/types'
 import dayjs from "dayjs";
 import { useCasesStore } from "src/features/case/stores/case-store"
 import { wordDeclension } from 'src/support/word-declension'
+import { UserService } from 'src/features/user/api'
 
 const { requestCases, filter } = useCases()
 const courtStore = useCourtStore()
@@ -80,6 +93,8 @@ const judgeOptions = computed(() =>
 const regionOptions = computed(() =>
   regionStore.items.map((item) => ({ label: item.name, value: item.id!! })),
 )
+const userOptions = ref<any[]>()
+
 const statusOptions = [
   {
     label: 'Создан',
@@ -115,6 +130,10 @@ const selectedCourts = ref<NumberOption[]>([])
 const selectedCompanies = ref<NumberOption[]>([])
 const selectedJudges = ref<NumberOption[]>([])
 const selectedRegions = ref<NumberOption[]>([])
+const selectedAuthors = ref<NumberOption[]>([])
+const selectedExperts = ref<NumberOption[]>([])
+const selectedManagers = ref<NumberOption[]>([])
+const selectedHeads = ref<NumberOption[]>([])
 const selectedStatuses = ref<{ [key: number]: CaseStatus }>([])
 const selectedPriorities = ref<{ [key: number]: CasePriority }>([])
 const dateDefaultValue = { from: '', to: '' }
@@ -151,6 +170,10 @@ const applyFilters = async () => {
     createdAtTo: toISO(createdAt.value.to),
     deadlineFrom: toISO(deadline.value.from),
     deadlineTo: toISO(deadline.value.to),
+    createdById: numberOptionValues(selectedAuthors),
+    expertId: numberOptionValues(selectedExperts),
+    managerId: numberOptionValues(selectedManagers),
+    headId: numberOptionValues(selectedHeads),
   })
 }
 
@@ -164,9 +187,21 @@ const clearFilters = async () => {
   createdAt.value = dateDefaultValue
   deadline.value = dateDefaultValue
   search.value = ''
+  selectedAuthors.value = []
+  selectedExperts.value = []
+  selectedManagers.value = []
+  selectedHeads.value = []
 
   await requestCases({})
 }
+
+onMounted(async() => {
+    const gettedUsers = await UserService.getAllUsers()
+    userOptions.value = gettedUsers.data.map(u => ({
+        label: u.lastName + ' ' + u.firstName + ' ' + u.middleName,
+        value: u
+    }))
+})
 </script>
 
 <style lang="scss" scoped>
