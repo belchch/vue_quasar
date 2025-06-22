@@ -1,6 +1,5 @@
 <template>
     <q-card-section v-if="localCase">
-        {{ localCase }}
         <q-form class="q-gutter-sm" @submit="handleSave">
             <div class="row q-col-gutter-lg">
                 <div class="col-6">
@@ -47,8 +46,8 @@
                         />
                      <FormList 
                         label="Руководитель" 
-                        v-model="localCase.judge"
-                        :options="judgeOptions"
+                        v-model="localCase.head"
+                        :options="userOptions"
                         option-label="label"
                         option-value="value"
                         emit-value
@@ -58,13 +57,21 @@
                 <div class="col-6">
                     <FormList 
                         label="Менеджер" 
-                        v-model="localCase.company"
-                        :options="companyStore.items"
+                        v-model="localCase.manager"
+                        :options="userOptions"
+                        option-label="label"
+                        option-value="value"
+                        emit-value
+                        map-options
                         />
                     <FormList 
                         label="Эксперт" 
-                        v-model="localCase.company"
-                        :options="companyStore.items"
+                        v-model="localCase.expert"
+                        :options="userOptions"
+                        option-label="label"
+                        option-value="value"
+                        emit-value
+                        map-options
                         />
                 </div>            
             </div>
@@ -85,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
 import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
 import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
@@ -96,7 +103,6 @@ import FormList from './FormList.vue'
 import { Case } from 'src/features/case/stores/types'
 import FormDate from './FormDate.vue'
 import { UserService } from 'src/features/user/api'
-import { User } from 'src/features/user/stores/types'
 
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
