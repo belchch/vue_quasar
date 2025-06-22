@@ -3,6 +3,7 @@ import type {StructElem} from "src/features/lookup/struct-elem/stores/types";
 import type {Material} from "src/features/lookup/material/stores/types";
 import {Defect} from "src/features/defect/flaw/stores/types";
 import {Flaw} from "src/features/defect/flaw/stores/types";
+import { Spot } from 'src/features/lookup/spot/stores/types';
 
 export type PhotoDocUpdateRequest = {
   id: number
@@ -45,4 +46,18 @@ export type PhotoDocSearchRequest = {
   spotIdIsNull: boolean
   materialIdIsNull: boolean
   structElemIdIsNull: boolean
+}
+
+export type InspectionSpot = {
+  id?: number | undefined,
+  spot: Spot,
+  count: number,
+  inUse: boolean
+}
+
+export type InspectionSpotUpdateRequest = {
+  id?: number | undefined,
+  spotId: number,
+  count: number,
+  inUse: boolean
 }
