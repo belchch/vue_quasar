@@ -43,6 +43,9 @@
             </q-list>
           </q-menu>
         </q-item>
+        <q-item class="menu-item" clickable v-ripple :class="{ active: isAdminActive }" :to="{ name: 'cases' }">
+          <q-item-section>Администрирование</q-item-section>
+        </q-item>
       </q-list>
 
       <div class="q-mx-sm flex justify-end" style="width: 320px;">
@@ -113,6 +116,10 @@ const isLookupActive = computed(() => {
 
 const isCasesActive = computed(() => {
   return router.currentRoute.value.path.startsWith('/cases')
+})
+
+const isAdminActive = computed(() => {
+  return router.currentRoute.value.path.startsWith('/administration')
 })
 </script>
 
