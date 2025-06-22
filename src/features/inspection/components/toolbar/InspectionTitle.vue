@@ -58,6 +58,7 @@
         <q-tab name="generalView" label="Общие виды" class="q-px-xl" />
         <q-tab name="defect" label="Дефекты" class="q-px-xl" />
         <q-tab name="information" label="Информация" class="q-px-xl" />
+        <q-tab name="questions" label="Вопросы" class="q-px-xl" />
       </q-tabs>
     </q-toolbar>
   </q-page-sticky>

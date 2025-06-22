@@ -72,6 +72,7 @@ export default defineConfigWithVueTs(
       "@typescript-eslint/no-unnecessary-type-assertion": "off",
       "@typescript-eslint/no-misused-promises": "off",
       'prefer-promise-reject-errors': 'off',
+      'vue/no-v-text-v-html-on-component': 'off',
 
       // allow debugger during development only
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

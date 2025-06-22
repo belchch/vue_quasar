@@ -19,6 +19,11 @@
               <InspectionInformation  />
             </div>
           </q-tab-panel>
+          <q-tab-panel name="questions">
+            <div class="q-pa-md">
+              <CaseQuestions/>
+            </div>
+          </q-tab-panel>
         </q-tab-panels>
       </q-card-section>
     </q-card>
@@ -42,6 +47,7 @@ import { useSelectedCaseService } from 'src/features/case/composables/selected-c
 import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store'
 import {storeToRefs} from "pinia";
 import GeneralViewComponent from "src/features/general-view/components/GeneralViewComponent.vue";
+import CaseQuestions from 'src/features/case/components/questions/CaseQuestions.vue'
 
 const props = defineProps<{
   caseId: number
