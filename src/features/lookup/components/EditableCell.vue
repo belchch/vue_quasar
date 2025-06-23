@@ -3,7 +3,6 @@
         <span>{{ value }}</span>
         <q-dialog v-model="isEditing">
             <q-card style="min-width: 350px">
-                {{ editRow }}
                 <q-card-section class="q-pt-none2">
                     <q-form class="q-gutter-md" ref="formRef" @submit.prevent="handleSave(editRow)"
                         @keyup.enter.prevent="handleSave(editRow)">
