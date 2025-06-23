@@ -38,7 +38,7 @@
 
         <q-item class="q-mt-none text-grey-8 grid-2 q-py-md">
           <ListFilter v-model="selectedAuthors" :options="userOptions" label="Автор" />
-          <ListFilter v-model="selectedExperts" :options="userOptions" label="Експерт" />
+          <ListFilter v-model="selectedExperts" :options="userOptions" label="Эксперт" />
           <ListFilter v-model="selectedManagers" :options="userOptions" label="Менеджер" />
           <ListFilter v-model="selectedHeads" :options="userOptions" label="Руководитель" />
         </q-item>
