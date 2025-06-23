@@ -12,3 +12,14 @@ export type UserCreateRequest = {
 export const userName = (user: User) => {
   return `${user.firstName} ${user.middleName} ${user.lastName} `
 }
+
+export const userRoleLabel = (user: User) => {
+  switch (user.role) {
+    case 'ADMIN':
+      return 'Администратор'
+    case 'USER':
+      return 'Пользователь'
+    default:
+      return ''
+  }
+}

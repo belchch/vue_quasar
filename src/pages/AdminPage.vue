@@ -3,7 +3,7 @@
         <q-inner-loading :showing="loading">
             <q-spinner size="50px" color="primary" />
         </q-inner-loading>
-        <q-table v-if="!loading" 
+        <q-table :class="{'is-loading': loading}" 
             wrap-cells 
             flat bordered 
             title="Пользователи" 
@@ -35,7 +35,7 @@
                     </template>
                     <template v-else>
                         <EditableCell ref="editFormRef" :value="props.value" :row="props.row" @close="() => { }"
-                            :editable-fields="formFields"
+                            :editable-fields="formFields" type="user"
                             @update="(newValue) => handleUpdateRow(props.row, newValue)" />
                     </template>
                 </q-td>
@@ -178,12 +178,13 @@ async function loadUsers() {
 
 const handleUpdateRow = async (row: { id: number }, { newValue, onSuccess }: { newValue: any, onSuccess: () => void }) => {
     try {
-        await UserService.updateUser(row.id, newValue);
+        await UserService.updateUser(row.id, newValue)
+        await loadUsers()
         // editFormRef.value?.close()
-        $q.notify({ type: 'positive', message: 'Данные обновлены' });
+        $q.notify({ type: 'positive', message: 'Данные обновлены' })
         onSuccess()
     } catch (error) {
-        $q.notify({ type: 'negative', message: 'Ошибка обновления' });
+        $q.notify({ type: 'negative', message: 'Ошибка обновления' })
     }
 };
 
@@ -200,3 +201,8 @@ const handleReset = () => {
     showCreateFrom.value = false
 }
 </script>
+<style scoped >
+.is-loading {
+    opacity: 0.5
+}
+</style>

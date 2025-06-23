@@ -2,7 +2,7 @@
     <div class="editable-cell" @click="startEditing">
         <span>{{ value }}</span>
         <q-dialog v-model="isEditing">
-            <q-card style="min-width: 350px">
+            <q-card style="min-width: 350px" :class="{ 'user-form': type === 'user'}">
                 <q-card-section class="q-pt-none2">
                     <q-form class="q-gutter-md" ref="formRef" @submit.prevent="handleSave(editRow)"
                         @keyup.enter.prevent="handleSave(editRow)">
@@ -36,7 +36,11 @@
                             <q-input v-else v-model="editRow[field.name]" :label="field.label" dense outlined
                                 :autofocus="index === 0" :type="field.type" />
                         </template>
-                        <div class="row justify-end q-mt-xs">
+                        <div v-if="type === 'user'" class="row q-mt-lg">
+                            <q-btn label="Сохранить" type="submit" color="primary" flat2 />
+                            <q-btn label="Отмена" type="reset" @click="isEditing = false" color="primary" flat  class="q-ml-sm" />
+                        </div>
+                        <div v-else class="row justify-end q-mt-xs">
                             <q-btn label="OK" type="submit" color="primary" flat />
                         </div>
                     </q-form>
@@ -55,6 +59,7 @@ const props = defineProps<{
     value: any,
     row: any,
     editableFields: Field[]
+    type?: string
 }
 >();
 const formRef = ref()
@@ -97,6 +102,15 @@ const handleSave = (editRow: any) => {
 
 .editable-cell:hover .edit-icon {
     opacity: .5;
+}
+.user-form {
+    padding: 24px;
+    width: 430px;
+    form {
+        label {
+            margin-bottom: 20px;
+        }
+    }
 }
 </style>
 <style>

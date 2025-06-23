@@ -10,7 +10,10 @@
         class="full-width"
         style="position: relative; top: -15px; margin-bottom: 10px; text-transform: none"
       />
-      <CaseList />
+      <q-inner-loading :showing="isLoading">
+        <q-spinner size="50px" color="primary" />
+      </q-inner-loading>
+      <CaseList :class="{ 'is-loading': isLoading }"/>
     </div>
     <div class="col-5">
       <CaseFilter />
@@ -116,7 +119,7 @@ import dayjs from 'dayjs'
 import _ from 'lodash'
 import { useCases } from 'src/features/case/composables/case'
 
-const { createCase } = useCases()
+const { createCase, isLoading } = useCases()
 
 const courtStore = useCourtStore()
 const judgeStore = useJudgeStore()
@@ -196,5 +199,8 @@ const submitCreateForm = async () => {
 .list-wrapper {
   max-width: 1280px;
   // margin-inline: auto;
+}
+.is-loading {
+  opacity: 0.5;
 }
 </style>

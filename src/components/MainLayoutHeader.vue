@@ -47,21 +47,22 @@
           <q-item-section>Администрирование</q-item-section>
         </q-item>
       </q-list>
-
-      <div class="q-mx-sm flex justify-end" style="width: 320px;">
+      <div v-if="userStore.user" class="q-mx-sm flex justify-end" style="width: 320px;">
         <q-btn round flat class="q-mr-xs">
-          <q-avatar color="primary" text-color="white" class="text-weight-regular">RB</q-avatar>
+          <q-avatar color="primary" text-color="white" class="text-weight-regular">
+            {{ avatarText }}
+          </q-avatar>
 
           <q-menu class="border-radius" style="max-width: 440px">
             <q-list>
               <q-item class="q-mb-sm" clickable v-ripple v-close-popup>
                 <q-item-section avatar>
-                  <q-avatar color="primary" text-color="white" class="text-weight-regular">RB
+                  <q-avatar color="primary" text-color="white" class="text-weight-regular">{{ avatarText }}
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ userStore.user?.username }}</q-item-label>
-                  <q-item-label caption>Администратор</q-item-label>
+                  <q-item-label caption>{{ userRoleLabel(userStore.user) }}</q-item-label>
                 </q-item-section>
               </q-item>
 
@@ -99,6 +100,7 @@ import { useAuth } from 'src/features/auth/composables/auth'
 import { useRouter } from 'vue-router'
 import { useUserStore } from 'src/features/user/stores/user-store'
 import { menuLinks } from 'src/config/lookup-links'
+import { userRoleLabel } from 'src/features/user/api/types'
 
 
 const auth = useAuth()
@@ -120,6 +122,10 @@ const isCasesActive = computed(() => {
 
 const isAdminActive = computed(() => {
   return router.currentRoute.value.path.startsWith('/administration')
+})
+
+const avatarText = computed(() => {
+  return `${userStore.user?.firstName?.charAt(0)}${userStore.user?.lastName?.charAt(0)}`
 })
 </script>
 
@@ -148,9 +154,8 @@ const isAdminActive = computed(() => {
 
 .dark_active,
 .active {
-  // background-color: red !important;
   background: #eeeeee !important;
   color: $grey-10 ;
-  //background: #ffffff23 !important;
 }
+
 </style>
