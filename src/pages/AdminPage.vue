@@ -35,7 +35,7 @@
                     </template>
                     <template v-else>
                         <EditableCell ref="editFormRef" :value="props.value" :row="props.row" @close="() => { }"
-                            :editable-fields="formFields" @update22="() => console.log('update22')"
+                            :editable-fields="formFields"
                             @update="(newValue) => handleUpdateRow(props.row, newValue)" />
                     </template>
                 </q-td>
@@ -141,6 +141,7 @@ const formFields = computed((): Field[] => [
                 name: 'Пользователь'
             }
         ],
+        emitValue: true
     },
 ])
 

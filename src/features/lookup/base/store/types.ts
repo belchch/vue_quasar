@@ -10,6 +10,7 @@ export interface Field {
 
   required?: boolean
   options?: any[]
+  emitValue?: boolean
   placeholder?: string
   selectValueField?: string
   rules?: ((val: any) => boolean | string)[]

@@ -15,7 +15,7 @@
                                 option-label="name" 
                                 :label="field.label" 
                                 style="min-width: 120px;"
-                                map-options dense emit-value2 outlined />
+                                :map-options="true" dense :emit-value="field.emitValue" outlined />
                             <q-select v-else-if="field.type === 'select-multiple'"
                                 :model-value="editRow[field.name]"
                                 @update:model-value="(newVal) => editRow[field.name] = newVal"
