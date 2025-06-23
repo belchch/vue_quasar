@@ -18,13 +18,13 @@ const columns = [
         label: 'Название',
         editable: true
     },
-    {
-        name: 'isRoom',
-        field: (row: any) => row.isRoom ? true : false,
-        label: 'Помещение',
-        editable: false,
-        classes: 'view-checkbox'
-    }
+    // {
+    //     name: 'isRoom',
+    //     field: (row: any) => row.isRoom ? true : false,
+    //     label: 'Помещение',
+    //     editable: false,
+    //     classes: 'view-checkbox'
+    // }
 ];
 
 const formFields = ref<Field[]>([
@@ -34,12 +34,12 @@ const formFields = ref<Field[]>([
         type: 'text' as const,
         required: true,
     },
-    {
-        name: 'isRoom',
-        label: 'Является помещением',
-        type: 'checkbox' as const,
-        required: true,
-    }
+    // {
+    //     name: 'isRoom',
+    //     label: 'Является помещением',
+    //     type: 'checkbox' as const,
+    //     required: true,
+    // }
 ])
 
 onMounted(async () => {
