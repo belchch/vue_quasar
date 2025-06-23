@@ -1,13 +1,15 @@
 import { InspectionApi } from 'src/features/inspection/api/inspection-api'
 import { usePhotoDocsStore } from 'src/features/inspection/store/photo-doc-store'
-import {PhotoDoc} from 'src/features/inspection/store/types'
-import {PhotoDocSearchRequest} from "src/features/inspection/api/types";
-import {storeToRefs} from "pinia";
+import { PhotoDoc } from 'src/features/inspection/store/types'
+import { PhotoDocSearchRequest } from "src/features/inspection/api/types";
+import { storeToRefs } from "pinia";
+import { useAllPhotoDocStore } from '../store/all-photo-doc-store';
 
 export const usePhotoDocs = () => {
   const photoDocsStore = usePhotoDocsStore()
   const { setSearch, setPhotoDocs } = photoDocsStore
-  const { search,filteredPhotoDocs } = storeToRefs(photoDocsStore)
+  const { search, photoDocsLoading, photoDocs } = storeToRefs(photoDocsStore)
+  const {allPhotoDocs} = storeToRefs(useAllPhotoDocStore())
 
   const createPhotoDoc = async (inspectionId: number, source: string) => {
     return InspectionApi.createPhotoDoc(inspectionId, { sources: [source] })
@@ -31,16 +33,34 @@ export const usePhotoDocs = () => {
       },
     }
 
-    return await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
+    const response =  await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
+    photoDocs.value = replacePhotoDoc(photoDocs.value, response.data) 
+    allPhotoDocs.value = replacePhotoDoc(allPhotoDocs.value, response.data)
+  }
+
+  const replacePhotoDoc = (target: PhotoDoc[], replacement: PhotoDoc): PhotoDoc[] => {
+    return photoDocs.value.map(item => {
+      if (item.id == replacement.id) {
+        return replacement
+      } else {
+        return item
+      }
+    })
   }
 
   const searchAndSet = async (inspectionId: number, newSearch?: PhotoDocSearchRequest, generatePresignedUrls?: boolean) => {
-    if (generatePresignedUrls) {
-      await InspectionApi.generatePresignedUrls(inspectionId)
-    }
+    try {
+      photoDocsLoading.value = true
 
-    const response = await InspectionApi.searchPhotoDocs(inspectionId, newSearch)
-    setPhotoDocs(response.data)
+      if (generatePresignedUrls) {
+        await InspectionApi.generatePresignedUrls(inspectionId)
+      }
+
+      const response = await InspectionApi.searchPhotoDocs(inspectionId, newSearch)
+      setPhotoDocs(response.data)
+    } finally {
+      photoDocsLoading.value = false
+    }
   }
 
   const refreshPhotoDocs = async (inspectionId: number, generatePresignedUrls: boolean) => {

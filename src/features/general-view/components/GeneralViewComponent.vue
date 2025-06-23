@@ -3,7 +3,7 @@
     <q-card flat>
       <div class="row justify-between">
         <q-card-section>
-          <q-btn label="Сформировать отчет" @click="confirmOpen = true" color="primary" />
+          <q-btn label="Сформировать отчет" @click="confirmOpen = true" color="primary" :loading="isBuilding"/>
         </q-card-section>
         <DownloadReportButton label="Скачать" :api-fn="buildDocx" :disable="!generalViewReport" />        
       </div>
@@ -43,6 +43,7 @@ const { generalViewReport } = storeToRefs(useGeneralViewReportStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const split = ref(60)
+const isBuilding = ref(false)
 
 const confirmOpen = ref<boolean>(false)
 const format = ref<ReportFormat>('SINGLE_SPOT_ROW')
@@ -54,9 +55,11 @@ const buildDocx = async () => {
 
 const buildReport = async () => {
   confirmOpen.value = false
+  isBuilding.value = true
   await buildGeneralViewReport(format.value)
   await requestGeneralViewReport()
   await requestGallery()
+  isBuilding.value = false
 }
 </script>
 <style scoped>

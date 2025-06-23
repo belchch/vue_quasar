@@ -7,10 +7,15 @@
 import CaseSearchPanel from "src/features/case/components/CaseSearch.vue";
 import { onMounted } from "vue";
 import { useCases } from "src/features/case/composables/case";
+import { useCasesStore } from "src/features/case/stores/case-store";
+import { storeToRefs } from "pinia";
 
 const caseService = useCases()
+const {cases} = storeToRefs(useCasesStore())
 
 onMounted(async () => {
-  await caseService.requestCases({})
+  if (!cases.value?.length) {
+    await caseService.requestCases({})
+  }
 })
 </script>

@@ -1,7 +1,8 @@
 <template>
   <q-card class="shadow_custom rounded-borders q-ma-md" bordered style="flex: 1">
     <InspectionToolbar />
-    <PhotoDocsContainer v-if="caseLoaded" :items="photoDocsStore.photoDocs" />
+    <PhotoDocsSkeleton v-if="!caseLoaded || photoDocsLoading"/>
+    <PhotoDocsContainer v-else :items="photoDocs" />
     <InspectionUnionButton />
   </q-card>
 </template>
@@ -13,7 +14,8 @@ import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-sto
 import {usePhotoDocsStore} from "src/features/inspection/store/photo-doc-store";
 import PhotoDocsContainer from "src/features/inspection/components/photo-doc/PhotoDocsContainer.vue";
 import InspectionUnionButton from "src/features/inspection/components/toolbar/InspectionUnionButton.vue";
+import PhotoDocsSkeleton from './photo-doc/PhotoDocsSkeleton.vue';
 
 const { caseLoaded } = storeToRefs(useSelectedCaseStore())
-const photoDocsStore = usePhotoDocsStore()
+const { photoDocsLoading, photoDocs } = storeToRefs(usePhotoDocsStore())
 </script>

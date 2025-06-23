@@ -2,40 +2,28 @@
   <q-btn square icon="edit" color="secondary" size="xs" outline @click="openDialog" />
   <q-dialog v-model="open" full-width full-height>
     <q-card class="column full-height q-pa-lg">
-      <q-tabs
-        v-model="tab"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="left"
-        narrow-indicator
-        no-caps
-      >
+      <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="left"
+        narrow-indicator no-caps>
         <q-tab name="defect" label="Дефект" />
         <q-tab name="values" label="Значения шаблона" :disable="!valuesEnabled()" />
-        <q-tab name="technicalReport" label="Техническое заключение" :disable="!technicalReport"/>
+        <q-tab name="technicalReport" label="Техническое заключение" :disable="!technicalReport" />
       </q-tabs>
       <q-tab-panels v-model="tab" class="col">
         <q-tab-panel name="defect">
           <DefectPickerDefect :defect-info="defectInfo" />
         </q-tab-panel>
         <q-tab-panel name="values">
-          <DefectInfoPickerValues
-            v-model:defect-value="defectValue"
-            v-model:defect-cause="defectCause"
-          />
+          <DefectInfoPickerValues v-model:defect-value="defectValue" v-model:defect-cause="defectCause" />
         </q-tab-panel>
         <q-tab-panel name="technicalReport">
-          <DefectInfoPickerTechnicalReport
-            v-model="technicalReportRow"
-            :photo-doc-id="photoDocId"
-          />
+          <DefectInfoPickerTechnicalReport v-model="technicalReportRow" :photo-doc-id="photoDocId" />
         </q-tab-panel>
       </q-tab-panels>
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="ОК" v-close-popup @click="emitChangeDefectInfo" />
       </q-card-actions>
+      <q-inner-loading :showing="defectSearchService.isLoading" label="Загрузка..."
+        label-style="font-size: 1.1em" />
     </q-card>
   </q-dialog>
 </template>
@@ -69,8 +57,6 @@ const technicalReportRowSelected = _.filter(technicalReport.value?.rows, {
   id: props.defectInfo?.technicalReportRowId,
 }) as TechnicalReportRow[]
 
-console.log('report', technicalReport.value?.rows)
-console.log('selected', technicalReportRowSelected)
 const technicalReportRow = ref<TechnicalReportRow[]>(technicalReportRowSelected || [])
 
 const defectSearchService = useDefectSearch()

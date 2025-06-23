@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import InspectionCommon from '../features/inspection/pages/InspectionCommon.vue'
 import DefectPage from 'pages/DefectPage.vue'
 import InspectionContent from 'src/features/inspection/components/InspectionContent.vue'
@@ -53,7 +53,7 @@ const props = defineProps<{
   caseId: number
 }>()
 
-const { selectCase } = useSelectedCaseService()
+const { selectCase, cleanCase } = useSelectedCaseService()
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 
 const activeTab = ref<string>('inspection')
@@ -64,6 +64,10 @@ const updateTab = (newTab: string) => {
 
 onMounted(async () => {
   await selectCase(props.caseId)
+})
+
+onBeforeUnmount(() => {
+  cleanCase()
 })
 </script>
 

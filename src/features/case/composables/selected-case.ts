@@ -18,9 +18,17 @@ import { Case } from "../stores/types";
 import { CaseUpdateRequest } from "../api/types";
 import { useCompanyStore } from "src/features/lookup/company/stores/compay-store";
 import { useInspectionSpotService } from "src/features/inspection/composables/inspection-spot";
+import { useTechnicalReportStore } from "src/features/defect/stores/technical-report-store";
+import { useInspectionSpotStore } from "src/features/inspection/store/inspection-spot-store";
+import { useAllPhotoDocStore } from "src/features/inspection/store/all-photo-doc-store";
+import { useAllPhotoDocsService } from "src/features/inspection/composables/all-photo-docs";
 
 export const useSelectedCaseService = () => {
   const { selectedCase, caseLoaded } = storeToRefs(useSelectedCaseStore())
+  const { photoDocs } = storeToRefs(usePhotoDocsStore())
+  const { technicalReport } = storeToRefs(useTechnicalReportStore())
+  const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
+  const { allPhotoDocs } = storeToRefs(useAllPhotoDocStore())
 
   const inspectionsStore = useInspectionsStore()
   const photoDocService = usePhotoDocs()
@@ -30,25 +38,43 @@ export const useSelectedCaseService = () => {
   const standardStore = useStandardStore()
   const flawStore = useFlawStore()
   const companyStore = useCompanyStore()
+  const { requestAllPhotoDocs } = useAllPhotoDocsService()
   const { requestTechnicalReport } = useTechnicalReportService()
-  const {requestInspectionSpots} = useInspectionSpotService()
+  const { requestInspectionSpots } = useInspectionSpotService()
 
   const selectCase = async (caseId: number) => {
     const caseResponse = await CaseApi.getCase(caseId)
+    selectedCase.value = caseResponse.data
     const inspectionResponse = await InspectionApi.getInspections(caseId)
     const inspectionId = _.first(inspectionResponse.data)!!.id!!
     inspectionsStore.setSelectedInspectionId(inspectionId)
-    selectedCase.value = caseResponse.data
-    await photoDocService.requestPhotoDocs(inspectionId, undefined, true)
-    await spotStore.requestLookup()
-    await structElemStore.requestLookup()
-    await materialStore.requestLookup()
-    await flawStore.requestLookup()
-    await standardStore.requestLookup()
+    await requestAllPhotoDocs()
+    photoDocs.value = allPhotoDocs.value
+    await requestLookupIfEmpty(spotStore)
+    await requestLookupIfEmpty(structElemStore)
+    await requestLookupIfEmpty(materialStore)
+    await requestLookupIfEmpty(flawStore)
+    await requestLookupIfEmpty(standardStore)
+    await requestLookupIfEmpty(companyStore)
     await requestTechnicalReport()
-    await companyStore.requestLookup()
     await requestInspectionSpots()
     caseLoaded.value = true
+  }
+
+  const requestLookupIfEmpty = async (store: any) => {
+    if (store.items.length == 0) {
+      await store.requestLookup()
+    }
+  }
+
+  const cleanCase = () => {
+    inspectionsStore.setSelectedInspectionId(undefined)
+    selectedCase.value = undefined
+    photoDocs.value = []
+    allPhotoDocs.value = []
+    technicalReport.value = undefined
+    inspectionSpots.value = []
+    caseLoaded.value = false
   }
 
   const updateCase = async () => {
@@ -57,7 +83,7 @@ export const useSelectedCaseService = () => {
     selectedCase.value = response.data
   }
 
-  return { selectCase, updateCase }
+  return { selectCase, updateCase, cleanCase }
 }
 
 const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {

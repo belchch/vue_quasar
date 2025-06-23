@@ -150,7 +150,6 @@ const inspectionSpotOptions = computed(() => {
 
 const updatePhotoDoc = async (photoDoc: PhotoDoc) => {
   await selectedInspectionService.updatePhotoDoc(photoDoc)
-  await selectedInspectionService.refreshPhotoDocs()
 }
 
 const deletePhotoDoc = async () => {

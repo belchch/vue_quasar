@@ -2,7 +2,7 @@
   <div class="q-gutter-md">
     <div class="row justify-between">
       <div class="row">
-        <q-btn label="Сформировать отчет" color="primary" @click="buildReport()" />
+        <q-btn label="Сформировать отчет" color="primary" @click="buildReport()" :loading="isBuilding"/>
         <q-checkbox v-if="technicalReport" v-model="useTechnicalReport" color="primary" label="Техническое заключение">
         </q-checkbox>
       </div>
@@ -42,6 +42,7 @@ const { technicalReport } = storeToRefs(useTechnicalReportStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const drag = ref(false)
+const isBuilding = ref(false)
 const useTechnicalReport = ref(!!technicalReport.value)
 
 const buildDocx = async () => {
@@ -50,7 +51,9 @@ const buildDocx = async () => {
 }
 
 const buildReport = async () => {
+  isBuilding.value = true
   await buildAndRequestDefectReport(useTechnicalReport.value)
+  isBuilding.value = false
 }
 
 const onDragChange = async (e: any) => {

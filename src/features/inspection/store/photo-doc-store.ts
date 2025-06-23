@@ -7,6 +7,7 @@ export const usePhotoDocsStore = defineStore('photoDocs', () => {
   const photoDocs = ref<PhotoDoc[]>([])
   const filteredPhotoDocs = ref<PhotoDoc[]>([])
   const search = ref<PhotoDocSearchRequest>()
+  const photoDocsLoading = ref(false)
 
   const setPhotoDocs = (docs: PhotoDoc[]) => {
     photoDocs.value = docs
@@ -30,6 +31,7 @@ export const usePhotoDocsStore = defineStore('photoDocs', () => {
     setPhotoDocs,
     setSearch,
     insertPhotoDoc,
-    filteredPhotoDocs
+    filteredPhotoDocs,
+    photoDocsLoading
   }
 })

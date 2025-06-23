@@ -81,18 +81,7 @@ const props = defineProps<{
 const {requestPhotoDocs} = useSelectedInspection()
 const {requestTechnicalReport} = useTechnicalReportService()
 
-const onUpdateTab = async (tab: string) => {
-  switch (tab) {
-    case 'inspection': {
-      await requestPhotoDocs(undefined, true)
-      break;
-    }
-    case 'defect': {
-      await requestPhotoDocs(undefined, true)
-      await requestTechnicalReport()
-      break;
-    }
-  }
+const onUpdateTab = (tab: string) => {
   emits('update:modelValue', tab)
 }
 

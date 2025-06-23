@@ -9,14 +9,12 @@
         label="Создать"
         class="full-width"
         style="position: relative; top: -15px; margin-bottom: 10px; text-transform: none"
-      />
-      <q-inner-loading :showing="isLoading">
-        <q-spinner size="50px" color="primary" />
-      </q-inner-loading>
-      <CaseList :class="{ 'is-loading': isLoading }"/>
+      />    
+      <CaseListSkeleton v-if="isLoading"/>
+      <CaseList v-else/>
     </div>
     <div class="col-5">
-      <CaseFilter />
+      <CaseFilter/>
     </div>
   </div>
   <q-dialog v-model="createDialogOpen" style="width: 100%">
@@ -118,6 +116,7 @@ import dayjs from 'dayjs'
 
 import _ from 'lodash'
 import { useCases } from 'src/features/case/composables/case'
+import CaseListSkeleton from './CaseListSkeleton.vue'
 
 const { createCase, isLoading } = useCases()
 
@@ -199,8 +198,5 @@ const submitCreateForm = async () => {
 .list-wrapper {
   max-width: 1280px;
   // margin-inline: auto;
-}
-.is-loading {
-  opacity: 0.5;
 }
 </style>
