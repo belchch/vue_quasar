@@ -19,6 +19,7 @@
               use-input
               dense
               outlined
+              clearable
               :option-value="optionValue ? optionValue : 'id'"
               :option-label="optionLabel ? optionLabel : 'name'"
               :label="label"
