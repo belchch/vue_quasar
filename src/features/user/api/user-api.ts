@@ -11,8 +11,8 @@ export const UserService = {
     return api.post<User>(`/api/users`, request)
   },
 
-  updateUser(request: User) {
-    return api.put<User>(`/api/users`, request)
+  updateUser(userId: number, request: User) {
+    return api.put<User>(`/api/users/${userId}`, request)
   },
 
   getAllUsers() {
