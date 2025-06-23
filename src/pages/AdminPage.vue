@@ -41,10 +41,11 @@
                 </q-td>
             </template>
 
-            <div class="row justify-center q-mt-md">
-                <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="sm" />
-            </div>
+            
         </q-table>
+        <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
+            <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="sm" />
+        </div>
     </div>
 
     <q-dialog v-model="showCreateFrom">

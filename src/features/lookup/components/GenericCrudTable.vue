@@ -10,9 +10,20 @@
             </template>
 
         </div>
-        <q-table v-if="!loading" wrap-cells flat bordered :title="title" :rows="rows" :columns="processedColumns"
-            row-key="id" v-model:pagination="pagination" hide-pagination no-data-label="Нет данных" :filter="filter"
-            separator="cell" :visible-columns="localVisibleColumns">
+        <q-table v-if="!loading" 
+            wrap-cells 
+            flat 
+            bordered 
+            :title="title" 
+            :rows="rows" 
+            :columns="processedColumns"
+            row-key="id" 
+            v-model:pagination="pagination" 
+            hide-pagination 
+            no-data-label="Нет данных" 
+            :filter="filter"
+            separator="cell" 
+            :visible-columns="localVisibleColumns">
             <template v-slot:top>
                 <div class="table-header row items-center full-width">
                     <div class="q-table__title">{{ title }}</div>
@@ -57,10 +68,10 @@
                         @click.stop="confirmDelete(props.row)" />
                 </q-td>
             </template>
-            <div class="row justify-center q-mt-md">
-                <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="sm" />
-            </div>
         </q-table>
+        <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
+            <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
+        </div>
     </div>
 </template>
 
