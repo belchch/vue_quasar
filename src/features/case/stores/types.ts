@@ -35,6 +35,7 @@ export type CaseStatus = 'OPEN' | 'IN_PROGRESS' | 'DONE'
 export type CasePriority = 'HIGH' | 'MEDIUM' | 'LOW'
 
 export type CaseQuestion = {
-  id?: number,
-  text: string
+  id?: number | undefined,
+  text: string,
+  caseId: number
 }
