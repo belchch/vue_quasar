@@ -73,6 +73,9 @@ const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {
     regionId: data.region.id!,
     createdById: data.createdBy.id!,
     createdAt: data.createdAt,
-    deadline: data.deadline
+    deadline: data.deadline,
+    expertId: data.expert?.id,
+    managerId: data.manager?.id,
+    headId: data.head?.id
   }
 }
