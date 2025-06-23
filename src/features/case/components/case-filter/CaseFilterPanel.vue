@@ -150,8 +150,8 @@ const updateCreatedAt = () => {
   console.log(createdAt.value)
 }
 
-const numberOptionValues = (options: Ref<NumberOption[]>): number[] => {
-  return options.value.map((option) => option.value)
+const numberOptionValues = (options: Ref<any[]>): number[] => {
+  return options.value.map((option) => option.value.id)
 }
 
 const applyFilters = async () => {
