@@ -177,7 +177,7 @@ async function loadUsers() {
 
 const handleUpdateRow = async (row: { id: number }, { newValue, onSuccess }: { newValue: any, onSuccess: () => void }) => {
     try {
-        await UserService.updateUser(newValue);
+        await UserService.updateUser(row.id, newValue);
         // editFormRef.value?.close()
         $q.notify({ type: 'positive', message: 'Данные обновлены' });
         onSuccess()
