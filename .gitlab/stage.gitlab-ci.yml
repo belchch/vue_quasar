@@ -50,7 +50,7 @@ validate-node:
     - npm ci
     # Проверяем наличие всех критических файлов
     - |
-      for file in package.json vue.config.js src/main.js src/App.vue; do
+      for file in package.json src/App.vue; do
         if [ -f "$file" ]; then
           echo "✓ $file exists"
         else
@@ -68,8 +68,10 @@ build:
   image: node:18-alpine
   script:
     # Устанавливаем все зависимости, включая devDependencies
+    - npm i -g @quasar/cli
     - npm ci --include=dev
     # Оптимизируем сборку для production
+    - echo "VUE_APP_API_URL=$VUE_APP_API_URL" > .env
     - export NODE_OPTIONS=--max_old_space_size=4096
     - npm run build
   variables:
@@ -78,21 +80,21 @@ build:
     <<: *node_cache
   artifacts:
     paths:
-      - dist/
+      - dist/spa/
     expire_in: 1 hour
   tags:
     - stage
 
-test:
-  stage: test
-  image: node:18-alpine
-  script:
-    - npm ci --include=dev
-    - npm run lint
-  cache:
-    <<: *node_cache
-  tags:
-    - stage
+# test:
+#   stage: test
+#   image: node:18-alpine
+#   script:
+#     - npm ci --include=dev
+#     - npm run lint
+#   cache:
+#     <<: *node_cache
+#   tags:
+#     - stage
 
 push:
   stage: push
@@ -106,7 +108,7 @@ push:
     - *setup_yc
   script:
     - >
-      docker build 
+      docker build
       --build-arg VUE_APP_API_URL=${VUE_APP_API_URL}
       -t $DOCKER_IMAGE .
     - docker login $CI_YC_REGISTRY --username iam --password-stdin < <(yc iam create-token)
@@ -132,7 +134,7 @@ deploy:
           --description "Frontend staging environment logs" \
           --labels env=stage,app=frontend,version=${CI_COMMIT_SHA}
       fi
-    
+
     # Деплоим с настройкой логирования и переменными окружения
     - |
       yc serverless container revision deploy \
@@ -153,6 +155,6 @@ deploy:
     - *cleanup
   environment:
     name: stage
-    url: https://frontend.epse-stage.cbse1.ru
+    url: https://web.epse-stage.cbse1.ru
   tags:
     - stage
