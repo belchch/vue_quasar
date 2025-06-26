@@ -6,7 +6,7 @@
         <q-scroll-area style="height: 100%">
           <div class="q-pa-md q-ma-none">
             <q-item clickable v-ripple v-for="link in menuLinks" :key="link.name" class="navigation-item"
-              :to="{ name: link.route }">
+              :to="{ name: link.route }">            
               <q-item-section>{{ link.name }}</q-item-section>
             </q-item>
           </div>

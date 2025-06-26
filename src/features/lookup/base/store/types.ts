@@ -6,7 +6,7 @@ export type LookupItem = {
 export interface Field {
   name: string
   label: string
-  type: 'select' | 'text' | 'checkbox' | 'textarea' | 'select-multiple'
+  type: 'select' | 'text' | 'checkbox' | 'textarea' | 'select-multiple' | 'decimal'
 
   required?: boolean
   options?: any[]

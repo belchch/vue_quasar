@@ -33,6 +33,8 @@
                                 <q-checkbox color="secondary" v-model="editRow[field.name]" :label="field.label"
                                     :key="index" :id="field.name" />
                             </template>
+                            <q-input v-else-if="field.type == 'decimal'" v-model="editRow[field.name]" :label="field.label" dense outlined
+                                :autofocus="index === 0" mask="#.##" fill-mask="0" reverse-fill-mask/>
                             <q-input v-else v-model="editRow[field.name]" :label="field.label" dense outlined
                                 :autofocus="index === 0" :type="field.type" />
                         </template>

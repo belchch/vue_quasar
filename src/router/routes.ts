@@ -89,6 +89,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/lookup/CompanyPage.vue'),
         name: 'lookup.companies',
       },
+      {
+        path: 'openings',
+        component: () => import('pages/lookup/OpeningPage.vue'),
+        name: 'lookup.openings',
+      },
     ],
     meta: { requiredAuth: true },
   },
