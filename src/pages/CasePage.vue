@@ -24,6 +24,11 @@
               <CaseQuestions/>
             </div>
           </q-tab-panel>
+          <q-tab-panel name="measurements">
+            <div class="q-pa-md">
+              <MeasurementComponent/>
+            </div>
+          </q-tab-panel>
         </q-tab-panels>
       </q-card-section>
     </q-card>
@@ -48,6 +53,7 @@ import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-sto
 import {storeToRefs} from "pinia";
 import GeneralViewComponent from "src/features/general-view/components/GeneralViewComponent.vue";
 import CaseQuestions from 'src/features/case/components/questions/CaseQuestions.vue'
+import MeasurementComponent from 'src/features/measurement/components/MeasurementComponent.vue'
 
 const props = defineProps<{
   caseId: number
