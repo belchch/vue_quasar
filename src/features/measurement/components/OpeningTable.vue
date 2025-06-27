@@ -1,6 +1,6 @@
 <template>
-    <q-table :rows="rows" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
-        :pagination="{ rowsPerPage: 20 }" separator="cell">
+    <q-table v-if="rows.length > 0" :rows="rows" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
+        :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
         <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td key="opening" :props="props">
@@ -19,7 +19,7 @@
                     {{ props.row.area }}
                 </q-td>
                 <q-td key="actions" :props="props">
-                    <q-btn icon="delete" @click="() => deleteRow(props.row.id)" />
+                    <q-btn icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative"/>
                 </q-td>
             </q-tr>
         </template>

@@ -39,7 +39,7 @@
             </q-card-section>
         </q-card>
     </q-dialog>
-    <q-btn @click="doOpen">
+    <q-btn @click="doOpen" color="secondary" size="sm" >
         Добавить проем
     </q-btn>
 </template>
