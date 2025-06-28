@@ -43,8 +43,8 @@ const rows = computed(() => {
     return openingMeasurements.value?.filter(item => item.room.id == props.roomId) || []
 })
 
-const deleteRow = (id: number) => {
-    deleteOpeningMeasurement(id)
+const deleteRow = async (id: number) => {
+    await deleteOpeningMeasurement(id)
 }
 
 const columns = [
