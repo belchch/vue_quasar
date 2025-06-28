@@ -10,10 +10,10 @@
                     {{ props.row.material?.name }}
                 </q-td>
                 <q-td key="width">
-                    {{ props.row.area }}
+                    {{ props.row.width }}
                 </q-td>
                 <q-td key="height" :props="props">
-                    {{ props.row.area }}
+                    {{ props.row.height }}
                 </q-td>
                 <q-td key="area" :props="props">
                     {{ props.row.area }}
