@@ -95,7 +95,7 @@
   </q-header>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAuth } from 'src/features/auth/composables/auth'
 import { useRouter } from 'vue-router'
 import { useUserStore } from 'src/features/user/stores/user-store'
@@ -112,10 +112,6 @@ const logout = async () => {
   await router.push('/login')
 }
 
-if (!userStore.user) {
-  logout()
-}
-
 const isLookupActive = computed(() => {
   return router.currentRoute.value.path.startsWith('/lookup');
 })
@@ -130,6 +126,12 @@ const isAdminActive = computed(() => {
 
 const avatarText = computed(() => {
   return `${userStore.user?.firstName?.charAt(0)}${userStore.user?.lastName?.charAt(0)}`
+})
+
+onMounted( async () => {
+  if (!userStore.user) {
+  await logout()
+}
 })
 </script>
 
