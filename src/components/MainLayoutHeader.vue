@@ -112,6 +112,10 @@ const logout = async () => {
   await router.push('/login')
 }
 
+if (!userStore.user) {
+  logout()
+}
+
 const isLookupActive = computed(() => {
   return router.currentRoute.value.path.startsWith('/lookup');
 })
