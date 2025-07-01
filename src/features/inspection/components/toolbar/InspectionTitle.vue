@@ -35,7 +35,6 @@
         </div> -->
       </div>
 
-      <q-chip v-if="props.case?.priority == 'HIGH'" outline color="negative" square class="badge q-ml-md" size="xs">
       <q-chip
         v-if="props.case?.priority == 'HIGH'"
         outline
@@ -48,8 +47,6 @@
       </q-chip>
 
       <q-space />
-      <q-tabs :model-value="modelValue" @update:model-value="onUpdateTab" dense align="left" class="text-grey-10" shrink
-        stretch no-caps active-color="primary">
       <q-tabs
         :model-value="modelValue"
         @update:model-value="onUpdateTab"
