@@ -7,7 +7,7 @@
             <InspectionContent />
           </q-tab-panel>
           <q-tab-panel name="generalView">
-            <GeneralViewComponent/>
+            <GeneralViewComponent />
           </q-tab-panel>
           <q-tab-panel name="defect">
             <div class="q-pa-md">
@@ -16,12 +16,17 @@
           </q-tab-panel>
           <q-tab-panel name="information">
             <div class="q-pa-md">
-              <InspectionInformation  />
+              <InspectionInformation />
             </div>
           </q-tab-panel>
           <q-tab-panel name="questions">
             <div class="q-pa-md">
-              <CaseQuestions/>
+              <CaseQuestions />
+            </div>
+          </q-tab-panel>
+          <q-tab-panel name="documents">
+            <div class="q-pa-md">
+              <CaseDocuments />
             </div>
           </q-tab-panel>
         </q-tab-panels>
@@ -48,6 +53,7 @@ import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-sto
 import {storeToRefs} from "pinia";
 import GeneralViewComponent from "src/features/general-view/components/GeneralViewComponent.vue";
 import CaseQuestions from 'src/features/case/components/questions/CaseQuestions.vue'
+import CaseDocuments from 'src/features/case/components/documents/CaseDocuments.vue'
 
 const props = defineProps<{
   caseId: number
