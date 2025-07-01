@@ -4,7 +4,28 @@ export type User = {
   role: UserRole,
   firstName: string,
   lastName: string,
-  middleName?: string
+  middleName?: string,
+  permissions: AllowedPermissions[]
 }
 
 export type UserRole = 'USER' | 'ADMIN'
+
+export type AllowedPermissions =
+    'case.create' |
+    'case.update' |
+    'case.update.head' |
+    'case.update.expert' |
+    'case.update.priority' |
+    'case.update.status' |
+    'case.update.deadline' |
+    'question.create' |
+    'question.update' |
+    'question.read' |
+    'inspection.update' |
+    'inspection.read' |
+    'generalViewReport.read' |
+    'generalViewReport.update' |
+    'defectReport.read' |
+    'defectReport.update' |
+    'lookup.read' |
+    'lookup.update';
