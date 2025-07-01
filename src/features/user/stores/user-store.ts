@@ -22,6 +22,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const setUser = (value: User) => {
+    console.log('user', value)
     user.value = value
   }
 

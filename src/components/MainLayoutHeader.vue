@@ -43,7 +43,8 @@
             </q-list>
           </q-menu>
         </q-item>
-        <q-item v-if="userStore.user?.role == 'ADMIN'" class="menu-item" clickable v-ripple :class="{ active: isAdminActive }" :to="{ name: 'admin' }">
+        <q-item v-if="userStore.user?.role == 'ADMIN'" class="menu-item" clickable v-ripple
+          :class="{ active: isAdminActive }" :to="{ name: 'admin' }">
           <q-item-section>Администрирование</q-item-section>
         </q-item>
       </q-list>
@@ -95,19 +96,22 @@
   </q-header>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAuth } from 'src/features/auth/composables/auth'
 import { useRouter } from 'vue-router'
 import { useUserStore } from 'src/features/user/stores/user-store'
 import { menuLinks } from 'src/config/lookup-links'
 import { userRoleLabel } from 'src/features/user/api/types'
+import { useCommonService } from 'src/composables/common'
 
 
 const auth = useAuth()
 const router = useRouter()
 const userStore = useUserStore()
+const { cleanAll } = useCommonService()
 
 const logout = async () => {
+  cleanAll()
   await auth.logout()
   await router.push('/login')
 }
@@ -126,6 +130,12 @@ const isAdminActive = computed(() => {
 
 const avatarText = computed(() => {
   return `${userStore.user?.firstName?.charAt(0)}${userStore.user?.lastName?.charAt(0)}`
+})
+
+onMounted(async () => {
+  if (!userStore.user) {
+    await logout()
+  }
 })
 </script>
 
@@ -157,5 +167,4 @@ const avatarText = computed(() => {
   background: #eeeeee !important;
   color: $grey-10 ;
 }
-
 </style>

@@ -135,12 +135,24 @@ const formFields = computed((): Field[] => [
         options: [
             {
                 id: 'ADMIN',
-                name: 'Администратор'
+                name: roleLabel('ADMIN')
             },
             {
-                id: 'USER',
-                name: 'Пользователь'
-            }
+                id: 'BUSINESS_ADMIN',
+                name: roleLabel('BUSINESS_ADMIN')
+            },
+            {
+                id: 'HEAD',
+                name: roleLabel('HEAD')
+            },
+            {
+                id: 'MANAGER',
+                name: roleLabel('MANAGER')
+            },
+            {
+                id: 'EXPERT',
+                name: roleLabel('EXPERT')
+            }            
         ],
         emitValue: true
     },
@@ -150,8 +162,14 @@ const roleLabel = (role: string) => {
     switch (role) {
         case 'ADMIN':
             return 'Администратор'
-        case 'USER':
-            return 'Пользователь'
+        case 'BUSINESS_ADMIN':
+            return 'Бизнес администратор'
+        case 'HEAD': 
+            return 'Руководитель'
+        case 'MANAGER': 
+            return 'Менеджер'
+        case 'EXPERT': 
+            return 'Эксперт'        
         default:
             return ''
     }
