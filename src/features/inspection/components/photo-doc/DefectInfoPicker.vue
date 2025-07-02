@@ -1,5 +1,5 @@
 <template>
-  <q-btn square icon="edit" color="secondary" size="xs" outline @click="openDialog" />
+  <q-btn v-if="hasPermission(['inspection.update'])" square icon="edit" color="secondary" size="xs" outline @click="openDialog" />
   <q-dialog v-model="open" full-width full-height>
     <q-card class="column full-height q-pa-lg">
       <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="left"
@@ -38,6 +38,7 @@ import DefectInfoPickerTechnicalReport from 'src/features/inspection/components/
 import { TechnicalReportRow } from 'src/features/defect/stores/types'
 import { useTechnicalReportStore } from 'src/features/defect/stores/technical-report-store'
 import { storeToRefs } from 'pinia'
+import { useUserStore } from 'src/features/user/stores/user-store';
 
 const props = defineProps<{
   photoDocId: number
@@ -49,6 +50,7 @@ const emit = defineEmits<{
 }>()
 
 const { technicalReport } = storeToRefs(useTechnicalReportStore())
+const { hasPermission } = useUserStore()
 
 const defectValue = ref<string | undefined>(props.defectInfo?.value)
 const defectCause = ref<string | undefined>(props.defectInfo?.cause)

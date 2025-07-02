@@ -6,7 +6,7 @@
         <div class="text-body2">После создания технического заключения оно будет доступно в разделе «Осмотр».</div>
       </q-card-section>
     </div>
-    <q-card-section>
+    <q-card-section v-if="hasPermission(['defectReport.update'])">
       <q-btn label="Создать" @click="createDialogOpen = true" color="primary"/>
     </q-card-section>
   </q-card>
@@ -40,11 +40,13 @@ import {ref} from "vue";
 import _ from 'lodash'
 import {QForm} from "quasar";
 import {useTechnicalReportService} from "src/features/defect/composables/technical-report";
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const { createTechnicalReport } = useTechnicalReportService()
 const technicalReportName = ref<string>()
 const createForm = ref()
 const createDialogOpen = ref(false)
+const { hasPermission } = useUserStore()
 
 const onSubmit = async () => {
   createForm.value.validate()

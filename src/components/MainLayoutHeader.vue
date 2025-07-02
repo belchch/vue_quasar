@@ -30,7 +30,10 @@
         <q-item class="menu-item" clickable v-ripple :class="{ active: isCasesActive }" :to="{ name: 'cases' }">
           <q-item-section> Экспертизы</q-item-section>
         </q-item>
-        <q-item class="menu-item" clickable v-ripple :class="{ active: isLookupActive }">
+        <q-item
+          v-if="userStore.hasPermission(['lookup.read'])"
+          class="menu-item" clickable v-ripple :class="{ active: isLookupActive }"
+        >
           <q-item-section> Справочники</q-item-section>
           <q-menu class="border-radius" style="">
             <q-list>

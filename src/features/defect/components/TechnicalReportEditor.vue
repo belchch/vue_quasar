@@ -8,7 +8,7 @@
         </div>
         <div class="q-gutter-sm">
           <div class="text-accent text-subtitle2">№ {{technicalReport?.name}}</div>
-          <div class="row justify-end">
+          <div class="row justify-end" v-if="hasPermission(['defectReport.update'])">
             <q-btn label="Удалить" color="negative" size="sm" icon="delete" @click="deleteTechnicalReport"/>
           </div>
         </div>
@@ -23,7 +23,7 @@
         bordered
         wrap-cells
       >
-        <template v-slot:top-left>
+        <template v-if="hasPermission(['defectReport.update'])" v-slot:top-left>
           <q-btn
             label="Добавить запись"
             class="q-mb-sm"
@@ -34,7 +34,7 @@
           />
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props" @click="onEditRow(props.rowIndex, props.row)" class="cursor-pointer">
+          <q-tr :props="props" :class="{'no-event': !hasPermission(['defectReport.update'])}" @click="onEditRow(props.rowIndex, props.row)" class="cursor-pointer">
             <q-td key="documented" :props="props">
               {{ props.row.documented }}
             </q-td>
@@ -49,7 +49,7 @@
               {{ props.row.photo?.length }}
             </q-td>
             <q-td key="actions">
-              <q-btn icon="delete" flat color="negative" size="sm" @click.stop="deleteRow(props.row)"/>
+              <q-btn v-if="hasPermission(['defectReport.update'])" icon="delete" flat color="negative" size="sm" @click.stop="deleteRow(props.row)"/>
             </q-td>
           </q-tr>
         </template>
@@ -72,10 +72,11 @@ import { useTechnicalReportService } from 'src/features/defect/composables/techn
 import StandardMissmatch from 'src/features/defect/components/StandardMissmatch.vue'
 import { usePhotoDocsStore } from 'src/features/inspection/store/photo-doc-store'
 import {Standard} from "src/features/lookup/standard/stores/types";
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const { technicalReport, rowEditorOpen } = storeToRefs(useTechnicalReportStore())
 const { requestTechnicalReport, deleteTechnicalReport, deleteTechnicalReportRow } = useTechnicalReportService()
-
+const { hasPermission } = useUserStore()
 const photoDocStore = usePhotoDocsStore()
 
 const findPhotoDocStandard = (rowId: number): Standard | undefined => {
@@ -141,3 +142,9 @@ const columns = [
   { name: 'actions', field: 'action', label: '', sortable: false, align: 'right' as const },
 ]
 </script>
+<style scoped>
+.no-event {
+  cursor: default;
+  pointer-events: none;
+}
+</style>

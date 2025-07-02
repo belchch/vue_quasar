@@ -6,7 +6,7 @@
       default-opened
     >
       <q-card flat>
-        <div style="background: #fafafa">
+        <div style="background: #fafafa" :style="{ 'pointer-events': hasPermission(['defectReport.update']) ? 'auto' : 'none' }">
           <draggable
             v-model="structElems"
             item-key="id"
@@ -31,8 +31,10 @@ import {DefectReportSpotModel} from "src/features/defect/stores/defect-report-ty
 import draggable from "vuedraggable";
 import {ref} from 'vue'
 import {useDefectReportService} from "src/features/defect/composables/defect-report-service";
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const {moveStructElem} = useDefectReportService()
+const { hasPermission } = useUserStore()
 
 const props = defineProps<{
   showTechnicalReport: boolean

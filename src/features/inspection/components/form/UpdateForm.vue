@@ -5,15 +5,15 @@
                 <div class="col-6">
                     <FormInput v-model="localCase.number" label="Номер дела" title="Дело" :required="true"/>
                     <FormInput v-model="localCase.facilityAddress" label="Адрес" :required="true"/>
-                    <FormList 
-                        label="Регион" 
+                    <FormList
+                        label="Регион"
                         v-model="localCase.region"
                         :options="regionStore.items"
                         :required="true"/>
                 </div>
                 <div class="col-6">
-                    <FormList 
-                        label="Суд" 
+                    <FormList
+                        label="Суд"
                         v-model="localCase.court"
                         :options="courtStore.items"
                         />
@@ -26,8 +26,8 @@
                         emit-value
                         map-options
                     />
-                    <FormList 
-                        label="Организация" 
+                    <FormList
+                        label="Организация"
                         v-model="localCase.company"
                         :options="companyStore.items"
                         />
@@ -35,8 +35,8 @@
             </div>
             <div class="row q-col-gutter-lg q-mt-md">
                 <div class="col-6">
-                    <FormList 
-                        label="Автор" 
+                    <FormList
+                        label="Автор"
                         v-model="localCase.createdBy"
                         :options="userOptions"
                         option-label="label"
@@ -44,8 +44,9 @@
                         emit-value
                         map-options
                         />
-                     <FormList 
-                        label="Руководитель" 
+                     <FormList
+                        :disable-permission="!hasPermission(['case.update.head'])"
+                        label="Руководитель"
                         v-model="localCase.head"
                         :options="userOptions"
                         option-label="label"
@@ -55,8 +56,8 @@
                         />
                 </div>
                 <div class="col-6">
-                    <FormList 
-                        label="Менеджер" 
+                    <FormList
+                        label="Менеджер"
                         v-model="localCase.manager"
                         :options="userOptions"
                         option-label="label"
@@ -64,8 +65,9 @@
                         emit-value
                         map-options
                         />
-                    <FormList 
-                        label="Эксперт" 
+                    <FormList
+                        :disable-permission="!hasPermission(['case.update.expert'])"
+                        label="Эксперт"
                         v-model="localCase.expert"
                         :options="userOptions"
                         option-label="label"
@@ -73,13 +75,14 @@
                         emit-value
                         map-options
                         />
-                </div>            
+                </div>
             </div>
         <div class="row justify-between items-end q-ml-none q-mt-lg">
             <div>
-                <FormDate 
+                <FormDate
                     v-model="localCase.deadline"
                     title="Срок сдачи"
+                    :disabled-permission="!hasPermission(['case.update.deadline'])"
                 />
             </div>
             <div>
@@ -98,6 +101,7 @@ import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
 import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
 import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
 import { judgeName } from 'src/features/lookup/judge/stores/types'
+import { useUserStore } from 'src/features/user/stores/user-store';
 import FormInput from './FormInput.vue'
 import FormList from './FormList.vue'
 import { Case } from 'src/features/case/stores/types'
@@ -109,6 +113,7 @@ const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
 const courtStore = useCourtStore()
 const regionStore = useRegionStore()
+const { hasPermission } = useUserStore()
 
 const localCase = ref<Case>()
 const selectedJudge = ref(null)
@@ -130,7 +135,7 @@ const resetForm = () => {
 
 const judgeOptions = judgeStore.items.map(j => ({
   label: judgeName(j),
-  value: j 
+  value: j
 }))
 const userOptions = ref<any[]>()
 

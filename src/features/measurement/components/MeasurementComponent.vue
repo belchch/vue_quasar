@@ -1,62 +1,62 @@
 <template>
-    <q-card>
+  <q-card>
 
-        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => row.room.id"
-            selection="single" wrap-cells flat bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
-            <template v-slot:top>
-                <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
-            </template>
-            <template v-slot:body="props">
-                <q-tr :props="props">
-                    <q-td auto-width>
-                        <q-btn size="xs" flat dense @click="props.expand = !props.expand"
-                            :icon="props.expand ? 'remove' : 'add'" sor />
-                    </q-td>
-                    <q-td key="room" :props="props">
-                        {{ props.row.room.name }}
-                    </q-td>
-                    <q-td key="declaredArea" :props="props">
-                        <CellEditor :value="props.row.declaredArea as number" field="declaredArea"
-                            :row="props.row as RoomMeasurement" />
-                    </q-td>
-                    <q-td key="width">
-                        <CellEditor :value="props.row.width as number" field="width"
-                            :row="props.row as RoomMeasurement" />
-                    </q-td>
-                    <q-td key="length" :props="props">
-                        <CellEditor :value="props.row.length as number" field="length"
-                            :row="props.row as RoomMeasurement" />
-                    </q-td>
-                    <q-td key="height" :props="props">
-                        <CellEditor :value="props.row.height as number" field="height"
-                            :row="props.row as RoomMeasurement" />
-                    </q-td>
-                    <q-td key="area" :props="props">
-                        {{ props.row.area }}
-                    </q-td>
-                    <q-td key="perimeter" :props="props">
-                        {{ props.row.perimeter }}
-                    </q-td>
-                    <q-td key="doorArea" :props="props">
-                        {{ props.row.doorArea }}
-                    </q-td>
-                    <q-td key="windowArea" :props="props">
-                        {{ props.row.windowArea }}
-                    </q-td>
-                </q-tr>
-                <q-tr v-show="props.expand" :props="props">
-                    <q-td colspan="100%">
-                        <div class="text-left">
-                            <div class="q-gutter-sm q-pa-lg">
-                                <AddOpeningDialog :room="props.row.room" />
-                                <OpeningTable :room-id="props.row.room.id" />
-                            </div>
-                        </div>
-                    </q-td>
-                </q-tr>
-            </template>
-        </q-table>
-    </q-card>
+    <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => row.room.id"
+      selection="single" wrap-cells flat bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
+      <template v-slot:top>
+        <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
+      </template>
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td auto-width>
+            <q-btn size="xs" flat dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'"
+              sor />
+          </q-td>
+          <q-td key="room" :props="props">
+            {{ props.row.room.name }}
+          </q-td>
+          <q-td key="declaredArea" :props="props">
+            <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.declaredArea as number"
+              field="declaredArea" :row="props.row as RoomMeasurement" />
+          </q-td>
+          <q-td key="width">
+            <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.width as number"
+              field="width" :row="props.row as RoomMeasurement" />
+          </q-td>
+          <q-td key="length" :props="props">
+            <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.length as number"
+              field="length" :row="props.row as RoomMeasurement" />
+          </q-td>
+          <q-td key="height" :props="props">
+            <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.height as number"
+              field="height" :row="props.row as RoomMeasurement" />
+          </q-td>
+          <q-td key="area" :props="props">
+            {{ props.row.area }}
+          </q-td>
+          <q-td key="perimeter" :props="props">
+            {{ props.row.perimeter }}
+          </q-td>
+          <q-td key="doorArea" :props="props">
+            {{ props.row.doorArea }}
+          </q-td>
+          <q-td key="windowArea" :props="props">
+            {{ props.row.windowArea }}
+          </q-td>
+        </q-tr>
+        <q-tr v-show="props.expand" :props="props">
+          <q-td colspan="100%">
+            <div class="text-left">
+              <div class="q-gutter-sm q-pa-lg">
+                <AddOpeningDialog v-if="hasPermission(['measurement.update'])" :room="props.row.room" />
+                <OpeningTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
+              </div>
+            </div>
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
+  </q-card>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
@@ -70,10 +70,12 @@ import OpeningTable from './OpeningTable.vue';
 import { RoomMeasurementApi } from '../api/room-measurement-api';
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 import DownloadReportButton from 'src/components/DownloadReportButton.vue';
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { requestMeasurements } = useMeasurementService()
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
+const { hasPermission } = useUserStore()
 
 const buildDocx = async () => {
     const response = await RoomMeasurementApi.buildDocx(selectedInspectionId.value!!)

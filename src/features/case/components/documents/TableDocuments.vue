@@ -4,7 +4,9 @@
       hide-pagination>
       <template v-slot:body-cell-displayName="props">
         <q-td>
-          <EditableCell :editableFields="formFields" :value="props.value" :row="props.row"
+          <EditableCell
+            :no-edit="!hasPermission(['photoDoc.update'])"
+            :editableFields="formFields" :value="props.value" :row="props.row"
             @update="(newValue) =>{ handleUpdateRow(props.row, newValue)}"></EditableCell>
         </q-td>
 
@@ -14,18 +16,20 @@
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td style="border-left: 0">
-          <q-btn class="action-btn" size="sm" flat round color="primary" icon="o_file_download"
-            @click.stop="saveFile(props.row)">
-            <q-tooltip anchor="top middle" self="bottom middle">
-              Скачать
-            </q-tooltip>
-          </q-btn>
-          <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
-            @click.stop="confirmDelete(props.row)">
-            <q-tooltip anchor="top middle" self="bottom middle">
-              Удалить
-            </q-tooltip>
-          </q-btn>
+          <div v-if="hasPermission(['photoDoc.update'])">
+            <q-btn class="action-btn" size="sm" flat round color="primary" icon="o_file_download"
+              @click.stop="saveFile(props.row)">
+              <q-tooltip anchor="top middle" self="bottom middle">
+                Скачать
+              </q-tooltip>
+            </q-btn>
+            <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
+              @click.stop="confirmDelete(props.row)">
+              <q-tooltip anchor="top middle" self="bottom middle">
+                Удалить
+              </q-tooltip>
+            </q-btn>
+          </div>
         </q-td>
       </template>
     </q-table>
@@ -39,6 +43,9 @@ import { CaseDocumentResponse } from './types';
 import { DocumentsAPI } from './documents-api';
 import EditableCell from 'src/features/lookup/components/EditableCell.vue';
 import { Field } from 'src/features/lookup/base/store/types'
+import { useUserStore } from "src/features/user/stores/user-store";
+
+const { hasPermission } = useUserStore()
 const columnsAct = ref<any[]>([]);
 const $q = useQuasar();
 const props = defineProps<{
