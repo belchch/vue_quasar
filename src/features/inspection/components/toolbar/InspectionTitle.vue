@@ -1,8 +1,6 @@
 <template>
   <q-page-sticky expand position="top">
     <q-toolbar class="bg-white" style="border-bottom: 1px solid #e0e0e0">
-      <q-btn flat icon="keyboard_arrow_left" @click="$router.back()" class="q-mr-xs q-my-sm text-grey-8"
-        style="width: 36px; margin-right: 16px" />
       <q-btn
         flat
         icon="keyboard_arrow_left"
@@ -13,8 +11,6 @@
 
       <q-card-section class="q-pa-none justify-center column q-mr-md">
         <q-card bordered flat class="q-pa-none q-ma-none">
-          <q-avatar :class="statusStyle.class" class="rounded-borders" size="24px" :icon="statusStyle.icon"
-            style="color: #757575" />
           <q-avatar
             :class="statusStyle.class"
             class="rounded-borders"
