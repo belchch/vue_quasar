@@ -1,12 +1,13 @@
 <template>
   <div class="text-subtitle1 q-mb-sm">{{ title }}</div>
       <q-input dense outlined
-        v-model="displayDate" 
+        v-model="displayDate"
         lazy-rules
         readonly
         :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
         >
           <q-btn
+              :disable="disabledPermission"
               icon="event"
               flat
               no-caps
@@ -24,7 +25,7 @@
                   </q-date>
               </q-popup-proxy>
           </q-btn>
-      </q-input> 
+      </q-input>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
@@ -37,8 +38,9 @@ const model = defineModel<string,number>()
 const emit = defineEmits(['update:modelValue'])
 const tempDate = ref('')
 
-defineProps<{
-  title: string
+const { title = '', disabledPermission = false } = defineProps<{
+  title: string,
+  disabledPermission?: boolean
 }>()
 
 // Отображение даты в формате YYYY/MM/DD

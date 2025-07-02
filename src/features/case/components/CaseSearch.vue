@@ -2,6 +2,7 @@
   <div class="row list-wrapper q-mt-sm no-wrap q-gutter-x-lg q-ml-md">
     <div class="col-7">
       <q-btn
+        v-if="hasPermission(['case.create'])"
         dense
         icon="add"
         @click="createDialogOpen = true"
@@ -9,7 +10,7 @@
         label="Создать"
         class="full-width"
         style="position: relative; top: -15px; margin-bottom: 10px; text-transform: none"
-      />    
+      />
       <CaseListSkeleton v-if="isLoading"/>
       <CaseList v-else/>
     </div>
@@ -112,6 +113,7 @@ import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
 import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
 import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
+import { useUserStore } from 'src/features/user/stores/user-store';
 import dayjs from 'dayjs'
 
 import _ from 'lodash'
@@ -124,6 +126,7 @@ const courtStore = useCourtStore()
 const judgeStore = useJudgeStore()
 const regionStore = useRegionStore()
 const companyStore = useCompanyStore()
+const { hasPermission } = useUserStore()
 
 onMounted(async () => {
   await courtStore.requestLookup()

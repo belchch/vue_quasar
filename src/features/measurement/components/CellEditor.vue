@@ -1,6 +1,6 @@
 <template>
-    {{ props.value }}
-    <q-popup-edit v-model="localValue" buttons v-slot="scope" @update:model-value="updateValue">
+    {{ value }}
+    <q-popup-edit v-if="canEdit" v-model="localValue" buttons v-slot="scope" @update:model-value="updateValue">
         <q-input type="number" v-model="scope.value" dense autofocus />
     </q-popup-edit>
 </template>
@@ -12,17 +12,18 @@ import _ from 'lodash';
 
 const {updateRoomMeasurement} = useMeasurementService()
 
-const props = defineProps<{
+const {field, value, row, canEdit=true} = defineProps<{
     field: string,
     value: number,
-    row: RoomMeasurement
+    row: RoomMeasurement,
+    canEdit?: boolean
 }>()
 
-const localValue = ref(props.value)
+const localValue = ref(value)
 
 const updateValue = async () => {
-    const update = _.cloneDeep(props.row) as any
-    update[props.field] = localValue.value
+    const update = _.cloneDeep(row) as any
+    update[field] = localValue.value
     await updateRoomMeasurement(update as RoomMeasurement)
 }
 </script>

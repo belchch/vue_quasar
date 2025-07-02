@@ -1,5 +1,5 @@
 <template>
-    <div class="editable-cell" @click="startEditing">
+    <div class="editable-cell" :class="{'no-edit': props.noEdit}" @click="startEditing">
         <span>{{ value }}</span>
         <q-dialog v-model="isEditing">
             <q-card style="min-width: 350px" :class="{ 'user-form': type === 'user'}">
@@ -11,9 +11,9 @@
                                 :model-value="editRow[field.name]"
                                 @update:model-value="(newVal) => editRow[field.name] = newVal"
                                 :options="field.options"
-                                option-value="id" 
-                                option-label="name" 
-                                :label="field.label" 
+                                option-value="id"
+                                option-label="name"
+                                :label="field.label"
                                 style="min-width: 120px;"
                                 :map-options="true" dense :emit-value="field.emitValue" outlined />
                             <q-select v-else-if="field.type === 'select-multiple'"
@@ -27,7 +27,7 @@
                                 multiple
                                 map-options
                                 dense
-                                outlined 
+                                outlined
                             />
                             <template v-else-if="field.type === 'checkbox'">
                                 <q-checkbox color="secondary" v-model="editRow[field.name]" :label="field.label"
@@ -61,7 +61,8 @@ const props = defineProps<{
     value: any,
     row: any,
     editableFields: Field[]
-    type?: string
+    type?: string,
+    noEdit?: boolean
 }
 >();
 const formRef = ref()
@@ -100,6 +101,9 @@ const handleSave = (editRow: any) => {
     height: 100%;
     align-content: center;
     cursor: pointer;
+}
+.editable-cell.no-edit{
+  pointer-events: none;
 }
 
 .editable-cell:hover .edit-icon {

@@ -17,7 +17,9 @@
     <q-card-section v-if="!collapsed">
       <div class="q-mb-xs q-gutter-md">
         <q-btn-dropdown :label="photoDocTypeDesc(photoDoc.type)" icon="image" size="sm" no-caps color="grey-8" flat
-          square>
+          square
+          :disabled="!hasPermission(['inspection.update'])"
+        >
           <q-list>
             <q-item v-for="item in ['DEFECT', 'GENERAL_VIEW']" :key="item!!" clickable v-close-popup
               @click="() => onSelectType(item as PhotoDocType)">
@@ -27,7 +29,10 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-btn-dropdown :label="displaySpotName(photoDoc)" icon="house" size="sm" no-caps color="grey-8" flat square>
+        <q-btn-dropdown
+          :disable="!hasPermission(['inspection.update'])"
+          :label="displaySpotName(photoDoc)" icon="house" size="sm" no-caps color="grey-8" flat square
+        >
           <q-list>
             <q-item v-for="item in inspectionSpotOptions" :key="item.id!!" clickable v-close-popup
               @click="() => onSelectSpot(item)">
@@ -43,29 +48,30 @@
         @changeDefectInfo="onChangeDefectInfo" :photo-doc-id="photoDoc.id!!" />
     </q-card-section>
 
-
-    <template v-if="!unionStore.isUnionMode">
-      <div class="hover-controls absolute-top column">
-        <q-btn flat text-color="white" icon="filter" class="union-btn" @click.stop="startUnionMode">
-          <q-tooltip>Добавить к фотографии другие фото</q-tooltip>
-        </q-btn>
-        <q-btn v-if="photoDoc.urls?.length && photoDoc.urls?.length > 1" flat text-color="white" icon="view_cozy"
-          class="hover-delete-btn" @click.stop="ungroupPhotoDoc">
-          <q-tooltip>Разгруппировать</q-tooltip>
-        </q-btn>
-        <q-btn flat text-color="white" icon="delete" class="hover-delete-btn" @click.stop="confirmDelete" />
-      </div>
-    </template>
-    <template v-else>
-      <div class="hover-controls hover-controls--union-mode absolute-top column">
-        <q-btn v-if="unionStore.mainPhotoDoc?.id == photoDoc.id" flat color="white" text-color="white" icon="filter"
-          class="union-btn union-btn-active" @click.stop="unionStore.resetUnion">
-          <q-tooltip>Сбросить объединение</q-tooltip>
-        </q-btn>
-        <q-checkbox v-else flat :model-value="unionStore.isSelected(photoDoc)" color="secondary"
-          @update:model-value="handleCheckboxChange" class="hover-checkbox" @click.stop />
-      </div>
-    </template>
+    <div v-if="hasPermission(['inspection.update'])">
+      <template v-if="!unionStore.isUnionMode">
+        <div class="hover-controls absolute-top column">
+          <q-btn flat text-color="white" icon="filter" class="union-btn" @click.stop="startUnionMode">
+            <q-tooltip>Добавить к фотографии другие фото</q-tooltip>
+          </q-btn>
+          <q-btn v-if="photoDoc.urls?.length && photoDoc.urls?.length > 1" flat text-color="white" icon="view_cozy"
+            class="hover-delete-btn" @click.stop="ungroupPhotoDoc">
+            <q-tooltip>Разгруппировать</q-tooltip>
+          </q-btn>
+          <q-btn flat text-color="white" icon="delete" class="hover-delete-btn" @click.stop="confirmDelete" />
+        </div>
+      </template>
+      <template v-else>
+        <div class="hover-controls hover-controls--union-mode absolute-top column">
+          <q-btn v-if="unionStore.mainPhotoDoc?.id == photoDoc.id" flat color="white" text-color="white" icon="filter"
+            class="union-btn union-btn-active" @click.stop="unionStore.resetUnion">
+            <q-tooltip>Сбросить объединение</q-tooltip>
+          </q-btn>
+          <q-checkbox v-else flat :model-value="unionStore.isSelected(photoDoc)" color="secondary"
+            @update:model-value="handleCheckboxChange" class="hover-checkbox" @click.stop />
+        </div>
+      </template>
+    </div>
   </q-card>
   <q-dialog v-model="showLightbox" full-width full-height maximized backdrop-filter="brightness(40%)">
     <q-card class="lightbox-container" style="background: transparent; box-shadow: none">
@@ -113,8 +119,10 @@ import { useTechnicalReportService } from 'src/features/defect/composables/techn
 import { buildInspectionSpotOptions, InspectionSpotOption } from '../../composables/inspection-spot'
 import { useInspectionSpotStore } from '../../store/inspection-spot-store'
 import { storeToRefs } from 'pinia'
+import { useUserStore } from 'src/features/user/stores/user-store';
 
 const unionStore = usePhotoDocsUnionStore()
+const { hasPermission } = useUserStore()
 const $q = useQuasar()
 
 const props = defineProps<{

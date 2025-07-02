@@ -4,11 +4,11 @@
             <div class="col-9">
                 <q-card class="shadow_custom rounded-borders text-grey-8" bordered>
                     <InspectionInformationBlock title="Общая информация" template="8-4">
-                        <template #appendTitle>
+                        <template #appendTitle v-if="hasPermission(['case.update'])">
                             <q-btn
-                                icon="edit" 
-                                class="edit-btn" 
-                                size="sm" 
+                                icon="edit"
+                                class="edit-btn"
+                                size="sm"
                                 color="primary"
                                 @click="openDialog"
                             />
@@ -110,24 +110,28 @@
                         <div class="col-12">
                             <q-toolbar-title ellipsis class="q-pb-sm">Статус</q-toolbar-title>
                             <q-option-group square dense2 size="sm" color="secondary" type="radio" class="text-grey-8"
-                                v-model="selectedCase.status" :options="statusOptions" @update:model-value="onChange" />
-                            
+                                v-model="selectedCase.status" :options="statusOptions" @update:model-value="onChange"
+                                :disable="!hasPermission(['case.update.status'])"
+                            />
+
                             <q-toolbar-title ellipsis class="q-pb-sm q-pl-none q-mt-lg">Приоритет</q-toolbar-title>
                             <q-toggle v-model="selectedCase.priority" label="Срочный" color="secondary"
-                                true-value="HIGH" false-value="LOW" @update:model-value="onChange" />
+                                true-value="HIGH" false-value="LOW" @update:model-value="onChange"
+                                :disable="!hasPermission(['case.update.priority'])"
+                            />
                         </div>
                     </q-card-section>
                 </q-card>
                 <InspectionLocations/>
-            </div>        
+            </div>
         </template>
     </div>
 
     <q-dialog v-if="selectedCase" v-model="createDialogOpen" style="width: 100%">
         <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
-            <UpdateForm 
-                v-model="selectedCase" 
-                :statusOptions="statusOptions" 
+            <UpdateForm
+                v-model="selectedCase"
+                :statusOptions="statusOptions"
                 @save="handleSave"
                 @reset="resetForm"
             />
@@ -158,7 +162,7 @@ const { updateCase } = useSelectedCaseService()
 
 const deadline = computed(() => dayjs(selectedCase.value?.deadline))
 const createdAt = computed(() => dayjs(selectedCase.value?.createdAt))
-const userStore = useUserStore()
+const { hasPermission } = useUserStore()
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
 const courtStore = useCourtStore()
@@ -175,7 +179,7 @@ onMounted(async () => {
 const createDialogOpen = ref(false)
 
 
-const openDialog = () => {  
+const openDialog = () => {
   createDialogOpen.value = true
 };
 

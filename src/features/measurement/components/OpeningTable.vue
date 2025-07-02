@@ -19,7 +19,7 @@
                     {{ props.row.area }}
                 </q-td>
                 <q-td key="actions" :props="props">
-                    <q-btn icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative"/>
+                    <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative"/>
                 </q-td>
             </q-tr>
         </template>
@@ -35,12 +35,13 @@ import { useMeasurementService } from '../composables/measurement';
 const { openingMeasurements } = storeToRefs(useMeasurementStore())
 const { deleteOpeningMeasurement } = useMeasurementService()
 
-const props = defineProps<{
-    roomId: number
+const { roomId, canEdit=true} = defineProps<{
+    roomId: number,
+    canEdit?: boolean
 }>()
 
 const rows = computed(() => {
-    return openingMeasurements.value?.filter(item => item.room.id == props.roomId) || []
+    return openingMeasurements.value?.filter(item => item.room.id == roomId) || []
 })
 
 const deleteRow = async (id: number) => {

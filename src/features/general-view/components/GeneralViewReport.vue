@@ -4,7 +4,7 @@
             <div v-for="(row, index) in generalViewReport.rows" :key="index" class="row q-gutter-md no-wrap q-mb-md ">
                 <div v-for="(item, index) in row.items" :key="index" class="q-gutter-xs">
                     <div class="row no-wrap">
-                        <q-card bordered flat class="row q-pa-sm no-wrap">
+                        <q-card bordered flat class="row q-pa-sm no-wrap" :class="{ 'none-event': !hasPermission(['generalViewReport.update']) }">
                             <draggable v-model="item.photos" item-key="id" tag="div" handle=".drag-handle"
                                 group="photos" @start="drag = true" @end="drag = false" @change="onDragChange"
                                 class="q-gutter-md row full-width report-item no-wrap">
@@ -14,7 +14,7 @@
                                     </div>
                                 </template>
                             </draggable>
-                            <div class="q-ml-md">
+                            <div class="q-ml-md" v-if="hasPermission(['generalViewReport.update'])">
                                 <q-btn icon="delete" @click="removeItem(row.id!!, item.id!!)" size="sm"
                                     color="secondary" flat dense />
                             </div>
@@ -23,19 +23,19 @@
                     <q-card bordered flat>
                         <div class="cursor-pointer text-center text-caption">
                             {{ item.text }}
-                            <q-popup-edit v-model="item.text" auto-save v-slot="scope" @update:model-value="refresh">
+                            <q-popup-edit v-if="hasPermission(['generalViewReport.update'])" v-model="item.text" auto-save v-slot="scope" @update:model-value="refresh">
                                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
                             </q-popup-edit>
-                        </div>                    
+                        </div>
                     </q-card>
 
                 </div>
-                <div class="column">
+                <div class="column" v-if="hasPermission(['generalViewReport.update'])">
                     <q-btn icon="add" @click="addItem(row.id!!)" color="secondary" size="xs" />
                     <q-btn icon="remove" @click="removeRow(row.id!!)" color="secondary" size="xs" class="q-mt-sm" />
                 </div>
             </div>
-            <q-btn icon="add" @click="addRow()" label="добавить строку" color="secondary" size="sm"/>
+            <q-btn v-if="hasPermission(['generalViewReport.update'])" icon="add" @click="addRow()" label="добавить строку" color="secondary" size="sm"/>
         </div>
     </div>
 </template>
@@ -48,12 +48,14 @@ import draggable from 'vuedraggable';
 import { useGeneralViewReportService } from '../composables/general-view';
 import { useGeneralViewReportStore } from '../store/general-view-store';
 import { useGeneralViewGalleryService } from '../composables/gallery';
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const drag = ref()
 
 const { generalViewReport } = storeToRefs(useGeneralViewReportStore())
 const { updateGeneralViewReport, requestGeneralViewReport } = useGeneralViewReportService()
 const { requestGallery } = useGeneralViewGalleryService()
+const { hasPermission } = useUserStore()
 
 const refresh = async () => {
     await updateGeneralViewReport()
@@ -122,5 +124,8 @@ onMounted(async () => {
 .report-item {
     height: 330px;
     min-width: 256px;
+}
+.none-event {
+  pointer-events: none;
 }
 </style>

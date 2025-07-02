@@ -55,6 +55,7 @@ import InspectionTitle from 'src/features/inspection/components/toolbar/Inspecti
 import InspectionInformation from 'src/features/inspection/components/InspectionInformation.vue'
 import { useSelectedCaseService } from 'src/features/case/composables/selected-case'
 import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store'
+import { useUserStore } from "src/features/user/stores/user-store";
 import {storeToRefs} from "pinia";
 import GeneralViewComponent from "src/features/general-view/components/GeneralViewComponent.vue";
 import CaseQuestions from 'src/features/case/components/questions/CaseQuestions.vue'
@@ -67,6 +68,7 @@ const props = defineProps<{
 
 const { selectCase, cleanCase } = useSelectedCaseService()
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
+const { hasPermission } = useUserStore()
 
 const activeTab = ref<string>('inspection')
 
@@ -74,6 +76,11 @@ const updateTab = (newTab: string) => {
   activeTab.value = newTab
 }
 
+onBeforeMount(() => {
+  if(!hasPermission(['inspection.read'])){
+    activeTab.value = 'information';
+  }
+});
 onMounted(async () => {
   await selectCase(props.caseId)
 })

@@ -9,7 +9,7 @@
             </div>
           </q-img>
         </q-card-section>
-        <div class="hover-controls absolute-top column">
+        <div class="hover-controls absolute-top column" v-if="hasPermission(['photoDoc.update'])">
           <q-btn flat text-color="white" icon="delete" class="hover-delete-btn" @click="confirmDelete(doc)" />
         </div>
       </q-card>
@@ -22,7 +22,9 @@ import { ref, onMounted, defineEmits } from 'vue';
 import { useQuasar } from 'quasar';
 import { CaseDocumentResponse } from './types';
 import { DocumentsAPI } from './documents-api';
+import { useUserStore } from "src/features/user/stores/user-store";
 const $q = useQuasar();
+const { hasPermission } = useUserStore()
 const props = defineProps<{
   docs: CaseDocumentResponse[],
 }>();
