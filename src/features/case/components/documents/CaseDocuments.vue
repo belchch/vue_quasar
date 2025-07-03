@@ -8,7 +8,8 @@
       <div style="width: 100%">
         <q-tab-panels v-model="tab">
           <q-tab-panel name="act" class="q-pt-none">
-            <UploadDocumentBtn @add="addDocument" file-type="INSPECTION_REPORT" />
+            <UploadDocumentBtn v-if="hasPermission(['document.update'])" @add="addDocument"
+              file-type="INSPECTION_REPORT" />
             <q-list bordered class="rounded-borders" separator>
               <q-expansion-item switch-toggle-side expand-separator default-opened icon="o_library_books"
                 label="Список файлов" headerClass="text-primary bg-grey-2">
@@ -22,16 +23,16 @@
                 label="Просмотр" headerClass="text-primary bg-grey-2">
                 <q-card>
                   <q-card-section>
-                    <GalleryDocuments :docs="filteredAct" @remove="onRemove"/>
+                    <GalleryDocuments :docs="filteredAct" @remove="onRemove" />
                   </q-card-section>
                 </q-card>
               </q-expansion-item>
             </q-list>
           </q-tab-panel>
           <q-tab-panel name="scheme" class="q-pt-none">
-            <UploadDocumentBtn file-type="FLOOR_PLAN" @add="addDocument" />
+            <UploadDocumentBtn v-if="hasPermission(['document.update'])" file-type="FLOOR_PLAN" @add="addDocument" />
             <q-list bordered class="rounded-borders" separator>
-              <q-expansion-item headerClass="text-primary bg-grey-2" switch-toggle-side expand-separator
+              <q-expansion-item headerClass="text-primary bg-grey-2" switch-toggle-side expand-separator default-opened
                 icon="o_library_books" label="Список файлов">
                 <q-card>
                   <q-card-section>

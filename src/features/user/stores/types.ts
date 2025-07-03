@@ -29,7 +29,9 @@ export type AllowedPermissions =
     'defectReport.update' |
     'lookup.read' |
     'lookup.update'
-    | 'measurement.read '
+    | 'measurement.read'
     | 'measurement.update'
     | 'photoDoc.update'
-    | 'photoDoc.create';
+    | 'photoDoc.create'
+    | 'document.read'
+    | 'document.update';
