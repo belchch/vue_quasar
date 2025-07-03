@@ -4,6 +4,7 @@
         v-model="displayDate"
         lazy-rules
         readonly
+        :disable="disabledPermission"
         :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
         >
           <q-btn

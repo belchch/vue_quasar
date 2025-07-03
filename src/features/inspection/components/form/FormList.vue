@@ -2,7 +2,7 @@
     <div style="margin-bottom: 20px;">
       <div class="text-subtitle1 q-mb-xs">{{ title ? title : label }}</div>
         <q-select v-if="required"
-            :disabled="props.disablePermission"
+            :disable="props.disablePermission"
             v-bind="$attrs"
               v-model="model"
               use-input
@@ -15,7 +15,7 @@
               :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
           />
         <q-select v-else
-              :disabled="props.disablePermission"
+              :disable="props.disablePermission"
               v-bind="$attrs"
               v-model="model"
               use-input

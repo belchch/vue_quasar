@@ -57,6 +57,7 @@
                 </div>
                 <div class="col-6">
                     <FormList
+                    :disable-permission="!hasPermission(['case.update.manager'])"
                         label="Менеджер"
                         v-model="localCase.manager"
                         :options="userOptions"

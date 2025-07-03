@@ -15,6 +15,7 @@ export type AllowedPermissions =
     'case.update' |
     'case.update.head' |
     'case.update.expert' |
+    'case.update.manager' |
     'case.update.priority' |
     'case.update.status' |
     'case.update.deadline' |

@@ -50,6 +50,7 @@ const initConfig = (): InspectionSpot[] => {
 const spotConfigs = ref<InspectionSpot[]>(initConfig())
 
 const sortedConfigs = computed(() => {
+    console.log(spotConfigs.value.length,'location');
     return _.sortBy(spotConfigs.value, 'spot.name')
 })
 
