@@ -77,12 +77,13 @@ const updateTab = (newTab: string) => {
 }
 
 onBeforeMount(() => {
-  if(!hasPermission(['inspection.read'])){
-    activeTab.value = 'information';
-  }
+
 });
 onMounted(async () => {
   await selectCase(props.caseId)
+  if (!hasPermission(['inspection.read'])) {
+    activeTab.value = 'information';
+  }
 })
 
 onBeforeUnmount(() => {
