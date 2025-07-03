@@ -8,7 +8,7 @@
       <div style="width: 100%">
         <q-tab-panels v-model="tab">
           <q-tab-panel name="act" class="q-pt-none">
-            <UploadDocumentBtn v-if="hasPermission(['photoDoc.create'])" @add="addDocument" file-type="INSPECTION_REPORT" />
+            <UploadDocumentBtn @add="addDocument" file-type="INSPECTION_REPORT" />
             <q-list bordered class="rounded-borders" separator>
               <q-expansion-item switch-toggle-side expand-separator default-opened icon="o_library_books"
                 label="Список файлов" headerClass="text-primary bg-grey-2">
@@ -29,7 +29,7 @@
             </q-list>
           </q-tab-panel>
           <q-tab-panel name="scheme" class="q-pt-none">
-            <UploadDocumentBtn v-if="hasPermission(['photoDoc.create'])" file-type="FLOOR_PLAN" @add="addDocument" />
+            <UploadDocumentBtn file-type="FLOOR_PLAN" @add="addDocument" />
             <q-list bordered class="rounded-borders" separator>
               <q-expansion-item headerClass="text-primary bg-grey-2" switch-toggle-side expand-separator
                 icon="o_library_books" label="Список файлов">

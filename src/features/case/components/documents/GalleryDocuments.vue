@@ -9,7 +9,7 @@
             </div>
           </q-img>
         </q-card-section>
-        <div class="hover-controls absolute-top column" v-if="hasPermission(['photoDoc.update'])">
+        <div class="hover-controls absolute-top column">
           <q-btn flat text-color="white" icon="delete" class="hover-delete-btn" @click="confirmDelete(doc)" />
         </div>
       </q-card>

@@ -5,7 +5,6 @@
       <template v-slot:body-cell-displayName="props">
         <q-td>
           <EditableCell
-            :no-edit="!hasPermission(['photoDoc.update'])"
             :editableFields="formFields" :value="props.value" :row="props.row"
             @update="(newValue) =>{ handleUpdateRow(props.row, newValue)}"></EditableCell>
         </q-td>
@@ -16,7 +15,7 @@
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td style="border-left: 0">
-          <div v-if="hasPermission(['photoDoc.update'])">
+          <div>
             <q-btn class="action-btn" size="sm" flat round color="primary" icon="o_file_download"
               @click.stop="saveFile(props.row)">
               <q-tooltip anchor="top middle" self="bottom middle">
