@@ -66,7 +66,7 @@ import EditableCell from 'src/features/lookup/components/EditableCell.vue'
 import { Field } from 'src/features/lookup/base/store/types'
 import { useQuasar } from 'quasar'
 import CreateUserForm from 'src/features/admin/components/CreateUserForm.vue'
-import { UserCreateRequest } from 'src/features/user/api/types'
+import { UserCreateRequest, userRoleLabel } from 'src/features/user/api/types'
 
 const $q = useQuasar()
 
@@ -95,7 +95,7 @@ const columns = [
     },
     {
         name: 'role',
-        field: (row: any) => roleLabel(row.role),
+        field: (row: any) => userRoleLabel(row.role),
         label: 'Роль',
         editable: true,
         sortable: true,
@@ -135,45 +135,28 @@ const formFields = computed((): Field[] => [
         options: [
             {
                 id: 'ADMIN',
-                name: roleLabel('ADMIN')
+                name: userRoleLabel('ADMIN')
             },
             {
                 id: 'BUSINESS_ADMIN',
-                name: roleLabel('BUSINESS_ADMIN')
+                name: userRoleLabel('BUSINESS_ADMIN')
             },
             {
                 id: 'HEAD',
-                name: roleLabel('HEAD')
+                name: userRoleLabel('HEAD')
             },
             {
                 id: 'MANAGER',
-                name: roleLabel('MANAGER')
+                name: userRoleLabel('MANAGER')
             },
             {
                 id: 'EXPERT',
-                name: roleLabel('EXPERT')
+                name: userRoleLabel('EXPERT')
             }            
         ],
         emitValue: true
     },
 ])
-
-const roleLabel = (role: string) => {
-    switch (role) {
-        case 'ADMIN':
-            return 'Администратор'
-        case 'BUSINESS_ADMIN':
-            return 'Бизнес администратор'
-        case 'HEAD': 
-            return 'Руководитель'
-        case 'MANAGER': 
-            return 'Менеджер'
-        case 'EXPERT': 
-            return 'Эксперт'        
-        default:
-            return ''
-    }
-}
 
 const pagination = ref({
     sortBy: 'desc',

@@ -66,7 +66,7 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ userStore.user?.username }}</q-item-label>
-                  <q-item-label caption>{{ userRoleLabel(userStore.user) }}</q-item-label>
+                  <q-item-label caption>{{ userRoleLabel(userStore.user.role) }}</q-item-label>
                 </q-item-section>
               </q-item>
 
