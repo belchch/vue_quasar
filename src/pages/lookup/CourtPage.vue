@@ -1,18 +1,21 @@
 <template>
-    <GenericCrudTable title="Суды" :columns="columns" :items="courtStore.items" :formFields="formFields"
-        :store="courtStore" />
+  <GenericCrudTable title="Суды" :columns="columns" :items="courtStore.items" :formFields="formFields"
+    :store="courtStore" :edit-permission="hasPermission(['lookup.update'])"
+    :add-permission="hasPermission(['lookup.update'])" />
 </template>
 
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
 import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
 import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
+import { useUserStore } from "src/features/user/stores/user-store";
 
 import GenericCrudTable from 'src/features/lookup/components/GenericCrudTable.vue'
 import { Field } from 'src/features/lookup/base/store/types'
 
 const courtStore = useCourtStore()
 const regionStore = useRegionStore()
+const { hasPermission } = useUserStore()
 
 const columns = [
     {

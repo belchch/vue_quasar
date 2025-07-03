@@ -1,6 +1,7 @@
 <template>
-    <GenericCrudTable title="Недостатки" :columns="columns" :items="defectStore.items" :formFields="formFields"
-        :store="defectStore" :addForm="{ classname: 'defect' }" />
+  <GenericCrudTable title="Недостатки" :columns="columns" :items="defectStore.items" :formFields="formFields"
+    :store="defectStore" :addForm="{ classname: 'defect' }" :edit-permission="hasPermission(['lookup.update'])"
+    :add-permission="hasPermission(['lookup.update'])" />
 </template>
 
 <script setup lang="ts">
@@ -10,6 +11,7 @@ import { useStructElemStore } from 'src/features/lookup/struct-elem/stores/struc
 import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
 import { useFlawStore } from 'src/features/defect/flaw/stores/flaw-store'
 import { useStandardStore } from 'src/features/lookup/standard/stores/standard-store'
+import { useUserStore } from "src/features/user/stores/user-store";
 
 import GenericCrudTable from 'src/features/lookup/components/GenericCrudTable.vue'
 import { Field } from 'src/features/lookup/base/store/types'
@@ -19,6 +21,7 @@ const structElemnStore = useStructElemStore()
 const materialStore = useMaterialStore()
 const flawStore = useFlawStore()
 const standardStore = useStandardStore()
+const { hasPermission } = useUserStore()
 
 const columns = [
     {

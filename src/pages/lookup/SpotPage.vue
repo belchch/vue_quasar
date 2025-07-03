@@ -1,6 +1,7 @@
 <template>
-    <GenericCrudTable title="Локации" :columns="columns" :items="spotStore.items" :formFields="formFields"
-        :store="spotStore" />
+  <GenericCrudTable title="Локации" :columns="columns" :items="spotStore.items" :formFields="formFields"
+    :store="spotStore" :edit-permission="hasPermission(['lookup.update'])"
+    :add-permission="hasPermission(['lookup.update'])" />
 </template>
 
 <script setup lang="ts">
@@ -8,8 +9,10 @@ import { ref, onMounted } from 'vue'
 import { useSpotStore } from 'src/features/lookup/spot/stores/spot-store'
 import GenericCrudTable from 'src/features/lookup/components/GenericCrudTable.vue'
 import { Field } from 'src/features/lookup/base/store/types'
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const spotStore = useSpotStore();
+const { hasPermission } = useUserStore()
 
 const columns = [
     {

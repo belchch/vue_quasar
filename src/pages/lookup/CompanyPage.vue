@@ -1,16 +1,19 @@
 <template>
-    <GenericCrudTable title="Организации" :columns="columns" :items="companyStore.items" :formFields="formFields"
-        :store="companyStore" />
+  <GenericCrudTable title="Организации" :columns="columns" :items="companyStore.items" :formFields="formFields"
+    :store="companyStore" :edit-permission="hasPermission(['lookup.update'])"
+    :add-permission="hasPermission(['lookup.update'])" />
 </template>
 
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
+import { useUserStore } from "src/features/user/stores/user-store";
 
 import GenericCrudTable from 'src/features/lookup/components/GenericCrudTable.vue'
 import { Field } from 'src/features/lookup/base/store/types'
 
 const companyStore = useCompanyStore()
+const { hasPermission } = useUserStore()
 
 const columns = [
     {

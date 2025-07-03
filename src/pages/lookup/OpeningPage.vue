@@ -1,6 +1,7 @@
 <template>
-    <GenericCrudTable title="Проемы" :columns="columns" :items="openingStore.items" :formFields="formFields"
-        :store="openingStore" />
+  <GenericCrudTable title="Проемы" :columns="columns" :items="openingStore.items" :formFields="formFields"
+    :store="openingStore" :edit-permission="hasPermission(['lookup.update'])"
+    :add-permission="hasPermission(['lookup.update'])" />
 </template>
 
 <script setup lang="ts">
@@ -10,8 +11,10 @@ import { useMaterialStore } from 'src/features/lookup/material/stores/material-s
 import GenericCrudTable from 'src/features/lookup/components/GenericCrudTable.vue'
 import { Field } from 'src/features/lookup/base/store/types'
 import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const openingStore = useOpeningStore()
+const { hasPermission } = useUserStore()
 
 const typeOptions = [
     {id: 'DOOR', name: 'Дверь'},
@@ -79,7 +82,7 @@ const onAdd = () => {
 }
 
 const onUpdate = () => {
-    
+
 }
 
 onMounted(async () => {

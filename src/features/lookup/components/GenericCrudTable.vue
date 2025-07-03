@@ -10,25 +10,25 @@
             </template>
 
         </div>
-        <q-table v-if="!loading" 
-            wrap-cells 
-            flat 
-            bordered 
-            :title="title" 
-            :rows="rows" 
+        <q-table v-if="!loading"
+            wrap-cells
+            flat
+            bordered
+            :title="title"
+            :rows="rows"
             :columns="processedColumns"
-            row-key="id" 
-            v-model:pagination="pagination" 
-            hide-pagination 
-            no-data-label="Нет данных" 
+            row-key="id"
+            v-model:pagination="pagination"
+            hide-pagination
+            no-data-label="Нет данных"
             :filter="filter"
-            separator="cell" 
+            separator="cell"
             :visible-columns="localVisibleColumns">
             <template v-slot:top>
                 <div class="table-header row items-center full-width">
                     <div class="q-table__title">{{ title }}</div>
                     <q-btn :color="showForm ? 'secondary' : 'primary'" :icon="showForm ? 'close' : 'add'"
-                        :label="showForm ? 'Скрыть' : addButtonLabel" @click="showForm = !showForm" size="sm" />
+                        :label="showForm ? 'Скрыть' : addButtonLabel" @click="showForm = !showForm" size="sm" v-if="addPermission" />
                     <q-space />
                     <q-input outlined dense debounce="300" color="primary" v-model="filter">
                         <template v-slot:append>
@@ -54,7 +54,7 @@
                     <template v-else>
                         <EditableCell ref="editFormRef" :value="props.value" :row="props.row" @close="() => { }"
                             :editable-fields="formFields" @update22="() => console.log('update22')"
-                            @update="(newValue) => handleUpdateRow(props.row, newValue)" />
+                            @update="(newValue) => handleUpdateRow(props.row, newValue)" :no-edit="!editPermission" />
                     </template>
                 </q-td>
             </template>
@@ -65,7 +65,7 @@
             <template v-slot:body-cell-actions="props">
                 <q-td style="border-left: 0">
                     <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
-                        @click.stop="confirmDelete(props.row)" />
+                        @click.stop="confirmDelete(props.row)" v-if="editPermission" />
                 </q-td>
             </template>
         </q-table>
@@ -81,6 +81,7 @@ import { useQuasar } from 'quasar'
 import AddForm from './AddForm.vue'
 import EditableCell from './EditableCell.vue'
 import { Field } from '../base/store/types'
+import { add } from 'lodash'
 
 interface TableColumn {
     name: string
@@ -135,6 +136,14 @@ const props = defineProps({
     addForm: {
         type: Object,
         default: () => ({})
+    },
+    editPermission: {
+        type: Boolean,
+        default: true
+    },
+    addPermission: {
+        type: Boolean,
+        default: true
     }
 
 });

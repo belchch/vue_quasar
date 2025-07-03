@@ -30,7 +30,7 @@
         stretch no-caps active-color="primary">
         <q-tab name="inspection" label="Осмотр" class="q-px-xl" v-if="hasPermission(['inspection.read'])" />
         <q-tab name="generalView" label="Общие виды" class="q-px-xl" v-if="hasPermission(['generalViewReport.read'])" />
-        <q-tab name="defect" label="Дефекты" class="q-px-xl" v-if="!!hasPermission(['defectReport.read'])" />
+        <q-tab name="defect" label="Дефекты" class="q-px-xl" v-if="hasPermission(['defectReport.read'])" />
         <q-tab name="information" label="Информация" class="q-px-xl" />
         <q-tab name="questions" label="Вопросы" class="q-px-xl" v-if="hasPermission(['question.read'])" />
         <q-tab name="measurements" label="Размеры" class="q-px-xl" v-if="hasPermission(['measurement.read '])" />

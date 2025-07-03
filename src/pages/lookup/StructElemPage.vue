@@ -1,6 +1,7 @@
 <template>
-    <GenericCrudTable title="Поверхности" :columns="columns" :items="structElemStore.items" :formFields="formFields"
-        :store="structElemStore" />
+  <GenericCrudTable title="Поверхности" :columns="columns" :items="structElemStore.items" :formFields="formFields"
+    :store="structElemStore" :edit-permission="hasPermission(['lookup.update'])"
+    :add-permission="hasPermission(['lookup.update'])" />
 </template>
 
 <script setup lang="ts">
@@ -9,9 +10,11 @@ import { useStructElemStore } from 'src/features/lookup/struct-elem/stores/struc
 import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
 import GenericCrudTable from 'src/features/lookup/components/GenericCrudTable.vue'
 import { Field } from 'src/features/lookup/base/store/types'
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const structElemStore = useStructElemStore()
 const materialStore = useMaterialStore()
+const { hasPermission } = useUserStore()
 
 const columns = [
     {
@@ -50,7 +53,7 @@ const onAdd = () => {
 }
 
 const onUpdate = () => {
-    
+
 }
 
 onMounted(async () => {
