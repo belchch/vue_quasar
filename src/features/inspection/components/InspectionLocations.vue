@@ -9,10 +9,10 @@
         <q-card-section class="q-ml-sm q-pt-sm">
             <div v-for="item in sortedConfigs" :key="item.spot.id!!" class="row q-gutter-lg">
                 <div style="width: 200px" class="q-pa-sm">
-                    <q-checkbox :label="item.spot.name" v-model="item.inUse" color="secondary"
+                    <q-checkbox :label="item.spot.name" v-model="item.inUse" color="secondary" :disable="!hasPermission(['inspection.update'])"
                         @update:model-value="onChange(item)" />
                 </div>
-                <q-input :disable="!item.inUse" v-model="item.count" type="number" outlined style="width: 80px;"
+                <q-input :disable="!item.inUse || !hasPermission(['inspection.update'])" v-model="item.count" type="number" outlined style="width: 80px;"
                     size="sm" dense @update:model-value="onChange(item)" />
             </div>
         </q-card-section>
@@ -27,10 +27,12 @@ import { useInspectionSpotStore } from '../store/inspection-spot-store';
 import { storeToRefs } from 'pinia';
 import { InspectionSpot } from '../api/types';
 import _ from 'lodash';
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const spotStore = useSpotStore()
 const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
 const { updateInspectionSpot } = useInspectionSpotService()
+const { hasPermission } = useUserStore()
 
 const newSpots = (): InspectionSpot[] => {
     return spotStore.items?.filter(item => !inspectionSpots.value?.some((is: InspectionSpot) => is.spot.id == item.id))

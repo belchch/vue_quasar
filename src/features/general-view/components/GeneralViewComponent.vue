@@ -3,9 +3,9 @@
     <q-card flat>
       <div class="row justify-between">
         <q-card-section>
-          <q-btn label="Сформировать отчет" @click="confirmOpen = true" color="primary" :loading="isBuilding"/>
+          <q-btn v-if="hasPermission(['generalViewReport.update'])" label="Сформировать отчет" @click="confirmOpen = true" color="primary" :loading="isBuilding"/>
         </q-card-section>
-        <DownloadReportButton label="Скачать" :api-fn="buildDocx" :disable="!generalViewReport" />        
+        <DownloadReportButton label="Скачать" :api-fn="buildDocx" :disable="!generalViewReport" />
       </div>
     </q-card>
     <q-splitter v-model="split">
@@ -36,11 +36,13 @@ import { GeneralViewReportApi } from '../api/general-view-report-api';
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 import GeneralViewFormatConfirmDialog from './GeneralViewFormatConfirmDialog.vue';
 import { ReportFormat } from '../api/types';
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const { buildGeneralViewReport, requestGeneralViewReport } = useGeneralViewReportService()
 const { requestGallery } = useGeneralViewGalleryService()
 const { generalViewReport } = storeToRefs(useGeneralViewReportStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
+const { hasPermission } = useUserStore()
 
 const split = ref(60)
 const isBuilding = ref(false)

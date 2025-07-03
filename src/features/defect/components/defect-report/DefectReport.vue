@@ -1,13 +1,16 @@
 <template>
   <div class="q-gutter-md">
     <div class="row justify-between">
-      <div class="row">
-        <q-btn label="Сформировать отчет" color="primary" @click="buildReport()" :loading="isBuilding"/>
-        <q-checkbox v-if="technicalReport" v-model="useTechnicalReport" color="primary" label="Техническое заключение">
-        </q-checkbox>
+      <div>
+        <div class="row" v-if="hasPermission(['defectReport.update'])">
+          <q-btn label="Сформировать отчет" color="primary" @click="buildReport()" :loading="isBuilding" />
+          <q-checkbox v-if="technicalReport" v-model="useTechnicalReport" color="primary"
+            label="Техническое заключение">
+          </q-checkbox>
+        </div>
       </div>
       <div>
-        <DownloadReportButton label="Скачать" :api-fn="buildDocx" :disable="!defectReport"/>
+        <DownloadReportButton label="Скачать" :api-fn="buildDocx" :disable="!defectReport" />
       </div>
     </div>
 
@@ -35,11 +38,13 @@ import { useTechnicalReportStore } from "src/features/defect/stores/technical-re
 import DownloadReportButton from 'src/components/DownloadReportButton.vue'
 import { DefectReportApi } from '../../api/defect-report-api'
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
+import { useUserStore } from "src/features/user/stores/user-store";
 
 const { buildAndRequestDefectReport, requestDefectReport, moveSpot } = useDefectReportService()
 const { defectReport } = storeToRefs(useDefectReportStore())
 const { technicalReport } = storeToRefs(useTechnicalReportStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
+const { hasPermission } = useUserStore()
 
 const drag = ref(false)
 const isBuilding = ref(false)
