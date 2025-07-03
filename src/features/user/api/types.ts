@@ -13,13 +13,19 @@ export const userName = (user: User) => {
   return `${user.firstName} ${user.middleName} ${user.lastName} `
 }
 
-export const userRoleLabel = (user: User) => {
-  switch (user.role) {
-    case 'ADMIN':
-      return 'Администратор'
-    case 'USER':
-      return 'Пользователь'
-    default:
-      return ''
-  }
+export const userRoleLabel = (role: string) => {
+    switch (role) {
+        case 'ADMIN':
+            return 'Администратор'
+        case 'BUSINESS_ADMIN':
+            return 'Бизнес администратор'
+        case 'HEAD': 
+            return 'Руководитель'
+        case 'MANAGER': 
+            return 'Менеджер'
+        case 'EXPERT': 
+            return 'Эксперт'        
+        default:
+            return ''
+    }
 }

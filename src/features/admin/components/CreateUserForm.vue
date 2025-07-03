@@ -16,14 +16,11 @@
                 <q-select class="q-pt-lg"
                     v-model="localUser.role"
                     :options="[
-                            {
-                                id: 'ADMIN',
-                                name: 'Администратор'
-                            },
-                            {
-                                id: 'USER',
-                                name: 'Пользователь'
-                            }
+                        roleOption('EXPERT'),
+                        roleOption('MANAGER'),
+                        roleOption('HEAD'),
+                        roleOption('BUSINESS_ADMIN'),
+                        roleOption('ADMIN'),
                     ]"
                     label="Роль"
                     emit-value
@@ -49,7 +46,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import FormInput from 'src/features/inspection/components/form/FormInput.vue'
-import { UserCreateRequest } from 'src/features/user/api/types'
+import { UserCreateRequest, userRoleLabel } from 'src/features/user/api/types'
+
+const roleOption = (role: string) => {
+    return {
+        id: role,
+        name: userRoleLabel(role)
+    }
+}
 
 const localUser = ref<UserCreateRequest>({
     username: '',
