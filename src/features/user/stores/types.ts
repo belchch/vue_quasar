@@ -8,7 +8,7 @@ export type User = {
   permissions: AllowedPermissions[]
 }
 
-export type UserRole = 'USER' | 'ADMIN'
+export type UserRole = 'USER' | 'ADMIN' | 'MANAGER' | 'HEAD' | 'EXPERT'
 
 export type AllowedPermissions =
     'case.create' |
