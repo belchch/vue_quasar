@@ -103,6 +103,7 @@
                         </template>
                     </InspectionInformationBlock>
                 </q-card>
+                <CaseCommets />
             </div>
             <div class="col-3">
                 <q-card bordered class="shadow_custom rounded-borders text-grey-8">
@@ -157,6 +158,7 @@ import { judgeName } from 'src/features/lookup/judge/stores/types'
 import { userName } from 'src/features/user/api/types'
 import UpdateForm from './form/UpdateForm.vue'
 import InspectionLocations from './InspectionLocations.vue'
+import CaseCommets from 'src/features/case/components/comments/CaseCommets.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 
