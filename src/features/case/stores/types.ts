@@ -42,3 +42,9 @@ export type CaseQuestion = {
   text: string,
   caseId: number
 }
+
+export type CaseComment = {
+  id?: number | undefined,
+  text: string,
+  caseId: number
+}
