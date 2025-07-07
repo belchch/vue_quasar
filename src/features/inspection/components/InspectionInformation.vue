@@ -21,6 +21,10 @@
                                 <span>{{ createdAt.format('DD.MM.YYYY') }}</span>
                                 <div>Дата сдачи: </div>
                                 <span style="width: fit-content;">{{ deadline.format('DD.MM.YYYY') }}</span>
+                                <div>Дата начала осмотра: </div>
+                                <span style="width: fit-content;">{{ inspectionStartAt }}</span>
+                                <div>Дата окончания осмотра: </div>
+                                <span style="width: fit-content;">{{ inspectionEndAt }}</span>
                                 <span>Адрес:</span>
                                 <span>{{ selectedCase.facilityAddress }}</span>
                             </div>
@@ -162,8 +166,14 @@ import CaseCommets from 'src/features/case/components/comments/CaseCommets.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 
+const dateOrNull = (date?: string) => {
+    return date && dayjs(date).format('DD.MM.YYYY')
+}
+
 const deadline = computed(() => dayjs(selectedCase.value?.deadline))
 const createdAt = computed(() => dayjs(selectedCase.value?.createdAt))
+const inspectionStartAt = computed(() => dateOrNull(selectedCase.value?.inspectionStartAt))
+const inspectionEndAt = computed(() => dateOrNull(selectedCase.value?.inspectionEndAt))
 const { hasPermission } = useUserStore()
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()

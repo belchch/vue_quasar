@@ -5,13 +5,14 @@
                 <div class="col-6">
                     <FormInput v-model="localCase.number" label="Номер дела" title="Дело" :required="true" />
                     <FormInput v-model="localCase.facilityAddress" label="Адрес" :required="true" />
-                    <FormList label="Регион" v-model="localCase.region" :options="regionStore.items" :required="true" />
+                    <FormList label="Регион" v-model="localCase.region" :options="regionStore.items" />
+                    <FormList label="Организация" v-model="localCase.company" :options="companyStore.items" />
                 </div>
                 <div class="col-6">
                     <FormList label="Суд" v-model="localCase.court" :options="courtStore.items" />
+                    <FormList label="Вид экспертизы" v-model="expertiseType" :options="expertiseTypOptions"/>
                     <FormList label="Судья" v-model="localCase.judge" :options="judgeOptions" option-label="label"
-                        option-value="value" emit-value map-options />
-                    <FormList label="Организация" v-model="localCase.company" :options="companyStore.items" />
+                        option-value="value" emit-value map-options />                                    
                 </div>
             </div>
             <div class="row q-col-gutter-lg q-mt-md">
@@ -30,9 +31,17 @@
                 </div>
             </div>
             <div class="row justify-between items-end q-ml-none q-mt-lg">
-                <div>
-                    <FormDate v-model="localCase.deadline" title="Срок сдачи"
-                        :disabled-permission="!hasPermission(['case.update.deadline'])" />
+                <div class="row q-gutter-md">
+                    <div>
+                        <FormDate v-model="localCase.deadline" title="Срок сдачи"
+                            :disabled-permission="!hasPermission(['case.update.deadline'])" />
+                    </div>
+                    <div>
+                        <FormDate v-model="localCase.inspectionStartAt" title="Дата начала осмотра"/>
+                    </div>
+                    <div>
+                        <FormDate v-model="localCase.inspectionEndAt" title="Дата окончания осмотра"/>
+                    </div>
                 </div>
                 <div>
                     <q-btn label="Сохранить" type="submit" color="primary" />
@@ -72,11 +81,34 @@ const model = defineModel<Case>()
 defineProps({
     statusOptions: Array
 })
+const expertiseTypOptions = [
+    {
+        id: 'SHARED_EQUITY',
+        name: 'ДДУ'
+    },
+    {
+        id: 'FLOOD_DAMAGE',
+        name: 'Залив'
+    },
+    {
+        id: 'LAND_MANAGEMENT',
+        name: 'Землеустроительная'
+    },
+]
+
+
+
+const expertiseType = ref<{id: string, name: string}>(
+    expertiseTypOptions.find(item => item.id == model.value?.expertiseType)!
+)
 
 const emit = defineEmits(['update:modelValue', 'save', 'reset'])
 
 const handleSave = () => {
-    emit('save', localCase.value)
+    emit('save', {        
+        ...localCase.value,
+        expertiseType: expertiseType.value.id
+    })
 }
 const resetForm = () => {
     initLocalForm()

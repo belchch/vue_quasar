@@ -35,7 +35,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 
-const model = defineModel<string,number>()
+const model = defineModel<string | undefined,number>()
 const emit = defineEmits(['update:modelValue'])
 const tempDate = ref('')
 
