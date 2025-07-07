@@ -46,6 +46,19 @@
             />
           </div>
           <div>
+            <div class="text-subtitle1 q-mb-sm">Вид экспертизы</div>
+            <q-select
+              use-input
+              dense
+              outlined
+              v-model="createForm.expertiseType"
+              lazy-rules
+              :options="expertiseTypeOptions"
+              label="Вид экспертизы"
+              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
+            />
+          </div>
+          <div>
             <div class="text-subtitle1 q-mb-sm">Организанция</div>
             <q-select
               use-input
@@ -143,6 +156,7 @@ const createForm = ref<CreateFormType>({
   company: null,
   region: null,
   facilityAddress: '',
+  expertiseType: null,
   deadline: dayjs().add(30, 'day').toDate(),
 })
 
@@ -155,6 +169,7 @@ type CreateFormType = {
   number: string,
   company: SelectOption | null,
   region: SelectOption | null,
+  expertiseType: {label: string, value: string} | null,
   facilityAddress: string,
   deadline: Date
 }
@@ -165,6 +180,21 @@ const companyOptions = computed(() =>
 const regionOptions = computed(() =>
   regionStore.items.map((item) => ({ label: item.name, value: item.id!! })),
 )
+
+const expertiseTypeOptions = ref<{label: string, value: string}[]>([
+  {
+    label: 'ДДУ',
+    value: 'SHARED_EQUITY'
+  },
+  {
+    label: 'Залив',
+    value: 'FLOOD_DAMAGE'
+  },
+  {
+    label: 'Землеустроительная',
+    value: 'LAND_MANAGEMENT'
+  }
+])
 
 const localDate = ref('')
 
@@ -177,6 +207,7 @@ const resetCreateForm = () => {
     number: '',
     company: null,
     region: null,
+    expertiseType: null,
     facilityAddress: '',
     deadline: dayjs().add(30, 'day').toDate(),
   }
@@ -184,12 +215,13 @@ const resetCreateForm = () => {
 }
 
 const submitCreateForm = async () => {
-  const { number, company, region, facilityAddress, deadline } = createForm.value
+  const { number, company, region, facilityAddress, deadline, expertiseType } = createForm.value
 
   await createCase({
     number: number,
     facilityAddress: facilityAddress,
     companyId: company!!.value,
+    expertiseType: expertiseType!!.value,
     regionId: region!!.value,
     deadline: dayjs(deadline).toISOString(),
   })

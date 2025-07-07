@@ -21,7 +21,10 @@ export type Case = {
   stages: CaseStages,
   expert?: User,
   manager?: User,
-  head?: User
+  head?: User,
+  inspectionStartAt?: string | undefined,
+  inspectionEndAt?: string | undefined,
+  expertiseType: string
 }
 
 export type CaseStages = {

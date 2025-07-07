@@ -25,7 +25,8 @@ export type CaseCreateRequest = {
   facilityAddress: string,
   companyId: number,
   regionId: number,
-  deadline: string
+  deadline: string,
+  expertiseType: string
 }
 
 export type CaseUpdateRequest = {
@@ -43,5 +44,8 @@ export type CaseUpdateRequest = {
   deadline: string,
   expertId?: number | undefined,
   managerId?: number| undefined,
-  headId?: number | undefined
+  headId?: number | undefined,
+  expertiseType: string,
+  inspectionStartAt?: string | undefined,
+  inspectionEndAt?: string | undefined
 }

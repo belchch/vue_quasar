@@ -69,7 +69,7 @@ const groupedItems = computed(() => {
     margin-top: 0;
 }
 </style>
-<style>
+<style >
 .q-panel {
     overflow-y: hidden;
 }
