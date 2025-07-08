@@ -1,5 +1,7 @@
 <template>
-    <q-btn icon="download" :label="label" @click="execute" color="primary" :loading="loading" flat :disable="disable"/>
+    <div>
+      <q-btn icon="download" :label="label" @click="execute" color="primary" :loading="loading" flat :disable="disable"/>
+    </div>
 </template>
 <script setup lang="ts">
 import axios from 'axios';

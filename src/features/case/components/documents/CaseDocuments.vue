@@ -8,8 +8,11 @@
       <div style="width: 100%">
         <q-tab-panels v-model="tab">
           <q-tab-panel name="act" class="q-pt-none">
-            <UploadDocumentBtn v-if="hasPermission(['document.update'])" @add="addDocument"
-              file-type="INSPECTION_REPORT" />
+            <div class="row justify-between">
+              <UploadDocumentBtn v-if="hasPermission(['document.update'])" @add="addDocument"
+                file-type="INSPECTION_REPORT" />
+              <DownloadReportButton label="Скачать отчет" :disable="false" :api-fn="downloadReport" />
+            </div>
             <q-list bordered class="rounded-borders" separator>
               <q-expansion-item switch-toggle-side expand-separator default-opened icon="o_library_books"
                 label="Список файлов" headerClass="text-primary bg-grey-2">
@@ -65,15 +68,20 @@ import { useUserStore } from "src/features/user/stores/user-store";
 import UploadDocumentBtn from './UploadDocumentBtn.vue';
 import TableDocuments from "./TableDocuments.vue";
 import GalleryDocuments from './GalleryDocuments.vue';
+import DownloadReportButton from 'src/components/DownloadReportButton.vue';
 
 const { hasPermission } = useUserStore()
 const tab = ref('act');
 const actDocuments = ref<any[]>([]);
 
-const filteredAct = computed(() => actDocuments.value.filter((item: any) => { return item.fileType =='INSPECTION_REPORT' }));
+const filteredAct = computed(() => actDocuments.value.filter((item: any) => { return item.fileType == 'INSPECTION_REPORT' }));
 
 const filteredPlan = computed(() => actDocuments.value.filter((item: any) => { return item.fileType == 'FLOOR_PLAN' }));
 const inspectionStore = useInspectionsStore();
+
+const downloadReport = async () => {
+  return (await DocumentsAPI.downloadReport(inspectionStore.selectedInspectionId!)).data
+}
 
 onMounted(async () => {
   try {
@@ -90,13 +98,11 @@ const addDocument = (item: any) => {
 }
 
 const onRemove = (id: number) => {
-    actDocuments.value = actDocuments.value.filter((item: any) => item.id !== id);
+  actDocuments.value = actDocuments.value.filter((item: any) => item.id !== id);
 }
 
 
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

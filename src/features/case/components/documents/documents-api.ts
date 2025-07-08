@@ -1,4 +1,5 @@
 import { api } from 'boot/axios';
+import { FileInfo } from 'src/common/types';
 import { useUploadConfig } from 'src/features/inspection/composables/upload-config'
 const uploadConfig = useUploadConfig();
 export const DocumentsAPI = {
@@ -17,5 +18,12 @@ export const DocumentsAPI = {
   },
   updateDocument(id:"number", obj:any) {
     return api.put('/api/documents/' + id, obj);
+  },
+  downloadReport(inspectionId: number) {
+    return api.post<FileInfo>(`/api/documents/build-docx`, {}, {
+      params: {
+        inspectionId
+      }
+    })
   }
 }
