@@ -105,6 +105,12 @@ const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {
     headId: data.head?.id,
     expertiseType: data.expertiseType,
     inspectionStartAt: data.inspectionStartAt,
-    inspectionEndAt: data.inspectionEndAt
+    inspectionEndAt: data.inspectionEndAt,
+    courtCaseNum: data.courtCaseNum,
+    numberOfVolumes: data.numberOfVolumes,
+    determinationDate: data.determinationDate,
+    contactPerson: data.contactPerson,
+    contactPhone: data.contactPhone,
+    contactEmail: data.contactEmail
   }
 }

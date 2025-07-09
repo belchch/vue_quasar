@@ -5,14 +5,14 @@
                 <div class="col-6">
                     <FormInput v-model="localCase.number" label="Номер дела" title="Дело" :required="true" />
                     <FormInput v-model="localCase.facilityAddress" label="Адрес" :required="true" />
-                    <FormList label="Регион" v-model="localCase.region" :options="regionStore.items" />
-                    <FormList label="Организация" v-model="localCase.company" :options="companyStore.items" />
+                    <FormList v-show="false" label="Регион" v-model="localCase.region" :options="regionStore.items" />
+                    <FormList v-show="false" label="Организация" v-model="localCase.company" :options="companyStore.items" />
                 </div>
                 <div class="col-6">
-                    <FormList label="Суд" v-model="localCase.court" :options="courtStore.items" />
+                    <FormList v-show="false" label="Суд" v-model="localCase.court" :options="courtStore.items" />
                     <FormList label="Вид экспертизы" v-model="expertiseType" :options="expertiseTypOptions"/>
-                    <FormList label="Судья" v-model="localCase.judge" :options="judgeOptions" option-label="label"
-                        option-value="value" emit-value map-options />                                    
+                    <FormList v-show="false" label="Судья" v-model="localCase.judge" :options="judgeOptions" option-label="label"
+                        option-value="value" emit-value map-options />
                 </div>
             </div>
             <div class="row q-col-gutter-lg q-mt-md">
@@ -105,7 +105,7 @@ const expertiseType = ref<{id: string, name: string}>(
 const emit = defineEmits(['update:modelValue', 'save', 'reset'])
 
 const handleSave = () => {
-    emit('save', {        
+    emit('save', {
         ...localCase.value,
         expertiseType: expertiseType.value.id
     })

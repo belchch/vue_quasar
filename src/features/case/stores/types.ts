@@ -17,6 +17,7 @@ export type Case = {
   createdBy: User,
   createdAt: string,
   deadline: string,
+  determinationDate?: string,
   inspectionIds: number[],
   stages: CaseStages,
   expert?: User,
@@ -24,7 +25,12 @@ export type Case = {
   head?: User,
   inspectionStartAt?: string | undefined,
   inspectionEndAt?: string | undefined,
-  expertiseType: string
+  numberOfVolumes?: number | undefined,
+  expertiseType: string,
+  courtCaseNum?: string | undefined,
+  contactPerson?: string | undefined,
+  contactPhone?: string | undefined,
+  contactEmail?: string | undefined
 }
 
 export type CaseStages = {
