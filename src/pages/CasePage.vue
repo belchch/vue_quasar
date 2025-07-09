@@ -31,18 +31,19 @@
           </q-tab-panel>
           <q-tab-panel name="measurements">
             <div class="q-pa-md">
-              <MeasurementComponent/>
+              <MeasurementComponent />
+            </div>
+          </q-tab-panel>
+          <q-tab-panel name="common-report">
+            <div>
+              <CommonReport />
             </div>
           </q-tab-panel>
         </q-tab-panels>
       </q-card-section>
     </q-card>
 
-    <InspectionTitle
-      :case="selectedCase"
-      :model-value="activeTab"
-      @update:model-value="updateTab"
-    />
+    <InspectionTitle :case="selectedCase" :model-value="activeTab" @update:model-value="updateTab" />
   </q-page>
 </template>
 
@@ -56,11 +57,12 @@ import InspectionInformation from 'src/features/inspection/components/Inspection
 import { useSelectedCaseService } from 'src/features/case/composables/selected-case'
 import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store'
 import { useUserStore } from "src/features/user/stores/user-store";
-import {storeToRefs} from "pinia";
+import { storeToRefs } from "pinia";
 import GeneralViewComponent from "src/features/general-view/components/GeneralViewComponent.vue";
 import CaseQuestions from 'src/features/case/components/questions/CaseQuestions.vue'
 import MeasurementComponent from 'src/features/measurement/components/MeasurementComponent.vue'
 import CaseDocuments from 'src/features/case/components/documents/CaseDocuments.vue'
+import CommonReport from 'src/features/report/components/CommonReport.vue'
 
 const props = defineProps<{
   caseId: number

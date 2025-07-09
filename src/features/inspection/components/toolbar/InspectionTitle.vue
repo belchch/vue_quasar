@@ -35,6 +35,7 @@
         <q-tab name="questions" label="Вопросы" class="q-px-xl" v-if="hasPermission(['question.read'])" />
         <q-tab name="measurements" label="Размеры" class="q-px-xl" v-if="hasPermission(['measurement.read'])" />
         <q-tab name="documents" label="Документы" class="q-px-xl" v-if="hasPermission(['document.read'])" />
+        <q-tab name="common-report" label="Отчет" class="q-px-xl"/>
       </q-tabs>
     </q-toolbar>
   </q-page-sticky>
