@@ -47,5 +47,11 @@ export type CaseUpdateRequest = {
   headId?: number | undefined,
   expertiseType: string,
   inspectionStartAt?: string | undefined,
-  inspectionEndAt?: string | undefined
+  inspectionEndAt?: string | undefined,
+  courtCaseNum?: string | undefined,
+  numberOfVolumes?: number | undefined,
+  determinationDate?: string | undefined,
+  contactPerson?: string | undefined,
+  contactPhone?: string | undefined,
+  contactEmail?: string | undefined
 }

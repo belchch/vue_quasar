@@ -22,6 +22,7 @@
                     </div>
                     <q-card bordered flat>
                         <div class="cursor-pointer text-center text-caption">
+                          <q-icon name="edit" color="blue-grey-9" />
                             {{ item.text }}
                             <q-popup-edit v-if="hasPermission(['generalViewReport.update'])" v-model="item.text" auto-save v-slot="scope" @update:model-value="refresh">
                                 <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />

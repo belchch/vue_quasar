@@ -4,8 +4,9 @@
         v-model="displayDate"
         lazy-rules
         readonly
+
         :disable="disabledPermission"
-        :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
+        :rules="[(value) => (!_.isEmpty(value) || !required) || 'Обязательное поле']"
         >
           <q-btn
               :disable="disabledPermission"
@@ -39,9 +40,10 @@ const model = defineModel<string | undefined,number>()
 const emit = defineEmits(['update:modelValue'])
 const tempDate = ref('')
 
-const { title = '', disabledPermission = false } = defineProps<{
+const { title = '', disabledPermission = false, required = false } = defineProps<{
   title: string,
-  disabledPermission?: boolean
+  disabledPermission?: boolean,
+  required?: boolean
 }>()
 
 // Отображение даты в формате YYYY/MM/DD

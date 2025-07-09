@@ -9,12 +9,14 @@
               dense
               outlined
               lazy-rules
+              @update:model-value="changeHandler"
               :option-value="optionValue ? optionValue : 'id'"
               :option-label="optionLabel ? optionLabel : 'name'"
               :label="label"
               :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
           />
         <q-select v-else
+              @update:model-value="changeHandler"
               :disable="props.disablePermission"
               v-bind="$attrs"
               v-model="model"
@@ -39,5 +41,13 @@ const props = defineProps<{
   optionLabel?: string,
   disablePermission?: boolean
 }>()
+
+const emit = defineEmits<{
+  (e: 'change', value: any): void
+}>();
+
+const changeHandler = (value:any) => {
+  emit('change',value);
+}
 
 </script>

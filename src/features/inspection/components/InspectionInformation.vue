@@ -6,6 +6,7 @@
                     <InspectionInformationBlock title="Общая информация" template="8-4">
                         <template #appendTitle v-if="hasPermission(['case.update'])">
                             <q-btn
+                                flat
                                 icon="edit"
                                 class="edit-btn"
                                 size="sm"
@@ -53,6 +54,16 @@
                     </InspectionInformationBlock>
 
                     <InspectionInformationBlock title="Организация" template="4-4-4">
+                        <template #appendTitle v-if="hasPermission(['case.update'])">
+                            <q-btn
+                                icon="edit"
+                                flat
+                                class="edit-btn"
+                                size="sm"
+                                color="primary"
+                                @click="openUpdateOrganizationDialog=true"
+                            />
+                        </template>
                         <template #s1>
                             ИНН
                             <div>{{ selectedCase.company?.inn }}</div>
@@ -63,11 +74,11 @@
                         </template>
                         <template #s3>
                             Регион
-                            <div>-</div>
+                            <div>{{ selectedCase.region?.name }}</div>
                         </template>
                     </InspectionInformationBlock>
 
-                    <InspectionInformationBlock title="Объект исследнования" template="6-6">
+                    <InspectionInformationBlock title="Объект исследования" template="6-6">
                         <template #s1>
                             Тип объекта
                             <div>-</div>
@@ -79,15 +90,26 @@
                     </InspectionInformationBlock>
 
                     <InspectionInformationBlock title="" template="6-6">
+                        <template #appendTitle v-if="hasPermission(['case.update'])">
+                            <q-btn
+                                style="position: absolute;right: 32px;"
+                                icon="edit"
+                                flat
+                                class="edit-btn"
+                                size="sm"
+                                color="primary"
+                                @click="openUpdateJudgeDialog = true"
+                            />
+                        </template>
                         <template #s1>
                             <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Суд</q-toolbar-title>
                             <div class="grid-2 items-center gap-sm2" style="grid-template-columns: 150px auto;">
                                 <div>Дело:</div>
-                                <span>1</span>
-                                <div>Количетво томов:</div>
-                                <span>1</span>
+                                <span>{{ selectedCase.courtCaseNum || '-'}}</span>
+                                <div>Количество томов:</div>
+                                <span>{{ selectedCase.numberOfVolumes }}</span>
                                 <div>Дата определения: </div>
-                                <span>-</span>
+                                <span>{{ determinationDate || '-' }}</span>
                                 <span>Суд:</span>
                                 <span>{{ selectedCase.court?.name }}</span>
                             </div>
@@ -98,11 +120,11 @@
                                 <div>Судья:</div>
                                 <span>{{ selectedCase.judge ? judgeName(selectedCase.judge) : '' }}</span>
                                 <div>ФИО контактного лица:</div>
-                                <span class="text-weight-medium relative">-</span>
+                                <span class="text-weight-medium relative">{{selectedCase.contactPerson || '-'}}</span>
                                 <div>Телефон контактного лица:</div>
-                                <span class="text-weight-medium relative"></span>
+                                <span class="text-weight-medium relative"> {{ selectedCase.contactPhone || '-' }} </span>
                                 <div>Email контактного лица:</div>
-                                <span class="text-weight-medium relative"></span>
+                                <span class="text-weight-medium relative">{{ selectedCase.contactEmail || '-' }}</span>
                             </div>
                         </template>
                     </InspectionInformationBlock>
@@ -142,6 +164,24 @@
             />
         </q-card>
     </q-dialog>
+    <q-dialog v-if="selectedCase" v-model="openUpdateJudgeDialog" style="width: 100%">
+        <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+            <UpdateFormJudge
+                v-model="selectedCase"
+                @save="handeSaveJudge"
+                @reset="openUpdateJudgeDialog = false"
+            />
+        </q-card>
+    </q-dialog>
+    <q-dialog v-if="selectedCase" v-model="openUpdateOrganizationDialog" style="width: 100%">
+      <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+          <UpdateFormOrganization
+              v-model="selectedCase"
+              @save="handeSaveOrganization"
+              @reset="openUpdateOrganizationDialog = false"
+          />
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -163,6 +203,8 @@ import { userName } from 'src/features/user/api/types'
 import UpdateForm from './form/UpdateForm.vue'
 import InspectionLocations from './InspectionLocations.vue'
 import CaseCommets from 'src/features/case/components/comments/CaseCommets.vue'
+import UpdateFormJudge from './form/UpdateFormJudge.vue'
+import UpdateFormOrganization from './form/UpdateFormOrganization.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 
@@ -174,6 +216,7 @@ const deadline = computed(() => dayjs(selectedCase.value?.deadline))
 const createdAt = computed(() => dayjs(selectedCase.value?.createdAt))
 const inspectionStartAt = computed(() => dateOrNull(selectedCase.value?.inspectionStartAt))
 const inspectionEndAt = computed(() => dateOrNull(selectedCase.value?.inspectionEndAt))
+const determinationDate = computed(() => dateOrNull(selectedCase.value?.determinationDate))
 const { hasPermission } = useUserStore()
 const companyStore = useCompanyStore()
 const judgeStore = useJudgeStore()
@@ -189,7 +232,8 @@ onMounted(async () => {
 
 
 const createDialogOpen = ref(false)
-
+const openUpdateJudgeDialog = ref(false)
+const openUpdateOrganizationDialog = ref(false)
 
 const openDialog = () => {
   createDialogOpen.value = true
@@ -200,7 +244,20 @@ const save = async () => {
     console.log(selectedCase.value)
     await updateCase()
 }
-
+const handeSaveOrganization = async (localCase: any) => {
+  if (localCase) {
+    selectedCase.value = localCase
+    await save()
+  }
+  openUpdateOrganizationDialog.value = false;
+}
+const handeSaveJudge = async (localCase: any) => {
+  if (localCase) {
+    selectedCase.value = localCase
+    await save()
+  }
+  openUpdateJudgeDialog.value = false;
+}
 const handleSave = async (localCase: any) => {
     if (localCase) {
         selectedCase.value = localCase

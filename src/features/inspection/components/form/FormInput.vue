@@ -21,7 +21,7 @@
 </template>
 <script setup lang="ts">
 import _ from 'lodash'
-const model = defineModel<string>()
+const model = defineModel<string | undefined | number>()
 
 defineProps<{
   label: string
