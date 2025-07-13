@@ -18,7 +18,11 @@
             <GalleryDocuments v-else :docs="filteredAct" @remove="onRemove" />
           </q-tab-panel>
           <q-tab-panel name="scheme" class="q-pt-none">
-            <UploadDocumentBtn v-if="hasPermission(['document.update'])" file-type="FLOOR_PLAN" @add="addDocument" />
+            <div class="row justify-between q-pb-lg">
+              <UploadDocumentBtn v-if="hasPermission(['document.update'])" file-type="FLOOR_PLAN" @add="addDocument" />
+              <DisplayModeBtn v-model="displayMode" />
+              <DownloadReportButton label="Скачать отчет" :disable="false" :api-fn="downloadReport" />
+            </div>
             <TableDocuments v-if="displayMode == 'table'" :docs="filteredPlan" @remove="onRemove"></TableDocuments>
             <GalleryDocuments v-else :docs="filteredPlan" @remove="onRemove" />
           </q-tab-panel>
@@ -57,7 +61,6 @@ const downloadReport = async () => {
 onMounted(async () => {
   try {
     const response = await DocumentsAPI.getDocuments(inspectionStore.selectedInspectionId || 0);
-    // const response = await api.get(`/api/documents?inspectionId=${inspectionStore.selectedInspectionId}`);
     actDocuments.value = response.data;
   } catch (error) {
     console.log(error);
@@ -65,16 +68,12 @@ onMounted(async () => {
 })
 
 const addDocument = (item: any) => {
-  console.log(item);
   actDocuments.value.push(item);
 }
 
 const onRemove = (id: number) => {
   actDocuments.value = actDocuments.value.filter((item: any) => item.id !== id);
 }
-
-
-
 </script>
 
 <style lang="scss" scoped></style>
