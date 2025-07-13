@@ -1,7 +1,7 @@
 <template>
   <q-page class="case-page column">
     <q-card flat style="background: transparent; flex: 1" class="column">
-      <q-card-section class="q-pa-none column" style="flex: 1">
+      <q-card-section class="q-pa-none" style="flex: 1">
         <q-tab-panels v-model="activeTab" style="flex: 1" class="column">
           <q-tab-panel name="inspection" style="flex: 1">
             <InspectionContent />

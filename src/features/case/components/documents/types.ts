@@ -5,6 +5,8 @@ export type CaseDocumentResponse = {
       originalName: string,
       mimeType: string,
       url: string,
-      fileType: 'INSPECTION_REPORT' | 'FLOOR_PLAN',
+      fileType: CaseDocumentType,
       objectKey: string
 }
+
+export type CaseDocumentType = 'INSPECTION_REPORT' | 'FLOOR_PLAN';
