@@ -5,9 +5,9 @@
       <div class="left-menu text-grey-8">
         <q-scroll-area style="height: 100%">        
           <div class="q-pa-md q-ma-none">               
-            <div class="q-mb-md">
+            <!-- <div class="q-mb-md">
               <LookupUploadButton/>
-            </div>
+            </div> -->
             <q-item clickable v-ripple v-for="link in menuLinks" :key="link.name" class="navigation-item"
               :to="{ name: link.route }">            
               <q-item-section>{{ link.name }}</q-item-section>
