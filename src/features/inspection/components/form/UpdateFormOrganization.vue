@@ -4,7 +4,6 @@
       <div class="row q-col-gutter-lg">
         <div class="col-6">
           <FormList label="Организация" v-model="localCase.company" :options="companyStore.items" />
-          <div class="text-blue-grey-13" style="margin-top: -20px;">ИНН:{{ localCase.company.inn || '-' }}</div>
         </div>
         <div class="col-6">
           <FormList label="Регион" v-model="localCase.region" :options="regionStore.items" />
