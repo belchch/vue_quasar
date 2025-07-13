@@ -8,50 +8,19 @@
       <div style="width: 100%">
         <q-tab-panels v-model="tab">
           <q-tab-panel name="act" class="q-pt-none">
-            <div class="row justify-between">
+            <div class="row justify-between q-pb-lg">
               <UploadDocumentBtn v-if="hasPermission(['document.update'])" @add="addDocument"
                 file-type="INSPECTION_REPORT" />
+              <DisplayModeBtn v-model="displayMode" />
               <DownloadReportButton label="Скачать отчет" :disable="false" :api-fn="downloadReport" />
             </div>
-            <q-list bordered class="rounded-borders" separator>
-              <q-expansion-item switch-toggle-side expand-separator default-opened icon="o_library_books"
-                label="Список файлов" headerClass="text-primary bg-grey-2">
-                <q-card>
-                  <q-card-section>
-                    <TableDocuments :docs="filteredAct" @remove="onRemove"></TableDocuments>
-                  </q-card-section>
-                </q-card>
-              </q-expansion-item>
-              <q-expansion-item switch-toggle-side expand-separator default-opened icon="o_library_books"
-                label="Просмотр" headerClass="text-primary bg-grey-2">
-                <q-card>
-                  <q-card-section>
-                    <GalleryDocuments :docs="filteredAct" @remove="onRemove" />
-                  </q-card-section>
-                </q-card>
-              </q-expansion-item>
-            </q-list>
+            <TableDocuments v-if="displayMode=='table'" :docs="filteredAct" @remove="onRemove"></TableDocuments>
+            <GalleryDocuments v-else :docs="filteredAct" @remove="onRemove" />
           </q-tab-panel>
           <q-tab-panel name="scheme" class="q-pt-none">
             <UploadDocumentBtn v-if="hasPermission(['document.update'])" file-type="FLOOR_PLAN" @add="addDocument" />
-            <q-list bordered class="rounded-borders" separator>
-              <q-expansion-item headerClass="text-primary bg-grey-2" switch-toggle-side expand-separator default-opened
-                icon="o_library_books" label="Список файлов">
-                <q-card>
-                  <q-card-section>
-                    <TableDocuments :docs="filteredPlan" @remove="onRemove"></TableDocuments>
-                  </q-card-section>
-                </q-card>
-              </q-expansion-item>
-              <q-expansion-item switch-toggle-side expand-separator default-opened icon="o_library_books"
-                label="Просмотр" headerClass="text-primary bg-grey-2">
-                <q-card>
-                  <q-card-section>
-                    <GalleryDocuments :docs="filteredPlan" @remove="onRemove" />
-                  </q-card-section>
-                </q-card>
-              </q-expansion-item>
-            </q-list>
+            <TableDocuments v-if="displayMode == 'table'" :docs="filteredPlan" @remove="onRemove"></TableDocuments>
+            <GalleryDocuments v-else :docs="filteredPlan" @remove="onRemove" />
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -69,10 +38,12 @@ import UploadDocumentBtn from './UploadDocumentBtn.vue';
 import TableDocuments from "./TableDocuments.vue";
 import GalleryDocuments from './GalleryDocuments.vue';
 import DownloadReportButton from 'src/components/DownloadReportButton.vue';
+import DisplayModeBtn from './DisplayModeBtn.vue'
 
 const { hasPermission } = useUserStore()
 const tab = ref('act');
 const actDocuments = ref<any[]>([]);
+const displayMode = ref('gallery');
 
 const filteredAct = computed(() => actDocuments.value.filter((item: any) => { return item.fileType == 'INSPECTION_REPORT' }));
 
@@ -94,6 +65,7 @@ onMounted(async () => {
 })
 
 const addDocument = (item: any) => {
+  console.log(item);
   actDocuments.value.push(item);
 }
 

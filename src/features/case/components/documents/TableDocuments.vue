@@ -1,13 +1,12 @@
 <template>
   <div>
-    <q-table flat bordered :rows="props.docs" :columns="columnsAct" row-key="name" :rows-per-page-options="[]"
+    <q-table flat bordered :rows="props.docs" :columns="columnsAct" row-key="id"
+      :pagination="{ rowsPerPage: 0 }"
       hide-pagination>
       <template v-slot:body-cell-displayName="props">
         <q-td>
-          <EditableCell
-            :no-edit="!hasPermission(['document.update'])"
-            :editableFields="formFields" :value="props.value" :row="props.row"
-            @update="(newValue) =>{ handleUpdateRow(props.row, newValue)}"></EditableCell>
+          <EditableCell :no-edit="!hasPermission(['document.update'])" :editableFields="formFields" :value="props.value"
+            :row="props.row" @update="(newValue) =>{ handleUpdateRow(props.row, newValue)}"></EditableCell>
         </q-td>
 
       </template>

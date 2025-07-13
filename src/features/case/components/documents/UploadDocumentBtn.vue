@@ -4,7 +4,7 @@
       <q-uploader :factory="uploadFactory" multiple method="PUT" :send-raw="true" class="img-uploader"
         @uploaded="onUploaded" @factory-failed="onFactoryFailed" thumbnail-fit="contain" />
     </q-dialog>
-    <q-btn color="primary" icon="upload" class="q-mb-lg" label="Загрузить" @click="showUploadDialog=true" />
+    <q-btn color="primary" icon="upload" label="Загрузить" @click="showUploadDialog=true" />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ import { ref, defineProps, defineEmits } from 'vue';
 import { useUploadConfig } from 'src/features/inspection/composables/upload-config'
 import { useInspectionsStore } from "src/features/inspection/store/inspection-store";
 import { api } from 'boot/axios'
-import { CaseDocumentResponse } from './types';
+import { CaseDocumentResponse, CaseDocumentType } from './types';
 import { DocumentsAPI } from './documents-api';
 
 
@@ -26,7 +26,7 @@ const uploadMessage = ref('');
 const uploadMessageClass = ref('');
 
 const props = defineProps<{
-  fileType: 'INSPECTION_REPORT' | 'FLOOR_PLAN',
+  fileType: CaseDocumentType,
 }>();
 
 const emit = defineEmits<{
