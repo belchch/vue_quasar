@@ -3,8 +3,11 @@
     <MainLayoutHeader />
     <q-page-container class="">
       <div class="left-menu text-grey-8">
-        <q-scroll-area style="height: 100%">
-          <div class="q-pa-md q-ma-none">
+        <q-scroll-area style="height: 100%">        
+          <div class="q-pa-md q-ma-none">               
+            <div class="q-mb-md">
+              <LookupUploadButton/>
+            </div>
             <q-item clickable v-ripple v-for="link in menuLinks" :key="link.name" class="navigation-item"
               :to="{ name: link.route }">            
               <q-item-section>{{ link.name }}</q-item-section>
@@ -26,6 +29,7 @@ import { useUserStore } from "src/features/user/stores/user-store";
 import { useRouter } from "vue-router"
 import MainLayoutHeader from 'src/components/MainLayoutHeader.vue'
 import { menuLinks } from 'src/config/lookup-links'
+import LookupUploadButton from 'src/features/lookup/components/LookupUploadButton.vue';
 
 const auth = useAuth()
 const userStore = useUserStore()
