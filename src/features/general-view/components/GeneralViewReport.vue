@@ -1,44 +1,53 @@
 <template>
-    <div>
-        <div v-if="generalViewReport">
-            <div v-for="(row, index) in generalViewReport.rows" :key="index" class="row q-gutter-md no-wrap q-mb-md ">
-                <div v-for="(item, index) in row.items" :key="index" class="q-gutter-xs">
-                    <div class="row no-wrap">
-                        <q-card bordered flat class="row q-pa-sm no-wrap" :class="{ 'none-event': !hasPermission(['generalViewReport.update']) }">
-                            <draggable v-model="item.photos" item-key="id" tag="div" handle=".drag-handle"
-                                group="photos" @start="drag = true" @end="drag = false" @change="onDragChange"
-                                class="q-gutter-md row full-width report-item no-wrap">
-                                <template #item="{ element }">
-                                    <div class="report-photo drag-handle">
-                                        <q-img :src="element.url" />
-                                    </div>
-                                </template>
-                            </draggable>
-                            <div class="q-ml-md" v-if="hasPermission(['generalViewReport.update'])">
-                                <q-btn icon="delete" @click="removeItem(row.id!!, item.id!!)" size="sm"
-                                    color="secondary" flat dense />
-                            </div>
-                        </q-card>
-                    </div>
-                    <q-card bordered flat>
-                        <div class="cursor-pointer text-center text-caption">
-                          <q-icon name="edit" color="blue-grey-9" />
-                            {{ item.text }}
-                            <q-popup-edit v-if="hasPermission(['generalViewReport.update'])" v-model="item.text" auto-save v-slot="scope" @update:model-value="refresh">
-                                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
-                            </q-popup-edit>
-                        </div>
-                    </q-card>
-
-                </div>
-                <div class="column" v-if="hasPermission(['generalViewReport.update'])">
-                    <q-btn icon="add" @click="addItem(row.id!!)" color="secondary" size="xs" />
-                    <q-btn icon="remove" @click="removeRow(row.id!!)" color="secondary" size="xs" class="q-mt-sm" />
-                </div>
+  <div>
+    <div v-if="generalViewReport">
+      <div v-for="(row, index) in generalViewReport.rows" :key="index" class="row q-gutter-md no-wrap q-mb-md ">
+        <div v-for="(item, index) in row.items" :key="index" class="q-gutter-xs">
+          <div class="row no-wrap">
+            <q-card bordered flat class="row q-pa-sm no-wrap"
+              :class="{ 'none-event': !hasPermission(['generalViewReport.update']) }">
+              <draggable v-model="item.photos" item-key="id" tag="div" handle=".drag-handle" group="photos"
+                @start="drag = true" @end="drag = false" @change="onDragChange"
+                class="q-gutter-md row full-width report-item no-wrap">
+                <template #item="{ element }">
+                  <div class="report-photo drag-handle">
+                    <q-img :src="element.url">
+                      <q-btn icon="cancel" size="sm" @click="removePhoto(row,index,element)"
+                        class="absolute all-pointer-events" color="secondary" flat dense style="top: 8px; left: 8px">
+                        <q-tooltip>
+                          Убрать фотографию
+                        </q-tooltip>
+                      </q-btn>
+                    </q-img>
+                  </div>
+                </template>
+              </draggable>
+              <div class="q-ml-md" v-if="hasPermission(['generalViewReport.update'])">
+                <q-btn icon="delete" @click="removeItem(row.id!!, item.id!!)" size="sm" color="secondary" flat dense />
+              </div>
+            </q-card>
+          </div>
+          <q-card bordered flat>
+            <div class="cursor-pointer text-center text-caption">
+              <q-icon name="edit" color="blue-grey-9" />
+              {{ item.text }}
+              <q-popup-edit v-if="hasPermission(['generalViewReport.update'])" v-model="item.text" auto-save
+                v-slot="scope" @update:model-value="refresh">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
             </div>
-            <q-btn v-if="hasPermission(['generalViewReport.update'])" icon="add" @click="addRow()" label="добавить строку" color="secondary" size="sm"/>
+          </q-card>
+
         </div>
+        <div class="column" v-if="hasPermission(['generalViewReport.update'])">
+          <q-btn icon="add" @click="addItem(row.id!!)" color="secondary" size="xs" />
+          <q-btn icon="remove" @click="removeRow(row.id!!)" color="secondary" size="xs" class="q-mt-sm" />
+        </div>
+      </div>
+      <q-btn v-if="hasPermission(['generalViewReport.update'])" icon="add" @click="addRow()" label="добавить строку"
+        color="secondary" size="sm" />
     </div>
+  </div>
 </template>
 <script setup lang="ts">
 import _ from 'lodash';
@@ -65,6 +74,14 @@ const refresh = async () => {
 
 const onDragChange = async () => {
     await refresh()
+}
+
+const removePhoto = async (row:any,indexCol:number,photo: any) => {
+  const copyRow = {...row}
+  _.remove(copyRow.items[indexCol].photos, { id: photo.id })
+  await updateRow(photo.rowId, curentRow => {
+    curentRow = { ...copyRow }
+  });
 }
 
 const updateReport = async (updateFn: (update: GeneralViewReport) => void) => {
