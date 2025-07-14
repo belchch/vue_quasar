@@ -111,6 +111,7 @@ const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {
     determinationDate: data.determinationDate,
     contactPerson: data.contactPerson,
     contactPhone: data.contactPhone,
-    contactEmail: data.contactEmail
+    contactEmail: data.contactEmail,
+    inspectionObjectType: data.inspectionObjectType!
   }
 }

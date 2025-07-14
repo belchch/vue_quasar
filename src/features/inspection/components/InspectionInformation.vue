@@ -79,9 +79,19 @@
                     </InspectionInformationBlock>
 
                     <InspectionInformationBlock title="Объект исследования" template="6-6">
+                        <template #appendTitle v-if="hasPermission(['case.update'])">
+                            <q-btn
+                                icon="edit"
+                                flat
+                                class="edit-btn"
+                                size="sm"
+                                color="primary"
+                                @click="openUpdateObjectDialog=true"
+                            />
+                        </template>
                         <template #s1>
                             Тип объекта
-                            <div>-</div>
+                            <div>{{ objectTypeText }}</div>
                         </template>
                         <template #s2>
                             Адрес осмотра
@@ -182,6 +192,16 @@
           />
       </q-card>
     </q-dialog>
+    <!-- Объект исследования -->
+    <q-dialog v-if="selectedCase" v-model="openUpdateObjectDialog" style="width: 100%">
+      <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+          <UpdateFormObject
+              v-model="selectedCase"
+              @save="handeSaveObject"
+              @reset="openUpdateObjectDialog = false"
+          />
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -200,11 +220,13 @@ import { useSelectedCaseService } from 'src/features/case/composables/selected-c
 import _ from 'lodash'
 import { judgeName } from 'src/features/lookup/judge/stores/types'
 import { userName } from 'src/features/user/api/types'
+import { InspectionObjectTypeEnum } from 'src/features/case/stores/types'
 import UpdateForm from './form/UpdateForm.vue'
 import InspectionLocations from './InspectionLocations.vue'
 import CaseCommets from 'src/features/case/components/comments/CaseCommets.vue'
 import UpdateFormJudge from './form/UpdateFormJudge.vue'
 import UpdateFormOrganization from './form/UpdateFormOrganization.vue'
+import UpdateFormObject from './form/UpdateFormObject.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 
@@ -234,6 +256,7 @@ onMounted(async () => {
 const createDialogOpen = ref(false)
 const openUpdateJudgeDialog = ref(false)
 const openUpdateOrganizationDialog = ref(false)
+const openUpdateObjectDialog = ref(false)
 
 const openDialog = () => {
   createDialogOpen.value = true
@@ -243,6 +266,13 @@ const openDialog = () => {
 const save = async () => {
     console.log(selectedCase.value)
     await updateCase()
+}
+const handeSaveObject = async (localCase: any) => {
+  if (localCase) {
+    selectedCase.value = localCase
+    await save()
+  }
+  openUpdateObjectDialog.value = false;
 }
 const handeSaveOrganization = async (localCase: any) => {
   if (localCase) {
@@ -274,6 +304,11 @@ const resetForm = () => {
   createDialogOpen.value = false
 }
 
+const objectTypeText = computed(() => {
+  if (!selectedCase.value?.inspectionObjectType) return '-';
+  return InspectionObjectTypeEnum[selectedCase.value.inspectionObjectType];
+
+})
 
 const statusOptions = [
     {
