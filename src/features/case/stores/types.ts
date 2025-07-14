@@ -30,7 +30,8 @@ export type Case = {
   courtCaseNum?: string | undefined,
   contactPerson?: string | undefined,
   contactPhone?: string | undefined,
-  contactEmail?: string | undefined
+  contactEmail?: string | undefined,
+  inspectionObjectType?: InspectionObjectType,
 }
 
 export type CaseStages = {
@@ -54,3 +55,12 @@ export type CaseComment = {
   text: string,
   caseId: number
 }
+
+export enum InspectionObjectTypeEnum {
+  FLAT = 'Квартира',
+  APARTMENTS = 'Апартаменты',
+  GENERAL_PURPOSE = 'Помещение свободного назначения',
+  PANTRY = 'Кладовка',
+  PARKING = 'Парковочное место'
+}
+export type InspectionObjectType = keyof typeof InspectionObjectTypeEnum

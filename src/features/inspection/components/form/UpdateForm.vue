@@ -4,7 +4,7 @@
             <div class="row q-col-gutter-lg">
                 <div class="col-6">
                     <FormInput v-model="localCase.number" label="Номер дела" title="Дело" :required="true" />
-                    <FormInput v-model="localCase.facilityAddress" label="Адрес" :required="true" />
+                    <FormInput v-show="false" v-model="localCase.facilityAddress" label="Адрес" :required="true" />
                     <FormList v-show="false" label="Регион" v-model="localCase.region" :options="regionStore.items" />
                     <FormList v-show="false" label="Организация" v-model="localCase.company" :options="companyStore.items" />
                 </div>
