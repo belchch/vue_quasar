@@ -10,5 +10,8 @@ export const AuthApi = {
 
   async logout(request: LogoutRequest) {
     return api.post(`/api/auth/logout`, request)
+  },
+  async refreshToken(token:string | null) {
+    return api.post<Tokens>(`/api/auth/refresh`,{refreshToken:token})
   }
 };
