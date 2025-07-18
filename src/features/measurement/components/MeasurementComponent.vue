@@ -56,6 +56,11 @@
         </q-tr>
       </template>
     </q-table>
+    <q-card-section>
+      <h4 class="q-mb-sm">ЭПСЭ «План»</h4>
+      <PlanTree />
+    </q-card-section>
+
   </q-card>
 </template>
 <script setup lang="ts">
@@ -71,6 +76,7 @@ import { RoomMeasurementApi } from '../api/room-measurement-api';
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 import DownloadReportButton from 'src/components/DownloadReportButton.vue';
 import { useUserStore } from "src/features/user/stores/user-store";
+import PlanTree from './PlanTree.vue'
 
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { requestMeasurements } = useMeasurementService()
