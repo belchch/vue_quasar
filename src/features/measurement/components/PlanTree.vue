@@ -5,6 +5,7 @@
 
       <template v-slot:before>
         <div class="q-pa-md">
+          <PlanTableButton />
           <q-tree ref="treePlan" @update:selected="nodeSelected" :nodes="treeData" node-key="id"
             selected-color="primary" v-model:selected="selected" no-selection-unset>
             <template v-slot:header-room="prop">
@@ -99,6 +100,8 @@
                 </q-card-section>
               </q-card>
               <WallsInfo :walls-config="selectedNode.rawData.walls" />
+              <FloorInfo :section="selectedNode.rawData.floor" />
+              <CeilInfo :section="selectedNode.rawData.ceiling" />
             </div>
           </q-tab-panel>
           <!-- Стены -->
@@ -111,11 +114,11 @@
           </q-tab-panel>
           <!-- Пол -->
           <q-tab-panel name="floor">
-            <FloorInfo :section="selectedNode" />
+            <FloorInfo :section="selectedNode.rawData" />
           </q-tab-panel>
           <!-- Потолок -->
           <q-tab-panel name="ceiling">
-            <CeilInfo :section="selectedNode" />
+            <CeilInfo :section="selectedNode.rawData" />
           </q-tab-panel>
           <!-- Секция cтены -->
           <q-tab-panel name="wall-section">
@@ -151,6 +154,7 @@ import FloorInfo from './FloorInfo.vue'
 import CeilInfo from './CeilInfo.vue'
 import { tpcMeasurementApi } from '../api/tpc-measurement-api'
 import { useInspectionsStore } from "src/features/inspection/store/inspection-store";
+import PlanTableButton from './PlanTableButton.vue'
 
 const inspectionStore = useInspectionsStore();
 
