@@ -13,7 +13,7 @@
                   <div class="report-photo drag-handle">
                     <q-img :src="element.url">
                       <q-btn icon="cancel" size="sm" @click="removePhoto(row,index,element)"
-                        class="absolute all-pointer-events" color="secondary" flat dense style="top: 8px; left: 8px">
+                        class="absolute all-pointer-events" color="secondary" flat dense style="top: 8px; left: 8px;background: rgba(0, 0, 0, 0.47);">
                         <q-tooltip>
                           Убрать фотографию
                         </q-tooltip>
