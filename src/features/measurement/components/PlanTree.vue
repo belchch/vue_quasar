@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-separator />
-    <q-splitter v-model="splitterModel">
+    <q-splitter v-model="splitterModel" style="min-height: 400px;">
 
       <template v-slot:before>
         <div class="q-pa-md">
@@ -98,6 +98,7 @@
                   <div class="text-body1">{{ selectedNode.rawData.floor.perimeterExcludingOpenings || '-' }}</div>
                 </q-card-section>
               </q-card>
+              <WallsInfo :walls-config="selectedNode.rawData.walls" />
             </div>
           </q-tab-panel>
           <!-- Стены -->
@@ -139,18 +140,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import WallInfo from './WallInfo.vue'
 import WallsInfo from './WallsInfo.vue'
-import { head } from 'lodash';
 import OpeningInfo from './OpeningInfo.vue'
 import WallSectionInfo from './WallSectionInfo.vue'
 import FloorSectionInfo from './FloorSectionInfo.vue'
 import CeilSection from './CeilSection.vue'
 import FloorInfo from './FloorInfo.vue'
 import CeilInfo from './CeilInfo.vue'
+import { tpcMeasurementApi } from '../api/tpc-measurement-api'
+import { useInspectionsStore } from "src/features/inspection/store/inspection-store";
 
-// const simple = ref([])
+const inspectionStore = useInspectionsStore();
+
 const treePlan = ref();
 const splitterModel = ref(30);
 const selected = ref<number | null>(null);
@@ -311,7 +314,15 @@ const planJson = [
     }
   }
 ];
-
+onMounted(async () => {
+  try {
+    const response = await tpcMeasurementApi.getTpcMeasurements(inspectionStore.selectedInspectionId || 0);
+    console.log(response.data);
+    transformPlanJson(response.data.rooms);
+  } catch (error) {
+    console.log(error);
+  }
+})
 const nodeSelected = (node: any) => {
   const item = treePlan.value.getNodeByKey(node)
   console.log(node)
@@ -390,8 +401,9 @@ const createRoom = (room:any)=>{
     children: []
   }
   const transformedWalls = createWalls(room.walls);
-  walls.children.push(...transformedWalls)
-  resultRoom.children.push(walls);
+  //walls.children.push(...transformedWalls)
+  //resultRoom.children.push(walls);
+  resultRoom.children.push(...transformedWalls);
   const rootFloor = transformRoomFloor(room.floor);
   const rootCeiling = transformRoomCeiling(room.ceiling);
   resultRoom.children.push(rootFloor);
@@ -532,7 +544,7 @@ const createOpenings = (parent:any[],openings: any[]) => {
   })
   // return result;
 }
-transformPlanJson(planJson);
+// transformPlanJson(planJson);
 
 </script>
 

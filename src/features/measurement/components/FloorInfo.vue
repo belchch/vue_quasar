@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-blue-grey">Секция</div>
+    <div class="text-blue-grey">Пол</div>
     <div class="text-h6">{{ section['label'] || '-' }}</div>
     <div class="q-pa-md row items-start q-gutter-md">
       <!--  -->
