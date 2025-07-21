@@ -23,6 +23,7 @@ import { apkApi } from 'src/features/apk/api/apk-api'
 import { Notify } from 'quasar';
 import { useUserStore } from 'src/features/user/stores/user-store'
 import { useUploadApk } from 'src/features/inspection/composables/upload-config'
+import axios from 'axios';
 import { ref } from "vue";
 const userStore = useUserStore()
 const uploadConfig = useUploadApk();
@@ -38,9 +39,14 @@ const downloadApk = async () => {
     });
     return;
   }
-  const url = window.URL.createObjectURL(new Blob([response.data.url]));
+  const responseApk = await axios({
+    url:response.data.url,
+    method: 'GET',
+    responseType: 'blob',
+  });
+  const href = window.URL.createObjectURL(responseApk.data);
   const link = document.createElement('a')
-  link.href = url
+  link.href = href;
   const filename = response.data.source.split('/').pop()!;
   link.setAttribute('download', filename)
   document.body.appendChild(link)
