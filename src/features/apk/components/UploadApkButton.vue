@@ -12,7 +12,7 @@
         :loading="loading"
         flat
         round
-        icon="sym_o_upload"
+        icon="upload"
       >
         <q-tooltip>
           Загрузить APK
@@ -44,15 +44,20 @@ async function uploadFile(e:Event) {
   target.value = '';
   loading.value = true;
   try{
-    const { url, objectKey } = await uploadConfig(file.name);
-    console.log(url, objectKey);
+    const { url, objectKey } = await uploadConfig(file?.name);
+    console.log(url, objectKey, file?.type);
+    const blob = new Blob([file], { type: file?.type || 'application/octet-stream' })
     const uploadResponse = await fetch(url, {
       method: 'PUT',
-      body: file,
+      body: blob,
+      headers: {
+        'Content-Type': file?.type || 'application/octet-stream',
+      }
     });
     if(uploadResponse.ok){
-      console.log(uploadResponse);
-      await apkApi.postApk(objectKey, Date.now().toString());
+      let version = file.name.replace('.apk','')?.replace('Epse-','');
+      if(!version){ version = Date.now().toString(); }
+      await apkApi.postApk(objectKey, version);
       Notify.create({
         type: 'positive',
         message: 'Файл успешно загружен',

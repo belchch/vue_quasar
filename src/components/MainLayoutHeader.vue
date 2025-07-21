@@ -51,7 +51,6 @@
       </q-list>
       <div v-if="userStore.user" class="q-mx-sm flex justify-end" style="width: 320px;">
         <DownloadApkButton />
-        <UploadApkButton v-if="userStore.user.role == 'ADMIN'" />
         <q-btn round flat class="q-mr-xs">
           <q-avatar color="primary" text-color="white" class="text-weight-regular">
             {{ avatarText }}
