@@ -105,6 +105,7 @@ api.interceptors.response.use(
         retryFailedRequests(tokens.data.accessToken);
         return resultOriginalRequest;
       } catch(refreshError){
+        console.log("Ошибка обновления токена", refreshError);
         Credentials.removeTokens();
         rejectFailedRequests(refreshError);
         await router.push('/login');
