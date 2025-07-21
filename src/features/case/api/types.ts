@@ -1,4 +1,4 @@
-import {CasePriority, CaseStatus} from "src/features/case/stores/types";
+import {CasePriority, CaseStatus, InspectionObjectType} from "src/features/case/stores/types";
 
 export type CaseFilterRequest = {
   search?: string | undefined
@@ -53,5 +53,6 @@ export type CaseUpdateRequest = {
   determinationDate?: string | undefined,
   contactPerson?: string | undefined,
   contactPhone?: string | undefined,
-  contactEmail?: string | undefined
+  contactEmail?: string | undefined,
+  inspectionObjectType?: InspectionObjectType
 }

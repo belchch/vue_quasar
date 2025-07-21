@@ -30,10 +30,8 @@
         <q-item class="menu-item" clickable v-ripple :class="{ active: isCasesActive }" :to="{ name: 'cases' }">
           <q-item-section> Экспертизы</q-item-section>
         </q-item>
-        <q-item
-          v-if="userStore.hasPermission(['lookup.read'])"
-          class="menu-item" clickable v-ripple :class="{ active: isLookupActive }"
-        >
+        <q-item v-if="userStore.hasPermission(['lookup.read'])" class="menu-item" clickable v-ripple
+          :class="{ active: isLookupActive }">
           <q-item-section> Справочники</q-item-section>
           <q-menu class="border-radius" style="">
             <q-list>
@@ -52,6 +50,7 @@
         </q-item>
       </q-list>
       <div v-if="userStore.user" class="q-mx-sm flex justify-end" style="width: 320px;">
+        <DownloadApkButton />
         <q-btn round flat class="q-mr-xs">
           <q-avatar color="primary" text-color="white" class="text-weight-regular">
             {{ avatarText }}
@@ -106,6 +105,8 @@ import { useUserStore } from 'src/features/user/stores/user-store'
 import { menuLinks } from 'src/config/lookup-links'
 import { userRoleLabel } from 'src/features/user/api/types'
 import { useCommonService } from 'src/composables/common'
+import DownloadApkButton from 'src/features/apk/components/DownloadApkButton.vue'
+import UploadApkButton from 'src/features/apk/components/UploadApkButton.vue'
 
 
 const auth = useAuth()

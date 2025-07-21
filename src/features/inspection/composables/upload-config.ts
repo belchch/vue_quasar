@@ -15,3 +15,15 @@ export const useUploadConfig = () => {
     }
   }
 }
+
+export const useUploadApk = () => {
+  return async (fileName: string) => {
+    const objectKey = `android/${fileName}`
+    const uploadUrl = await S3Api.generateUploadUrl(objectKey)
+
+    return {
+      url: uploadUrl.data,
+      objectKey
+    }
+  }
+}
