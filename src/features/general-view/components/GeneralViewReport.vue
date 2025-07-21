@@ -11,9 +11,9 @@
                 class="q-gutter-md row full-width report-item no-wrap">
                 <template #item="{ element }">
                   <div class="report-photo drag-handle">
-                    <q-img :src="element.url">
+                    <q-img :src="element.url" class="img-action">
                       <q-btn icon="cancel" size="sm" @click="removePhoto(row,index,element)"
-                        class="absolute all-pointer-events" color="secondary" flat dense style="top: 8px; left: 8px;background: rgba(0, 0, 0, 0.47);">
+                        class="absolute all-pointer-events" color="white" flat dense style="top: 0px; left: 0px;background: rgba(0, 0, 0, 0.47);">
                         <q-tooltip>
                           Убрать фотографию
                         </q-tooltip>
@@ -145,5 +145,12 @@ onMounted(async () => {
 }
 .none-event {
   pointer-events: none;
+}
+.img-action button{
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.img-action:hover button {
+  opacity: 1;
 }
 </style>
