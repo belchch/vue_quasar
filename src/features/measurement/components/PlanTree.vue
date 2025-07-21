@@ -5,7 +5,7 @@
 
       <template v-slot:before>
         <div class="q-pa-md">
-          <PlanTableButton />
+          <PlanTableButton style="display:none" />
           <q-tree ref="treePlan" @update:selected="nodeSelected" :nodes="treeData" node-key="id"
             selected-color="primary" v-model:selected="selected" no-selection-unset>
             <template v-slot:header-room="prop">
@@ -99,6 +99,8 @@
                   <div class="text-body1">{{ selectedNode.rawData.floor.perimeterExcludingOpenings || '-' }}</div>
                 </q-card-section>
               </q-card>
+            </div>
+            <div class="q-pa-md">
               <WallsInfo :walls-config="selectedNode.rawData.walls" />
               <FloorInfo :section="selectedNode.rawData.floor" />
               <CeilInfo :section="selectedNode.rawData.ceiling" />
