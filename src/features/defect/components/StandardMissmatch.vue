@@ -12,7 +12,7 @@ const show = () => {
 }
 
 const message = computed(() => {
-  return `Несоответсвие нормотивов ${props.one?.name} и ${props.another?.name}`
+  return `Несоответсвие нормативов ${props.one?.name} и ${props.another?.name}`
 })
 
 const props = defineProps<{

@@ -4,7 +4,7 @@
       <q-uploader :factory="uploadFactory" method="PUT" :send-raw="true" class="img-uploader"
         @uploaded="onUploaded" @factory-failed="onFactoryFailed" thumbnail-fit="contain" />
     </q-dialog>
-    <q-btn flat round icon="android">
+    <q-btn flat round icon="android" style="color: #616161;">
       <q-menu>
         <q-list style="min-width: 100px">
           <q-item clickable v-close-popup @click="downloadApk">

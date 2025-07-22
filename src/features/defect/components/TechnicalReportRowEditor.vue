@@ -28,7 +28,7 @@
               fill-input
               hide-selected
               behavior="dialog"
-              hint="Справочник нормотивов"
+              hint="Справочник нормативов"
               :rules="[(val) => !_.isEmpty(val) || 'Обязательное поле']"
             />
 
