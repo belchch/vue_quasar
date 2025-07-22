@@ -121,7 +121,7 @@ const columns = [
   { name: 'defect', field: (row: TableRow) => row.defect.description, label: 'Недостаток', sortable: true, align: 'left' as const },
   {
     name: 'standard',
-    label: 'Нормотив',
+    label: 'Норматив',
     field: (row: TableRow) => row,
     sortable: true,
     align: 'left' as const,
