@@ -5,7 +5,6 @@ import {Credentials} from "src/features/auth/composables/credentials";
 
 import { AuthApi } from 'src/features/auth/api';
 import qs from 'qs'
-import { error } from 'console';
 import { Notify } from 'quasar';
 
 declare module 'vue' {
@@ -17,6 +16,7 @@ declare module 'vue' {
 declare module 'axios' {
   interface AxiosRequestConfig {
     __isRetryRequest?: boolean;
+    __isRefreshTokenRequest?: boolean;
   }
 }
 
@@ -32,7 +32,7 @@ const api = axios.create({
     return qs.stringify(params, { arrayFormat: 'comma' });
   },
 })
-const router = useRouter()
+
 let isRefreshing = false;
 let failedRequests :{
   resolve: (value: any) => void;
@@ -71,60 +71,9 @@ api.interceptors.request.use(
   }
 )
 
-api.interceptors.response.use(
-  response => response,
-   async (error:AxiosError) => {
-    const originalRequest = error.config;
-    // Токен истек
-    if (error.response?.status === 401 && originalRequest){
-      if(originalRequest && originalRequest.__isRetryRequest){
-        console.log("повторный запрос",originalRequest.url);
-        Credentials.removeTokens();
-        await router.push('/login');
-        return Promise.reject(error);
-      }
-      console.log(`Токен истек: ${originalRequest.url}`);
-      originalRequest.__isRetryRequest = true;
-      // Если обновление уже в процессе - добавляем запрос в очередь
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedRequests.push({ resolve, reject, config: originalRequest });
-        });
-      }
-      isRefreshing = true;
 
-      try {
-        const refreshToken = Credentials.getRefreshToken();
-        Credentials.removeTokens();
-        delete originalRequest.headers[AUTH_HEADER];
-        const tokens = await AuthApi.refreshToken(refreshToken);
-        Credentials.setTokens(tokens.data);
-        // originalRequest.headers[AUTH_HEADER] = `Bearer ${tokens.data.accessToken}`;
-        // api.defaults.headers.common[AUTH_HEADER] = `Bearer ${tokens.data.accessToken}`;
-        const  resultOriginalRequest = await api(originalRequest);
-        retryFailedRequests(tokens.data.accessToken);
-        return resultOriginalRequest;
-      } catch(refreshError){
-        console.log("Ошибка обновления токена", refreshError);
-        Credentials.removeTokens();
-        rejectFailedRequests(refreshError);
-        await router.push('/login');
-      }
-      finally {
-        isRefreshing = false;
-      }
 
-    } else {
-      Notify.create({
-        type: 'negative',
-        message: error.message
-      })
-      throw error
-    }
-  }
-)
-
-export default defineBoot(({ app }) => {
+export default defineBoot(({ app,router }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axios
@@ -134,6 +83,74 @@ export default defineBoot(({ app }) => {
   app.config.globalProperties.$api = api
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
+  api.interceptors.response.use(
+    response => response,
+    async (error:AxiosError) => {
+      const originalRequest = {...error.config} as InternalAxiosRequestConfig;
+      // Токен истек
+      if (error.response?.status === 401 && originalRequest){
+        if (originalRequest?.__isRefreshTokenRequest) {
+          console.log("Refresh token invalid",originalRequest.url);
+          Credentials.removeTokens();
+          rejectFailedRequests(error);
+          isRefreshing = false;
+          await router.push('/login');
+          return Promise.reject(error);
+        }
+        if(isRefreshing && originalRequest && originalRequest.__isRetryRequest){
+          const router = useRouter();
+          console.log("повторный запрос",originalRequest.url);
+          Credentials.removeTokens();
+          isRefreshing = false;
+          rejectFailedRequests(error);
+          await router.push('/login');
+          return Promise.reject(error);
+        }
+        console.log(`Токен истек: ${originalRequest.url}`);
+        originalRequest.__isRetryRequest = true;
+        // Если обновление уже в процессе - добавляем запрос в очередь
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedRequests.push({ resolve, reject, config: originalRequest });
+          });
+        }
+        isRefreshing = true;
+
+        try {
+          const refreshToken = Credentials.getRefreshToken();
+          Credentials.removeTokens();
+          delete originalRequest.headers[AUTH_HEADER];
+          console.log('send refresh',originalRequest)
+          const tokens = await AuthApi.refreshToken(refreshToken,{
+            __isRefreshTokenRequest: true // Помечаем запрос
+          });
+          console.log('refresh tokens',tokens)
+          Credentials.setTokens(tokens.data);
+          // originalRequest.headers[AUTH_HEADER] = `Bearer ${tokens.data.accessToken}`;
+          // api.defaults.headers.common[AUTH_HEADER] = `Bearer ${tokens.data.accessToken}`;
+          const  resultOriginalRequest = await api(originalRequest);
+          retryFailedRequests(tokens.data.accessToken);
+          return resultOriginalRequest;
+        } catch(refreshError){
+          const router = useRouter();
+          console.log("Ошибка обновления токена", refreshError);
+          Credentials.removeTokens();
+          rejectFailedRequests(refreshError);
+          await router.push('/login');
+        }
+        finally {
+          isRefreshing = false;
+        }
+
+      } else {
+        Notify.create({
+          type: 'negative',
+          message: error.message
+        })
+        throw error
+      }
+    }
+  )
 })
 
 export { api }
