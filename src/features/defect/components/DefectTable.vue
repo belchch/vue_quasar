@@ -9,7 +9,7 @@
     :pagination="{rowsPerPage: 20}"
   >
     <template v-slot:top-left>
-      <q-toggle v-model="showTechnicalReport" label="Техническое заклчение" color="secondary"/>
+      <q-toggle v-model="showTechnicalReport" label="Техническое заключение" color="secondary"/>
       <q-toggle v-model="showInspection" label="Натурный осмотр" color="secondary"/>
     </template>
     <template v-slot:body="props">
