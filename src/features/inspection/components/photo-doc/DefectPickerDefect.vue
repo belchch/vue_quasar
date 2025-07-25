@@ -7,18 +7,21 @@
           title="Поверхность"
           type="structElem"
           @select="selectStructElem"
+          @unselect="resetStructElem"
         />
         <DefectAttributeFilter
           :options="materialOptions"
           title="Материал"
           type="material"
           @select="selectMaterial"
+          @unselect="resetMaterial"
         />
         <DefectAttributeFilter
           :options="flawOptions"
           title="Тип дефекта"
           type="flaw"
           @select="selectFlaw"
+          @unselect="resetFlaw"
         />
       </div>
     </q-card-section>
@@ -94,7 +97,7 @@ const selectStructElem = async (id: number) => {
 
 const selectMaterial = async (id: number) => {
   await updateDefectInfo({
-    materialId: id,
+    materialId: id
   })
 }
 
@@ -115,6 +118,26 @@ const reset = async () => {
     materialId: undefined,
     flawId: undefined,
     defectId: undefined,
+  })
+}
+
+const resetStructElem = async () => {
+  await updateDefectInfo({
+    structElemId: undefined,
+    defectId: undefined,
+    materialId: undefined,
+  })
+}
+const resetMaterial = async () => {
+  await updateDefectInfo({
+    materialId: undefined,
+    flawId: undefined,
+    defectId: undefined,
+  })
+}
+const resetFlaw = async () => {
+  await updateDefectInfo({
+    flawId: undefined,
   })
 }
 

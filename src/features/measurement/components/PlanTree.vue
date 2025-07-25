@@ -5,7 +5,7 @@
 
       <template v-slot:before>
         <div class="q-pa-md">
-          <PlanTableButton style="display:none" />
+          <PlanTableButton />
           <q-tree ref="treePlan" @update:selected="nodeSelected" :nodes="treeData" node-key="id"
             selected-color="primary" v-model:selected="selected" no-selection-unset>
             <template v-slot:header-room="prop">
