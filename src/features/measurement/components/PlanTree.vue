@@ -1,18 +1,26 @@
 <template>
-  <div>
+  <q-card class="q-mt-md">
+    <q-card-section>
+      <div class="text-h6">ЭПСЭ План</div>
+    </q-card-section>
     <q-separator />
+    <PlanLocationDialog v-model="openSelectLocationDialog" :room-item="roomEditedLocation" />
     <q-splitter v-model="splitterModel" style="min-height: 400px;">
-
       <template v-slot:before>
         <div class="q-pa-md">
           <PlanTableButton />
           <q-tree ref="treePlan" @update:selected="nodeSelected" :nodes="treeData" node-key="id"
             selected-color="primary" v-model:selected="selected" no-selection-unset>
             <template v-slot:header-room="prop">
-              <q-item>
+              <q-item class="full-width">
                 <q-item-section>
                   <q-item-label caption>Помещение</q-item-label>
                   <q-item-label>{{ prop.node.label }}</q-item-label>
+                </q-item-section>
+                <q-item-section avatar @click="editRoomLocation(prop.node)">
+                  <q-btn flat dense round color="primary">
+                    <q-icon :size="'xs'" name="edit" />
+                  </q-btn>
                 </q-item-section>
               </q-item>
             </template>
@@ -141,7 +149,7 @@
         </q-tab-panels>
       </template>
     </q-splitter>
-  </div>
+  </q-card>
 </template>
 
 <script setup lang="ts">
@@ -157,6 +165,7 @@ import CeilInfo from './CeilInfo.vue'
 import { tpcMeasurementApi } from '../api/tpc-measurement-api'
 import { useInspectionsStore } from "src/features/inspection/store/inspection-store";
 import PlanTableButton from './PlanTableButton.vue'
+import PlanLocationDialog from './PlanLocationDialog.vue'
 
 const inspectionStore = useInspectionsStore();
 
@@ -166,6 +175,8 @@ const selected = ref<number | null>(null);
 const treeData = ref<object[]>([]);
 const selectedNode = ref<TreeItem | null>(null);
 const selectedNodeType = ref('');
+const openSelectLocationDialog = ref(false);
+const roomEditedLocation = ref<Room|null>(null);
 const planJson = [
   {
     "comment": "Жилая комната",
@@ -339,6 +350,10 @@ const nodeSelected = (node: any) => {
   }
   selectedNode.value = item;
   selectedNodeType.value = item.type;
+}
+const editRoomLocation = (room:Room)=>{
+  roomEditedLocation.value = room;
+  openSelectLocationDialog.value = true;
 }
 let globalIndex = 0;
 const transformPlanJson = (planJson: any) => {

@@ -56,12 +56,8 @@
         </q-tr>
       </template>
     </q-table>
-    <q-card-section>
-      <h4 class="q-mb-sm">ЭПСЭ «План»</h4>
-      <PlanTree />
-    </q-card-section>
-
   </q-card>
+  <PlanTree />
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
