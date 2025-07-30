@@ -72,7 +72,7 @@ import { RoomMeasurementApi } from '../api/room-measurement-api';
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 import DownloadReportButton from 'src/components/DownloadReportButton.vue';
 import { useUserStore } from "src/features/user/stores/user-store";
-import PlanTree from './PlanTree.vue'
+import PlanTree from './plan-tree/PlanTree.vue'
 
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { requestMeasurements } = useMeasurementService()

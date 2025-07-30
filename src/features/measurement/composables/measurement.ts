@@ -11,6 +11,11 @@ useMeasurementService = () => {
     const {roomMeasurements, openingMeasurements} = storeToRefs(useMeasurementStore())
     const {selectedInspectionId} = storeToRefs(useInspectionsStore())
 
+    const requestAllMeasurements = async () => {
+        await requestRoomMeasurements()
+        await requestOpeningMeasurements()
+    }
+
     const requestRoomMeasurements = async () => {
         const response = await RoomMeasurementApi.getByInspectionId(selectedInspectionId.value!!)
         roomMeasurements.value = response.data
@@ -49,6 +54,7 @@ useMeasurementService = () => {
     }
 
     return {
+        requestAllMeasurements,
         deleteOpeningMeasurement,
         requestMeasurements,
         updateRoomMeasurement,

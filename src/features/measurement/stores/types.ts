@@ -27,3 +27,52 @@ export type OpeningMeasurement = {
     area: number,
     opening: Opening
 }
+
+export type TreeItem = {
+  id: number,
+  header: string,
+  type: string,
+  label: string,
+  rawData: any,
+  children: any[]
+}
+
+export type Room = {
+  id: number,
+  header: 'room',
+  type: 'room',
+  label: string,
+  rawData: any,
+  children: any[]
+}
+
+export type Wall = {
+  id: number,
+  index: number,
+  header: string,
+  type: string,
+  label: string,
+  rawData: object,
+  children: any[]
+}
+
+export type Walls = {
+  id: number,
+  header: string,
+  type: string,
+  label: string,
+  rawData: object,
+  children: any[]
+}
+
+export type PlanOpening = {
+  id: number,
+  type: 'opening',
+  label: string,
+  rawData: object
+}
+
+export type PlanTreeCommonNode = {
+    label: string,
+    rawData: any
+}
