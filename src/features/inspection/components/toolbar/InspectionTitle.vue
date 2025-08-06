@@ -33,9 +33,20 @@
         <q-tab name="defect" label="Дефекты" class="q-px-xl" v-if="hasPermission(['defectReport.read'])" />
         <q-tab name="information" label="Информация" class="q-px-xl" />
         <q-tab name="questions" label="Вопросы" class="q-px-xl" v-if="hasPermission(['question.read'])" />
-        <q-tab name="measurements" label="Размеры" class="q-px-xl" v-if="hasPermission(['measurement.read'])" />
-        <q-tab name="documents" label="Документы" class="q-px-xl" v-if="hasPermission(['document.read'])" />
-        <q-tab name="common-report" label="Отчет" class="q-px-xl"/>
+        <q-tab name="measurements" label="Размеры" class="q-px-xl" v-if="hasPermission(['measurement.read'])" />              
+        <q-btn-dropdown auto-close stretch flat label="Еще..." no-caps>
+          <q-list>
+            <q-item clickable @click="onUpdateTab('boq')">
+              <q-item-section>ВОР</q-item-section>
+            </q-item>
+            <q-item clickable @click="onUpdateTab('documents')" v-if="hasPermission(['document.read'])">
+              <q-item-section>Документы</q-item-section>
+            </q-item>
+            <q-item clickable @click="onUpdateTab('common-report')">
+              <q-item-section>Общий отчет</q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-tabs>
     </q-toolbar>
   </q-page-sticky>
@@ -44,11 +55,11 @@
 <script setup lang="ts">
 import { Case } from 'src/features/case/stores/types'
 import { computed, ref } from 'vue'
-import {usePhotoDocsStore} from "src/features/inspection/store/photo-doc-store";
-import {usePhotoDocs} from "src/features/inspection/composables/photo-doc";
-import {useInspections} from "src/features/inspection/composables/inspection";
-import {useSelectedInspection} from "src/features/inspection/composables/selected-inspection";
-import {useTechnicalReportService} from "src/features/defect/composables/technical-report";
+import { usePhotoDocsStore } from "src/features/inspection/store/photo-doc-store";
+import { usePhotoDocs } from "src/features/inspection/composables/photo-doc";
+import { useInspections } from "src/features/inspection/composables/inspection";
+import { useSelectedInspection } from "src/features/inspection/composables/selected-inspection";
+import { useTechnicalReportService } from "src/features/defect/composables/technical-report";
 import { useUserStore } from "src/features/user/stores/user-store";
 
 const props = defineProps<{
@@ -56,8 +67,8 @@ const props = defineProps<{
   modelValue: string
 }>()
 
-const {requestPhotoDocs} = useSelectedInspection()
-const {requestTechnicalReport} = useTechnicalReportService()
+const { requestPhotoDocs } = useSelectedInspection()
+const { requestTechnicalReport } = useTechnicalReportService()
 const { hasPermission } = useUserStore()
 
 const onUpdateTab = (tab: string) => {

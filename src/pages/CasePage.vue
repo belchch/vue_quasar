@@ -39,6 +39,11 @@
               <CommonReport />
             </div>
           </q-tab-panel>
+          <q-tab-panel name="boq">
+            <div>              
+              <BoqMain/>
+            </div>
+          </q-tab-panel>
         </q-tab-panels>
       </q-card-section>
     </q-card>
@@ -63,6 +68,7 @@ import CaseQuestions from 'src/features/case/components/questions/CaseQuestions.
 import MeasurementComponent from 'src/features/measurement/components/MeasurementComponent.vue'
 import CaseDocuments from 'src/features/case/components/documents/CaseDocuments.vue'
 import CommonReport from 'src/features/report/components/CommonReport.vue'
+import BoqMain from 'src/features/boq/components/BoqMain.vue'
 
 const props = defineProps<{
   caseId: number
@@ -74,7 +80,7 @@ const { hasPermission } = useUserStore()
 
 const activeTab = ref<string>('inspection')
 
-const updateTab = (newTab: string) => {
+const updateTab = (newTab: string) => {  
   activeTab.value = newTab
 }
 
