@@ -1,3 +1,7 @@
+import CaseDocumentsPage from 'src/pages/case/CaseDocumentsPage.vue'
+import CaseInfoPage from 'src/pages/case/CaseInfoPage.vue'
+import CaseInspectionsPage from 'src/pages/case/CaseInspectionsPage.vue'
+import CaseQuestionsPage from 'src/pages/case/CaseQuestionsPage.vue'
 import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -20,6 +24,28 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CasePage.vue'),
         name: 'case',
         props: true,
+        children: [
+          {
+            path: 'information',
+            component: () => CaseInfoPage,
+            name: 'case-information'          
+          },
+          {
+            path: 'questions',
+            component: () => CaseQuestionsPage,
+            name: 'case-questions'
+          },
+          {
+            path: 'documents',
+            component: () => CaseDocumentsPage,
+            name: 'case-documents'
+          },
+          {
+            path: 'inspections',
+            component: () => CaseInspectionsPage,
+            name: 'case-inspections'
+          },
+        ]
       },
     ],
     meta: { requiredAuth: true },

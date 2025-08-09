@@ -1,5 +1,5 @@
 <template>
-    <q-card class="q-mt-md text-grey-8">
+    <q-card class="q-mt-sm text-grey-8">
         <q-card-section class="q-pb-none">
             <q-toolbar-title ellipsis class="q-ml-md">Локации</q-toolbar-title>
             <div class="text-body2 q-pl-md q-mt-xs">

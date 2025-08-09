@@ -1,64 +1,78 @@
 <template>
-  <q-page class="case-page column">
-    <q-card flat style="background: transparent; flex: 1" class="column">
-      <q-card-section class="q-pa-none" style="flex: 1">
-        <q-tab-panels v-model="activeTab" style="flex: 1" class="column">
-          <q-tab-panel name="inspection" style="flex: 1">
-            <InspectionContent />
-          </q-tab-panel>
-          <q-tab-panel name="generalView">
-            <GeneralViewComponent />
-          </q-tab-panel>
-          <q-tab-panel name="defect">
-            <div class="q-pa-md">
-              <DefectPage />
-            </div>
-          </q-tab-panel>
-          <q-tab-panel name="information">
-            <div class="q-pa-md">
-              <InspectionInformation />
-            </div>
-          </q-tab-panel>
-          <q-tab-panel name="questions">
-            <div class="q-pa-md">
-              <CaseQuestions />
-            </div>
-          </q-tab-panel>
-          <q-tab-panel name="documents">
-            <div class="q-pa-md">
-              <CaseDocuments />
-            </div>
-          </q-tab-panel>
-          <q-tab-panel name="measurements">
-            <div class="q-pa-md">
-              <MeasurementComponent />
-            </div>
-          </q-tab-panel>
-          <q-tab-panel name="common-report">
-            <div>
-              <CommonReport />
-            </div>
-          </q-tab-panel>
-          <q-tab-panel name="boq">
-            <div>              
-              <BoqMain/>
-            </div>
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card-section>
-    </q-card>
-
-    <InspectionTitle :case="selectedCase" :model-value="activeTab" @update:model-value="updateTab" />
-  </q-page>
+  <q-drawer
+      side="left"
+      v-model="drawerOpen"
+      show-if-above
+      bordered
+      
+      :width="250"      
+    >
+      <CaseDrawer @close="drawerOpen = false" v-model:active-tab="activeTab"/>
+    </q-drawer>    
+    <q-page class="case-page column">
+        <InspectionTitle :case="selectedCase" :model-value="activeTab" @update:model-value="updateTab" v-model:drawer-open="drawerOpen"/>
+        <div class="q-pa-sm">
+          <router-view/>           
+        </div>
+        <!-- <q-card flat style="background: transparent; flex: 1" class="column">
+          <q-card-section style="flex: 1">            
+            <q-tab-panels v-model="activeTab" style="flex: 1" class="column">
+              <q-tab-panel name="inspection" style="flex: 1">
+                <InspectionContent />
+              </q-tab-panel>
+              <q-tab-panel name="inspections">
+                <InspectionsPage/>
+              </q-tab-panel>
+              <q-tab-panel name="general-view">
+                <GeneralViewComponent />
+              </q-tab-panel>
+              <q-tab-panel name="defect">
+                <div class="q-pa-md">
+                  <DefectPage />
+                </div>
+              </q-tab-panel>
+              <q-tab-panel name="information">
+                <div class="q-pa-md">
+                  <InspectionInformation />
+                </div>
+              </q-tab-panel>
+              <q-tab-panel name="questions">
+                <div class="q-pa-md">
+                  <CaseQuestions />
+                </div>
+              </q-tab-panel>
+              <q-tab-panel name="documents">
+                <div class="q-pa-md">
+                  <CaseDocuments />
+                </div>
+              </q-tab-panel>
+              <q-tab-panel name="measurements">
+                <div class="q-pa-md">
+                  <MeasurementComponent />
+                </div>
+              </q-tab-panel>
+              <q-tab-panel name="common-report">
+                <div>
+                  <CommonReport />
+                </div>
+              </q-tab-panel>
+              <q-tab-panel name="boq">
+                <div>
+                  <BoqMain />
+                </div>
+              </q-tab-panel>
+            </q-tab-panels>
+          </q-card-section>
+        </q-card> -->
+      </q-page>
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
-import InspectionCommon from '../features/inspection/pages/InspectionCommon.vue'
 import DefectPage from 'pages/DefectPage.vue'
 import InspectionContent from 'src/features/inspection/components/InspectionContent.vue'
 import InspectionTitle from 'src/features/inspection/components/toolbar/InspectionTitle.vue'
-import InspectionInformation from 'src/features/inspection/components/InspectionInformation.vue'
+//import InspectionInformation from 'src/features/inspection/components/InspectionInformation.vue'
 import { useSelectedCaseService } from 'src/features/case/composables/selected-case'
 import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store'
 import { useUserStore } from "src/features/user/stores/user-store";
@@ -69,6 +83,8 @@ import MeasurementComponent from 'src/features/measurement/components/Measuremen
 import CaseDocuments from 'src/features/case/components/documents/CaseDocuments.vue'
 import CommonReport from 'src/features/report/components/CommonReport.vue'
 import BoqMain from 'src/features/boq/components/BoqMain.vue'
+import CaseDrawer from 'src/layouts/case-drawer/CaseDrawer.vue'
+import InspectionsPage from 'src/features/case/components/InspectionsPage.vue'
 
 const props = defineProps<{
   caseId: number
@@ -78,9 +94,11 @@ const { selectCase, cleanCase } = useSelectedCaseService()
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { hasPermission } = useUserStore()
 
-const activeTab = ref<string>('inspection')
+const drawerOpen = ref<boolean>(true)
 
-const updateTab = (newTab: string) => {  
+const activeTab = ref<string>('information')
+
+const updateTab = (newTab: string) => {
   activeTab.value = newTab
 }
 
@@ -105,7 +123,7 @@ onBeforeUnmount(() => {
 }
 
 .case-page {
-  padding-top: 32px;
+  padding-top: 49px;
 }
 
 .q-tab-panel {

@@ -22,6 +22,8 @@ import { useTechnicalReportStore } from "src/features/defect/stores/technical-re
 import { useInspectionSpotStore } from "src/features/inspection/store/inspection-spot-store";
 import { useAllPhotoDocStore } from "src/features/inspection/store/all-photo-doc-store";
 import { useAllPhotoDocsService } from "src/features/inspection/composables/all-photo-docs";
+import { useInspections } from "src/features/inspection/composables/inspection";
+
 
 export const useSelectedCaseService = () => {
   const { selectedCase, caseLoaded } = storeToRefs(useSelectedCaseStore())
@@ -41,13 +43,12 @@ export const useSelectedCaseService = () => {
   const { requestAllPhotoDocs } = useAllPhotoDocsService()
   const { requestTechnicalReport } = useTechnicalReportService()
   const { requestInspectionSpots } = useInspectionSpotService()
+  const { requestInspections } = useInspections()
 
   const selectCase = async (caseId: number) => {
     const caseResponse = await CaseApi.getCase(caseId)
     selectedCase.value = caseResponse.data
-    const inspectionResponse = await InspectionApi.getInspections(caseId)
-    const inspectionId = _.first(inspectionResponse.data)!!.id!!
-    inspectionsStore.setSelectedInspectionId(inspectionId)
+    await requestInspections()
     await requestAllPhotoDocs()
     photoDocs.value = allPhotoDocs.value
     await requestLookupIfEmpty(spotStore)

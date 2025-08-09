@@ -1,8 +1,8 @@
 <template>
   <q-page-sticky expand position="top">
-    <q-toolbar class="bg-white" style="border-bottom: 1px solid #e0e0e0">
-      <q-btn flat icon="keyboard_arrow_left" @click="$router.back()" class="q-mr-xs q-my-sm text-grey-8"
-        style="width: 36px; margin-right: 16px" />
+    <q-toolbar class="bg-white" style="border-bottom: 1px solid #e0e0e0">    
+      <q-btn v-if="!drawerOpen" flat icon="sym_o_left_panel_open" class="text-grey-8 q-mr-sm"
+            style="width: 36px;" @click="emits('update:drawerOpen', true)" />
 
       <q-card-section class="q-pa-none justify-center column q-mr-md">
         <q-card bordered flat class="q-pa-none q-ma-none">
@@ -26,7 +26,7 @@
       </q-chip>
 
       <q-space />
-      <q-tabs :model-value="modelValue" @update:model-value="onUpdateTab" dense align="left" class="text-grey-10" shrink
+      <!-- <q-tabs :model-value="modelValue" @update:model-value="onUpdateTab" dense align="left" class="text-grey-10" shrink
         stretch no-caps active-color="primary">
         <q-tab name="inspection" label="Осмотр" class="q-px-xl" v-if="hasPermission(['inspection.read'])" />
         <q-tab name="generalView" label="Общие виды" class="q-px-xl" v-if="hasPermission(['generalViewReport.read'])" />
@@ -47,7 +47,7 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-      </q-tabs>
+      </q-tabs> -->
     </q-toolbar>
   </q-page-sticky>
 </template>
@@ -61,10 +61,12 @@ import { useInspections } from "src/features/inspection/composables/inspection";
 import { useSelectedInspection } from "src/features/inspection/composables/selected-inspection";
 import { useTechnicalReportService } from "src/features/defect/composables/technical-report";
 import { useUserStore } from "src/features/user/stores/user-store";
+import NavigateBackButton from './NavigateBackButton.vue';
 
 const props = defineProps<{
   case: Case | undefined
-  modelValue: string
+  modelValue: string,
+  drawerOpen: boolean
 }>()
 
 const { requestPhotoDocs } = useSelectedInspection()
@@ -76,7 +78,8 @@ const onUpdateTab = (tab: string) => {
 }
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', value: string): void
+  (e: 'update:modelValue', value: string): void,  
+  (e: 'update:drawerOpen', value: boolean): void,
 }>()
 
 const computeStatusStyle = () => {
