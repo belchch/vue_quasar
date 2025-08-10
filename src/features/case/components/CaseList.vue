@@ -4,16 +4,15 @@
   </q-list>
 </template>
 <script setup lang="ts">
-import CaseItem from 'src/features/case/components/case-item/CaseItem.vue'
-import { Case } from 'src/features/case/stores/types'
-import { ref } from 'vue'
-import { useCasesStore } from "src/features/case/stores/case-store";
-import { useRouter } from "vue-router";
 import { useNavigate } from 'src/composables/navigate';
+import CaseItem from 'src/features/case/components/case-item/CaseItem.vue';
+import { useCasesStore } from "src/features/case/stores/case-store";
+import { Case } from 'src/features/case/stores/types';
 const caseStore = useCasesStore()
 const { navigateCaseHome } = useNavigate()
 
 const selectCase = async (cse: Case) => {
+  console.log('navigationCaseHome', cse)
   await navigateCaseHome(cse.id)
 }
 

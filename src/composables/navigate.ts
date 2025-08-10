@@ -1,6 +1,5 @@
 import { storeToRefs } from "pinia"
 import { useSelectedCaseStore } from "src/features/case/stores/selected-case-store"
-import { useSelectedInspection } from "src/features/inspection/composables/selected-inspection"
 import { useInspectionsStore } from "src/features/inspection/store/inspection-store"
 import { useRouter } from "vue-router"
 
@@ -12,10 +11,12 @@ export const useNavigate = () => {
     const inspectionHome = 'photos'
 
     const navigateCaseHome = async (caseId?: number) => {
+        console.log('navigateCasePage', caseId)
         await navigateCasePage('information', caseId)
     }
 
     const navigateCasePage = async (page: string, caseId?: number) => {
+        console.log('push', router, page, caseId)
         await router.push(caseUrl(page, caseId))
     }
 
@@ -27,6 +28,7 @@ export const useNavigate = () => {
     const inspectionHomeUrl = () => inspectionUrl(inspectionHome)
 
     const caseUrl = (page: string, caseId?: number) => {
+        console.log("caseUrl")
         return `/cases/${caseId || selectedCase.value?.id}/${page}`
     }
 
