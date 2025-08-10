@@ -12,16 +12,16 @@ export const useNavigate = () => {
 
     const navigateCaseHome = async (caseId?: number) => {
         console.log('navigateCasePage', caseId)
-        await navigateCasePage('information', caseId)
+        return await navigateCasePage('information', caseId)
     }
 
     const navigateCasePage = async (page: string, caseId?: number) => {
         console.log('push', router, page, caseId)
-        await router.push(caseUrl(page, caseId))
+        return await router.push(caseUrl(page, caseId))
     }
 
     const navigateInspectionPage = async (page: string, inspectionId?: number) => {
-        await router.push(inspectionUrl(page, inspectionId))
+        return await router.push(inspectionUrl(page, inspectionId))
     }
 
     const caseHomeUrl = () =>  caseUrl(caseHome)
