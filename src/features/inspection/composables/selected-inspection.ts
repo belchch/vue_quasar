@@ -9,7 +9,6 @@ import {useTechnicalReportService} from "src/features/defect/composables/technic
 export const useSelectedInspection = () => {
   const {selectedInspectionId} = storeToRefs(useInspectionsStore())
   const photoDocService = usePhotoDocs()
-  const {requestTechnicalReport} = useTechnicalReportService()
 
   const requestPhotoDocs = async (search?: PhotoDocSearchRequest, generatePresignedUrls: boolean = false) => {
     await photoDocService.requestPhotoDocs(selectedInspectionId.value!!, search, generatePresignedUrls)

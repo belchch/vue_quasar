@@ -1,9 +1,10 @@
-import { PhotoDocType } from 'src/features/inspection/store/types'
+import { Inspection, PhotoDocType } from 'src/features/inspection/store/types'
 import type {StructElem} from "src/features/lookup/struct-elem/stores/types";
 import type {Material} from "src/features/lookup/material/stores/types";
 import {Defect} from "src/features/defect/flaw/stores/types";
 import {Flaw} from "src/features/defect/flaw/stores/types";
 import { Spot } from 'src/features/lookup/spot/stores/types';
+import dayjs from 'dayjs';
 
 export type PhotoDocUpdateRequest = {
   id: number
@@ -66,4 +67,22 @@ export type InspectionSpotUpdateRequest = {
   spotId: number,
   count: number,
   inUse: boolean
+}
+
+export type InspectionUpdateRequest = {
+    apartment: string,
+    address: string,
+    performedDate?: string,
+    performedById?: number | undefined,
+    caseId: number
+}
+
+export const toInspectionUpdateRequest = (inspection: Inspection): InspectionUpdateRequest => {
+  return {
+    apartment: inspection.apartment,
+    address: inspection.address,
+    performedDate: inspection.performedDate,
+    performedById: inspection.performedBy?.id,
+    caseId: inspection.caseId
+  }
 }

@@ -6,16 +6,16 @@
     </q-card>
 </template>
 <script setup lang="ts">
-import DownloadReportButton from 'src/components/DownloadReportButton.vue';
-import { ReportApi } from '../api/report-api';
-import { useCasesStore } from 'src/features/case/stores/case-store';
 import { storeToRefs } from 'pinia';
-import { useSelectedCaseService } from 'src/features/case/composables/selected-case';
+import DownloadReportButton from 'src/components/DownloadReportButton.vue';
 import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store';
+import { ReportApi } from '../api/report-api';
+import { useSelectedInspection } from 'src/features/inspection/composables/selected-inspection';
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 
-const {selectedCase} = storeToRefs(useSelectedCaseStore())
+const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const downloadReport = async () => {
-    return (await ReportApi.downloadReport(selectedCase.value!.id!)).data
+    return (await ReportApi.downloadReport(selectedInspectionId.value!)).data
 }
 </script>

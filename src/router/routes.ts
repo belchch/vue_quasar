@@ -1,8 +1,28 @@
-import CaseDocumentsPage from 'src/pages/case/CaseDocumentsPage.vue'
+import { casePages } from 'src/features/case/constants/case-pages'
 import CaseInfoPage from 'src/pages/case/CaseInfoPage.vue'
-import CaseInspectionsPage from 'src/pages/case/CaseInspectionsPage.vue'
 import CaseQuestionsPage from 'src/pages/case/CaseQuestionsPage.vue'
+import CasePage from 'src/pages/CasePage.vue'
+import InspectionBoqPage from 'src/pages/inspection/InspectionBoqPage.vue'
+import InspectionDefectsPage from 'src/pages/inspection/InspectionDefectsPage.vue'
+import InspectionDocumentsPage from 'src/pages/inspection/InspectionDocumentsPage.vue'
+import InspectionGeneralViewPage from 'src/pages/inspection/InspectionGeneralViewPage.vue'
+import InspectionMeasurementsPage from 'src/pages/inspection/InspectionMeasurementsPage.vue'
+import InspectionPage from 'src/pages/inspection/InspectionPage.vue'
+import InspectionPhotoPage from 'src/pages/inspection/InspectionPhotoPage.vue'
+import InspectionReportPage from 'src/pages/inspection/InspectionReportPage.vue'
+import InspectionSettingsPage from 'src/pages/inspection/InspectionSettingsPage.vue'
+import { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
+
+const casePage = ({ name, component }: { name: string, component: Component }) => {
+  const page = casePages[name]!
+
+  return {
+    path: page.segment,
+    component,
+    name
+  }
+}
 
 const routes: RouteRecordRaw[] = [
   {
@@ -21,29 +41,57 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('pages/CasePage.vue'),
+        component: () => CasePage,
         name: 'case',
         props: true,
         children: [
+          casePage({
+            name: 'case-information',
+            component: CaseInfoPage
+          }),
+          casePage({
+            name: 'case-questions',
+            component: CaseQuestionsPage
+          }),
           {
-            path: 'information',
-            component: () => CaseInfoPage,
-            name: 'case-information'          
-          },
-          {
-            path: 'questions',
-            component: () => CaseQuestionsPage,
-            name: 'case-questions'
-          },
-          {
-            path: 'documents',
-            component: () => CaseDocumentsPage,
-            name: 'case-documents'
-          },
-          {
-            path: 'inspections',
-            component: () => CaseInspectionsPage,
-            name: 'case-inspections'
+            path: 'inspection/:inspectionId',
+            component: () => InspectionPage,
+            name: 'inspection',
+            props: true,
+            children: [
+              casePage({
+                name: 'inspection-photos',
+                component: InspectionPhotoPage
+              }),
+              casePage({
+                name: 'inspection-gv',
+                component: InspectionGeneralViewPage
+              }),
+              casePage({
+                name: 'inspection-measurements',
+                component: InspectionMeasurementsPage
+              }),   
+              casePage({
+                name: 'inspection-defects',
+                component: InspectionDefectsPage
+              }),
+              casePage({
+                name: 'inspection-boq',
+                component: InspectionBoqPage
+              }),
+              casePage({
+                name: 'inspection-documents',
+                component: InspectionDocumentsPage
+              }),
+              casePage({
+                name: 'inspection-report',
+                component: InspectionReportPage
+              }),
+              casePage({
+                name: 'inspection-settings',
+                component: InspectionSettingsPage
+              })
+            ]
           },
         ]
       },
@@ -54,12 +102,6 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
     children: [{ path: '', component: () => import('pages/LoginPage.vue'), name: 'login' }],
-  },
-  {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/DefectPage.vue'), name: 'defect' }],
-    meta: { requiredAuth: true },
   },
   {
     path: '/lookup',

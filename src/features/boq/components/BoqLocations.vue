@@ -50,7 +50,7 @@ const emits = defineEmits<{
     navigateLocation: [location: BoqLocation] 
 }>()
 
-const { requestBoq, buildAndRequestBoq } = useBoqService()
+const { buildAndRequestBoq } = useBoqService()
 const { locations } = storeToRefs(useBoqStore())
 
 const navigateLocation = (location: BoqLocation) => {
@@ -83,9 +83,5 @@ const columns = [
         align: 'left' as const,
     }
 ]
-
-onMounted(async () => {
-    await requestBoq()
-})
 
 </script>

@@ -158,8 +158,7 @@
                             />
                         </div>
                     </q-card-section>
-                </q-card>
-                <InspectionLocations/>
+                </q-card>                
             </div>
         </template>
     </div>

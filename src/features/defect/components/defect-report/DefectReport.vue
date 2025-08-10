@@ -40,7 +40,7 @@ import { DefectReportApi } from '../../api/defect-report-api'
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
 import { useUserStore } from "src/features/user/stores/user-store";
 
-const { buildAndRequestDefectReport, requestDefectReport, moveSpot } = useDefectReportService()
+const { buildAndRequestDefectReport, moveSpot } = useDefectReportService()
 const { defectReport } = storeToRefs(useDefectReportStore())
 const { technicalReport } = storeToRefs(useTechnicalReportStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
@@ -48,7 +48,7 @@ const { hasPermission } = useUserStore()
 
 const drag = ref(false)
 const isBuilding = ref(false)
-const useTechnicalReport = ref(!!technicalReport.value)
+const useTechnicalReport = ref(false)
 
 const buildDocx = async () => {
   const response = await DefectReportApi.buildDocx(selectedInspectionId.value!!)
@@ -64,10 +64,6 @@ const buildReport = async () => {
 const onDragChange = async (e: any) => {
   await moveSpot(e.moved.element.id, e.moved.oldIndex, e.moved.newIndex)
 }
-
-onMounted(async () => {
-  await requestDefectReport()
-})
 </script>
 <style scoped lang="scss">
 .root-card {

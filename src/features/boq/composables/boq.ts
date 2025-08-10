@@ -15,6 +15,8 @@ export const useBoqService = () => {
         if (boq.value.id) {
             const response = await BoqApi.getLocations(boq.value.id)
             locations.value = response.data
+        } else {
+            locations.value = []
         }
     }
 

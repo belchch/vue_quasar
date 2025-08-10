@@ -34,19 +34,21 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { useInspectionsStore } from "src/features/inspection/store/inspection-store";
-import { DocumentsAPI } from './documents-api';
-import { useUserStore } from "src/features/user/stores/user-store";
+import { DocumentsAPI } from '../api/documents-api';
 
 import UploadDocumentBtn from './UploadDocumentBtn.vue';
 import TableDocuments from "./TableDocuments.vue";
 import GalleryDocuments from './GalleryDocuments.vue';
-import DownloadReportButton from 'src/components/DownloadReportButton.vue';
 import DisplayModeBtn from './DisplayModeBtn.vue'
+import { useUserStore } from 'src/features/user/stores/user-store';
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
+import { useDocumentStore } from '../stores/documents-store';
+import { storeToRefs } from 'pinia';
 
 const { hasPermission } = useUserStore()
 const tab = ref('act');
-const actDocuments = ref<any[]>([]);
+const { actDocuments } = storeToRefs(useDocumentStore())
+
 const displayMode = ref('gallery');
 
 const filteredAct = computed(() => actDocuments.value.filter((item: any) => { return item.fileType == 'INSPECTION_REPORT' }));
@@ -57,15 +59,6 @@ const inspectionStore = useInspectionsStore();
 const downloadReport = async () => {
   return (await DocumentsAPI.downloadReport(inspectionStore.selectedInspectionId!)).data
 }
-
-onMounted(async () => {
-  try {
-    const response = await DocumentsAPI.getDocuments(inspectionStore.selectedInspectionId || 0);
-    actDocuments.value = response.data;
-  } catch (error) {
-    console.log(error);
-  }
-})
 
 const addDocument = (item: any) => {
   actDocuments.value.push(item);

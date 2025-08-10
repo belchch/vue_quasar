@@ -4,14 +4,13 @@
     <BoqSummary v-else @navigate-location="(location: BoqLocation) => navigateLocation(location)" />
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { BoqLocation } from '../api/types';
+import { useBoqLocationService } from '../composables/boq-location';
+import { useBoqLocationStore } from '../stores/boq-location-store';
+import BoqHeader from './BoqHeader.vue';
 import BoqSummary from './BoqSummary.vue';
 import BoqConfiguration from './configuration/BoqConfiguration.vue';
-import BoqHeader from './BoqHeader.vue';
-import { useBoqLocationStore } from '../stores/boq-location-store';
-import { storeToRefs } from 'pinia';
-import { useBoqLocationService } from '../composables/boq-location';
 
 const { location } = storeToRefs(useBoqLocationStore())
 const { selectLocation } = useBoqLocationService()

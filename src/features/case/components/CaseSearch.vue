@@ -1,21 +1,14 @@
 <template>
   <div class="row list-wrapper q-mt-sm no-wrap q-gutter-x-lg q-ml-md">
     <div class="col-7">
-      <q-btn
-        v-if="hasPermission(['case.create'])"
-        dense
-        icon="add"
-        @click="createDialogOpen = true"
-        color="primary"
-        label="Создать"
-        class="full-width"
-        style="position: relative; top: -15px; margin-bottom: 10px; text-transform: none"
-      />
-      <CaseListSkeleton v-if="isLoading"/>
-      <CaseList v-else/>
+      <q-btn v-if="hasPermission(['case.create'])" dense icon="add" @click="createDialogOpen = true" color="primary"
+        label="Создать" class="full-width"
+        style="position: relative; top: -15px; margin-bottom: 10px; text-transform: none" />
+      <CaseListSkeleton v-if="isLoading" />
+      <CaseList v-else />
     </div>
     <div class="col-5">
-      <CaseFilter/>
+      <CaseFilter />
     </div>
   </div>
   <q-dialog v-model="createDialogOpen" style="width: 100%">
@@ -25,78 +18,44 @@
           <div class="text-h6">Новая экспертиза</div>
           <div>
             <div class="text-subtitle1 q-mb-sm">Дело</div>
-            <q-input
-              dense
-              outlined
-              v-model="createForm.number"
-              lazy-rules
-              label="Номер дела"
-              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
-            />
+            <q-input dense outlined v-model="createForm.number" lazy-rules label="Номер дела"
+              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
           </div>
           <div>
-            <div class="text-subtitle1 q-mb-sm">Адрес</div>
-            <q-input
-              dense
-              outlined
-              v-model="createForm.facilityAddress"
-              lazy-rules
-              label="Адрес"
-              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
-            />
+            <div class="text-subtitle1  q-mb-sm">Адрес</div>
+            <div class="row q-mb-sm">
+              <div class="col">
+                <q-input dense outlined v-model="createForm.facilityAddress" lazy-rules label="Адрес"
+                  :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
+              </div>
+              <div class="col-3 q-ml-sm">
+                <q-input dense outlined v-model="createForm.apartment" lazy-rules label="Номер квартиры"
+                  :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
+              </div>
+            </div>
           </div>
           <div>
             <div class="text-subtitle1 q-mb-sm">Вид экспертизы</div>
-            <q-select
-              use-input
-              dense
-              outlined
-              v-model="createForm.expertiseType"
-              lazy-rules
-              :options="expertiseTypeOptions"
-              label="Вид экспертизы"
-              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
-            />
+            <q-select use-input dense outlined v-model="createForm.expertiseType" lazy-rules
+              :options="expertiseTypeOptions" label="Вид экспертизы"
+              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
           </div>
           <div>
             <div class="text-subtitle1 q-mb-sm">Организанция</div>
-            <q-select
-              use-input
-              dense
-              outlined
-              v-model="createForm.company"
-              lazy-rules
-              :options="companyOptions"
-              label="Организация"
-              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
-            />
+            <q-select use-input dense outlined v-model="createForm.company" lazy-rules :options="companyOptions"
+              label="Организация" :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
           </div>
           <div>
             <div class="text-subtitle1 q-mb-sm">Регион</div>
-            <q-select
-              use-input
-              dense
-              outlined
-              v-model="createForm.region"
-              lazy-rules
-              :options="regionOptions"
-              label="Регион"
-              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
-            />
+            <q-select use-input dense outlined v-model="createForm.region" lazy-rules :options="regionOptions"
+              label="Регион" :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
           </div>
           <div class="row justify-between items-end">
             <div>
               <div class="text-subtitle1 q-mb-sm">Срок сдачи</div>
               <q-input dense outlined v-model="localDate" readonly>
-                <q-btn
-                  icon="event"
-                  flat
-                  no-caps
-                  round2
-                  class="bg-grey-3 text-grey-8"
-                  style="margin: 1px -11px"
-                  size="md"
-                >
+                <q-btn icon="event" flat no-caps round2 class="bg-grey-3 text-grey-8" style="margin: 1px -11px"
+                  size="md">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                     <q-date color="grey" v-model="localDate" minimal>
                       <div class="row items-center justify-end q-gutter-sm">
@@ -156,6 +115,7 @@ const createForm = ref<CreateFormType>({
   company: null,
   region: null,
   facilityAddress: '',
+  apartment: '',
   expertiseType: null,
   deadline: dayjs().add(30, 'day').toDate(),
 })
@@ -169,8 +129,9 @@ type CreateFormType = {
   number: string,
   company: SelectOption | null,
   region: SelectOption | null,
-  expertiseType: {label: string, value: string} | null,
+  expertiseType: { label: string, value: string } | null,
   facilityAddress: string,
+  apartment: string,
   deadline: Date
 }
 
@@ -181,7 +142,7 @@ const regionOptions = computed(() =>
   regionStore.items.map((item) => ({ label: item.name, value: item.id!! })),
 )
 
-const expertiseTypeOptions = ref<{label: string, value: string}[]>([
+const expertiseTypeOptions = ref<{ label: string, value: string }[]>([
   {
     label: 'ДДУ',
     value: 'SHARED_EQUITY'
@@ -209,17 +170,19 @@ const resetCreateForm = () => {
     region: null,
     expertiseType: null,
     facilityAddress: '',
+    apartment: '',
     deadline: dayjs().add(30, 'day').toDate(),
   }
   createDialogOpen.value = false
 }
 
 const submitCreateForm = async () => {
-  const { number, company, region, facilityAddress, deadline, expertiseType } = createForm.value
+  const { number, company, region, facilityAddress, apartment, deadline, expertiseType } = createForm.value
 
   await createCase({
     number: number,
     facilityAddress: facilityAddress,
+    apartment: apartment,
     companyId: company!!.value,
     expertiseType: expertiseType!!.value,
     regionId: region!!.value,

@@ -9,11 +9,12 @@ import { Case } from 'src/features/case/stores/types'
 import { ref } from 'vue'
 import { useCasesStore } from "src/features/case/stores/case-store";
 import { useRouter } from "vue-router";
+import { useNavigate } from 'src/composables/navigate';
 const caseStore = useCasesStore()
-const router = useRouter()
+const { navigateCaseHome } = useNavigate()
 
 const selectCase = async (cse: Case) => {
-  await router.push(`/cases/${cse.id}/information`)
+  await navigateCaseHome(cse.id)
 }
 
 </script>

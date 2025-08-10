@@ -1,5 +1,5 @@
 <template>
-  <q-card class="shadow_custom rounded-borders q-ma-md" bordered style="flex: 1">
+  <q-card class="shadow_custom rounded-borders" bordered style="flex: 1">
     <InspectionToolbar />
     <PhotoDocsSkeleton v-if="!caseLoaded || photoDocsLoading"/>
     <PhotoDocsContainer v-else :items="photoDocs" />

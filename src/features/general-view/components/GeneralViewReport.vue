@@ -63,7 +63,7 @@ import { useUserStore } from "src/features/user/stores/user-store";
 const drag = ref()
 
 const { generalViewReport } = storeToRefs(useGeneralViewReportStore())
-const { updateGeneralViewReport, requestGeneralViewReport } = useGeneralViewReportService()
+const { updateGeneralViewReport } = useGeneralViewReportService()
 const { requestGallery } = useGeneralViewGalleryService()
 const { hasPermission } = useUserStore()
 
@@ -129,9 +129,6 @@ const addRow = async () => {
     })
 }
 
-onMounted(async () => {
-    await requestGeneralViewReport()
-})
 </script>
 <style scoped>
 .report-photo {
