@@ -11,24 +11,21 @@ export const useNavigate = () => {
     const inspectionHome = 'photos'
 
     const navigateCaseHome = async (caseId?: number) => {
-        console.log('navigateCasePage', caseId)
-        return await navigateCasePage('information', caseId)
+        await navigateCasePage('information', caseId)
     }
 
-    const navigateCasePage = async (page: string, caseId?: number) => {
-        console.log('push', router, page, caseId)
-        return await router.push(caseUrl(page, caseId))
+    const navigateCasePage = async (page: string, caseId?: number) => {        
+        await router.push(caseUrl(page, caseId))
     }
 
     const navigateInspectionPage = async (page: string, inspectionId?: number) => {
-        return await router.push(inspectionUrl(page, inspectionId))
+        await router.push(inspectionUrl(page, inspectionId))
     }
 
-    const caseHomeUrl = () =>  caseUrl(caseHome)
+    const caseHomeUrl = () => caseUrl(caseHome)
     const inspectionHomeUrl = () => inspectionUrl(inspectionHome)
 
-    const caseUrl = (page: string, caseId?: number) => {
-        console.log("caseUrl")
+    const caseUrl = (page: string, caseId?: number) => {        
         return `/cases/${caseId || selectedCase.value?.id}/${page}`
     }
 

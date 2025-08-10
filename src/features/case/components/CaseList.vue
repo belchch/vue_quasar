@@ -11,8 +11,7 @@ import { Case } from 'src/features/case/stores/types';
 const caseStore = useCasesStore()
 const { navigateCaseHome } = useNavigate()
 
-const selectCase = async (cse: Case) => {
-  console.log('navigationCaseHome', cse)
+const selectCase = async (cse: Case) => {  
   await navigateCaseHome(cse.id)
 }
 

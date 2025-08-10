@@ -23,7 +23,7 @@
     "quasar": "^2.16.0",
     "uuid": "^11.1.0",
     "vue": "^3.4.18",
-    "vue-router": "^4.0.12",
+    "vue-router": "^4.5.1",
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {

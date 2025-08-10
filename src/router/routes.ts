@@ -1,16 +1,4 @@
 import { casePages } from 'src/features/case/constants/case-pages'
-import CaseInfoPage from 'src/pages/case/CaseInfoPage.vue'
-import CaseQuestionsPage from 'src/pages/case/CaseQuestionsPage.vue'
-import CasePage from 'src/pages/CasePage.vue'
-import InspectionBoqPage from 'src/pages/inspection/InspectionBoqPage.vue'
-import InspectionDefectsPage from 'src/pages/inspection/InspectionDefectsPage.vue'
-import InspectionDocumentsPage from 'src/pages/inspection/InspectionDocumentsPage.vue'
-import InspectionGeneralViewPage from 'src/pages/inspection/InspectionGeneralViewPage.vue'
-import InspectionMeasurementsPage from 'src/pages/inspection/InspectionMeasurementsPage.vue'
-import InspectionPage from 'src/pages/inspection/InspectionPage.vue'
-import InspectionPhotoPage from 'src/pages/inspection/InspectionPhotoPage.vue'
-import InspectionReportPage from 'src/pages/inspection/InspectionReportPage.vue'
-import InspectionSettingsPage from 'src/pages/inspection/InspectionSettingsPage.vue'
 import { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 
@@ -41,55 +29,55 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => CasePage,
+        component: () => import('src/pages/CasePage.vue'),
         name: 'case',
         props: true,
         children: [
           casePage({
             name: 'case-information',
-            component: CaseInfoPage
+            component: import('src/pages/case/CaseInfoPage.vue')
           }),
           casePage({
             name: 'case-questions',
-            component: CaseQuestionsPage
+            component: import('src/pages/case/CaseQuestionsPage.vue')
           }),
           {
             path: 'inspection/:inspectionId',
-            component: () => InspectionPage,
+            component: () => import('src/pages/inspection/InspectionPage.vue'),
             name: 'inspection',
             props: true,
             children: [
               casePage({
                 name: 'inspection-photos',
-                component: InspectionPhotoPage
+                component: import('src/pages/inspection/InspectionPhotoPage.vue')
               }),
               casePage({
                 name: 'inspection-gv',
-                component: InspectionGeneralViewPage
+                component: import('src/pages/inspection/InspectionGeneralViewPage.vue')
               }),
               casePage({
                 name: 'inspection-measurements',
-                component: InspectionMeasurementsPage
+                component: import('src/pages/inspection/InspectionMeasurementsPage.vue')
               }),   
               casePage({
                 name: 'inspection-defects',
-                component: InspectionDefectsPage
+                component: import('src/pages/inspection/InspectionDefectsPage.vue')
               }),
               casePage({
                 name: 'inspection-boq',
-                component: InspectionBoqPage
+                component: import('src/pages/inspection/InspectionBoqPage.vue')
               }),
               casePage({
                 name: 'inspection-documents',
-                component: InspectionDocumentsPage
+                component: import('src/pages/inspection/InspectionDocumentsPage.vue')
               }),
               casePage({
                 name: 'inspection-report',
-                component: InspectionReportPage
+                component: import('src/pages/inspection/InspectionReportPage.vue')
               }),
               casePage({
                 name: 'inspection-settings',
-                component: InspectionSettingsPage
+                component: import('src/pages/inspection/InspectionSettingsPage.vue')
               })
             ]
           },
