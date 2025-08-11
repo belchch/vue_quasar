@@ -2,10 +2,10 @@
     <div class="header row justify-between items-center" bordered square flat>
         <div class="row">
             <q-btn flat icon="keyboard_arrow_left" to="/cases" class="text-grey-8 q-ml-sm"
-                style="width: 36px" />            
+                style="width: 36px;" />
         </div>
 
-        <q-btn flat icon="sym_o_left_panel_close" class="text-grey-8 q-mr-sm" style="width: 36px;"
+        <q-btn flat icon="sym_o_left_panel_close" class="text-grey-8 q-mr-sm" style="width: 36px; "
             @click="emits('close')" />
     </div>
 
