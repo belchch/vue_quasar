@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-card flat bordered>
+        <q-card>
             <q-card-section>
                 <div class="text-subtitle1 text-accent">Пол</div>
             </q-card-section>

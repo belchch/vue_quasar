@@ -1,6 +1,6 @@
 <template>
     <q-table :rows="works" :columns="columns" :row-key="row => row.id" wrap-cells
-        :selection="editable ? 'multiple' : 'none'" flat bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
+        :selection="editable ? 'multiple' : 'none'" :pagination="{ rowsPerPage: 20 }" separator="cell">
         <template v-slot:top>
             <div class="caption">Работы</div>
         </template>

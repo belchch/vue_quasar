@@ -5,7 +5,7 @@ import { BoqApi } from "../api/boq-api"
 import { BoqLocation, toLocationUpdateRequest } from "../api/types"
 
 export const useBoqService = () => {
-    const { boq, locations } = storeToRefs(useBoqStore())
+    const { boq, locations, initialized } = storeToRefs(useBoqStore())
     const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
     const requestBoq = async () => {
@@ -18,6 +18,7 @@ export const useBoqService = () => {
         } else {
             locations.value = []
         }
+        initialized.value = true
     }
 
     const buildAndRequestBoq = async () => {

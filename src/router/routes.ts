@@ -2,7 +2,7 @@ import { casePages } from 'src/features/case/constants/case-pages'
 import { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 
-const casePage = ({ name, component }: { name: string, component: Component }) => {
+const casePage = ({ name, component }: { name: string, component: Component}) => {
   const page = casePages[name]!
 
   return {
@@ -32,8 +32,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CasePage.vue'),
         name: 'case',
         props: true,
-        children: [
-          
+        children: [          
           casePage({
             name: 'case-information',
             component: () => import('pages/case/CaseInfoPage.vue')
@@ -64,10 +63,21 @@ const routes: RouteRecordRaw[] = [
                 name: 'inspection-defects',
                 component: () => import('pages/inspection/InspectionDefectsPage.vue')
               }),
-              casePage({
+              {
                 name: 'inspection-boq',
-                component: () => import('pages/inspection/InspectionBoqPage.vue')
-              }),
+                component: () => import('pages/inspection/boq/BoqHomePage.vue'),
+                path: 'boq',
+                children: [
+                  casePage({
+                    name: 'boq-summary',
+                    component: () => import('pages/inspection/boq/BoqSummaryPage.vue')
+                  }),
+                  casePage({
+                    name: 'boq-configuration',
+                    component: () => import('pages/inspection/boq/BoqConfigurationPage.vue')
+                  })
+                ]
+              },
               casePage({
                 name: 'inspection-documents',
                 component: () => import('pages/inspection/InspectionDocumentsPage.vue')

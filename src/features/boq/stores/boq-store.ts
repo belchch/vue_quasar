@@ -5,8 +5,9 @@ import { Boq, BoqLocation } from "../api/types";
 export const useBoqStore = defineStore('boq', () => {
     const boq = ref<Boq>()
     const locations = ref<BoqLocation[]>()
+    const initialized = ref(false)
 
     return {
-        boq, locations
+        boq, locations, initialized
     }
 })

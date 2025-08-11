@@ -1,5 +1,5 @@
 <template>
-    <div class="row q-col-gutter-lg q-pa-md">
+    <div class="row q-col-gutter-sm">
         <div class="col-8">
             <BoqFloor :floor="location!.floor" />
         </div>
@@ -9,13 +9,12 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted } from 'vue';
-import { BoqLocation } from '../../api/types';
-import BoqFloor from './BoqFloor.vue';
-import { useBoqLocationStore } from '../../stores/boq-location-store';
 import { storeToRefs } from 'pinia';
-import WorkTable from '../WorkTable.vue';
+import { computed } from 'vue';
+import { useBoqLocationStore } from '../../stores/boq-location-store';
 import { useBoqWorkStore } from '../../stores/boq-work-store';
+import WorkTable from '../WorkTable.vue';
+import BoqFloor from './BoqFloor.vue';
 
 const { location } = storeToRefs(useBoqLocationStore())
 const { works } = storeToRefs(useBoqWorkStore())

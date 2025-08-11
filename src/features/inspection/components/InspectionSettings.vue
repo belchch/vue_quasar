@@ -31,13 +31,13 @@
             </div>
         </q-card-section>
         <q-card-section class="q-ml-sm q-pt-sm">
-            <div v-for="item in sortedConfigs" :key="item.spot.id!!" class="row q-gutter-lg">
+            <div v-for="item in sortedConfigs" :key="item.spot.id!!" class="row q-gutter-lg items-center">
                 <div style="width: 200px" class="q-pa-sm">
                     <q-checkbox :label="item.spot.name" v-model="item.inUse" color="secondary"
                         :disable="!hasPermission(['inspection.update'])" @update:model-value="onChange(item)" />
                 </div>
                 <q-input :disable="!item.inUse || !hasPermission(['inspection.update'])" v-model="item.count"
-                    type="number" outlined style="width: 80px;" size="sm" dense @update:model-value="onChange(item)" />
+                    type="number" outlined style="width: 80px;" dense @update:model-value="onChange(item)" />
             </div>
         </q-card-section>
     </q-card>

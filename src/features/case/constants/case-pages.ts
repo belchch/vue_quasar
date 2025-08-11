@@ -2,12 +2,13 @@ export type CasePageProps = {
     segment: string,
     icon: string,
     label: string,
-    rootEntity: PageRootEntity
+    rootEntity: PageRootEntity,
+    parent?: string
 }
 
 export type PageRootEntity = 'INSPECTION' | 'CASE'
 
-export const casePages: {[key: string]: CasePageProps} = {
+export const casePages: { [key: string]: CasePageProps } = {
     'case-information': {
         segment: 'information',
         icon: 'note_alt',
@@ -18,7 +19,7 @@ export const casePages: {[key: string]: CasePageProps} = {
         segment: 'questions',
         icon: 'text_snippet',
         label: 'Вопросы',
-        rootEntity: 'CASE'        
+        rootEntity: 'CASE'
     },
     'inspection-photos': {
         segment: 'photos',
@@ -48,7 +49,21 @@ export const casePages: {[key: string]: CasePageProps} = {
         segment: 'boq',
         icon: 'request_page',
         label: 'ВОР',
-        rootEntity: 'INSPECTION'
+        rootEntity: 'INSPECTION',        
+    },
+    'boq-summary': {
+        segment: '',
+        icon: 'request_page',
+        label: 'ВОР',
+        rootEntity: 'INSPECTION',
+        parent: 'inspection-boq'
+    },
+    'boq-configuration': {
+        segment: ':locationId/configuration',
+        icon: 'request_page',
+        label: 'ВОР',
+        rootEntity: 'INSPECTION',
+        parent: 'inspection-boq'
     },
     'inspection-documents': {
         segment: 'documents',

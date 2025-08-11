@@ -1,6 +1,6 @@
 <template>
-    <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells flat
-        bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
+    <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
+        :pagination="{ rowsPerPage: 20 }" separator="cell">
         <template v-slot:top>
             <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
                 Сформировать
@@ -14,25 +14,13 @@
                     </div>
                 </q-td>
                 <q-td key="area" :props="props">
-                    <LocationCellEditor
-                        field="area"
-                        :value="props.row.area"
-                        :row="props.row"
-                    />
+                    <LocationCellEditor field="area" :value="props.row.area" :row="props.row" />
                 </q-td>
                 <q-td key="height">
-                    <LocationCellEditor
-                        field="height"
-                        :value="props.row.height"
-                        :row="props.row"
-                    />
+                    <LocationCellEditor field="height" :value="props.row.height" :row="props.row" />
                 </q-td>
                 <q-td key="perimeter" :props="props">
-                    <LocationCellEditor
-                        field="perimeter"
-                        :value="props.row.perimeter"
-                        :row="props.row"
-                    />
+                    <LocationCellEditor field="perimeter" :value="props.row.perimeter" :row="props.row" />
                 </q-td>
             </q-tr>
         </template>
@@ -47,7 +35,7 @@ import { BoqLocation } from '../api/types';
 import LocationCellEditor from './LocationCellEditor.vue';
 
 const emits = defineEmits<{
-    navigateLocation: [location: BoqLocation] 
+    navigateLocation: [location: BoqLocation]
 }>()
 
 const { buildAndRequestBoq } = useBoqService()
