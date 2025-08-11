@@ -25,11 +25,11 @@ const init = async () => {
 }
 
 watch(selectedInspectionId, async () => {
-    if (route.name != 'inspection-boq') {
+    if (route.name != 'boq-summary') {
         await navigateInspectionPage('boq')
     } else {
         await init()
-    }
+    }    
 })
 
 onMounted(async () => {
