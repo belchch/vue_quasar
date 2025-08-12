@@ -45,10 +45,9 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue';
 import { useQuasar } from 'quasar';
-import { CaseDocumentResponse } from './types';
-import { DocumentsAPI } from './documents-api';
-import { useUserStore } from "src/features/user/stores/user-store";
-import LightBoxImage from 'src/components/LightBoxImage.vue'
+import { CaseDocumentResponse } from '../types';
+import { DocumentsAPI } from '../api/documents-api';
+import { useUserStore } from 'src/features/user/stores/user-store';
 
 const cardSize = ref(400);
 

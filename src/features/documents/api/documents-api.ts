@@ -1,7 +1,6 @@
 import { api } from 'boot/axios';
 import { FileInfo } from 'src/common/types';
-import { useUploadConfig } from 'src/features/inspection/composables/upload-config'
-const uploadConfig = useUploadConfig();
+
 export const DocumentsAPI = {
   getDocuments(id:number) {
     return api.get('/api/documents', {

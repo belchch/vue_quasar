@@ -150,31 +150,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import WallInfo from './WallInfo.vue'
-import WallsInfo from './WallsInfo.vue'
-import OpeningInfo from './OpeningInfo.vue'
-import WallSectionInfo from './WallSectionInfo.vue'
-import FloorSectionInfo from './FloorSectionInfo.vue'
+import { storeToRefs } from 'pinia'
+import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
+import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
+import { useSpotStore } from 'src/features/lookup/spot/stores/spot-store'
+import { ref } from 'vue'
+import { usePlanTreeStore } from '../../stores/plan-tree-store'
+import { TreeItem } from '../../stores/types'
+import CeilInfo from './CeilInfo.vue'
 import CeilSection from './CeilSection.vue'
 import FloorInfo from './FloorInfo.vue'
-import CeilInfo from './CeilInfo.vue'
-import PlanTableButton from './PlanTableButton.vue'
+import FloorSectionInfo from './FloorSectionInfo.vue'
+import OpeningInfo from './OpeningInfo.vue'
 import PlanLocationDialog from './PlanLocationDialog.vue'
-import {TreeItem} from '../../stores/types'
-import { usePlanTreeStore } from '../../stores/plan-tree-store'
-import { usePlanTreeService } from '../../composables/plan-tree'
-import { storeToRefs } from 'pinia'
-import { useSpotStore } from 'src/features/lookup/spot/stores/spot-store'
-import PlanTreeNodeName from './PlanTreeNodeName.vue'
 import PlanMaterialDialog from './PlanMaterialDialog.vue'
-import PlanTreeNode from './PlanTreeNode.vue'
-import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
 import PlanOpeningDialog from './PlanOpeningDialog.vue'
-import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
+import PlanTableButton from './PlanTableButton.vue'
+import PlanTreeNode from './PlanTreeNode.vue'
+import WallInfo from './WallInfo.vue'
+import WallSectionInfo from './WallSectionInfo.vue'
+import WallsInfo from './WallsInfo.vue'
 
 const { treeData, editingNode } = storeToRefs(usePlanTreeStore())
-const { requestPlanTree } = usePlanTreeService()
 const spotStore = useSpotStore()
 const materialStore = useMaterialStore()
 const openingStore = useOpeningStore()
@@ -202,10 +199,6 @@ const selectedNodeType = ref('');
 const locationDialogOpen = ref(false);
 const materialDialogOpen = ref(false);
 const openingDialogOpen = ref(false);
-
-onMounted(async () => {
-  await requestPlanTree()
-})
 
 const nodeSelected = (node: any) => {
   const item = treePlan.value.getNodeByKey(node)

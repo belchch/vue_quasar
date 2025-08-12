@@ -1,5 +1,5 @@
 <template>
-    <div class="row q-col-gutter-lg text">
+    <div class="row q-col-gutter-sm text">
         <template v-if="selectedCase">
             <div class="col-9">
                 <q-card class="shadow_custom rounded-borders text-grey-8" bordered>
@@ -158,8 +158,7 @@
                             />
                         </div>
                     </q-card-section>
-                </q-card>
-                <InspectionLocations/>
+                </q-card>                
             </div>
         </template>
     </div>
@@ -213,7 +212,7 @@ import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store
 import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
 import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
 import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
-import InspectionInformationBlock from './InspectionInformationBlock.vue'
+import InspectionInformationBlock from 'src/features/inspection/components/InspectionInformationBlock.vue'
 import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store'
 import { storeToRefs } from 'pinia';
 import { useSelectedCaseService } from 'src/features/case/composables/selected-case'
@@ -221,12 +220,12 @@ import _ from 'lodash'
 import { judgeName } from 'src/features/lookup/judge/stores/types'
 import { userName } from 'src/features/user/api/types'
 import { InspectionObjectTypeEnum } from 'src/features/case/stores/types'
-import UpdateForm from './form/UpdateForm.vue'
-import InspectionLocations from './InspectionLocations.vue'
+import UpdateForm from 'src/features/inspection/components/form/UpdateForm.vue'
+import InspectionLocations from 'src/features/inspection/components/InspectionLocations.vue'
 import CaseCommets from 'src/features/case/components/comments/CaseCommets.vue'
-import UpdateFormJudge from './form/UpdateFormJudge.vue'
-import UpdateFormOrganization from './form/UpdateFormOrganization.vue'
-import UpdateFormObject from './form/UpdateFormObject.vue'
+import UpdateFormJudge from 'src/features/inspection/components/form/UpdateFormJudge.vue'
+import UpdateFormOrganization from 'src/features/inspection/components/form/UpdateFormOrganization.vue'
+import UpdateFormObject from 'src/features/inspection/components/form/UpdateFormObject.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 

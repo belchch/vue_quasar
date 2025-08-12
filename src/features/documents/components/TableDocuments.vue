@@ -38,11 +38,11 @@
 <script setup lang="ts">
 import { ref, onMounted, defineEmits } from 'vue';
 import { useQuasar } from 'quasar';
-import { CaseDocumentResponse } from './types';
-import { DocumentsAPI } from './documents-api';
+import { CaseDocumentResponse } from '../types';
+import { DocumentsAPI } from '../api/documents-api';
+import { useUserStore } from 'src/features/user/stores/user-store';
 import EditableCell from 'src/features/lookup/components/EditableCell.vue';
-import { Field } from 'src/features/lookup/base/store/types'
-import { useUserStore } from "src/features/user/stores/user-store";
+import { Field } from 'src/features/lookup/base/store/types';
 
 const { hasPermission } = useUserStore()
 const columnsAct = ref<any[]>([]);

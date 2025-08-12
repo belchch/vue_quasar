@@ -1,6 +1,6 @@
 import {api} from "boot/axios";
 import {Inspection, PhotoDoc} from "src/features/inspection/store/types";
-import {PhotoDocSearchRequest, PhotoDocUpdateRequest} from "src/features/inspection/api/types";
+import {InspectionUpdateRequest, PhotoDocSearchRequest, PhotoDocUpdateRequest} from "src/features/inspection/api/types";
 
 export const InspectionApi = {
   async getInspections(caseId?: number) {
@@ -9,6 +9,21 @@ export const InspectionApi = {
         caseId
       }
     })
+  },
+
+  createApartmentInspection(caseId: number, apartment: string) {
+    return api.post<Inspection>(`/api/inspections/apartment`, {
+      caseId,
+      apartment
+    })
+  },
+
+  deleteInspection(id: number) {
+    return api.delete(`/api/inspections/${id}`)
+  },
+
+  updateInspection(id: number, request: InspectionUpdateRequest) {
+    return api.put<Inspection>(`api/inspections/${id}`, request)
   },
 
   async searchPhotoDocs(inspectionId: number, searchRequest?: PhotoDocSearchRequest) {

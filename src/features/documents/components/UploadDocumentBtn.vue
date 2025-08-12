@@ -10,11 +10,10 @@
 
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue';
-import { useUploadConfig } from 'src/features/inspection/composables/upload-config'
-import { useInspectionsStore } from "src/features/inspection/store/inspection-store";
-import { api } from 'boot/axios'
-import { CaseDocumentResponse, CaseDocumentType } from './types';
-import { DocumentsAPI } from './documents-api';
+import { CaseDocumentResponse, CaseDocumentType } from '../types';
+import { DocumentsAPI } from '../api/documents-api';
+import { useUploadConfig } from 'src/features/inspection/composables/upload-config';
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 
 
 const uploadConfig = useUploadConfig();

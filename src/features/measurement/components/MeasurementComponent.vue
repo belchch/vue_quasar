@@ -64,8 +64,6 @@ import { storeToRefs } from 'pinia';
 import { useMeasurementStore } from '../stores/measurement-store';
 import { RoomMeasurement } from '../stores/types';
 import CellEditor from './CellEditor.vue';
-import { onMounted } from 'vue';
-import { useMeasurementService } from '../composables/measurement';
 import AddOpeningDialog from './AddOpeningDialog.vue';
 import OpeningTable from './OpeningTable.vue';
 import { RoomMeasurementApi } from '../api/room-measurement-api';
@@ -75,7 +73,6 @@ import { useUserStore } from "src/features/user/stores/user-store";
 import PlanTree from './plan-tree/PlanTree.vue'
 
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
-const { requestMeasurements } = useMeasurementService()
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 const { hasPermission } = useUserStore()
 
@@ -140,8 +137,4 @@ const columns = [
         align: 'left' as const,
     },
 ]
-
-onMounted(async () => {
-    await requestMeasurements()
-})
 </script>

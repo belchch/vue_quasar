@@ -11,7 +11,7 @@ export const usePlanTreeService = () => {
     
     const requestPlanTree = async () => {
         const response = await tpcMeasurementApi.getTpcMeasurements(selectedInspectionId.value!)
-        treeData.value =  transformPlanJson(response.data.rooms)
+        treeData.value =  transformPlanJson(response.data.rooms || [])
         planMeasurements.value = response.data
     }
 

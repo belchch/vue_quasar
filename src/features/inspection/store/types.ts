@@ -6,9 +6,11 @@ import { Defect, Flaw } from 'src/features/defect/flaw/stores/types'
 
 export type Inspection = {
   id?: number
+  apartment: string
   address: string
-  performedDate: Date
+  performedDate: string
   performedBy: User
+  caseId: number
 }
 
 export type PhotoDoc = {

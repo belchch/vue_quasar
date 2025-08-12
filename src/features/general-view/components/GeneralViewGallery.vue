@@ -19,14 +19,12 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { useUserStore } from "src/features/user/stores/user-store"
+import { ref } from 'vue'
 import draggable from 'vuedraggable'
-import { useGeneralViewGalleryService } from '../composables/gallery'
 import { useGeneralViewGalleryStore } from '../store/general-view-gallery-store'
-import { useUserStore } from "src/features/user/stores/user-store";
 
 const {generalViewGallery} = storeToRefs(useGeneralViewGalleryStore())
-const {requestGallery, generatePresignedUrlsAndRequestGallery} = useGeneralViewGalleryService()
 const { hasPermission } = useUserStore()
 
 const drag = ref(false)
@@ -34,10 +32,6 @@ const drag = ref(false)
 const onDragChange = (e: any) => {
     console.log(e)
 }
-
-onMounted( async () => {
-    await generatePresignedUrlsAndRequestGallery()
-})
 </script>
 <style scoped>
 .photo {

@@ -23,6 +23,7 @@ export type CaseFilterRequest = {
 export type CaseCreateRequest = {
   number: string,
   facilityAddress: string,
+  apartment: string,
   companyId: number,
   regionId: number,
   deadline: string,

@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="q-pa-md">
+  <q-card class="q-pa-sm">
     <q-card flat>
       <div class="row justify-between">
         <q-card-section>
@@ -44,7 +44,7 @@ const { generalViewReport } = storeToRefs(useGeneralViewReportStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 const { hasPermission } = useUserStore()
 
-const split = ref(60)
+const split = ref(65)
 const isBuilding = ref(false)
 
 const confirmOpen = ref<boolean>(false)

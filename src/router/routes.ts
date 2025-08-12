@@ -1,4 +1,16 @@
+import { casePages } from 'src/features/case/constants/case-pages'
+import { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
+
+const casePage = ({ name, component }: { name: string, component: Component}) => {
+  const page = casePages[name]!
+
+  return {
+    path: page.segment,
+    component,
+    name
+  }
+}
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,6 +32,67 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CasePage.vue'),
         name: 'case',
         props: true,
+        children: [          
+          casePage({
+            name: 'case-information',
+            component: () => import('pages/case/CaseInfoPage.vue')
+          }),
+          casePage({
+            name: 'case-questions',
+            component: () => import('pages/case/CaseQuestionsPage.vue')
+          }),
+          {
+            path: 'inspection/:inspectionId',
+            component: () => import('pages/inspection/InspectionPage.vue'),
+            name: 'inspection',
+            props: true,
+            children: [
+              casePage({
+                name: 'inspection-photos',
+                component: () => import('pages/inspection/InspectionPhotoPage.vue')
+              }),
+              casePage({
+                name: 'inspection-gv',
+                component: () => import('pages/inspection/InspectionGeneralViewPage.vue')
+              }),
+              casePage({
+                name: 'inspection-measurements',
+                component: () => import('pages/inspection/InspectionMeasurementsPage.vue')
+              }),   
+              casePage({
+                name: 'inspection-defects',
+                component: () => import('pages/inspection/InspectionDefectsPage.vue')
+              }),
+              {
+                name: 'inspection-boq',
+                component: () => import('pages/inspection/boq/BoqHomePage.vue'),
+                path: 'boq',
+                children: [
+                  casePage({
+                    name: 'boq-summary',
+                    component: () => import('pages/inspection/boq/BoqSummaryPage.vue')
+                  }),
+                  casePage({
+                    name: 'boq-configuration',
+                    component: () => import('pages/inspection/boq/BoqConfigurationPage.vue')
+                  })
+                ]
+              },
+              casePage({
+                name: 'inspection-documents',
+                component: () => import('pages/inspection/InspectionDocumentsPage.vue')
+              }),
+              casePage({
+                name: 'inspection-report',
+                component: () => import('pages/inspection/InspectionReportPage.vue')
+              }),
+              casePage({
+                name: 'inspection-settings',
+                component: () => import('pages/inspection/InspectionSettingsPage.vue')
+              })
+            ]
+          },
+        ]
       },
     ],
     meta: { requiredAuth: true },
@@ -28,12 +101,6 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
     children: [{ path: '', component: () => import('pages/LoginPage.vue'), name: 'login' }],
-  },
-  {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/DefectPage.vue'), name: 'defect' }],
-    meta: { requiredAuth: true },
   },
   {
     path: '/lookup',
