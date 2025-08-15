@@ -142,5 +142,12 @@ const columns = [
 </script>
 
 <style scoped>
-
+.dialog-img-colse-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  translate: 40% -40%;
+  cursor: pointer;
+}
 </style>

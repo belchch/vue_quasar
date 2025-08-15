@@ -9,6 +9,19 @@
       <card-item title="Периметр" :item-value="selectedNode.rawData.perimeter" />
       <card-item title="Площадь" :item-value="selectedNode.rawData.area" />
     </div>
+    <div class="text-h6">Фотографии</div>
+    <div class="q-pa-md">
+      <div v-if="selectedNode.rawData.photos.length == 0">
+        Фотографии отсутствуют
+      </div>
+      <q-list v-else bordered separator>
+        <q-item v-for="photo in selectedNode.rawData.photos" :key="photo.fileName">
+          <q-item-section>
+            {{ photo.fileName }}
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </div>
   </div>
 </template>
       <!--
