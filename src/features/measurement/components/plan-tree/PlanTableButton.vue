@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn @click="propagate()" :size="'sm'" outline label="Заполнить размеры" color="primary" :loading="loading"/>
+    <q-btn @click="propagate()" outline label="Заполнить размеры" color="primary" :loading="loading"/>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-blue-grey">{{ selectedNode.rawData.type == 'DOOR' ? 'Дверь' : 'Окно' }}</div>
+    <div class="text-blue-grey">{{openingTypeName(selectedNode.rawData.type)}}</div>
     <div class="text-h6">{{ selectedNode['label'] || '-' }}</div>
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card flat bordered>
@@ -88,6 +88,15 @@
 defineProps<{
   selectedNode: any
 }>()
+const openingTypeName = (openningType: string) => {
+  if (openningType == 'window') {
+    return 'Окно'
+  } else if (openningType == 'door') {
+    return 'Дверь'
+  } else {
+    return 'Проем'
+  }
+}
 </script>
 
 <style scoped></style>
