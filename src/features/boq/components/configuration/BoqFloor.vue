@@ -14,13 +14,13 @@
                                     size="sm" @update:model-value="updateBaseboardReplacement" />
 
                                 <q-toggle color="secondary" v-model="floorLocal.baseboardPreservation"
-                                    label="С сохранением" size="sm" @update:model-value="updateFloor(floorLocal)"
+                                    label="С сохранением" size="sm" @update:model-value="updateFloor(floorLocal, false)"
                                     :disable="!floorLocal.baseboardReplacement" />
                             </div>
                             <div class="row q-gutter-md">
                                 <q-input type="number" v-model.number="floorLocal.baseboardLength"
                                     hint="Длина напольного плинтуса" dense style="width: 160px"
-                                    @update:model-value="updateFloor(floorLocal)" />
+                                    @update:model-value="updateFloor(floorLocal, true)" />
                                 <div class="row items-center">
                                     <q-btn outline size="xs" color="secondary" @click="baseboardLengthAsPerimeter">Равно
                                         периметру</q-btn>
@@ -109,7 +109,7 @@ const updateBaseboardReplacement = async () => {
         floorLocal.value.baseboardPreservation = false
     }
 
-    await updateFloor(floorLocal.value)
+    await updateFloor(floorLocal.value, false)
 }
 
 const updateFloorSectionMaterialReplacement = async (section: BoqFloorSection, value: boolean) => {
@@ -122,15 +122,15 @@ const updateFloorSectionMaterialReplacement = async (section: BoqFloorSection, v
 
 const baseboardLengthAsPerimeter = async () => {
     floorLocal.value.baseboardLength = location.value?.perimeter || 0
-    await updateFloor(floorLocal.value)
+    await updateFloor(floorLocal.value, true)
 }
 
 const updateFloorSection = async (floorSection: BoqFloorSection) => {
     await BoqFloorApi.updateFloorSection(floorSection.id, toFloorSectionUpdateRequest(floorSection))
 }
 
-const updateFloor = async (floor: BoqFloor) => {
-    await BoqFloorApi.updateFloor(floor.id, toFloorUpdateRequest(floor))
+const updateFloor = async (floor: BoqFloor, updateVolume: boolean) => {
+    await BoqFloorApi.updateFloor(floor.id, toFloorUpdateRequest(floor), updateVolume)
     await requestWorks()
 }
 
