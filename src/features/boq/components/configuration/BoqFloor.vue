@@ -48,9 +48,9 @@
                 <div class="row q-pl-md q-gutter-xl">
                     <div class="q-gutter-md" style="width: 400px;">
                         <q-input type="number" v-model.number="section.area" label="Полщадь секции пола"
-                            style="width: 180px;" @update:model-value="updateFloorSection(section)" />
+                            style="width: 180px;" @update:model-value="updateFloorSection(section, true)" />
                         <q-toggle color="secondary" v-model="section.screedLeveling" label="Выравнивание стяжки"
-                            @update:model-value="updateFloorSection(section)" />
+                            @update:model-value="updateFloorSection(section, false)" />
                     </div>
                     <div>
                         <q-card bordered flat style="width: 400px;">
@@ -60,10 +60,10 @@
                                     <q-toggle color="secondary" v-model="section.materialReplacement" label="Замена"
                                         size="sm" @update:model-value="(val: boolean) => updateFloorSectionMaterialReplacement(section, val)" />
                                     <q-toggle color="secondary" v-model="section.materialPreservation" label="С сохранением"
-                                        size="sm" @update:model-value="updateFloorSection(section)" :disable="!section.materialReplacement"/>
+                                        size="sm" @update:model-value="updateFloorSection(section, false)" :disable="!section.materialReplacement"/>
                                 </div>
                                 <q-select v-model="section.material" :options="materials" option-label="name"
-                                    option-value="id" dense @update:model-value="updateFloorSection(section)" />
+                                    option-value="id" dense @update:model-value="updateFloorSection(section, false)" />
                             </div>
                         </q-card>
                     </div>
@@ -76,14 +76,13 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { BoqFloor, BoqFloorSection, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/types';
-import { onMounted, ref, watch } from 'vue';
-import { Material } from 'src/features/lookup/material/stores/types';
-import { BoqFloorApi } from '../../api/boq-floor-api';
-import { useBoqLocationService } from '../../composables/boq-location';
-import { useBoqLocationStore } from '../../stores/boq-location-store';
 import { storeToRefs } from 'pinia';
+import { Material } from 'src/features/lookup/material/stores/types';
+import { ref } from 'vue';
+import { BoqFloorApi } from '../../api/boq-floor-api';
+import { BoqFloor, BoqFloorSection, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/types';
 import { useBoqWorkService } from '../../composables/boq-work';
+import { useBoqLocationStore } from '../../stores/boq-location-store';
 
 const { floorPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
@@ -117,7 +116,7 @@ const updateFloorSectionMaterialReplacement = async (section: BoqFloorSection, v
         section.materialPreservation = false
     }
 
-    await updateFloorSection(section)
+    await updateFloorSection(section, false)
 }
 
 const baseboardLengthAsPerimeter = async () => {
@@ -125,8 +124,9 @@ const baseboardLengthAsPerimeter = async () => {
     await updateFloor(floorLocal.value, true)
 }
 
-const updateFloorSection = async (floorSection: BoqFloorSection) => {
-    await BoqFloorApi.updateFloorSection(floorSection.id, toFloorSectionUpdateRequest(floorSection))
+const updateFloorSection = async (floorSection: BoqFloorSection, updateVolume: boolean) => {
+    await BoqFloorApi.updateFloorSection(floorSection.id, toFloorSectionUpdateRequest(floorSection), updateVolume)
+    await requestWorks()
 }
 
 const updateFloor = async (floor: BoqFloor, updateVolume: boolean) => {

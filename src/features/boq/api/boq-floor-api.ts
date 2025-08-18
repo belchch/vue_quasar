@@ -10,8 +10,12 @@ export const BoqFloorApi = {
         })
     },
 
-    updateFloorSection: (id: number, request: BoqFloorSectionUpdateRequest) => {
-        return api.put<BoqFloorSection>(`/api/boq/floor-sections/${id}`, request)
+    updateFloorSection: (id: number, request: BoqFloorSectionUpdateRequest, updateVolume: boolean) => {
+        return api.put<BoqFloorSection>(`/api/boq/floor-sections/${id}`, request, {
+            params: {
+                updateVolume
+            }
+        })
     },
 
     createFloorSection: (floorId: number) => {
