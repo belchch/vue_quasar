@@ -76,3 +76,24 @@ export type PlanTreeCommonNode = {
     label: string,
     rawData: any
 }
+
+export interface Movable {
+  id: number;
+  name: string;
+  width: number;
+  length: number;
+  height: number;
+  heightFromFloor: number;
+  perimeter: number;
+  area: number;
+  hasCustomShape: boolean;
+  sources: string[];
+  urls: string[];
+  room: RoomMovable;
+  inspectionId: number;
+}
+
+export interface RoomMovable {
+  id: number;
+  name: string;
+}

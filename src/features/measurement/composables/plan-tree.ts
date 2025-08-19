@@ -8,7 +8,7 @@ import { Room, TreeItem, Wall, Walls } from "../stores/types"
 export const usePlanTreeService = () => {
     const { selectedInspectionId } = storeToRefs(useInspectionsStore())
     const { planMeasurements, treeData } = storeToRefs(usePlanTreeStore())
-    
+
     const requestPlanTree = async () => {
         const response = await tpcMeasurementApi.getTpcMeasurements(selectedInspectionId.value!)
         treeData.value =  transformPlanJson(response.data.rooms || [])
@@ -46,6 +46,14 @@ const createRoom = (room: any) => {
     rawData: room.walls,
     children: []
   }
+  const movabelObjects: TreeItem = {
+    id: globalIndex++,
+    header: 'movable-objects',
+    type: 'movable-objects',
+    label: `Перемещаемые объекты`,
+    rawData: room.objects || [],
+    children: []
+  }
   const transformedWalls = createWalls(room.walls);
   //walls.children.push(...transformedWalls)
   //resultRoom.children.push(walls);
@@ -54,6 +62,11 @@ const createRoom = (room: any) => {
   const rootCeiling = transformRoomCeiling(room.ceiling);
   resultRoom.children.push(rootFloor);
   resultRoom.children.push(rootCeiling);
+  const treeMovableObjects = transformMovableObjects(room.objects);
+  if (treeMovableObjects.length > 0) {
+    movabelObjects.children.push(...treeMovableObjects);
+    resultRoom.children.push(movabelObjects);
+  }
   // room.walls.forEach((wall: any,i:number) => {
   //   resultRoom.children.push(createWall(i,wall));
   // });
@@ -191,13 +204,29 @@ const createOpenings = (parent: any[], openings: any[]) => {
   // return result;
 }
 
+const transformMovableObjects = (objects: any) => {
+  if (!objects || objects.length === 0) return [];
+  const result: TreeItem[] = [];
+  objects.forEach((item: any) => {
+    const objectNode:TreeItem = {
+      id: globalIndex++,
+      header: 'movable-item',
+      type: 'movable-item',
+      label: item.comment,
+      rawData: item,
+      children: []
+    }
+    result.push(objectNode);
+  });
+  return result;
+}
+
   const result: object[] = [];
   planJson.forEach((room: any) => {
     const roomNode = createRoom(room);
     // createWalls(roomNode.children, room.walls);
     result.push(roomNode);
   });
-
   return result
 }
 

@@ -17,7 +17,7 @@ export type OpeningMeasurementUpdateRequest = {
 }
 
 interface Opening {
-  type: "WINDOW" | "DOOR";
+  type: "window" | "door" | "doorway";
   hasCustomShape: boolean;
   width: number;
   height: number;
@@ -82,4 +82,21 @@ export interface Room {
   walls: Wall[];
   floor: Floor;
   ceiling: Ceiling;
+}
+
+export type MovableCreateRequest = {
+  width: number;
+  length: number;
+  height: number;
+  name: string;
+  inspectionId: number;
+  roomId: number;
+  roomNum?: number | undefined;
+}
+
+export type MovableUpdateRequest = {
+  width?: number;
+  length?: number;
+  height?: number;
+  name?: string;
 }
