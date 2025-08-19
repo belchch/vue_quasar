@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CasePage.vue'),
         name: 'case',
         props: true,
-        children: [          
+        children: [
           casePage({
             name: 'case-information',
             component: () => import('pages/case/CaseInfoPage.vue')
@@ -58,7 +58,7 @@ const routes: RouteRecordRaw[] = [
               casePage({
                 name: 'inspection-measurements',
                 component: () => import('pages/inspection/InspectionMeasurementsPage.vue')
-              }),   
+              }),
               casePage({
                 name: 'inspection-defects',
                 component: () => import('pages/inspection/InspectionDefectsPage.vue')
@@ -160,6 +160,11 @@ const routes: RouteRecordRaw[] = [
         path: 'openings',
         component: () => import('pages/lookup/OpeningPage.vue'),
         name: 'lookup.openings',
+      },
+      {
+        path: 'rates',
+        component: () => import('pages/lookup/RatePage.vue'),
+        name: 'lookup.rates',
       },
     ],
     meta: { requiredAuth: true },

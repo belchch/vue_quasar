@@ -1,0 +1,120 @@
+<template>
+  <div class="text-center q-mt-md" v-if="rateStore.loading">
+    <q-spinner color="primary" size="3em" :thickness="2" />
+    <div class="q-mt-md">Загрузка...</div>
+  </div>
+  <div v-else>
+    <RateDialogForm v-model="openDialog" :rate="editedRate" />
+    <q-btn class="q-ma-md" flat color="primary" @click="openNewRateDialog">Добавить</q-btn>
+    <q-table :pagination="{ rowsPerPage: 0 }" hide-pagination flat bordered :rows="rateStore.rates" :columns="columns"
+      row-key="id">
+      <template v-slot:header-cell-actions>
+        <q-th style="width: 82px;border-left: 0"></q-th>
+      </template>
+      <template #body-cell-actions="props">
+        <q-td style="border-left: 0" class="text-right">
+          <q-btn
+            @click="openEditRateDialog(props.row)"
+            class="action-btn"
+            size="sm"
+            flat round color="primary" icon="edit">
+            <q-tooltip anchor="top middle" self="bottom middle">
+              Редактировать
+            </q-tooltip>
+          </q-btn>
+          <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
+            @click.stop="confirmDelete(props.row)">
+            <q-tooltip anchor="top middle" self="bottom middle">
+              Удалить
+            </q-tooltip>
+          </q-btn>
+        </q-td>
+      </template>
+    </q-table>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useStructElemStore } from 'src/features/lookup/struct-elem/stores/struct-elem-store'
+import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
+import { useRateStore } from 'src/features/lookup/rate/rate-store'
+import { Rate, UnitOfMeasureEnum, ParamsTypeEnum, ParamsType } from 'src/features/lookup/rate/types'
+import { useUserStore } from "src/features/user/stores/user-store";
+import { useQuasar } from 'quasar';
+import RateDialogForm from 'src/features/lookup/components/RateDialogForm.vue'
+const $q = useQuasar();
+
+const rateStore = useRateStore()
+const { hasPermission } = useUserStore()
+const openDialog = ref(false);
+const editedRate = ref<Rate | null>(null);
+
+const columns = [
+    {
+      name: 'name',
+      field: 'name',
+      label: 'Название',
+      align: 'left' as const,
+    },
+    {
+      name: 'price',
+      field: 'price',
+      label: 'Стоимость',
+      align: 'left' as const,
+    },
+    {
+      name: 'unitOfMeasure',
+      field: (row: Rate) => UnitOfMeasureEnum[row.unitOfMeasure],
+      label: 'Ед.измерения',
+      align: 'left' as const,
+    },
+    {
+      name: 'paramsType',
+      field: (row: Rate) => {
+        if(!row.boqWorkParamsType) return '-';
+        return ParamsTypeEnum[row.boqWorkParamsType];
+      },
+      label: 'Тип',
+      align: 'left' as const,
+    },
+    {
+      name: 'sourceUrl',
+      field: 'sourceUrl',
+      label: 'Ссылка',
+      align: 'left' as const,
+    },
+    {
+      name: 'actions',
+      field: 'actions',
+      label: '',
+      align: 'right' as const,
+    },
+];
+
+onMounted(async () => {
+    await rateStore.requestLookup()
+})
+const confirmDelete = (row: any) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить работу?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await rateStore.deleteRate(row.id);
+      $q.notify({ type: 'positive', message: 'Успешно удалено' });
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
+    }
+  });
+};
+const openNewRateDialog = () => {
+  editedRate.value = null;
+  openDialog.value = true;
+}
+const openEditRateDialog = (rate: Rate) => {
+  editedRate.value = rate;
+  openDialog.value = true;
+}
+</script>

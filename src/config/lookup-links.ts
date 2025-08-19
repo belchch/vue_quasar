@@ -13,5 +13,6 @@ export const menuLinks = [
   { name: 'Организации', route: 'lookup.companies' },
   { name: 'Регионы', route: 'lookup.regions' },
   { name: 'Локации', route: 'lookup.spots' },
-  { name: 'Проемы', route: 'lookup.openings'}
+  { name: 'Проемы', route: 'lookup.openings'},
+  { name: 'Работы', route: 'lookup.rates'}
 ]
