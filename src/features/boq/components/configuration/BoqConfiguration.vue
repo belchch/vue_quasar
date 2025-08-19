@@ -13,7 +13,7 @@
                     <q-tab-panel name="floor">
                         <BoqFloor :floor="location!.floor" />
                     </q-tab-panel>
-                    <q-tab-panel name="floor">
+                    <q-tab-panel name="ceil">
                         <BoqCeil :floor="location!.floor" />
                     </q-tab-panel>
                 </q-tab-panels>

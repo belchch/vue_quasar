@@ -1,4 +1,4 @@
-import { BoqFloor, BoqFloorSection, BoqFloorSectionUpdateRequest, BoqFloorUpdateRequest } from "./types"
+import { BoqFloor, BoqFloorSection, BoqFloorSectionUpdateRequest, BoqFloorUpdateRequest } from "../types"
 import { api } from "src/boot/axios"
 
 export const BoqFloorApi = {

@@ -35,18 +35,17 @@
     </div>
 </template>
 <script lang="ts" setup>
-import MaterialReplacement from './MaterialReplacement.vue';
-import BaseboardReplacement from './BaseboardReplacement.vue';
+import MaterialReplacement from './common/MaterialReplacement.vue';
+import BaseboardReplacement from './common/BaseboardReplacement.vue';
 import { storeToRefs } from 'pinia';
 import { Material } from 'src/features/lookup/material/stores/types';
 import { ref } from 'vue';
-import { BoqFloorApi } from '../../api/boq-floor-api';
-import { BoqFloor, BoqFloorSection, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/types';
+import { BoqFloorApi } from '../../api/floor/boq-floor-api';
+import { BoqFloor, BoqFloorSection, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/floor/types';
 import { useBoqWorkService } from '../../composables/boq-work';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
-import PhotoGallary from './PhotoGallary.vue';
-import PhotoGallery from './PhotoGallery.vue';
-import SectionLayout from './SectionLayout.vue';
+import PhotoGallery from './common/PhotoGallery.vue';
+import SectionLayout from './common/SectionLayout.vue';
 
 const { floorPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()

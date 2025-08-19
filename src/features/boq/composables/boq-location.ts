@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia"
 import { useBoqLocationStore } from "../stores/boq-location-store"
 import { useBoqStore } from "../stores/boq-store"
-import { BoqFloorApi } from "../api/boq-floor-api"
+import { BoqFloorApi } from "../api/floor/boq-floor-api"
 import { BoqLocation } from "../api/types"
 import { useBoqWorkService } from "./boq-work"
 import { useRouter } from "vue-router"
