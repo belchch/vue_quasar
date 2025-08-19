@@ -5,19 +5,27 @@
   </div>
   <div v-else>
     <RateDialogForm v-model="openDialog" :rate="editedRate" />
-    <q-btn class="q-ma-md" flat color="primary" @click="openNewRateDialog">Добавить</q-btn>
-    <q-table :pagination="{ rowsPerPage: 0 }" hide-pagination flat bordered :rows="rateStore.rates" :columns="columns"
-      row-key="id">
+    <q-table :pagination="{ rowsPerPage: 0 }" :filter="filter" separator="cell" hide-pagination flat bordered
+      :rows="rateStore.rates" :columns="columns" row-key="id">
+      <template v-slot:top>
+        <div class="table-header row items-center full-width">
+          <div class="q-table__title">Работы</div>
+          <q-btn class="q-ma-md" size="sm" icon="add" label="Добавить" color="primary" @click="openNewRateDialog" />
+          <q-space />
+          <q-input outlined dense debounce="300" color="primary" v-model="filter">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+      </template>
       <template v-slot:header-cell-actions>
         <q-th style="width: 82px;border-left: 0"></q-th>
       </template>
       <template #body-cell-actions="props">
         <q-td style="border-left: 0" class="text-right">
-          <q-btn
-            @click="openEditRateDialog(props.row)"
-            class="action-btn"
-            size="sm"
-            flat round color="primary" icon="edit">
+          <q-btn @click="openEditRateDialog(props.row)" class="action-btn" size="sm" flat round color="primary"
+            icon="edit">
             <q-tooltip anchor="top middle" self="bottom middle">
               Редактировать
             </q-tooltip>
@@ -49,7 +57,7 @@ const rateStore = useRateStore()
 const { hasPermission } = useUserStore()
 const openDialog = ref(false);
 const editedRate = ref<Rate | null>(null);
-
+const filter = ref('');
 const columns = [
     {
       name: 'name',

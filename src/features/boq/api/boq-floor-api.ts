@@ -2,12 +2,20 @@ import { BoqFloor, BoqFloorSection, BoqFloorSectionUpdateRequest, BoqFloorUpdate
 import { api } from "src/boot/axios"
 
 export const BoqFloorApi = {
-    updateFloor: (id: number, request: BoqFloorUpdateRequest) => {
-        return api.put<BoqFloor>(`/api/boq/floor/${id}`, request)
+    updateFloor: (id: number, request: BoqFloorUpdateRequest, updateVolume: boolean) => {
+        return api.put<BoqFloor>(`/api/boq/floor/${id}`, request, {
+            params: {
+                updateVolume
+            }
+        })
     },
 
-    updateFloorSection: (id: number, request: BoqFloorSectionUpdateRequest) => {
-        return api.put<BoqFloorSection>(`/api/boq/floor-sections/${id}`, request)
+    updateFloorSection: (id: number, request: BoqFloorSectionUpdateRequest, updateVolume: boolean) => {
+        return api.put<BoqFloorSection>(`/api/boq/floor-sections/${id}`, request, {
+            params: {
+                updateVolume
+            }
+        })
     },
 
     createFloorSection: (floorId: number) => {
