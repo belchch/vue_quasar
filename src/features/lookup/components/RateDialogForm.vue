@@ -9,26 +9,23 @@
       <div class="row">
         <div class="col">
           <q-card-section class="q-pt-none">
-            <div class="q-mb-md">Наименование работы</div>
+            <div class="q-mb-md text-subtitle1">Общие параметры</div>
             <q-input outlined dense v-model="formData.name" label="Наименование" />
           </q-card-section>
           <q-card-section class="q-pt-none">
-            <div class="q-mb-md">Цена</div>
             <q-input outlined dense v-model="formData.price" label="Цена" />
           </q-card-section>
           <q-card-section class="q-pt-none">
-            <div class="q-mb-md">Еденицы измерения</div>
             <q-select dense outlined v-model="formData.unitOfMeasure" :options="unitOfMeasureOptions"
               option-value="value" option-label="label" emit-value map-options label="Еденицы измерени" />
           </q-card-section>
           <q-card-section class="q-pt-none">
-            <div class="q-mb-md">Ссылка</div>
             <q-input outlined dense v-model="formData.sourceUrl" label="Ссылка" />
           </q-card-section>
         </div>
         <div class="col">
           <q-card-section class="q-pt-none">
-            <div class="q-mb-md">Тип параметров ВОР</div>
+            <div class="q-mb-md text-subtitle1">Параметры ВОР</div>
             <q-select @update:model-value="changeParamsType" dense outlined v-model="formData.boqWorkParamsType"
               :options="typeParamsOptions" option-value="value" option-label="label" emit-value map-options
               label="Тип" />
