@@ -24,18 +24,24 @@
       </template>
       <template #body-cell-actions="props">
         <q-td style="border-left: 0" class="text-right">
-          <q-btn @click="openEditRateDialog(props.row)" class="action-btn" size="sm" flat round color="primary"
+          <!-- <q-btn @click="openEditRateDialog(props.row)" class="action-btn" size="sm" flat round color="primary"
             icon="edit">
             <q-tooltip anchor="top middle" self="bottom middle">
               Редактировать
             </q-tooltip>
-          </q-btn>
+          </q-btn> -->
           <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
             @click.stop="confirmDelete(props.row)">
             <q-tooltip anchor="top middle" self="bottom middle">
               Удалить
             </q-tooltip>
           </q-btn>
+        </q-td>
+      </template>
+      <template v-slot:body-cell="props">
+        <q-td :props="props" @click="openEditRateDialog(props.row)" :key="props.col.name">
+          {{ props.value }}
+          <q-icon name="edit" class="edit-icon" />
         </q-td>
       </template>
     </q-table>
@@ -126,3 +132,23 @@ const openEditRateDialog = (rate: Rate) => {
   openDialog.value = true;
 }
 </script>
+<style scoped>
+.edit-icon {
+  opacity: 0;
+  transition: opacity 0.3s;
+  margin: -3px 0 0 10px;
+}
+td:hover{
+  cursor: pointer;
+}
+td:hover .edit-icon {
+  opacity: .5;
+}
+.action-btn{
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+tr:hover .action-btn{
+  opacity: 1;
+}
+</style>
