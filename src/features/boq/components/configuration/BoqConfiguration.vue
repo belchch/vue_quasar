@@ -14,7 +14,7 @@
                         <BoqFloor :floor="location!.floor" />
                     </q-tab-panel>
                     <q-tab-panel name="ceil">
-                        <BoqCeil :floor="location!.floor" />
+                        <BoqCeil :ceil="location!.ceil" />
                     </q-tab-panel>
                 </q-tab-panels>
             </q-card>

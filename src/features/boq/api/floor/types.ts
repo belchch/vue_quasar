@@ -47,7 +47,7 @@ export const toFloorUpdateRequest = (boqFloor: BoqFloor): BoqFloorUpdateRequest 
 export const toFloorSectionUpdateRequest = (floorSection: BoqFloorSection): BoqFloorSectionUpdateRequest => {
     return {
         id: floorSection.id,
-        materialId: floorSection.material.id,
+        materialId: floorSection.material?.id,
         area: floorSection.area,
         materialReplacement: floorSection.materialReplacement,
         materialPreservation: floorSection.materialPreservation,

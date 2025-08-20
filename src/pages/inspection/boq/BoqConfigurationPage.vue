@@ -35,6 +35,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
     pageBreadcrumbs.value = []
+    location.value = undefined
 })
 
 </script>

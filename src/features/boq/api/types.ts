@@ -1,6 +1,7 @@
 import { Spot } from "src/features/lookup/spot/stores/types"
 import { Rate } from "src/features/rate/stores/types"
 import { BoqFloor } from "./floor/types"
+import { BoqCeil } from "./ceil/types"
 
 export type BoqLocation = {
     id: number,
@@ -10,7 +11,8 @@ export type BoqLocation = {
     area?: number,
     perimeter?: number,
     height?: number,
-    floor: BoqFloor
+    floor: BoqFloor,
+    ceil: BoqCeil
 }
 
 export type Boq = {

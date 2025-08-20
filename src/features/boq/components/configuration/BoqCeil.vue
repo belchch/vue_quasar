@@ -3,32 +3,30 @@
         <div class="row justify-between">
             <q-card-section>
                 <BaseboardReplacement title="Потолочный плинтус" length-hint="Длина потолочного плинтуса"
-                    v-model:replacement="floorLocal.baseboardReplacement"
-                    v-model:preservation="floorLocal.baseboardPreservation" v-model:length="floorLocal.baseboardLength"
+                    v-model:replacement="ceilLocal.moldingReplacement"
+                    v-model:preservation="ceilLocal.moldingPreservation" v-model:length="ceilLocal.moldingLength"
                     @update:replacement="updateBaseboardReplacement"
-                    @update:preservation="updateFloor(floorLocal, false)" @update:length="updateFloor(floorLocal, true)"
-                    @fill-length="baseboardLengthAsPerimeter" />
+                    @update:preservation="updateCeil(ceilLocal, false)" @update:length="updateCeil(ceilLocal, true)"
+                    @fill-length="moldingLengthAsPerimeter" />
             </q-card-section>
             <q-card-section>
-                <PhotoGallery :urls="floorPhotos" />
+                <PhotoGallery :urls="ceilPhotos" />
             </q-card-section>
         </div>
-        <SectionLayout :sections="floorLocal.sections" @add-section="addSection" @remove-section="deleteSection">
+        <SectionLayout :sections="ceilLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">
                 <div class="q-gutter-md" style="width: 400px;">
                     <q-input type="number" v-model.number="section.area" label="Полщадь секции пола"
                         style="width: 180px;"
-                        @update:model-value="updateFloorSection(section as BoqFloorSection, true)" />
-                    <q-toggle color="secondary" v-model="section.screedLeveling" label="Выравнивание стяжки"
-                        @update:model-value="updateFloorSection(section as BoqFloorSection, false)" />
+                        @update:model-value="updateCeilSection(section as BoqCeilSection, true)" />                    
                 </div>
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"
                         v-model:preservation="section.materialPreservation" v-model:material="section.material"
                         :materials="materials"
-                        @update:replacement="(val: boolean) => updateFloorSectionMaterialReplacement(section as BoqFloorSection, val)"
-                        @update:preservation="updateFloorSection(section as BoqFloorSection, false)"
-                        @update:material="updateFloorSection(section as BoqFloorSection, false)" />
+                        @update:replacement="(val: boolean) => updateCeilSectionMaterialReplacement(section as BoqCeilSection, val)"
+                        @update:preservation="updateCeilSection(section as BoqCeilSection, false)"
+                        @update:material="updateCeilSection(section as BoqCeilSection, false)" />
                 </div>
             </template>
         </SectionLayout>
@@ -40,64 +38,64 @@ import BaseboardReplacement from './common/BaseboardReplacement.vue';
 import { storeToRefs } from 'pinia';
 import { Material } from 'src/features/lookup/material/stores/types';
 import { ref } from 'vue';
-import { BoqFloorApi } from '../../api/floor/boq-floor-api';
-import { BoqFloor, BoqFloorSection, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/floor/types';
+import { BoqCeilApi } from '../../api/ceil/boq-ceil-api';
+import { BoqCeil, BoqCeilSection, toCeilSectionUpdateRequest, toCeilUpdateRequest } from '../../api/ceil/types';
 import { useBoqWorkService } from '../../composables/boq-work';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
 import PhotoGallery from './common/PhotoGallery.vue';
 import SectionLayout from './common/SectionLayout.vue';
 
-const { floorPhotos, location } = storeToRefs(useBoqLocationStore())
+const { ceilPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{
-    floor: BoqFloor
+    ceil: BoqCeil
 }>()
 
-const floorLocal = ref<BoqFloor>(props.floor)
+const ceilLocal = ref<BoqCeil>(props.ceil)
 
 const addSection = async () => {
-    const response = await BoqFloorApi.createFloorSection(props.floor.id!)
-    floorLocal.value.sections.push(response.data)
+    const response = await BoqCeilApi.createCeilSection(props.ceil.id!)
+    ceilLocal.value.sections.push(response.data)
 }
 
 const deleteSection = async (id: number) => {
-    await BoqFloorApi.deleteFloorSection(id)
-    floorLocal.value.sections = floorLocal.value.sections.filter(item => item.id != id)
+    await BoqCeilApi.deleteCeilSection(id)
+    ceilLocal.value.sections = ceilLocal.value.sections.filter(item => item.id != id)
 }
 
 const updateBaseboardReplacement = async () => {
-    if (!floorLocal.value.baseboardReplacement) {
-        floorLocal.value.baseboardPreservation = false
+    if (!ceilLocal.value.moldingReplacement) {
+        ceilLocal.value.moldingPreservation = false
     }
 
-    await updateFloor(floorLocal.value, false)
+    await updateCeil(ceilLocal.value, false)
 }
 
-const updateFloorSectionMaterialReplacement = async (section: BoqFloorSection, value: boolean) => {
+const updateCeilSectionMaterialReplacement = async (section: BoqCeilSection, value: boolean) => {
     if (!value) {
         section.materialPreservation = false
     }
 
-    await updateFloorSection(section, false)
+    await updateCeilSection(section, false)
 }
 
-const baseboardLengthAsPerimeter = async () => {
-    floorLocal.value.baseboardLength = location.value?.perimeter || 0
-    await updateFloor(floorLocal.value, true)
+const moldingLengthAsPerimeter = async () => {
+    ceilLocal.value.moldingLength = location.value?.perimeter || 0
+    await updateCeil(ceilLocal.value, true)
 }
 
-const updateFloorSection = async (floorSection: BoqFloorSection, updateVolume: boolean) => {
-    await BoqFloorApi.updateFloorSection(floorSection.id, toFloorSectionUpdateRequest(floorSection), updateVolume)
+const updateCeilSection = async (ceilSection: BoqCeilSection, updateVolume: boolean) => {
+    await BoqCeilApi.updateCeilSection(ceilSection.id, toCeilSectionUpdateRequest(ceilSection), updateVolume)
     await requestWorks()
 }
 
-const updateFloor = async (floor: BoqFloor, updateVolume: boolean) => {
-    await BoqFloorApi.updateFloor(floor.id, toFloorUpdateRequest(floor), updateVolume)
+const updateCeil = async (ceil: BoqCeil, updateVolume: boolean) => {
+    await BoqCeilApi.updateCeil(ceil.id, toCeilUpdateRequest(ceil), updateVolume)
     await requestWorks()
 }
 
-const materials = ref<Material[]>(props.floor.structElems.flatMap(item => item.materials))
+const materials = ref<Material[]>(props.ceil.structElems.flatMap(item => item.materials))
 </script>
 <style scoped>
 .photo {

@@ -39,7 +39,7 @@ import MaterialReplacement from './common/MaterialReplacement.vue';
 import BaseboardReplacement from './common/BaseboardReplacement.vue';
 import { storeToRefs } from 'pinia';
 import { Material } from 'src/features/lookup/material/stores/types';
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { BoqFloorApi } from '../../api/floor/boq-floor-api';
 import { BoqFloor, BoqFloorSection, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/floor/types';
 import { useBoqWorkService } from '../../composables/boq-work';
@@ -63,7 +63,8 @@ const addSection = async () => {
 
 const deleteSection = async (id: number) => {
     await BoqFloorApi.deleteFloorSection(id)
-    floorLocal.value.sections = floorLocal.value.sections.filter(item => item.id != id)
+    await requestWorks()
+    floorLocal.value.sections = floorLocal.value.sections.filter(item => item.id != id)    
 }
 
 const updateBaseboardReplacement = async () => {
@@ -88,6 +89,7 @@ const baseboardLengthAsPerimeter = async () => {
 }
 
 const updateFloorSection = async (floorSection: BoqFloorSection, updateVolume: boolean) => {
+    console.log('update', updateVolume)
     await BoqFloorApi.updateFloorSection(floorSection.id, toFloorSectionUpdateRequest(floorSection), updateVolume)
     await requestWorks()
 }
@@ -98,6 +100,10 @@ const updateFloor = async (floor: BoqFloor, updateVolume: boolean) => {
 }
 
 const materials = ref<Material[]>(props.floor.structElems.flatMap(item => item.materials))
+
+onUnmounted(() => {
+    console.log('unmounted')
+})
 </script>
 <style scoped>
 .photo {
