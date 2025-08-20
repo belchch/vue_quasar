@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card-section class="q-pt-none">
-      <q-select dense outlined v-model="materialID" @update:model-value="changeMaterial" :options="materialStore.items"
+      <q-select clearable dense outlined v-model="materialID" @update:model-value="changeMaterial" :options="materialStore.items"
         option-value="id" option-label="name" map-options label="Материал" />
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
