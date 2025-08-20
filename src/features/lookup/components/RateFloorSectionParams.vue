@@ -1,17 +1,21 @@
 <template>
   <div>
     <q-card-section class="q-pt-none">
-      <q-select clearable dense outlined v-model="materialID" @update:model-value="changeMaterial" :options="materialStore.items"
-        option-value="id" option-label="name" map-options label="Материал" />
+      <q-select clearable dense outlined v-model="materialID" @update:model-value="changeMaterial"
+        :options="materialStore.items" option-value="id" option-label="name" map-options label="Материал" />
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
-      <q-toggle v-model="params.materialReplacement" label="Замена материала" />
+      <q-toggle toggle-indeterminate v-model="params.materialReplacement" label="Замена материала" />
+      <span v-if="params.materialReplacement===null" class="text-blue-grey text-caption"> Не
+        используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
-      <q-toggle v-model="params.materialPreservation" label="Замена материала с сохранением" />
+      <q-toggle toggle-indeterminate v-model="params.materialPreservation" label="Замена материала с сохранением" />
+      <span v-if="params.materialPreservation===null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
-      <q-toggle v-model="params.screedLeveling" label="Выравнивание стяжки" />
+      <q-toggle toggle-indeterminate v-model="params.screedLeveling" label="Выравнивание стяжки" />
+      <span v-if="params.screedLeveling===null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
   </div>
 </template>

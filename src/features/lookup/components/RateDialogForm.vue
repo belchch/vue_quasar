@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="openModal">
-    <q-card style="width: 100%;max-width: 800px;">
+    <q-card style="width: 100%;max-width: 850px;">
       <q-card-section class="row items-center">
         <div class="text-h6">{{ isEditMode ? 'Редактирование' : 'Добавление' }} работы</div>
         <q-space />
@@ -132,13 +132,19 @@ async function onSave() {
       if(formData.value.boqWorkParams['id']){delete formData.value.boqWorkParams.id}
       break;
     case 'FLOOR_SECTION':
+      floorSectionParamsUpdate.value.materialReplacement = floorSectionParams.value.materialReplacement;
+      floorSectionParamsUpdate.value.materialPreservation = floorSectionParams.value.materialPreservation;
+      floorSectionParamsUpdate.value.screedLeveling = floorSectionParams.value.screedLeveling;
       if(floorSectionParams.value.material){
-        floorSectionParamsUpdate.value = {
-          materialId: floorSectionParams.value.material?.id,
-          materialReplacement: floorSectionParams.value.materialReplacement,
-          materialPreservation: floorSectionParams.value.materialPreservation,
-          screedLeveling: floorSectionParams.value.screedLeveling
-        }
+        floorSectionParamsUpdate.value.materialId = floorSectionParams.value.material.id;
+        // floorSectionParamsUpdate.value = {
+        //   materialId: floorSectionParams.value.material?.id,
+        //   materialReplacement: floorSectionParams.value.materialReplacement,
+        //   materialPreservation: floorSectionParams.value.materialPreservation,
+        //   screedLeveling: floorSectionParams.value.screedLeveling
+        // }
+      } else {
+        floorSectionParamsUpdate.value.materialId = null;
       }
       formData.value.boqWorkParams = {...floorSectionParamsUpdate.value};
       // console.log(formData.value.boqWorkParams)
