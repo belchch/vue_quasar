@@ -27,7 +27,7 @@ export type BoqFloorSection = {
   screedLeveling?: boolean
 }
 export type BoqFloorSectionUpdateRequest = {
-  materialId: number | undefined,
+  materialId: number | undefined | null,
   materialReplacement: boolean,
   materialPreservation: boolean,
   screedLeveling?: boolean | undefined
