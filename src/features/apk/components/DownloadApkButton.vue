@@ -89,9 +89,7 @@ const onUploaded = async (info: any) => {
   const objectKey = info.files[0].objectKey;
   const file = info.files[0];
   try {
-    let version = file.name.replace('.apk', '')?.replace('Epse-', '');
-    if (!version) { version = Date.now().toString(); }
-    await apkApi.postApk(objectKey, version);
+    await apkApi.postApk(objectKey, version.value, versionCode.value!);
     Notify.create({
       type: 'positive',
       message: 'Файл успешно загружен',

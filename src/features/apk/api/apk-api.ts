@@ -6,10 +6,11 @@ export const apkApi = {
     return api.get<ApkResponse>(`/api/apk/current`);
   },
 
-  postApk(source: string, version:string) {
+  postApk(source: string, version:string,versionCode:number) {
     return api.post(`/api/apk`, {
       source,
-      version
+      version,
+      versionCode,
     });
   }
 }
