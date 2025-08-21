@@ -3,7 +3,7 @@
     <q-spinner color="primary" size="3em" :thickness="2" />
     <div class="q-mt-md">Загрузка...</div>
   </div>
-  <div v-else>
+  <div v-else class="q-pa-md">
     <RateDialogForm v-model="openDialog" :rate="editedRate" />
     <q-table :pagination="{ rowsPerPage: 0 }" :filter="filter" separator="cell" hide-pagination flat bordered
       :rows="rateStore.rates" :columns="columns" row-key="id">

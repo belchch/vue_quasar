@@ -6,7 +6,8 @@ export type Rate = {
     price: number,
     unitOfMeasure : UnitOfMeasureType,
     boqWorkParamsType?: ParamsType | '' | null,
-    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest
+    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest,
+    factor?: number | null
 }
 
 export enum ParamsTypeEnum {
