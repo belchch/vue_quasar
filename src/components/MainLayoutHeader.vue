@@ -106,8 +106,6 @@ import { menuLinks } from 'src/config/lookup-links'
 import { userRoleLabel } from 'src/features/user/api/types'
 import { useCommonService } from 'src/composables/common'
 import DownloadApkButton from 'src/features/apk/components/DownloadApkButton.vue'
-import UploadApkButton from 'src/features/apk/components/UploadApkButton.vue'
-
 
 const auth = useAuth()
 const router = useRouter()
