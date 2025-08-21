@@ -8,7 +8,7 @@
     <PlanObjectDialog v-if="editingNode" v-model="objectDialogOpen" />
     <q-splitter v-model="splitterModel" style="min-height: 400px;">
       <template v-slot:before>
-        <div class="q-pa-md">
+        <div class="q-pa-md scroll" style="height: calc(100vh - 280px);">
 
           <q-tree ref="treePlan" @update:selected="nodeSelected" :nodes="treeData" node-key="id"
             selected-color="primary" v-model:selected="selected" no-selection-unset>
@@ -55,8 +55,8 @@
       </template>
 
       <template v-slot:after>
-        <q-tab-panels v-if="selectedNode" v-model="selectedNodeType" animated transition-prev="jump-up"
-          transition-next="jump-up">
+        <q-tab-panels v-if="selectedNode" v-model="selectedNodeType" style="height: calc(100vh - 280px);" animated
+          transition-prev="jump-up" transition-next="jump-up">
           <q-tab-panel name="room">
             <div class="text-blue-grey">Помещение</div>
             <div class="text-h6">{{ selectedNode['label'] || '-' }}</div>
