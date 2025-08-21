@@ -33,6 +33,8 @@
           <rate-floor-params v-if="formData.boqWorkParamsType == 'FLOOR'" v-model="floorParams" />
           <rate-floor-section-params v-if="formData.boqWorkParamsType == 'FLOOR_SECTION'"
             v-model="floorSectionParams" />
+          <rate-ceil-params v-if="formData.boqWorkParamsType == 'CEIL'" v-model="ceilParams" />
+          <rate-ceil-section-params v-if="formData.boqWorkParamsType == 'CEIL_SECTION'" v-model="ceilSectionParams" />
         </div>
       </div>
       <q-card-actions align="right">
@@ -43,10 +45,21 @@
 </template>
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import { Rate, UnitOfMeasureType, UnitOfMeasureEnum, ParamsTypeEnum, ParamsType, BoqFloor, BoqFloorSection, BoqFloorSectionUpdateRequest } from 'src/features/lookup/rate/types';
+import { Rate,
+  UnitOfMeasureType,
+  UnitOfMeasureEnum,
+  ParamsTypeEnum,
+  ParamsType,
+  BoqFloor,
+  BoqFloorSection,
+  BoqFloorSectionUpdateRequest,
+  BoqCeil,
+  BoqSectionBase } from 'src/features/lookup/rate/types';
 import RateFloorParams from './RateFloorParams.vue'
 import { useRateStore } from 'src/features/lookup/rate/rate-store'
 import RateFloorSectionParams from './RateFloorSectionParams.vue'
+import RateCeilParams from './RateCeilParams.vue'
+import RateCeilSectionParams from './RateCeilSectionParams.vue'
 const rateStore = useRateStore()
 const openModal = defineModel<boolean>({ default: false });
 const { rate } = defineProps<{
@@ -66,7 +79,13 @@ const defaultFloorSectionParams:BoqFloorSection = {
   materialPreservation: false,
   screedLeveling: false
 }
+const defaultCeilSectionParams:BoqSectionBase = {
+  material: null,
+  materialReplacement: false,
+  materialPreservation: false,
+}
 const floorSectionParams = ref<BoqFloorSection>(defaultFloorSectionParams);
+const ceilSectionParams = ref<BoqSectionBase>({ ...defaultCeilSectionParams });
 const floorSectionParamsUpdate = ref<BoqFloorSectionUpdateRequest>({
   materialId: undefined,
   materialReplacement: false,
@@ -99,7 +118,12 @@ const defaultFloorParams:BoqFloor = {
   baseboardReplacement: false,
   baseboardPreservation: false
 }
+const defaultCeilParams: BoqCeil = {
+  moldingPreservation: false,
+  moldingReplacement: false
+}
 const floorParams = ref<BoqFloor>(defaultFloorParams);
+const ceilParams = ref<BoqCeil>({ ...defaultCeilParams });
 
 watch(openModal, (newValue) => {
   if (newValue) {
@@ -109,8 +133,14 @@ watch(openModal, (newValue) => {
         case 'FLOOR':
           Object.assign(floorParams.value, rate.boqWorkParams);
           break;
+        case 'CEIL':
+          Object.assign(ceilParams.value, rate.boqWorkParams);
+          break;
         case 'FLOOR_SECTION':
           Object.assign(floorSectionParams.value, rate.boqWorkParams);
+          break;
+        case 'CEIL_SECTION':
+          Object.assign(ceilSectionParams.value, rate.boqWorkParams);
           break;
       }
     } else {
@@ -128,6 +158,7 @@ function changeParamsType(v:any){
 async function onSave() {
   switch (formData.value.boqWorkParamsType) {
     case 'FLOOR':
+    case 'CEIL':
       formData.value.boqWorkParams = floorParams.value;
       if(formData.value.boqWorkParams['id']){delete formData.value.boqWorkParams.id}
       break;
@@ -137,17 +168,18 @@ async function onSave() {
       floorSectionParamsUpdate.value.screedLeveling = floorSectionParams.value.screedLeveling;
       if(floorSectionParams.value.material){
         floorSectionParamsUpdate.value.materialId = floorSectionParams.value.material.id;
-        // floorSectionParamsUpdate.value = {
-        //   materialId: floorSectionParams.value.material?.id,
-        //   materialReplacement: floorSectionParams.value.materialReplacement,
-        //   materialPreservation: floorSectionParams.value.materialPreservation,
-        //   screedLeveling: floorSectionParams.value.screedLeveling
-        // }
       } else {
         floorSectionParamsUpdate.value.materialId = null;
       }
       formData.value.boqWorkParams = {...floorSectionParamsUpdate.value};
       // console.log(formData.value.boqWorkParams)
+      break;
+    case 'CEIL_SECTION':
+      formData.value.boqWorkParams = {
+        materialPreservation: ceilSectionParams.value.materialPreservation,
+        materialReplacement: ceilSectionParams.value.materialReplacement,
+        materialId: ceilSectionParams.value.material?.id || null
+      }
       break;
     default:
       break;
@@ -160,7 +192,6 @@ async function onSave() {
       loading.value = false
       openModal.value = false;
     }
-
   } else {
     try{
       await rateStore.createRate(formData.value)
