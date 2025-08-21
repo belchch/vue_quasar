@@ -18,12 +18,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { usePlanTreeService } from "../../composables/plan-tree";
 import { storeToRefs } from "pinia";
 import { usePlanTreeStore } from "../../stores/plan-tree-store";
 import { useMaterialStore } from "src/features/lookup/material/stores/material-store";
-const openModal = defineModel<boolean>('open', { default: false });
+const openModal = defineModel<boolean>({ default: false });
 
 const { editingNode } = storeToRefs(usePlanTreeStore())
 const material = ref<{ label: string, value: number } | undefined>(undefined)
@@ -41,7 +41,14 @@ const optionItems = computed(() => {
     value: item.id!
   }))
 })
-
+watch(openModal, (newValue) => {
+  if (newValue) {
+    if (editingNode.value) {
+      const id = editingNode.value.rawData.materialId;
+      material.value = optionItems.value.find(item => item.value == id)
+    }
+  }
+}, { immediate: true })
 </script>
 
 <style scoped></style>

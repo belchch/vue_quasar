@@ -18,14 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useInspectionSpotStore } from "src/features/inspection/store/inspection-spot-store";
 import { usePlanTreeService } from "../../composables/plan-tree";
 import { storeToRefs } from "pinia";
 import { usePlanTreeStore } from "../../stores/plan-tree-store";
 import { buildInspectionSpotOptions } from "src/features/inspection/composables/inspection-spot";
-const openModal = defineModel<boolean>('open', { default: false });
-
+const openModal = defineModel<boolean>({ default: false });
 
 const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
 const { editingNode } = storeToRefs(usePlanTreeStore())
@@ -49,7 +48,7 @@ type SpotOption = {
 }
 const optionItems = computed(() => {
   const items: SpotOption[] = [];
-  inspectionSpotOptions.value.forEach((item) => {  
+  inspectionSpotOptions.value.forEach((item) => {
     items.push({
       label: item.name,
       value: item.id
@@ -57,7 +56,14 @@ const optionItems = computed(() => {
   });
   return items;
 })
-
+watch(openModal, (newValue) => {
+  if (newValue) {
+    if (editingNode.value) {
+      const locationId = editingNode.value.rawData.roomId;
+      locationModel.value = optionItems.value.find(item => item.value == locationId)
+    }
+  }
+}, { immediate: true })
 </script>
 
 <style scoped></style>
