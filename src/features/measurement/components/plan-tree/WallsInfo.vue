@@ -3,8 +3,7 @@
     <div class="text-h6">Стены</div>
     <div class="q-pa-md">
       <q-table
-        :pagination="{ rowsPerPage: 0 }"
-        hide-pagination
+        :pagination="{ rowsPerPage: 10 }"
         flat
         bordered
         :rows="wallsConfig"
