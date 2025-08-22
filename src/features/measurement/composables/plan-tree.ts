@@ -55,9 +55,6 @@ const createRoom = (room: any) => {
     children: []
   }
   const transformedWalls = createWalls(room.walls);
-  //walls.children.push(...transformedWalls)
-  //resultRoom.children.push(walls);
-  resultRoom.children.push(...transformedWalls);
   const rootFloor = transformRoomFloor(room.floor);
   const rootCeiling = transformRoomCeiling(room.ceiling);
   resultRoom.children.push(rootFloor);
@@ -67,9 +64,7 @@ const createRoom = (room: any) => {
     movabelObjects.children.push(...treeMovableObjects);
     resultRoom.children.push(movabelObjects);
   }
-  // room.walls.forEach((wall: any,i:number) => {
-  //   resultRoom.children.push(createWall(i,wall));
-  // });
+  resultRoom.children.push(...transformedWalls);
   return resultRoom;
 }
 const createWall = (i: number, wall: any) => {
