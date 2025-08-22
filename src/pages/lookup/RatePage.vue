@@ -84,6 +84,12 @@ const columns = [
       align: 'left' as const,
     },
     {
+      name: 'factor',
+      field: 'factor',
+      label: 'Коэф.',
+      align: 'left' as const,
+    },
+    {
       name: 'paramsType',
       field: (row: Rate) => {
         if(!row.boqWorkParamsType) return '-';
