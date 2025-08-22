@@ -158,9 +158,12 @@ function changeParamsType(v:any){
 async function onSave() {
   switch (formData.value.boqWorkParamsType) {
     case 'FLOOR':
-    case 'CEIL':
       formData.value.boqWorkParams = floorParams.value;
       if(formData.value.boqWorkParams['id']){delete formData.value.boqWorkParams.id}
+      break;
+    case 'CEIL':
+      formData.value.boqWorkParams = ceilParams.value;
+      if (formData.value.boqWorkParams['id']) { delete formData.value.boqWorkParams.id }
       break;
     case 'FLOOR_SECTION':
       floorSectionParamsUpdate.value.materialReplacement = floorSectionParams.value.materialReplacement;
