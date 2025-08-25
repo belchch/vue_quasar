@@ -3,6 +3,7 @@ import { Rate } from "src/features/rate/stores/types"
 import { BoqFloorModel } from "./floor/types"
 import { BoqCeilModel } from "./ceil/types"
 import { BoqInteriorDoorModel } from "./interior-door/types"
+import { BoqWindowModel } from "./window/types"
 
 export type BoqLocation = {
     id: number,
@@ -14,7 +15,8 @@ export type BoqLocation = {
     height?: number,
     floor: BoqFloorModel,
     ceil: BoqCeilModel,
-    interiorDoors: BoqInteriorDoorModel[]
+    interiorDoors: BoqInteriorDoorModel[],
+    windows: BoqWindowModel[]
 }
 
 export type Boq = {
