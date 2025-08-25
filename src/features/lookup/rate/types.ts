@@ -19,33 +19,33 @@ export enum ParamsTypeEnum {
 export type ParamsType = keyof typeof ParamsTypeEnum
 export interface BoqSectionBase {
   material?: Material | null;
-  materialReplacement: boolean;
-  materialPreservation: boolean;
+  materialReplacement: boolean | null;
+  materialPreservation: boolean | null;
 }
 export interface BoqSectionBaseUpdateRequest {
   materialId: number | undefined | null,
-  materialReplacement: boolean,
-  materialPreservation: boolean,
+  materialReplacement: boolean | null,
+  materialPreservation: boolean | null,
 }
 export interface BoqFloorSection extends BoqSectionBase {
-  screedLeveling?: boolean;
+  screedLeveling?: boolean | null;
 }
 
 
 export type BoqFloor = {
   id?: number,
-  baseboardReplacement:boolean,
-  baseboardPreservation: boolean
+  baseboardReplacement:boolean | null,
+  baseboardPreservation: boolean | null
 }
 
 export interface BoqFloorSectionUpdateRequest extends BoqSectionBaseUpdateRequest {
-  screedLeveling?: boolean | undefined
+  screedLeveling?: boolean | undefined | null
 }
 
 export type BoqCeil = {
   id?: number,
-  moldingReplacement:boolean,
-  moldingPreservation: boolean
+  moldingReplacement:boolean | null,
+  moldingPreservation: boolean | null
 }
 
 export enum UnitOfMeasureEnum {
