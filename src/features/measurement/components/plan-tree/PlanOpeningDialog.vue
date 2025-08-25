@@ -2,7 +2,7 @@
   <q-dialog v-model="openModal">
     <q-card style="width: 100%;max-width: 500px;">
       <q-card-section class="row items-center">
-        <div class="text-h6">Выбор материала</div>
+        <div class="text-h6">Редактирование</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -10,7 +10,7 @@
         <div class="q-mb-md">{{ editingNode?.label }}</div>
         <q-select dense outlined v-model="material" :options="materialItems" label="Материал" />
       </q-card-section>
-      <q-card-section class="q-pt-none">        
+      <q-card-section class="q-pt-none">
         <q-select dense outlined v-model="opening" :options="openingItems" label="Проем" />
       </q-card-section>
       <q-card-actions align="right">
@@ -21,13 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { usePlanTreeService } from "../../composables/plan-tree";
 import { storeToRefs } from "pinia";
 import { usePlanTreeStore } from "../../stores/plan-tree-store";
 import { useMaterialStore } from "src/features/lookup/material/stores/material-store";
 import { useOpeningStore } from "src/features/lookup/opening/opening-store";
-const openModal = defineModel<boolean>('open', { default: false });
+const openModal = defineModel<boolean>({ default: false });
 
 const { editingNode } = storeToRefs(usePlanTreeStore())
 const material = ref<{ label: string, value: number }>()
@@ -61,6 +61,16 @@ const openingItems = computed(() => {
 onMounted(async () => {
   await openingStore.requestLookup()
 })
+watch(openModal, (newValue) => {
+  if (newValue) {
+    console.log(editingNode.value?.rawData)
+    if (editingNode.value) {
+      const materialId = editingNode.value.rawData.materialId;
+      material.value = materialItems.value.find(item => item.value == materialId);
+      opening.value = openingItems.value.find(item => item.value == editingNode.value?.rawData.openingId);
+    }
+  }
+}, { immediate: true })
 </script>
 
 <style scoped></style>
