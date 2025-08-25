@@ -1,16 +1,16 @@
 import { Material } from "src/features/lookup/material/stores/types"
 import { StructElem } from "src/features/lookup/struct-elem/stores/types"
 
-export type BoqCeil = {
+export type BoqCeilModel = {
     id: number,
     moldingLength: number,
     moldingReplacement: boolean,
     moldingPreservation: boolean,
-    sections: BoqCeilSection[],
+    sections: BoqCeilSectionModel[],
     structElems: StructElem[]
 }
 
-export type BoqCeilSection = {
+export type BoqCeilSectionModel = {
     id: number,
     material: Material,
     area: number,
@@ -33,7 +33,7 @@ export type BoqCeilSectionUpdateRequest = {
     materialPreservation: boolean
 }
 
-export const toCeilUpdateRequest = (boqCeil: BoqCeil): BoqCeilUpdateRequest => {
+export const toCeilUpdateRequest = (boqCeil: BoqCeilModel): BoqCeilUpdateRequest => {
     return {
         id: boqCeil.id,
         moldingLength: boqCeil.moldingLength,
@@ -42,7 +42,7 @@ export const toCeilUpdateRequest = (boqCeil: BoqCeil): BoqCeilUpdateRequest => {
     }
 }
 
-export const toCeilSectionUpdateRequest = (ceilSection: BoqCeilSection): BoqCeilSectionUpdateRequest => {
+export const toCeilSectionUpdateRequest = (ceilSection: BoqCeilSectionModel): BoqCeilSectionUpdateRequest => {
     return {
         id: ceilSection.id,
         materialId: ceilSection.material.id,

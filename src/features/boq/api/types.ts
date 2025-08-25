@@ -1,7 +1,8 @@
 import { Spot } from "src/features/lookup/spot/stores/types"
 import { Rate } from "src/features/rate/stores/types"
-import { BoqFloor } from "./floor/types"
-import { BoqCeil } from "./ceil/types"
+import { BoqFloorModel } from "./floor/types"
+import { BoqCeilModel } from "./ceil/types"
+import { BoqInteriorDoorModel } from "./interior-door/types"
 
 export type BoqLocation = {
     id: number,
@@ -11,8 +12,9 @@ export type BoqLocation = {
     area?: number,
     perimeter?: number,
     height?: number,
-    floor: BoqFloor,
-    ceil: BoqCeil
+    floor: BoqFloorModel,
+    ceil: BoqCeilModel,
+    interiorDoors: BoqInteriorDoorModel[]
 }
 
 export type Boq = {

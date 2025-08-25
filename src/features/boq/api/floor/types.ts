@@ -1,16 +1,16 @@
 import { Material } from "src/features/lookup/material/stores/types"
 import { StructElem } from "src/features/lookup/struct-elem/stores/types"
 
-export type BoqFloor = {
+export type BoqFloorModel = {
     id: number,
     baseboardLength: number,
     baseboardReplacement: boolean,
     baseboardPreservation: boolean,
-    sections: BoqFloorSection[],
+    sections: BoqFloorSectionModel[],
     structElems: StructElem[]
 }
 
-export type BoqFloorSection = {
+export type BoqFloorSectionModel = {
     id: number,
     material: Material,
     area: number,
@@ -35,7 +35,7 @@ export type BoqFloorSectionUpdateRequest = {
     screedLeveling: boolean
 }
 
-export const toFloorUpdateRequest = (boqFloor: BoqFloor): BoqFloorUpdateRequest => {
+export const toFloorUpdateRequest = (boqFloor: BoqFloorModel): BoqFloorUpdateRequest => {
     return {
         id: boqFloor.id,
         baseboardLength: boqFloor.baseboardLength,
@@ -44,7 +44,7 @@ export const toFloorUpdateRequest = (boqFloor: BoqFloor): BoqFloorUpdateRequest 
     }
 }
 
-export const toFloorSectionUpdateRequest = (floorSection: BoqFloorSection): BoqFloorSectionUpdateRequest => {
+export const toFloorSectionUpdateRequest = (floorSection: BoqFloorSectionModel): BoqFloorSectionUpdateRequest => {
     return {
         id: floorSection.id,
         materialId: floorSection.material?.id,

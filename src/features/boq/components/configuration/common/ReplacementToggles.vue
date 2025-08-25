@@ -1,6 +1,6 @@
 <template>
     <div class="row q-gutter-md">
-        <q-toggle color="secondary" v-model="replacement" label="Замена" size="sm"/>
+        <q-toggle color="secondary" v-model="replacement" :label="replacementLabel" size="sm"/>
 
         <q-toggle color="secondary" v-model="preservation" label="С сохранением" size="sm" :disable="!replacement" />
     </div>
@@ -9,4 +9,9 @@
 const replacement = defineModel<boolean>('replacement', { required: true })
 const preservation = defineModel<boolean>('preservation', { required: true })
 
+const props =  withDefaults(defineProps<{
+  replacementLabel?: string
+}>(), {
+  replacementLabel: 'Замена'
+})
 </script>

@@ -22,6 +22,11 @@
           <q-card-section class="q-pt-none">
             <q-input outlined dense v-model="formData.sourceUrl" label="Ссылка" />
           </q-card-section>
+          <q-card-section class="q-pt-none">
+            <q-input outlined dense v-model="formData.factor" label="Коэффициент"
+                :rules="[val => !isNaN(Number(val)) || 'Введите число']"
+             />
+          </q-card-section>
         </div>
         <div class="col">
           <q-card-section class="q-pt-none">
@@ -71,13 +76,14 @@ const defautObj: Rate = {
   price: 0,
   unitOfMeasure: "SQUARE_METER",
   boqWorkParamsType: null,
+  factor: null
 }
 const loading = ref(false);
 const defaultFloorSectionParams:BoqFloorSection = {
   material: null,
   materialReplacement: false,
   materialPreservation: false,
-  screedLeveling: false
+  screedLeveling: false,
 }
 const defaultCeilSectionParams:BoqSectionBase = {
   material: null,
@@ -126,6 +132,7 @@ const floorParams = ref<BoqFloor>(defaultFloorParams);
 const ceilParams = ref<BoqCeil>({ ...defaultCeilParams });
 
 watch(openModal, (newValue) => {
+  formData.value = {...defautObj};
   if (newValue) {
     if (rate) {
       Object.assign(formData.value, rate);
@@ -156,6 +163,7 @@ function changeParamsType(v:any){
   // }
 }
 async function onSave() {
+  if (!formData.value.factor) delete formData.value.factor;
   switch (formData.value.boqWorkParamsType) {
     case 'FLOOR':
       formData.value.boqWorkParams = floorParams.value;

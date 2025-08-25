@@ -1,9 +1,9 @@
-import { BoqCeil, BoqCeilSection, BoqCeilSectionUpdateRequest, BoqCeilUpdateRequest } from "./types"
+import { BoqCeilModel, BoqCeilSectionModel, BoqCeilSectionUpdateRequest, BoqCeilUpdateRequest } from "./types"
 import { api } from "src/boot/axios"
 
 export const BoqCeilApi = {
     updateCeil: (id: number, request: BoqCeilUpdateRequest, updateVolume: boolean) => {
-        return api.put<BoqCeil>(`/api/boq/ceil/${id}`, request, {
+        return api.put<BoqCeilModel>(`/api/boq/ceil/${id}`, request, {
             params: {
                 updateVolume
             }
@@ -11,7 +11,7 @@ export const BoqCeilApi = {
     },
 
     updateCeilSection: (id: number, request: BoqCeilSectionUpdateRequest, updateVolume: boolean) => {
-        return api.put<BoqCeilSection>(`/api/boq/ceil-sections/${id}`, request, {
+        return api.put<BoqCeilSectionModel>(`/api/boq/ceil-sections/${id}`, request, {
             params: {
                 updateVolume
             }
@@ -19,7 +19,7 @@ export const BoqCeilApi = {
     },
 
     createCeilSection: (ceilId: number) => {
-        return api.post<BoqCeilSection>(`/api/boq/ceil-sections`, {}, {
+        return api.post<BoqCeilSectionModel>(`/api/boq/ceil-sections`, {}, {
             params: {
                 ceilId
             }
