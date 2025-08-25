@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-md q-gutter-sm">
-        <q-breadcrumbs active-color="accent">
+        <q-breadcrumbs active-color="primary">
             <template v-for="item in breadcrumbs" :key="item.to" >
                 <q-breadcrumbs-el :label="item.label" :icon="item.icon" :to="item.to" :class=" !item.to && 'text-grey-8'"/>
             </template>        

@@ -18,15 +18,15 @@
                 <div class="q-gutter-md" style="width: 400px;">
                     <q-input type="number" v-model.number="section.area" label="Полщадь секции пола"
                         style="width: 180px;"
-                        @update:model-value="updateCeilSection(section as BoqCeilSection, true)" />                    
+                        @update:model-value="updateCeilSection(section as BoqCeilSectionModel, true)" />                    
                 </div>
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"
                         v-model:preservation="section.materialPreservation" v-model:material="section.material"
                         :materials="materials"
-                        @update:replacement="(val: boolean) => updateCeilSectionMaterialReplacement(section as BoqCeilSection, val)"
-                        @update:preservation="updateCeilSection(section as BoqCeilSection, false)"
-                        @update:material="updateCeilSection(section as BoqCeilSection, false)" />
+                        @update:replacement="(val: boolean) => updateCeilSectionMaterialReplacement(section as BoqCeilSectionModel, val)"
+                        @update:preservation="updateCeilSection(section as BoqCeilSectionModel, false)"
+                        @update:material="updateCeilSection(section as BoqCeilSectionModel, false)" />
                 </div>
             </template>
         </SectionLayout>
@@ -39,7 +39,7 @@ import { storeToRefs } from 'pinia';
 import { Material } from 'src/features/lookup/material/stores/types';
 import { ref } from 'vue';
 import { BoqCeilApi } from '../../api/ceil/boq-ceil-api';
-import { BoqCeil, BoqCeilSection, toCeilSectionUpdateRequest, toCeilUpdateRequest } from '../../api/ceil/types';
+import { BoqCeilModel, BoqCeilSectionModel, toCeilSectionUpdateRequest, toCeilUpdateRequest } from '../../api/ceil/types';
 import { useBoqWorkService } from '../../composables/boq-work';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
 import PhotoGallery from './common/PhotoGallery.vue';
@@ -49,10 +49,10 @@ const { ceilPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{
-    ceil: BoqCeil
+    ceil: BoqCeilModel
 }>()
 
-const ceilLocal = ref<BoqCeil>(props.ceil)
+const ceilLocal = ref<BoqCeilModel>(props.ceil)
 
 const addSection = async () => {
     const response = await BoqCeilApi.createCeilSection(props.ceil.id!)
@@ -72,7 +72,7 @@ const updateBaseboardReplacement = async () => {
     await updateCeil(ceilLocal.value, false)
 }
 
-const updateCeilSectionMaterialReplacement = async (section: BoqCeilSection, value: boolean) => {
+const updateCeilSectionMaterialReplacement = async (section: BoqCeilSectionModel, value: boolean) => {
     if (!value) {
         section.materialPreservation = false
     }
@@ -85,12 +85,12 @@ const moldingLengthAsPerimeter = async () => {
     await updateCeil(ceilLocal.value, true)
 }
 
-const updateCeilSection = async (ceilSection: BoqCeilSection, updateVolume: boolean) => {
+const updateCeilSection = async (ceilSection: BoqCeilSectionModel, updateVolume: boolean) => {
     await BoqCeilApi.updateCeilSection(ceilSection.id, toCeilSectionUpdateRequest(ceilSection), updateVolume)
     await requestWorks()
 }
 
-const updateCeil = async (ceil: BoqCeil, updateVolume: boolean) => {
+const updateCeil = async (ceil: BoqCeilModel, updateVolume: boolean) => {
     await BoqCeilApi.updateCeil(ceil.id, toCeilUpdateRequest(ceil), updateVolume)
     await requestWorks()
 }

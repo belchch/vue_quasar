@@ -2,10 +2,11 @@
     <div class="row q-col-gutter-sm">
         <div class="col-8">
             <q-card flat bordered>
-                <q-tabs v-model="currentTab" no-caps align="left" active-color="accent">
+                <q-tabs v-model="currentTab" no-caps align="left" active-color="primary">
                     <q-tab name="floor" label="Пол" />
                     <q-tab name="ceil" label="Потолок" />
-                    <q-tab name="wall" label="Стены" />
+                    <q-tab name="interior-door" label="Межкомнатные двери"/>
+                    <q-tab name="wall" label="Стены" />                    
                 </q-tabs>
             </q-card>
             <q-card class="q-mt-xs">                
@@ -15,6 +16,9 @@
                     </q-tab-panel>
                     <q-tab-panel name="ceil">
                         <BoqCeil :ceil="location!.ceil" />
+                    </q-tab-panel>
+                    <q-tab-panel name="interior-door">
+                        <BoqInteriorDoors :interior-doors="location!.interiorDoors"/>
                     </q-tab-panel>
                 </q-tab-panels>
             </q-card>
@@ -32,6 +36,7 @@ import { useBoqWorkStore } from '../../stores/boq-work-store';
 import WorkTable from '../WorkTable.vue';
 import BoqFloor from './BoqFloor.vue';
 import BoqCeil from './BoqCeil.vue';
+import BoqInteriorDoors from './BoqInteriorDoors.vue';
 
 const { location } = storeToRefs(useBoqLocationStore())
 const { works } = storeToRefs(useBoqWorkStore())

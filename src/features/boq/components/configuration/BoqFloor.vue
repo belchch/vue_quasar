@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div>    
         <div class="row justify-between">
             <q-card-section>
                 <BaseboardReplacement title="Напольный плинтус" length-hint="Длина напольного плинтуса"
@@ -18,17 +18,17 @@
                 <div class="q-gutter-md" style="width: 400px;">
                     <q-input type="number" v-model.number="section.area" label="Полщадь секции пола"
                         style="width: 180px;"
-                        @update:model-value="updateFloorSection(section as BoqFloorSection, true)" />
+                        @update:model-value="updateFloorSection(section as BoqFloorSectionModel, true)" />
                     <q-toggle color="secondary" v-model="section.screedLeveling" label="Выравнивание стяжки"
-                        @update:model-value="updateFloorSection(section as BoqFloorSection, false)" />
+                        @update:model-value="updateFloorSection(section as BoqFloorSectionModel, false)" />
                 </div>
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"
                         v-model:preservation="section.materialPreservation" v-model:material="section.material"
                         :materials="materials"
-                        @update:replacement="(val: boolean) => updateFloorSectionMaterialReplacement(section as BoqFloorSection, val)"
-                        @update:preservation="updateFloorSection(section as BoqFloorSection, false)"
-                        @update:material="updateFloorSection(section as BoqFloorSection, false)" />
+                        @update:replacement="(val: boolean) => updateFloorSectionMaterialReplacement(section as BoqFloorSectionModel, val)"
+                        @update:preservation="updateFloorSection(section as BoqFloorSectionModel, false)"
+                        @update:material="updateFloorSection(section as BoqFloorSectionModel, false)" />
                 </div>
             </template>
         </SectionLayout>
@@ -41,7 +41,7 @@ import { storeToRefs } from 'pinia';
 import { Material } from 'src/features/lookup/material/stores/types';
 import { onUnmounted, ref } from 'vue';
 import { BoqFloorApi } from '../../api/floor/boq-floor-api';
-import { BoqFloor, BoqFloorSection, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/floor/types';
+import { BoqFloorModel, BoqFloorSectionModel, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/floor/types';
 import { useBoqWorkService } from '../../composables/boq-work';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
 import PhotoGallery from './common/PhotoGallery.vue';
@@ -51,10 +51,10 @@ const { floorPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{
-    floor: BoqFloor
+    floor: BoqFloorModel
 }>()
 
-const floorLocal = ref<BoqFloor>(props.floor)
+const floorLocal = ref<BoqFloorModel>(props.floor)
 
 const addSection = async () => {
     const response = await BoqFloorApi.createFloorSection(props.floor.id!)
@@ -75,7 +75,7 @@ const updateBaseboardReplacement = async () => {
     await updateFloor(floorLocal.value, false)
 }
 
-const updateFloorSectionMaterialReplacement = async (section: BoqFloorSection, value: boolean) => {
+const updateFloorSectionMaterialReplacement = async (section: BoqFloorSectionModel, value: boolean) => {
     if (!value) {
         section.materialPreservation = false
     }
@@ -88,22 +88,18 @@ const baseboardLengthAsPerimeter = async () => {
     await updateFloor(floorLocal.value, true)
 }
 
-const updateFloorSection = async (floorSection: BoqFloorSection, updateVolume: boolean) => {
+const updateFloorSection = async (floorSection: BoqFloorSectionModel, updateVolume: boolean) => {
     console.log('update', updateVolume)
     await BoqFloorApi.updateFloorSection(floorSection.id, toFloorSectionUpdateRequest(floorSection), updateVolume)
     await requestWorks()
 }
 
-const updateFloor = async (floor: BoqFloor, updateVolume: boolean) => {
+const updateFloor = async (floor: BoqFloorModel, updateVolume: boolean) => {
     await BoqFloorApi.updateFloor(floor.id, toFloorUpdateRequest(floor), updateVolume)
     await requestWorks()
 }
 
 const materials = ref<Material[]>(props.floor.structElems.flatMap(item => item.materials))
-
-onUnmounted(() => {
-    console.log('unmounted')
-})
 </script>
 <style scoped>
 .photo {
