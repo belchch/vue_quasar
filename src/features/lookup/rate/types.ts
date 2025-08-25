@@ -6,32 +6,46 @@ export type Rate = {
     price: number,
     unitOfMeasure : UnitOfMeasureType,
     boqWorkParamsType?: ParamsType | '' | null,
-    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest,
+    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil,
     factor?: number | null
 }
 
 export enum ParamsTypeEnum {
   FLOOR = 'Пол',
   FLOOR_SECTION = 'Секция пола',
+  CEIL = 'Потолок',
+  CEIL_SECTION = 'Секция потолка'
 }
 export type ParamsType = keyof typeof ParamsTypeEnum
+export interface BoqSectionBase {
+  material?: Material | null;
+  materialReplacement: boolean;
+  materialPreservation: boolean;
+}
+export interface BoqSectionBaseUpdateRequest {
+  materialId: number | undefined | null,
+  materialReplacement: boolean,
+  materialPreservation: boolean,
+}
+export interface BoqFloorSection extends BoqSectionBase {
+  screedLeveling?: boolean;
+}
+
+
 export type BoqFloor = {
   id?: number,
   baseboardReplacement:boolean,
   baseboardPreservation: boolean
 }
 
-export type BoqFloorSection = {
-  material?:Material | null,
-  materialReplacement: boolean,
-  materialPreservation: boolean,
-  screedLeveling?: boolean
-}
-export type BoqFloorSectionUpdateRequest = {
-  materialId: number | undefined | null,
-  materialReplacement: boolean,
-  materialPreservation: boolean,
+export interface BoqFloorSectionUpdateRequest extends BoqSectionBaseUpdateRequest {
   screedLeveling?: boolean | undefined
+}
+
+export type BoqCeil = {
+  id?: number,
+  moldingReplacement:boolean,
+  moldingPreservation: boolean
 }
 
 export enum UnitOfMeasureEnum {
