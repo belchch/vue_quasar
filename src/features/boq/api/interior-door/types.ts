@@ -10,6 +10,7 @@ export type BoqInteriorDoorModel = {
     trimsReplacement: boolean,
     replacement: boolean,
     preservation: boolean,
+    type: DoorType,
     structElems: StructElem[]
 }
 
@@ -21,6 +22,7 @@ export type BoqInteriorDoorUpdateRequest = {
     trimsReplacement: boolean,
     replacement: boolean,
     preservation: boolean,
+    type: DoorType
 }
 
 export const toInteriorDoorUpdateRequest = (interiorDoor: BoqInteriorDoorModel): BoqInteriorDoorUpdateRequest => {
@@ -31,6 +33,9 @@ export const toInteriorDoorUpdateRequest = (interiorDoor: BoqInteriorDoorModel):
         hasSlopes: interiorDoor.hasSlopes,
         trimsReplacement: interiorDoor.trimsReplacement,
         replacement: interiorDoor.replacement,
-        preservation: interiorDoor.preservation
+        preservation: interiorDoor.preservation,
+        type: interiorDoor.type
     }
 }
+
+export type DoorType = 'INTERIOR' | 'ENTRANCE'
