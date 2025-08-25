@@ -2,7 +2,7 @@
   <q-card>
     <q-tabs v-model="tab" no-caps active-color="primary" align="left">
       <q-tab label="Линейные размеры" name="measurements" />
-      <q-tab label="Объекты" name="objects" />
+      <q-tab label="Движимое имущество" name="objects" />
       <q-tab label="ЭПСЭ План" name="plan" />
     </q-tabs>
     <q-separator />

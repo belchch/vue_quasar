@@ -43,7 +43,7 @@
             </template>
             <template v-slot:header-movable-objects>
               <q-item-section>
-                <q-item-label>Объекты</q-item-label>
+                <q-item-label>Движимое имущество</q-item-label>
               </q-item-section>
             </template>
             <template v-slot:header-movable-item="prop">

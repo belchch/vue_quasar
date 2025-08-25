@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-blue-grey">Объект</div>
+    <div class="text-blue-grey">Движимое имущество</div>
     <div class="text-h6">{{ selectedNode['label'] || '-' }}</div>
     <div class="q-pa-md row items-start q-gutter-md">
       <card-item title="Длина" :item-value="selectedNode.rawData.length" />
