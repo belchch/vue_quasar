@@ -5,7 +5,7 @@
       <span v-if="params.moldingReplacement === null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none">
-      <q-toggle toggle-indeterminate v-model="params.moldingPreservation" label="Замена потолочного с сохранением" />
+      <q-toggle toggle-indeterminate v-model="params.moldingPreservation" label="Замена плинтуса с сохранением" />
       <span v-if="params.moldingPreservation === null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
   </div>
