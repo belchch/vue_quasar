@@ -6,7 +6,7 @@ export type Rate = {
     price: number,
     unitOfMeasure : UnitOfMeasureType,
     boqWorkParamsType?: ParamsType | '' | null,
-    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil,
+    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil | BoqDoor,
     factor?: number | null
 }
 
@@ -14,13 +14,19 @@ export enum ParamsTypeEnum {
   FLOOR = 'Пол',
   FLOOR_SECTION = 'Секция пола',
   CEIL = 'Потолок',
-  CEIL_SECTION = 'Секция потолка'
+  CEIL_SECTION = 'Секция потолка',
+  DOOR = 'Межкомнатная дверь'
 }
 export type ParamsType = keyof typeof ParamsTypeEnum
+export enum DimensionEnum {
+  AREA = 'Площадь',
+  PERIMETER = 'Периметр',
+}
+export type DimensionType = keyof typeof DimensionEnum
 export interface BoqSectionBase {
-  material?: Material | null;
-  materialReplacement: boolean;
-  materialPreservation: boolean;
+  material?: Material | null,
+  materialReplacement: boolean,
+  materialPreservation: boolean,
 }
 export interface BoqSectionBaseUpdateRequest {
   materialId: number | undefined | null,
@@ -46,6 +52,15 @@ export type BoqCeil = {
   id?: number,
   moldingReplacement:boolean,
   moldingPreservation: boolean
+}
+
+export type BoqDoor = {
+  id?: number,
+  hasSlopes: boolean | null,
+  trimsReplacement: boolean | null,
+  replacement: boolean | null,
+  preservation: boolean | null,
+  dimension: DimensionType
 }
 
 export enum UnitOfMeasureEnum {

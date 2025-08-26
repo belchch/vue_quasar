@@ -24,8 +24,7 @@
           </q-card-section>
           <q-card-section class="q-pt-none">
             <q-input outlined dense v-model="formData.factor" label="Коэффициент"
-                :rules="[val => !isNaN(Number(val)) || 'Введите число']"
-             />
+              :rules="[numberOrEmptyRule]" />
           </q-card-section>
         </div>
         <div class="col">
@@ -40,6 +39,7 @@
             v-model="floorSectionParams" />
           <rate-ceil-params v-if="formData.boqWorkParamsType == 'CEIL'" v-model="ceilParams" />
           <rate-ceil-section-params v-if="formData.boqWorkParamsType == 'CEIL_SECTION'" v-model="ceilSectionParams" />
+          <rate-door-params v-if="formData.boqWorkParamsType == 'DOOR'" v-model="doorParams" />
         </div>
       </div>
       <q-card-actions align="right">
@@ -59,12 +59,14 @@ import { Rate,
   BoqFloorSection,
   BoqFloorSectionUpdateRequest,
   BoqCeil,
-  BoqSectionBase } from 'src/features/lookup/rate/types';
+  BoqSectionBase,
+  BoqDoor } from 'src/features/lookup/rate/types';
 import RateFloorParams from './RateFloorParams.vue'
 import { useRateStore } from 'src/features/lookup/rate/rate-store'
 import RateFloorSectionParams from './RateFloorSectionParams.vue'
 import RateCeilParams from './RateCeilParams.vue'
 import RateCeilSectionParams from './RateCeilSectionParams.vue'
+import RateDoorParams from './RateDoorParams.vue'
 const rateStore = useRateStore()
 const openModal = defineModel<boolean>({ default: false });
 const { rate } = defineProps<{
@@ -90,8 +92,16 @@ const defaultCeilSectionParams:BoqSectionBase = {
   materialReplacement: false,
   materialPreservation: false,
 }
+const defaultDoorParams: BoqDoor = {
+  hasSlopes: null,
+  trimsReplacement: null,
+  replacement: null,
+  preservation: null,
+  dimension: 'AREA'
+}
 const floorSectionParams = ref<BoqFloorSection>(defaultFloorSectionParams);
 const ceilSectionParams = ref<BoqSectionBase>({ ...defaultCeilSectionParams });
+const doorParams = ref<BoqDoor>({ ...defaultDoorParams });
 const floorSectionParamsUpdate = ref<BoqFloorSectionUpdateRequest>({
   materialId: undefined,
   materialReplacement: false,
@@ -104,7 +114,11 @@ const unitOfMeasureOptions = computed(() => {
     label: UnitOfMeasureEnum[key as UnitOfMeasureType]
   }));
 });
-
+const numberOrEmptyRule = (val:any) => {
+  console.log(val)
+  if (val === '' || val === null || val === undefined) return true
+  return !isNaN(Number(val)) || 'Введите число или оставьте поле пустым'
+}
 const typeParamsOptions = computed(() => {
   const options:any = Object.keys(ParamsTypeEnum).map(key => ({
     value: key as ParamsType,
@@ -149,6 +163,9 @@ watch(openModal, (newValue) => {
         case 'CEIL_SECTION':
           Object.assign(ceilSectionParams.value, rate.boqWorkParams);
           break;
+        case 'DOOR':
+          Object.assign(doorParams.value, rate.boqWorkParams)
+          break;
       }
     } else {
       Object.assign(formData.value,{...defautObj});
@@ -190,6 +207,15 @@ async function onSave() {
         materialPreservation: ceilSectionParams.value.materialPreservation,
         materialReplacement: ceilSectionParams.value.materialReplacement,
         materialId: ceilSectionParams.value.material?.id || null
+      }
+      break;
+    case 'DOOR':
+      formData.value.boqWorkParams = {
+        hasSlopes: doorParams.value.hasSlopes,
+        trimsReplacement: doorParams.value.trimsReplacement,
+        replacement: doorParams.value.replacement,
+        preservation: doorParams.value.preservation,
+        dimension: doorParams.value.dimension
       }
       break;
     default:
