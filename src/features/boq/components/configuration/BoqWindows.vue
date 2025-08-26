@@ -1,5 +1,5 @@
 <template>
-    <q-btn color="secondary" label="Добавить дверь" size="sm" @click="addWindow()"/>
+    <q-btn color="secondary" label="Добавить окно" size="sm" @click="addWindow()"/>
     <q-separator class="q-mt-md"/>
     <template v-for="(window, index) in windowsLocal" :key="window.id">
         <BoqWindow :window="window" :index="index" @remove="deleteWindow(window.id)"/>

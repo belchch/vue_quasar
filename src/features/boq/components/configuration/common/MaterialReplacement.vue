@@ -3,7 +3,7 @@
         <q-card bordered flat style="width: 400px;">
             <div class="text-caption q-ma-sm">Метериал</div>
             <div class="q-ma-md">
-                <ReplacementToggles v-model:replacement="replacement" v-model:preservation="preservation" />
+                <ReplacementToggles v-model:replacement="replacement" v-model:preservation="preservation" :preservation-label="preservationLabel"/>
                 <q-select v-model="material" :options="materials" option-label="name" option-value="id" dense />
             </div>
         </q-card>
@@ -19,6 +19,7 @@ const preservation = defineModel<boolean>('preservation', { required: true })
 const material = defineModel<Material>('material')
 
 defineProps<{
-    materials: Material[]
+    materials: Material[],
+    preservationLabel?: string
 }>()
 </script>

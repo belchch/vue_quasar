@@ -7,7 +7,7 @@
                     <q-tab name="ceil" label="Потолок" />
                     <q-tab name="interior-door" label="Двери"/>
                     <q-tab name="window" label="Окна"/>
-                    <q-tab name="wall" label="Стены" />                    
+                    <q-tab name="wall" label="Стены" />
                 </q-tabs>
             </q-card>
             <q-card class="q-mt-xs">                
@@ -23,6 +23,9 @@
                     </q-tab-panel>
                     <q-tab-panel name="window">
                         <BoqWindows :windows="location!.windows"/>
+                    </q-tab-panel>
+                    <q-tab-panel name="wall">
+                        <BoqWallSections :wall-sections="location!.wallSections"/>
                     </q-tab-panel>
                 </q-tab-panels>
             </q-card>
@@ -42,6 +45,7 @@ import BoqFloor from './BoqFloor.vue';
 import BoqCeil from './BoqCeil.vue';
 import BoqInteriorDoors from './BoqInteriorDoors.vue';
 import BoqWindows from './BoqWindows.vue';
+import BoqWallSections from './BoqWallSections.vue';
 
 const { location } = storeToRefs(useBoqLocationStore())
 const { works } = storeToRefs(useBoqWorkStore())
