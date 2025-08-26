@@ -6,7 +6,7 @@ export type Rate = {
     price: number,
     unitOfMeasure : UnitOfMeasureType,
     boqWorkParamsType?: ParamsType | '' | null,
-    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil | BoqDoor | BoqWindow,
+    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil | BoqDoor | BoqWindow | BoqWallSection | BoqWallSectionUpdateReuest,
     factor?: number | null
 }
 
@@ -17,6 +17,7 @@ export enum ParamsTypeEnum {
   CEIL_SECTION = 'Секция потолка',
   DOOR = 'Межкомнатная дверь',
   WINDOW = 'Окно',
+  WALL_SECTION = 'Секция стены',
 }
 export type ParamsType = keyof typeof ParamsTypeEnum
 export enum DimensionEnum {
@@ -72,6 +73,19 @@ export type BoqWindow = {
   dimension: DimensionType
 }
 
+export type BoqWallSection = {
+  id?: number,
+  material?: Material | null,
+  replacement: boolean | null,
+  pinting: boolean | null,
+  plaster:  boolean | null,
+}
+export type BoqWallSectionUpdateReuest = {
+  materialId?: number | null,
+  replacement: boolean | null,
+  pinting: boolean | null,
+  plaster:  boolean | null,
+}
 export enum UnitOfMeasureEnum {
   SQUARE_METER = 'кв.метры',
   RUNNING_METER = 'погонные метры',

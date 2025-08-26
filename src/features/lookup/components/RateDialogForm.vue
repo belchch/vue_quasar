@@ -40,6 +40,7 @@
           <rate-ceil-section-params v-if="formData.boqWorkParamsType == 'CEIL_SECTION'" v-model="ceilSectionParams" />
           <rate-door-params v-if="formData.boqWorkParamsType == 'DOOR'" v-model="doorParams" />
           <rate-window-params v-if="formData.boqWorkParamsType == 'WINDOW'" v-model="windowParams" />
+          <rate-wall-section-params v-if="formData.boqWorkParamsType == 'WALL_SECTION'" v-model="wallSectionParams" />
         </div>
       </div>
       <q-card-actions align="right">
@@ -61,7 +62,8 @@ import { Rate,
   BoqCeil,
   BoqSectionBase,
   BoqDoor,
-  BoqWindow } from 'src/features/lookup/rate/types';
+  BoqWindow,
+  BoqWallSection } from 'src/features/lookup/rate/types';
 import RateFloorParams from './RateFloorParams.vue'
 import { useRateStore } from 'src/features/lookup/rate/rate-store'
 import RateFloorSectionParams from './RateFloorSectionParams.vue'
@@ -69,6 +71,7 @@ import RateCeilParams from './RateCeilParams.vue'
 import RateCeilSectionParams from './RateCeilSectionParams.vue'
 import RateDoorParams from './RateDoorParams.vue'
 import RateWindowParams from './RateWindowParams.vue'
+import RateWallSectionParams from './RateWallSectionParams.vue'
 const rateStore = useRateStore()
 const openModal = defineModel<boolean>({ default: false });
 const { rate } = defineProps<{
@@ -107,10 +110,17 @@ const defaultWindowParams: BoqWindow = {
   preservation: null,
   dimension: 'AREA'
 }
+const defaultWallSectionParams: BoqWallSection = {
+  material: null,
+  replacement: null,
+  pinting: null,
+  plaster: null,
+}
 const floorSectionParams = ref<BoqFloorSection>(defaultFloorSectionParams);
 const ceilSectionParams = ref<BoqSectionBase>({ ...defaultCeilSectionParams });
 const doorParams = ref<BoqDoor>({ ...defaultDoorParams });
 const windowParams = ref<BoqWindow>({...defaultWindowParams});
+const wallSectionParams = ref<BoqWallSection>({...defaultWallSectionParams});
 const floorSectionParamsUpdate = ref<BoqFloorSectionUpdateRequest>({
   materialId: undefined,
   materialReplacement: null,
@@ -178,6 +188,9 @@ watch(openModal, (newValue) => {
         case 'WINDOW':
           Object.assign(windowParams.value, rate.boqWorkParams)
           break;
+        case 'WALL_SECTION':
+          Object.assign(wallSectionParams.value, rate.boqWorkParams)
+          break;
       }
     } else {
       Object.assign(formData.value,{...defautObj});
@@ -187,6 +200,7 @@ watch(openModal, (newValue) => {
       floorSectionParams.value = {...defaultFloorSectionParams};
       ceilSectionParams.value = {...defaultCeilSectionParams};
       windowParams.value = {...defaultWindowParams};
+      wallSectionParams.value = {...defaultWallSectionParams};
       if (formData.value.id) delete formData.value.id;
     }
   }
@@ -242,6 +256,14 @@ async function onSave() {
         replacement: windowParams.value.replacement,
         preservation: windowParams.value.preservation,
         dimension: windowParams.value.dimension
+      }
+      break;
+    case 'WALL_SECTION':
+      formData.value.boqWorkParams = {
+        materialId: wallSectionParams.value.material?.id || null,
+        replacement: wallSectionParams.value.replacement,
+        pinting: wallSectionParams.value.pinting,
+        plaster: wallSectionParams.value.plaster,
       }
       break;
     default:
