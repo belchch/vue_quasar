@@ -83,14 +83,14 @@ const defautObj: Rate = {
 const loading = ref(false);
 const defaultFloorSectionParams:BoqFloorSection = {
   material: null,
-  materialReplacement: false,
-  materialPreservation: false,
-  screedLeveling: false,
+  materialReplacement: null,
+  materialPreservation: null,
+  screedLeveling: null,
 }
 const defaultCeilSectionParams:BoqSectionBase = {
   material: null,
-  materialReplacement: false,
-  materialPreservation: false,
+  materialReplacement: null,
+  materialPreservation: null,
 }
 const defaultDoorParams: BoqDoor = {
   hasSlopes: null,
@@ -104,9 +104,9 @@ const ceilSectionParams = ref<BoqSectionBase>({ ...defaultCeilSectionParams });
 const doorParams = ref<BoqDoor>({ ...defaultDoorParams });
 const floorSectionParamsUpdate = ref<BoqFloorSectionUpdateRequest>({
   materialId: undefined,
-  materialReplacement: false,
-  materialPreservation: false,
-  screedLeveling: false
+  materialReplacement: null,
+  materialPreservation: null,
+  screedLeveling: null
 });
 const unitOfMeasureOptions = computed(() => {
   return Object.keys(UnitOfMeasureEnum).map(key => ({
@@ -135,12 +135,12 @@ const isEditMode = computed(() => !!rate?.id);
 const formData = ref<Rate>({...defautObj})
 
 const defaultFloorParams:BoqFloor = {
-  baseboardReplacement: false,
-  baseboardPreservation: false
+  baseboardReplacement: null,
+  baseboardPreservation: null
 }
 const defaultCeilParams: BoqCeil = {
-  moldingPreservation: false,
-  moldingReplacement: false
+  moldingPreservation: null,
+  moldingReplacement: null
 }
 const floorParams = ref<BoqFloor>(defaultFloorParams);
 const ceilParams = ref<BoqCeil>({ ...defaultCeilParams });
@@ -169,6 +169,11 @@ watch(openModal, (newValue) => {
       }
     } else {
       Object.assign(formData.value,{...defautObj});
+      // Сбрасываем на дефолтные значения
+      floorParams.value = {...defaultFloorParams};
+      ceilParams.value = {...defaultCeilParams};
+      floorSectionParams.value = {...defaultFloorSectionParams};
+      ceilSectionParams.value = {...defaultCeilSectionParams};
       if (formData.value.id) delete formData.value.id;
     }
   }
