@@ -6,7 +6,7 @@ export type Rate = {
     price: number,
     unitOfMeasure : UnitOfMeasureType,
     boqWorkParamsType?: ParamsType | '' | null,
-    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil,
+    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil | BoqDoor | BoqWindow | BoqWallSection | BoqWallSectionUpdateReuest,
     factor?: number | null
 }
 
@@ -14,40 +14,84 @@ export enum ParamsTypeEnum {
   FLOOR = 'Пол',
   FLOOR_SECTION = 'Секция пола',
   CEIL = 'Потолок',
-  CEIL_SECTION = 'Секция потолка'
+  CEIL_SECTION = 'Секция потолка',
+  DOOR = 'Дверь',
+  WINDOW = 'Окно',
+  WALL_SECTION = 'Секция стены',
 }
 export type ParamsType = keyof typeof ParamsTypeEnum
+export enum DimensionEnum {
+  AREA = 'Площадь',
+  PERIMETER = 'Периметр',
+}
+export type DimensionType = keyof typeof DimensionEnum
+export enum DoorTypeEnum {
+  INTERIOR = 'Межкомнатная дверь',
+  ENTRANCE = 'Входная дверь'
+}
+export type DoorType = keyof typeof DoorTypeEnum
 export interface BoqSectionBase {
   material?: Material | null;
-  materialReplacement: boolean;
-  materialPreservation: boolean;
+  materialReplacement: boolean | null;
+  materialPreservation: boolean | null;
 }
 export interface BoqSectionBaseUpdateRequest {
   materialId: number | undefined | null,
-  materialReplacement: boolean,
-  materialPreservation: boolean,
+  materialReplacement: boolean | null,
+  materialPreservation: boolean | null,
 }
 export interface BoqFloorSection extends BoqSectionBase {
-  screedLeveling?: boolean;
+  screedLeveling?: boolean | null;
 }
 
 
 export type BoqFloor = {
   id?: number,
-  baseboardReplacement:boolean,
-  baseboardPreservation: boolean
+  baseboardReplacement:boolean | null,
+  baseboardPreservation: boolean | null
 }
 
 export interface BoqFloorSectionUpdateRequest extends BoqSectionBaseUpdateRequest {
-  screedLeveling?: boolean | undefined
+  screedLeveling?: boolean | undefined | null
 }
 
 export type BoqCeil = {
   id?: number,
-  moldingReplacement:boolean,
-  moldingPreservation: boolean
+  moldingReplacement:boolean | null,
+  moldingPreservation: boolean | null
 }
 
+export type BoqDoor = {
+  id?: number,
+  type: DoorType,
+  hasSlopes: boolean | null,
+  trimsReplacement: boolean | null,
+  replacement: boolean | null,
+  preservation: boolean | null,
+  dimension: DimensionType
+}
+
+export type BoqWindow = {
+  id?: number,
+  hasSlopes: boolean | null,
+  replacement: boolean | null,
+  preservation: boolean | null,
+  dimension: DimensionType
+}
+
+export type BoqWallSection = {
+  id?: number,
+  material?: Material | null,
+  replacement: boolean | null,
+  painting: boolean | null,
+  plaster:  boolean | null,
+}
+export type BoqWallSectionUpdateReuest = {
+  materialId?: number | null,
+  replacement: boolean | null,
+  pinting: boolean | null,
+  plaster:  boolean | null,
+}
 export enum UnitOfMeasureEnum {
   SQUARE_METER = 'кв.метры',
   RUNNING_METER = 'погонные метры',
