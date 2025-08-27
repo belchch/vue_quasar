@@ -1,5 +1,5 @@
 <template>
-    <q-btn color="secondary" label="Добавить окно" size="sm" @click="addWallSection()"/>
+    <q-btn color="secondary" label="Добавить секцию" size="sm" @click="addWallSection()"/>
     <q-separator class="q-mt-md"/>
     <template v-for="(wallSection, index) in wallSectionsLocal" :key="wallSection.id">
         <BoqWallSection :wall-section="wallSection" :index="index" @remove="deleteWallSection(wallSection.id)"/>

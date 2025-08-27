@@ -45,12 +45,12 @@ const emits = defineEmits<{
 
 const wallSectionLocal = ref<BoqWallSectionModel>(props.wallSection)
 
-const updateReplacement =  () => {
+const updateReplacement = async () => {
     if (!wallSectionLocal.value.replacement) {
         wallSectionLocal.value.painting = false
     }
 
-   //await updateWallSection(false)
+   await updateWallSection(false)
 }
 
 const updateWallSection = async (updateVolume: boolean) => {
