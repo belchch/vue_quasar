@@ -5,7 +5,7 @@
   </div>
   <div v-else class="q-pa-md">
     <RateDialogForm v-model="openDialog" :rate="editedRate" />
-    <q-table :pagination="{ rowsPerPage: 0 }" :filter="filter" separator="cell" hide-pagination flat bordered
+    <q-table ref="tableRate" v-model:pagination="pagination" :filter="filter" separator="cell" hide-pagination flat bordered
       :rows="rateStore.rates" :columns="columns" row-key="id">
       <template v-slot:top>
         <div class="table-header row items-center full-width">
@@ -45,6 +45,9 @@
         </q-td>
       </template>
     </q-table>
+    <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
+      <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
+    </div>
   </div>
 </template>
 
@@ -58,7 +61,7 @@ import { useUserStore } from "src/features/user/stores/user-store";
 import { useQuasar } from 'quasar';
 import RateDialogForm from 'src/features/lookup/components/RateDialogForm.vue'
 const $q = useQuasar();
-
+const tableRate = ref();
 const rateStore = useRateStore()
 const { hasPermission } = useUserStore()
 const openDialog = ref(false);
@@ -70,24 +73,28 @@ const columns = [
       field: 'name',
       label: 'Название',
       align: 'left' as const,
+      sortable: true,
     },
     {
       name: 'price',
       field: 'price',
       label: 'Стоимость',
       align: 'left' as const,
+      sortable: true,
     },
     {
       name: 'unitOfMeasure',
       field: (row: Rate) => UnitOfMeasureEnum[row.unitOfMeasure],
       label: 'Ед.измерения',
       align: 'left' as const,
+      sortable: true,
     },
     {
       name: 'factor',
       field: 'factor',
       label: 'Коэф.',
       align: 'left' as const,
+      sortable: true,
     },
     {
       name: 'paramsType',
@@ -97,12 +104,14 @@ const columns = [
       },
       label: 'Тип',
       align: 'left' as const,
+      sortable: true,
     },
     {
       name: 'sourceUrl',
       field: 'sourceUrl',
       label: 'Ссылка',
       align: 'left' as const,
+      sortable: true,
     },
     {
       name: 'actions',
@@ -111,7 +120,16 @@ const columns = [
       align: 'right' as const,
     },
 ];
-
+const pagination = ref({
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 15
+})
+const pagesNumber = computed(() => {
+  if (tableRate?.value?.filteredSortedRows) return Math.ceil(tableRate.value.filteredSortedRows.length / pagination.value.rowsPerPage)
+  return Math.ceil(rateStore.rates.length / pagination.value.rowsPerPage)
+});
 onMounted(async () => {
     await rateStore.requestLookup()
 })
