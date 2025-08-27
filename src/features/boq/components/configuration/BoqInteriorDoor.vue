@@ -5,7 +5,11 @@
             <q-btn icon="delete" color="secondary" flat size="md" @click="emits('remove')" />
         </div>
         <q-card-section>
-            <div class="row q-gutter-x-lg">
+            <div style="width: 180px">
+                <q-select v-model="interiorDoorLocal.type" :options="doorTypeOptions" dense emit-value map-options
+                    @update:model-value="updateInteriorDoor(true)" />
+            </div>
+            <div class="row q-gutter-x-lg q-mt-md">
                 <div>
                     <q-card bordered flat style="width: 400px;">
                         <div class="text-caption q-ma-sm">Размеры</div>
@@ -60,7 +64,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { BoqInteriorDoorApi } from '../../api/interior-door/boq-interior-door-api';
 import { BoqInteriorDoorModel, toInteriorDoorUpdateRequest } from '../../api/interior-door/types';
 import { useBoqWorkService } from '../../composables/boq-work';
@@ -76,6 +80,21 @@ const props = defineProps<{
 const emits = defineEmits<{
     remove: []
 }>()
+
+const doorTypeOptions = ref([
+    {
+        label: 'Межкомнатная',
+        value: 'INTERIOR'
+    },
+    {
+        label: 'Входная',
+        value: 'ENTRANCE'
+    },
+])
+
+// const selectedDoorType = computed(() => {
+//     return doorTypeOptions.value.find(item => item.value == interiorDoorLocal.value.type)
+// })
 
 const interiorDoorLocal = ref<BoqInteriorDoorModel>(props.interiorDoor)
 
