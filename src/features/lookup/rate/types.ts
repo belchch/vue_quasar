@@ -77,7 +77,7 @@ export type BoqWallSection = {
   id?: number,
   material?: Material | null,
   replacement: boolean | null,
-  pinting: boolean | null,
+  painting: boolean | null,
   plaster:  boolean | null,
 }
 export type BoqWallSectionUpdateReuest = {

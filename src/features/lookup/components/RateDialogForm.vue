@@ -113,7 +113,7 @@ const defaultWindowParams: BoqWindow = {
 const defaultWallSectionParams: BoqWallSection = {
   material: null,
   replacement: null,
-  pinting: null,
+  painting: null,
   plaster: null,
 }
 const floorSectionParams = ref<BoqFloorSection>(defaultFloorSectionParams);
@@ -262,7 +262,7 @@ async function onSave() {
       formData.value.boqWorkParams = {
         materialId: wallSectionParams.value.material?.id || null,
         replacement: wallSectionParams.value.replacement,
-        pinting: wallSectionParams.value.pinting,
+        painting: wallSectionParams.value.painting,
         plaster: wallSectionParams.value.plaster,
       }
       break;

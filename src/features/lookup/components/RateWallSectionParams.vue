@@ -10,8 +10,8 @@
         используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
-      <q-toggle toggle-indeterminate v-model="params.pinting" label="Окраска" />
-      <span v-if="params.pinting ===null" class="text-blue-grey text-caption"> Не используется</span>
+      <q-toggle toggle-indeterminate v-model="params.painting" label="Окраска" />
+      <span v-if="params.painting ===null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
       <q-toggle toggle-indeterminate v-model="params.plaster" label="Штукатурка" />
