@@ -1,10 +1,10 @@
 <template>
     <div class="row q-col-gutter-sm">
-        <div class="col-9">
+        <div class="col-8">
             <BoqLocations @navigate-location="(location: BoqLocation) => navigateLocation(location.id)" />
         </div>
-        <div class="col-3">
-            <WorkTable :works="enabledWorks" :editable="false" />
+        <div class="col-4">
+            <WorkTable :works="enabledWorks" :editable="false" :show-location="true"/>
         </div>
     </div>
 </template>

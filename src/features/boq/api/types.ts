@@ -1,10 +1,10 @@
 import { Spot } from "src/features/lookup/spot/stores/types"
 import { Rate } from "src/features/rate/stores/types"
-import { BoqFloorModel } from "./floor/types"
 import { BoqCeilModel } from "./ceil/types"
+import { BoqFloorModel } from "./floor/types"
 import { BoqInteriorDoorModel } from "./interior-door/types"
-import { BoqWindowModel } from "./window/types"
 import { BoqWallSectionModel } from "./wall/types"
+import { BoqWindowModel } from "./window/types"
 
 export type BoqLocation = {
     id: number,
@@ -49,6 +49,8 @@ export const toLocationUpdateRequest = (location: BoqLocation) => {
 export type BoqWork = {
     id: number,
     locationId: number,
+    roomName: string,
+    roomNum?: number,
     rate: Rate,
     volume: number,
     disabled: boolean,

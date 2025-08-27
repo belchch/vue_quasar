@@ -8,7 +8,8 @@
             <q-tr :props="props">
                 <q-td v-if="editable">
                     <q-toggle :model-value="!props.row.disabled"
-                        @update:model-value="(val: boolean) => setWorkDisabled(props.row, !val)" size="xs" color="secondary" />
+                        @update:model-value="(val: boolean) => setWorkDisabled(props.row, !val)" size="xs"
+                        color="secondary" />
                 </q-td>
                 <q-td key="name" :props="props">
                     {{ props.row.rate.name }}
@@ -19,6 +20,9 @@
                 <q-td key="volume">
                     <WorkCellEditor v-if="editable" field="volume" :row="props.row" :value="props.row.volume" />
                     <div v-else>{{ props.row.volume }}</div>
+                </q-td>
+                <q-td v-if="showLocation" key="location" :props="props">
+                    {{ locationName(props.row) }}
                 </q-td>
             </q-tr>
         </template>
@@ -39,8 +43,10 @@ const { updateWork } = useBoqWorkService()
 
 const props = defineProps<{
     works: BoqWork[],
-    editable: boolean
+    editable: boolean,
+    showLocation: boolean
 }>()
+
 
 const setDisabledAll = (value: boolean) => {
     props.works.forEach(async item => {
@@ -57,6 +63,8 @@ const setWorkDisabled = async (work: BoqWork, disabled: boolean) => {
     work.disabled = disabled
     await updateWork(work)
 }
+
+const locationName = (row: BoqWork) => `${row.roomName} ${row.roomNum || ''}`
 
 const columns = [
     {
@@ -76,7 +84,16 @@ const columns = [
         field: (row: BoqWork) => row.volume,
         label: 'Объем',
         align: 'left' as const,
-    },
-]
+    }
+].concat(
+    props.showLocation ? [{
+        name: 'location',
+        field: (row: BoqWork) => locationName(row),
+        label: 'Локация',
+        align: 'left' as const,
+    }] : []
+)
+
+
 
 </script>

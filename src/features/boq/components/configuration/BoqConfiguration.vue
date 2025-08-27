@@ -35,7 +35,7 @@
             </q-card>
         </div>
         <div class="col-4">
-            <WorkTable :works="locationWorks" :editable="true" />
+            <WorkTable :works="locationWorks" :editable="true" :show-location="false"/>
         </div>
     </div>
 </template>
