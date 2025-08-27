@@ -6,7 +6,7 @@ export type Rate = {
     price: number,
     unitOfMeasure : UnitOfMeasureType,
     boqWorkParamsType?: ParamsType | '' | null,
-    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil | BoqDoor | BoqWindow | BoqWallSection | BoqWallSectionUpdateReuest,
+    boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil | BoqDoor | BoqWindow | BoqWallSection | BoqWallSectionUpdateReuest | null,
     factor?: number | null
 }
 
@@ -18,6 +18,8 @@ export enum ParamsTypeEnum {
   DOOR = 'Дверь',
   WINDOW = 'Окно',
   WALL_SECTION = 'Секция стены',
+  BOQ = 'Дополнительные работы',
+  SUPPORTING = 'Дополнительные работы в помещении',
 }
 export type ParamsType = keyof typeof ParamsTypeEnum
 export enum DimensionEnum {
