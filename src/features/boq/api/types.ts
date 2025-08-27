@@ -51,19 +51,22 @@ export type BoqWork = {
     locationId: number,
     rate: Rate,
     volume: number,
-    disabled: boolean
+    disabled: boolean,
+    visible: boolean
 }
 
 export type BoqWorkUpdateRequest = {
     id: number,
     volume: number,
-    disabled: boolean
+    disabled: boolean,
+    visible: boolean
 }
 
 export const toWorkUpdateRequest = (work: BoqWork): BoqWorkUpdateRequest => {
     return {
         id: work.id,
         volume: work.volume,
-        disabled: work.disabled
+        disabled: work.disabled,
+        visible: work.visible
     }
 }
