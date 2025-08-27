@@ -98,6 +98,7 @@ const defaultCeilSectionParams:BoqSectionBase = {
   materialPreservation: null,
 }
 const defaultDoorParams: BoqDoor = {
+  type: 'INTERIOR',
   hasSlopes: null,
   trimsReplacement: null,
   replacement: null,
@@ -243,6 +244,7 @@ async function onSave() {
       break;
     case 'DOOR':
       formData.value.boqWorkParams = {
+        type: doorParams.value.type,
         hasSlopes: doorParams.value.hasSlopes,
         trimsReplacement: doorParams.value.trimsReplacement,
         replacement: doorParams.value.replacement,

@@ -1,41 +1,33 @@
 import { StructElem } from "src/features/lookup/struct-elem/stores/types"
 
-export type BoqInteriorDoorModel = {
+export type BoqWindowModel = {
     id: number,
     width: number,
     height: number,
     area: number,
     perimeter: number,
     hasSlopes: boolean,
-    trimsReplacement: boolean,
     replacement: boolean,
     preservation: boolean,
-    type: DoorType,
     structElems: StructElem[]
 }
 
-export type BoqInteriorDoorUpdateRequest = {
+export type BoqWindowUpdateRequest = {
     id: number,
     width: number,
     height: number,
-    hasSlopes: boolean,
-    trimsReplacement: boolean,
+    hasSlopes: boolean,    
     replacement: boolean,
     preservation: boolean,
-    type: DoorType
 }
 
-export const toInteriorDoorUpdateRequest = (interiorDoor: BoqInteriorDoorModel): BoqInteriorDoorUpdateRequest => {
+export const toWindowUpdateRequest = (interiorDoor: BoqWindowModel): BoqWindowUpdateRequest => {
     return {
         id: interiorDoor.id,
         width: interiorDoor.width,
         height: interiorDoor.height,
         hasSlopes: interiorDoor.hasSlopes,
-        trimsReplacement: interiorDoor.trimsReplacement,
         replacement: interiorDoor.replacement,
         preservation: interiorDoor.preservation,
-        type: interiorDoor.type
     }
 }
-
-export type DoorType = 'INTERIOR' | 'ENTRANCE'
