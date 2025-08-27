@@ -1,6 +1,10 @@
 <template>
   <div>
     <q-card-section class="q-pt-none">
+      <q-select dense outlined v-model="params.type" :options="doorOptions" option-value="value"
+        option-label="label" emit-value map-options label="Тип двери" />
+    </q-card-section>
+    <q-card-section class="q-pt-none">
       <q-select dense outlined v-model="params.dimension" :options="calcOptions" option-value="value"
         option-label="label" emit-value map-options label="Измерение для расчета" />
     </q-card-section>
@@ -25,7 +29,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { DimensionType, DimensionEnum } from 'src/features/lookup/rate/types';
+import { DimensionType, DimensionEnum, DoorTypeEnum, DoorType } from 'src/features/lookup/rate/types';
 import { BoqDoor } from 'src/features/lookup/rate/types';
 const params = defineModel<BoqDoor>({ default: null });
 const calcOptions = computed(() => {
@@ -34,6 +38,12 @@ const calcOptions = computed(() => {
     label: DimensionEnum[key as DimensionType]
   }));
 });
+const doorOptions = computed(() => {
+  return Object.keys(DoorTypeEnum).map(key => ({
+    value: key as DoorType,
+    label: DoorTypeEnum[key as DoorType]
+  }));
+})
 </script>
 
 <style scoped>

@@ -15,7 +15,7 @@ export enum ParamsTypeEnum {
   FLOOR_SECTION = 'Секция пола',
   CEIL = 'Потолок',
   CEIL_SECTION = 'Секция потолка',
-  DOOR = 'Межкомнатная дверь'
+  DOOR = 'Дверь'
 }
 export type ParamsType = keyof typeof ParamsTypeEnum
 export enum DimensionEnum {
@@ -23,6 +23,11 @@ export enum DimensionEnum {
   PERIMETER = 'Периметр',
 }
 export type DimensionType = keyof typeof DimensionEnum
+export enum DoorTypeEnum {
+  INTERIOR = 'Межкомнатная дверь',
+  ENTRANCE = 'Входная дверь'
+}
+export type DoorType = keyof typeof DoorTypeEnum
 export interface BoqSectionBase {
   material?: Material | null,
   materialReplacement: boolean,
@@ -56,6 +61,7 @@ export type BoqCeil = {
 
 export type BoqDoor = {
   id?: number,
+  type: DoorType,
   hasSlopes: boolean | null,
   trimsReplacement: boolean | null,
   replacement: boolean | null,
