@@ -16,6 +16,14 @@ const structElemStore = useStructElemStore()
 const materialStore = useMaterialStore()
 const { hasPermission } = useUserStore()
 
+const boqSectionOptions = [
+    {id: 'FLOOR', name: 'Пол'},
+    {id: 'CEIL', name: 'Потолок'},
+    {id: 'DOOR', name: 'Двери'},
+    {id: 'WINDOW', name: 'Окна'},
+    {id: 'WALL', name: 'Стены'},
+]
+
 const columns = [
     {
         name: 'name',
@@ -28,6 +36,12 @@ const columns = [
         field: (row: any) => row.materials?.map((item: any) => item.name).join(', '),
         label: 'Материал',
         editable: true
+    },
+   {
+        name: 'boqSection',
+        field: (row: any) => boqSectionOptions.find(item => item.id == row.boqSection)?.name,
+        label: 'Секция ВОР',
+        editable: true,
     },
 ];
 
@@ -44,6 +58,14 @@ const formFields = computed((): Field[] => [
         type: 'select-multiple' as const,
         required: true,
         options: materialStore.items,
+        selectValueField: 'name'
+    },
+    {
+        name: 'boqSection',
+        label: 'Секция ВОР',
+        type: 'select' as const,
+        required: true,
+        options: boqSectionOptions,
         selectValueField: 'name'
     },
 ])

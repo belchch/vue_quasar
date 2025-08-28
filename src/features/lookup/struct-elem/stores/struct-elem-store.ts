@@ -6,7 +6,8 @@ const requestMappingFn = (item: StructElem): StructElemUpdateRequest => {
     return {
         id: item.id!!,
         name: item.name,
-        materialIds: item.materials.map(item => item.id!!)
+        materialIds: item.materials.map(item => item.id!!),
+        boqSection: typeof item.boqSection == 'string' ? item.boqSection : item.boqSection?.id
     }
 }
 
