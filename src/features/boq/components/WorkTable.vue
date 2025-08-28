@@ -3,6 +3,7 @@
         :selection="editable ? 'multiple' : 'none'" :pagination="{ rowsPerPage: 20 }" separator="cell">
         <template v-slot:top>
             <div class="caption">Работы</div>
+            <slot name="additional-top"></slot>
         </template>
         <template v-slot:body="props">
             <q-tr :props="props">
