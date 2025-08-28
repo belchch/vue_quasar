@@ -16,7 +16,7 @@
         <SectionLayout :sections="ceilLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">
                 <div class="q-gutter-md" style="width: 400px;">
-                    <q-input type="number" v-model.number="section.area" label="Полщадь секции пола"
+                    <q-input type="number" v-model.number="section.area" label="Полщадь секции потолка"
                         style="width: 180px;"
                         @update:model-value="updateCeilSection(section as BoqCeilSectionModel, true)" />                    
                 </div>

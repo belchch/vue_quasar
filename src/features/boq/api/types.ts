@@ -54,14 +54,16 @@ export type BoqWork = {
     rate: Rate,
     volume: number,
     disabled: boolean,
-    visible: boolean
+    visible: boolean,
+    mountType: WorkMountType
 }
 
 export type BoqWorkUpdateRequest = {
     id: number,
     volume: number,
     disabled: boolean,
-    visible: boolean
+    visible: boolean,
+    mountType: WorkMountType
 }
 
 export const toWorkUpdateRequest = (work: BoqWork): BoqWorkUpdateRequest => {
@@ -69,6 +71,9 @@ export const toWorkUpdateRequest = (work: BoqWork): BoqWorkUpdateRequest => {
         id: work.id,
         volume: work.volume,
         disabled: work.disabled,
-        visible: work.visible
+        visible: work.visible,
+        mountType: work.mountType
     }
 }
+
+export type WorkMountType = 'LOCATION' | 'CEIL_SECTION' | 'FLOOR_SECTION' | 'WALL_SECTION' | 'DOOR' | 'WINDOW' | 'BOQ'
