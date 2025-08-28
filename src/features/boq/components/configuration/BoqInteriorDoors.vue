@@ -1,5 +1,8 @@
 <template>
-    <q-btn color="secondary" label="Добавить дверь" size="sm" @click="addInteriorDoor()"/>
+    <div class="row justify-between">
+        <q-btn color="secondary" label="Добавить дверь" size="sm" @click="addInteriorDoor()"/>
+        <PhotoGallery :urls="doorPhotos"/>
+    </div>
     <q-separator class="q-mt-md"/>
     <template v-for="(interiorDoor, index) in interiorDoorsLocal" :key="interiorDoor.id">
         <BoqInteriorDoor :interior-door="interiorDoor" :index="index" @remove="deleteInteriorDoor(interiorDoor.id)"/>
@@ -14,8 +17,9 @@ import { useBoqLocationStore } from '../../stores/boq-location-store';
 import BoqInteriorDoor from './BoqInteriorDoor.vue';
 import { ref } from 'vue';
 import { useBoqWorkService } from '../../composables/boq-work';
+import PhotoGallery from './common/PhotoGallery.vue';
 
-const { location } = storeToRefs(useBoqLocationStore())
+const { location, doorPhotos } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{

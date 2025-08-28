@@ -1,5 +1,8 @@
 <template>
-    <q-btn color="secondary" label="Добавить окно" size="sm" @click="addWindow()"/>
+    <div class="row justify-between">
+        <q-btn color="secondary" label="Добавить окно" size="sm" @click="addWindow()"/>
+        <PhotoGallery :urls="windowPhotos"/>
+    </div>
     <q-separator class="q-mt-md"/>
     <template v-for="(window, index) in windowsLocal" :key="window.id">
         <BoqWindow :window="window" :index="index" @remove="deleteWindow(window.id)"/>
@@ -12,10 +15,11 @@ import { BoqWindowApi } from '../../api/window/boq-window-api';
 import { BoqWindowModel } from '../../api/window/types';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
 import BoqWindow from './BoqWindow.vue';
+import PhotoGallery from './common/PhotoGallery.vue';
 import { ref } from 'vue';
 import { useBoqWorkService } from '../../composables/boq-work';
 
-const { location } = storeToRefs(useBoqLocationStore())
+const { location, windowPhotos } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{

@@ -9,9 +9,9 @@
                     @update:preservation="updateCeil(ceilLocal, false)" @update:length="updateCeil(ceilLocal, true)"
                     @fill-length="moldingLengthAsPerimeter" />
             </q-card-section>
-            <q-card-section>
+            <div>
                 <PhotoGallery :urls="ceilPhotos" />
-            </q-card-section>
+            </div>
         </div>
         <SectionLayout :sections="ceilLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">

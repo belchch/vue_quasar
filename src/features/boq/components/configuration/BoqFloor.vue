@@ -9,9 +9,9 @@
                     @update:preservation="updateFloor(floorLocal, false)" @update:length="updateFloor(floorLocal, true)"
                     @fill-length="baseboardLengthAsPerimeter" />
             </q-card-section>
-            <q-card-section>
+            <div>
                 <PhotoGallery :urls="floorPhotos" />
-            </q-card-section>
+            </div>
         </div>
         <SectionLayout :sections="floorLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">

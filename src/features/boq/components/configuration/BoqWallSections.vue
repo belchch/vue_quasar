@@ -1,5 +1,8 @@
 <template>
-    <q-btn color="secondary" label="Добавить секцию" size="sm" @click="addWallSection()"/>
+    <div class="row justify-between">
+        <q-btn color="secondary" label="Добавить секцию" size="sm" @click="addWallSection()"/>
+        <PhotoGallery :urls="wallPhotos"/>
+    </div>
     <q-separator class="q-mt-md"/>
     <template v-for="(wallSection, index) in wallSectionsLocal" :key="wallSection.id">
         <BoqWallSection :wall-section="wallSection" :index="index" @remove="deleteWallSection(wallSection.id)"/>
@@ -12,10 +15,11 @@ import { BoqWallSectionApi } from '../../api/wall/boq-wall-section-api';
 import { BoqWallSectionModel } from '../../api/wall/types';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
 import BoqWallSection from './BoqWallSection.vue';
+import PhotoGallery from './common/PhotoGallery.vue';
 import { ref } from 'vue';
 import { useBoqWorkService } from '../../composables/boq-work';
 
-const { location } = storeToRefs(useBoqLocationStore())
+const { location, wallPhotos } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{
