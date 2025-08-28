@@ -6,17 +6,22 @@
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
-      <q-card-section>
-        <q-list bordered separator>
-          <q-item>
-            <q-item-section v-if="works.length == 0" class="text-center">
+      <q-card-section class="q-pl-none">
+        <q-list>
+          <q-item v-if="works.length == 0">
+            <q-item-section class="text-center">
               Список пуст
             </q-item-section>
           </q-item>
           <q-item v-for="(item, index) in works" :key="index">
             <q-item-section>
-              <q-toggle color="primary" @update:model-value="(val) => updateVisible(item, val)"
-                :label="`${item.rate.name}`" v-model="item.visible" />
+              <q-toggle
+                size="sm"
+                color="secondary"
+                @update:model-value="(val) => updateVisible(item, val)"
+                :label="`${item.rate.name}`"
+                v-model="item.visible"
+              />
             </q-item-section>
           </q-item>
         </q-list>
@@ -32,9 +37,11 @@
 import { ref, onMounted } from 'vue';
 import { useBoqCommonWorkService } from 'src/features/boq/composables/boq-common-work';
 import { BoqWork } from '../api/types';
+import { useBoqWorkService } from 'src/features/boq/composables/boq-work';
 const open = ref<boolean>(false)
 const { requestWorks, updateWork } = useBoqCommonWorkService();
 const works = ref<BoqWork[]>([]);
+const boqService = useBoqWorkService()
 
 onMounted(async () => {
   works.value = await requestWorks();
@@ -45,8 +52,10 @@ const openDialog = () => {
 };
 
 const updateVisible = async (item: BoqWork, val: boolean) => {
+  item.visible = val;
   try {
     await updateWork(item);
+    await boqService.requestWorks()
   } catch {
     item.visible = !val;
   }
