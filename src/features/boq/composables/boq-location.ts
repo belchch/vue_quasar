@@ -8,9 +8,13 @@ import { useRouter } from "vue-router"
 import { AxiosResponse } from "axios"
 import { Ref } from "vue"
 import { BoqCeilApi } from "../api/ceil/boq-ceil-api"
+import BoqInteriorDoor from "../components/configuration/BoqInteriorDoor.vue"
+import { BoqInteriorDoorApi } from "../api/interior-door/boq-interior-door-api"
+import { BoqWindowApi } from "../api/window/boq-window-api"
+import { BoqWallSectionApi } from "../api/wall/boq-wall-section-api"
 
 export const useBoqLocationService = () => {
-    const { location, floorPhotos, ceilPhotos } = storeToRefs(useBoqLocationStore())
+    const { location, floorPhotos, ceilPhotos, doorPhotos, windowPhotos, wallPhotos } = storeToRefs(useBoqLocationStore())
     const { boq, locations } = storeToRefs(useBoqStore())
     const { requestWorks } = useBoqWorkService()
     const router = useRouter()
@@ -29,6 +33,30 @@ export const useBoqLocationService = () => {
         await requestPhotos({
             photosRef: ceilPhotos,
             api: BoqCeilApi,
+            boqId: boq.value!.id,
+            location: newLocation
+        })
+
+
+        await requestPhotos({
+            photosRef: doorPhotos,
+            api: BoqInteriorDoorApi,
+            boqId: boq.value!.id,
+            location: newLocation
+        })
+
+
+        await requestPhotos({
+            photosRef: windowPhotos,
+            api: BoqWindowApi,
+            boqId: boq.value!.id,
+            location: newLocation
+        })
+
+
+        await requestPhotos({
+            photosRef: wallPhotos,
+            api: BoqWallSectionApi,
             boqId: boq.value!.id,
             location: newLocation
         })
