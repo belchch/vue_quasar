@@ -23,7 +23,7 @@
                     <div v-else>{{ props.row.volume }}</div>
                 </q-td>
                 <q-td v-if="showLocation" key="location" :props="props">
-                    {{ locationName(props.row) }}
+                    {{ locationName(props.row)}}
                 </q-td>
             </q-tr>
         </template>
@@ -65,7 +65,7 @@ const setWorkDisabled = async (work: BoqWork, disabled: boolean) => {
     await updateWork(work)
 }
 
-const locationName = (row: BoqWork) => `${row.roomName} ${row.roomNum || ''}`
+const locationName = (row: BoqWork) => `${row.roomName || ''} ${row.roomNum || ''}`
 
 const columns = [
     {

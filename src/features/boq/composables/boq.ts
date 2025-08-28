@@ -3,18 +3,21 @@ import { useBoqStore } from "../stores/boq-store"
 import { useInspectionsStore } from "src/features/inspection/store/inspection-store"
 import { BoqApi } from "../api/boq-api"
 import { BoqLocation, toLocationUpdateRequest } from "../api/types"
+import { useBoqWorkService } from "./boq-work"
 
 export const useBoqService = () => {
     const { boq, locations, initialized } = storeToRefs(useBoqStore())
     const { selectedInspectionId } = storeToRefs(useInspectionsStore())
+    const { requestWorks } = useBoqWorkService()
 
     const requestBoq = async () => {
         const response = await BoqApi.getBoq(selectedInspectionId.value!!)
         boq.value = response.data
 
         if (boq.value.id) {
-            const response = await BoqApi.getLocations(boq.value.id)
+            const response = await BoqApi.getLocations(boq.value.id)        
             locations.value = response.data
+            await requestWorks()
         } else {
             locations.value = []
         }

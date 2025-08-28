@@ -1,10 +1,10 @@
 <template>
     <div class="row q-col-gutter-sm">
-        <div class="col-8">
+        <div class="col-7">
             <BoqLocations @navigate-location="(location: BoqLocation) => navigateLocation(location.id)" />
         </div>
-        <div class="col-4">
-            <WorkTable :works="enabledWorks" :editable="false" :show-location="true">
+        <div class="col-5">
+            <WorkTable :works="works" :editable="true" :show-location="true">
                 <template v-slot:additional-top>
                   <CommonWorksEditor />
                 </template>
@@ -20,11 +20,9 @@ import BoqLocations from './BoqLocations.vue';
 import WorkTable from './WorkTable.vue';
 import { BoqLocation } from '../api/types';
 import CommonWorksEditor from './CommonWorksEditor.vue'
+import { storeToRefs } from 'pinia';
 
-const { works } = useBoqWorkStore()
+const { works } = storeToRefs(useBoqWorkStore())
 const { navigateLocation } = useBoqLocationService()
 
-const enabledWorks = computed(() => {
-    return works.filter(item => !item.disabled)
-})
 </script>

@@ -31,7 +31,7 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-  <q-btn @click="openDialog" outline color="primary" size="sm" label="Доп. работы" class="q-ml-md" />
+  <q-btn @click="openDialog" outline color="secondary" size="sm" label="Доп. работы" class="q-ml-md" />
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
