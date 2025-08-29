@@ -133,7 +133,7 @@ const columns = [
     {
         name: 'area',
         field: (row: RoomMeasurement) => row.area,
-        label: 'Плащадь без учета проемов',
+        label: 'Площадь без учета проемов',
         align: 'left' as const,
     },
     {
