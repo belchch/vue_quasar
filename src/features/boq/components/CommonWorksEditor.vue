@@ -34,21 +34,21 @@
   <q-btn @click="openDialog" outline color="secondary" size="sm" label="Доп. работы" class="q-ml-md" />
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useBoqCommonWorkService } from 'src/features/boq/composables/boq-common-work';
 import { BoqWork } from '../api/types';
 import { useBoqWorkService } from 'src/features/boq/composables/boq-work';
+import { useBoqStore } from '../stores/boq-store';
+import { storeToRefs } from 'pinia';
 const open = ref<boolean>(false)
 const { requestWorks, updateWork } = useBoqCommonWorkService();
+const {boq} = storeToRefs(useBoqStore())
 const works = ref<BoqWork[]>([]);
 const boqService = useBoqWorkService()
 
-onMounted(async () => {
-  works.value = await requestWorks();
-});
-
-const openDialog = () => {
+const openDialog = async () => {
   open.value = true
+  works.value = await requestWorks();
 };
 
 const updateVisible = async (item: BoqWork, val: boolean) => {
