@@ -16,7 +16,8 @@
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td auto-width>
-                <q-btn size="xs" flat dense @click="props.expand = !props.expand"
+                <q-btn size="xs" flat dense
+                  @click="() => { props.expand = !props.expand; expandClick(props.expand,props.row.room.id)}"
                   :icon="props.expand ? 'remove' : 'add'" sor />
               </q-td>
               <q-td key="room" :props="props">
@@ -55,8 +56,20 @@
               <q-td colspan="100%">
                 <div class="text-left">
                   <div class="q-gutter-sm q-pa-lg">
-                    <AddOpeningDialog v-if="hasPermission(['measurement.update'])" :room="props.row.room" />
+                    <div class="row q-gutter-sm q-ma-none">
+                      <AddOpeningDialog v-if="hasPermission(['measurement.update'])" :room="props.row.room" />
+                      <!-- Секция пола-->
+                      <SectionFloorDialog section-type="floor_section" :room="props.row.room"
+                        btn-text="Секция пола" />
+                      <SectionFloorDialog section-type="ceil_section" :room="props.row.room"
+                        btn-text="Добавить секцию потолка" />
+                      <SectionFloorDialog section-type="wall_section" :room="props.row.room"
+                        btn-text="Добавить секцию пола" />
+                    </div>
                     <OpeningTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
+                    <CeilSectionsTable :room-id="props.row.room.id" />
+                    <FloorSectionsTable :room-id="props.row.room.id" />
+                    <WallSectionsTable :can-edit="hasPermission(['measurement.update'])" />
                   </div>
                 </div>
               </q-td>
@@ -90,9 +103,16 @@ import { useUserStore } from "src/features/user/stores/user-store";
 import PlanTree from './plan-tree/PlanTree.vue'
 import { ref } from 'vue'
 import MovableTab from './movable/MovableTab.vue'
+import SectionFloorDialog from './SectionFloorDialog.vue'
+import CeilSectionsTable from './CeilSectionsTable.vue'
+import FloorSectionsTable from './FloorSectionsTable.vue'
+import WallSectionsTable from './WallSectionsTable.vue'
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
+import { useMeasurementService } from '../composables/measurement';
 const { hasPermission } = useUserStore()
+
+const { requestCeilSectionMeasurements, requestFloorSectionMeasurements, requestWallSectionMeasurements} = useMeasurementService()
 
 const buildDocx = async () => {
     const response = await RoomMeasurementApi.buildDocx(selectedInspectionId.value!!)
@@ -155,4 +175,14 @@ const columns = [
         align: 'left' as const,
     },
 ]
+
+const expandClick = async (isExpand:boolean,roomId:number) => {
+  if(isExpand){
+    console.log('expandClick', roomId);
+    await requestCeilSectionMeasurements(roomId);
+    await requestFloorSectionMeasurements(roomId);
+    await requestWallSectionMeasurements(roomId);
+  }
+
+}
 </script>

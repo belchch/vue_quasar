@@ -28,6 +28,33 @@ export type OpeningMeasurement = {
     opening: Opening
 }
 
+export type FloorSectionMeasurement = {
+    id: number,
+    material?: Material,
+    width: number,
+    length: number,
+    area: number,
+    perimeter: number,
+}
+
+export type CeilSectionMeasurement = {
+    id: number,
+    material?: Material,
+    width: number,
+    length: number,
+    area: number,
+    perimeter: number,
+}
+
+export type WallSectionMeasurement = {
+    id: number,
+    material?: Material,
+    width: number,
+    height: number,
+    area: number,
+    perimeter: number,
+}
+
 export type TreeItem = {
   id: number,
   header: string,

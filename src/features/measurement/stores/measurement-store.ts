@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from "pinia"
-import { OpeningMeasurement, RoomMeasurement } from "./types"
+import { OpeningMeasurement, RoomMeasurement, CeilSectionMeasurement, FloorSectionMeasurement, WallSectionMeasurement } from "./types"
 import { computed, ref } from "vue"
 import { useOpeningStore } from "src/features/lookup/opening/opening-store"
 import InspectionLocations from "src/features/inspection/components/InspectionLocations.vue"
@@ -10,6 +10,9 @@ import _ from "lodash"
 export const useMeasurementStore = defineStore('room-measurements', () => {
     const roomMeasurements = ref<RoomMeasurement[]>()
     const openingMeasurements = ref<OpeningMeasurement[]>()
+    const ceilSectionMeasurements = ref<CeilSectionMeasurement[]>([])
+    const floorSectionMeasurements = ref<FloorSectionMeasurement[]>([])
+    const wallSectionMeasurements = ref<WallSectionMeasurement[]>([])
     const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
     const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
@@ -17,10 +20,10 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
         const result = inspectionSpots.value.filter(item => item.inUse && item.spot.isRoom)
             .map(item => {
                 const roomMeasurement = roomMeasurements.value?.find(rm => rm.room.id == item.spot.id)
-                
+
                 return roomMeasurement || {
                     inspectionId: selectedInspectionId.value!,
-                    room: item.spot,                    
+                    room: item.spot,
                 } as RoomMeasurement
             })
 
@@ -30,6 +33,9 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
     return {
         allRoomMeasurements,
         roomMeasurements,
-        openingMeasurements
+        openingMeasurements,
+        ceilSectionMeasurements,
+        floorSectionMeasurements,
+        wallSectionMeasurements,
     }
 })
