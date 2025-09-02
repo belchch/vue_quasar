@@ -1,9 +1,9 @@
 <template>
-  <div v-if="floorSectionMeasurements.length > 0">
+  <div v-if="rows.length > 0">
     <div class="text-subtitle1 q-mb-sm">
       Секции пола
     </div>
-    <q-table :rows="floorSectionMeasurements" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
+    <q-table :rows="rows" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
       :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -35,25 +35,25 @@
 import { storeToRefs } from 'pinia';
 import { useMeasurementStore } from '../stores/measurement-store';
 import { FloorSectionMeasurement } from '../stores/types';
-import { computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 
-const { floorSectionMeasurements } = storeToRefs(useMeasurementStore())
-const { deleteFloorSectionMeasurement } = useMeasurementService()
+// const { floorSectionMeasurements } = storeToRefs(useMeasurementStore())
+const { deleteFloorSectionMeasurement, requestFloorSectionMeasurements } = useMeasurementService()
 
 const { roomId, canEdit=true} = defineProps<{
     roomId: number,
     canEdit?: boolean
 }>()
 
-const rows = computed(() => {
-  return []
-})
+const rows = ref<FloorSectionMeasurement[]>([]);
 
 const deleteRow = async (id: number) => {
   await deleteFloorSectionMeasurement(id)
 }
-
+onMounted(async () => {
+  rows.value = await requestFloorSectionMeasurements(roomId)
+});
 const columns = [
     {
         name: 'material',

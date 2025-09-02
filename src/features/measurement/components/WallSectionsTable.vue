@@ -35,19 +35,26 @@
 import { storeToRefs } from 'pinia';
 import { useMeasurementStore } from '../stores/measurement-store';
 import { WallSectionMeasurement } from '../stores/types';
-import { computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 
 const { wallSectionMeasurements } = storeToRefs(useMeasurementStore())
-const { deleteWallSectionMeasurement } = useMeasurementService()
+const { deleteWallSectionMeasurement, requestWallSectionMeasurements } = useMeasurementService()
 
-const { canEdit=true} = defineProps<{
+const rows = ref<WallSectionMeasurement[]>([]);
+
+const {roomId, canEdit=true} = defineProps<{
+    roomId: number,
     canEdit?: boolean
 }>()
 
 const deleteRow = async (id: number) => {
   await deleteWallSectionMeasurement(id)
 }
+
+onMounted(async () => {
+  rows.value = await requestWallSectionMeasurements(roomId)
+});
 
 const columns = [
     {

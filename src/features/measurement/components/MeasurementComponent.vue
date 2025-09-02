@@ -59,17 +59,16 @@
                     <div class="row q-gutter-sm q-ma-none">
                       <AddOpeningDialog v-if="hasPermission(['measurement.update'])" :room="props.row.room" />
                       <!-- Секция пола-->
-                      <SectionFloorDialog section-type="floor_section" :room="props.row.room"
-                        btn-text="Секция пола" />
+                      <SectionFloorDialog section-type="floor_section" :room="props.row.room" btn-text="Секция пола" />
                       <SectionFloorDialog section-type="ceil_section" :room="props.row.room"
                         btn-text="Добавить секцию потолка" />
                       <SectionFloorDialog section-type="wall_section" :room="props.row.room"
                         btn-text="Добавить секцию пола" />
                     </div>
                     <OpeningTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
-                    <CeilSectionsTable :room-id="props.row.room.id" />
-                    <FloorSectionsTable :room-id="props.row.room.id" />
-                    <WallSectionsTable :can-edit="hasPermission(['measurement.update'])" />
+                    <CeilSectionsTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])"/>
+                    <FloorSectionsTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
+                    <WallSectionsTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
                   </div>
                 </div>
               </q-td>
@@ -178,10 +177,16 @@ const columns = [
 
 const expandClick = async (isExpand:boolean,roomId:number) => {
   if(isExpand){
-    console.log('expandClick', roomId);
     await requestCeilSectionMeasurements(roomId);
     await requestFloorSectionMeasurements(roomId);
     await requestWallSectionMeasurements(roomId);
+  }
+}
+const getCeilSections = async (roomId:number) => {
+  try{
+    return await requestCeilSectionMeasurements(roomId);
+  }catch{
+    return []
   }
 
 }

@@ -33,15 +33,15 @@ useMeasurementService = () => {
     }
     const requestCeilSectionMeasurements = async (roomId:number) => {
         const response = await CeilSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!, roomId)
-        ceilSectionMeasurements.value = response.data
+        return response.data
     }
     const requestFloorSectionMeasurements = async (roomId:number) => {
         const response = await FloorSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!,roomId)
-        floorSectionMeasurements.value = response.data
+        return response.data
     }
     const requestWallSectionMeasurements = async (roomId:number) => {
         const response = await WallSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!,roomId)
-        wallSectionMeasurements.value = response.data
+        return response.data
     }
     const requestMeasurements = async () => {
         await requestRoomMeasurements()
