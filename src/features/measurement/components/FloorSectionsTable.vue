@@ -16,11 +16,11 @@
           <q-td key="length" :props="props">
             {{ props.row.length }}
           </q-td>
-          <q-td key="perimeter" :props="props">
-            {{ props.row.perimeter }}
-          </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
+          </q-td>
+          <q-td key="perimeter" :props="props">
+            {{ props.row.perimeter }}
           </q-td>
           <q-td key="actions" :props="props">
             <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative" />
