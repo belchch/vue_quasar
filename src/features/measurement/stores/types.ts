@@ -5,6 +5,7 @@ import { Spot } from "src/features/lookup/spot/stores/types"
 
 export type RoomMeasurement = {
     id?: number,
+    roomNum?: number,
     inspectionId: number,
     room: Spot,
     width?: number,
@@ -14,22 +15,32 @@ export type RoomMeasurement = {
     perimeter?: number,
     declaredArea?: number,
     doorArea?: number,
-    windowArea?: number
+    windowArea?: number,
+    floorArea?:number,
+    ceilArea?:number,
+    wallMaterial?:Material,
+    floorMaterial?:Material,
+    ceilMaterial?:Material,
 }
 
 export type OpeningMeasurement = {
     id: number,
     room: Spot,
+    roomNum?: number,
     inspectionId: number,
     material?: Material,
     width: number,
     height: number,
     area: number,
+    hasTrims: boolean,
+    trimWidth: boolean,
     opening: Opening
 }
 
 export type FloorSectionMeasurement = {
     id: number,
+    room: Spot,
+    roomNum?: number,
     material?: Material,
     width: number,
     length: number,
@@ -39,6 +50,8 @@ export type FloorSectionMeasurement = {
 
 export type CeilSectionMeasurement = {
     id: number,
+    room: Spot,
+    roomNum?: number,
     material?: Material,
     width: number,
     length: number,
@@ -48,6 +61,8 @@ export type CeilSectionMeasurement = {
 
 export type WallSectionMeasurement = {
     id: number,
+    room: Spot,
+    roomNum?: number,
     material?: Material,
     width: number,
     height: number,

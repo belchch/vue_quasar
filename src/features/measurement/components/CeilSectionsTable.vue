@@ -1,28 +1,28 @@
 <template>
-  <div v-if="rows.length > 0">
+  <div v-if="getRoomCeilSections(roomId, roomNum).length > 0">
     <div class="text-subtitle1 q-mb-sm">
       Секции потолка
     </div>
-    <q-table :rows="rows" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
+    <q-table :rows="getRoomCeilSections(roomId, roomNum)" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
       :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
       <template v-slot:body="props">
         <q-tr :props="props">
-          <q-td key="material" :props="props">
+          <q-td :props="props">
             {{ props.row.material?.name }}
           </q-td>
-          <q-td key="width">
+          <q-td>
             {{ props.row.width }}
           </q-td>
-          <q-td key="length" :props="props">
+          <q-td :props="props">
             {{ props.row.length }}
           </q-td>
-          <q-td key="area" :props="props">
+          <q-td :props="props">
             {{ props.row.area }}
           </q-td>
-          <q-td key="perimeter" :props="props">
+          <q-td :props="props">
             {{ props.row.perimeter }}
           </q-td>
-          <q-td key="actions" :props="props">
+          <q-td :props="props">
             <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative" />
           </q-td>
         </q-tr>
@@ -38,22 +38,19 @@ import { CeilSectionMeasurement } from '../stores/types';
 import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 
-const { ceilSectionMeasurements } = storeToRefs(useMeasurementStore())
-const { deleteCeilSectionMeasurement, requestCeilSectionMeasurements } = useMeasurementService()
+const { ceilSectionMeasurements, getRoomCeilSections } = storeToRefs(useMeasurementStore())
+const { deleteCeilSectionMeasurement } = useMeasurementService()
 
-const { roomId, canEdit=true} = defineProps<{
+const { roomId, roomNum, canEdit=true} = defineProps<{
     roomId: number,
+    roomNum?: number | undefined,
     canEdit?: boolean,
 }>()
-
-const rows = ref<CeilSectionMeasurement[]>([]);
 
 const deleteRow = async (id: number) => {
   await deleteCeilSectionMeasurement(id)
 }
-onMounted(async () => {
-  rows.value = await requestCeilSectionMeasurements(roomId)
-});
+
 const columns = [
     {
         name: 'material',

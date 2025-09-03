@@ -1,9 +1,9 @@
 <template>
-  <div v-if="rows.length > 0">
+  <div v-if="getFloorCeilSections(roomId,roomNum).length > 0">
     <div class="text-subtitle1 q-mb-sm">
       Секции пола
     </div>
-    <q-table :rows="rows" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
+    <q-table :rows="getFloorCeilSections(roomId, roomNum)" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
       :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -38,22 +38,19 @@ import { FloorSectionMeasurement } from '../stores/types';
 import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 
-// const { floorSectionMeasurements } = storeToRefs(useMeasurementStore())
-const { deleteFloorSectionMeasurement, requestFloorSectionMeasurements } = useMeasurementService()
+const { getFloorCeilSections } = storeToRefs(useMeasurementStore())
+const { deleteFloorSectionMeasurement } = useMeasurementService()
 
-const { roomId, canEdit=true} = defineProps<{
+const { roomId, roomNum, canEdit=true} = defineProps<{
     roomId: number,
+    roomNum?: number | undefined,
     canEdit?: boolean
 }>()
-
-const rows = ref<FloorSectionMeasurement[]>([]);
 
 const deleteRow = async (id: number) => {
   await deleteFloorSectionMeasurement(id)
 }
-onMounted(async () => {
-  rows.value = await requestFloorSectionMeasurements(roomId)
-});
+
 const columns = [
     {
         name: 'material',

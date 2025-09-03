@@ -4,7 +4,14 @@ import { WallSectionMeasurement } from '../stores/types'
 
 
 export const WallSectionsMeasurementApi = {
-    getByInspectionId(inspectionId: number, roomId:number) {
+    getByInspectionId(inspectionId: number) {
+        return api.get<WallSectionMeasurement[]>(`/api/wall-section-measurement`, {
+            params: {
+                inspectionId,
+            }
+        })
+    },
+    getByRoomId(inspectionId: number, roomId:number) {
         return api.get<WallSectionMeasurement[]>(`/api/wall-section-measurement`, {
             params: {
                 inspectionId,

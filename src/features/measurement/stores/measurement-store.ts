@@ -29,6 +29,31 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
 
         return _.sortBy(result, 'room.name')
     })
+    type SectionsTypes = CeilSectionMeasurement[] | FloorSectionMeasurement[] | WallSectionMeasurement[];
+    const _findItemsByIdAndNum = (items: SectionsTypes, id: number, num?: number) => {
+      const filteredRoom = items.filter(item=>item.room.id == id);
+      if(typeof num === 'undefined') return filteredRoom;
+      return filteredRoom?.filter(item=>item.roomNum === num) || [];
+    }
+    const getRoomCeilSections = computed(() => {
+      return (roomId:number,roomNum?:number)=>{
+        const allRoomSections = ceilSectionMeasurements.value.filter(item=>item.room.id == roomId)
+        if(roomNum){
+          return allRoomSections?.filter(item=>item.roomNum == roomNum) || [];
+        } else  return allRoomSections;
+      }
+    })
+
+    const getFloorCeilSections = computed(() => {
+      return (roomId:number,roomNum?:number)=>{
+        return _findItemsByIdAndNum(floorSectionMeasurements.value,roomId,roomNum)
+      }
+    })
+    const getWallCeilSections = computed(() => {
+      return (roomId:number,roomNum?:number)=>{
+        return _findItemsByIdAndNum(wallSectionMeasurements.value,roomId,roomNum)
+      }
+    })
 
     return {
         allRoomMeasurements,
@@ -37,5 +62,8 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
         ceilSectionMeasurements,
         floorSectionMeasurements,
         wallSectionMeasurements,
+        getRoomCeilSections,
+        getFloorCeilSections,
+        getWallCeilSections
     }
 })

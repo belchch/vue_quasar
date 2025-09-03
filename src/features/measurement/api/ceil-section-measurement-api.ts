@@ -4,7 +4,14 @@ import { CeilSectionMeasurement } from '../stores/types'
 
 
 export const CeilSectionsMeasurementApi = {
-    getByInspectionId(inspectionId: number, roomId:number) {
+    getByInspectionId(inspectionId: number) {
+        return api.get<CeilSectionMeasurement[]>(`/api/ceil-section-measurement`, {
+            params: {
+                inspectionId
+            }
+        })
+    },
+    getByRoomId(inspectionId: number,roomId:number) {
         return api.get<CeilSectionMeasurement[]>(`/api/ceil-section-measurement`, {
             params: {
                 inspectionId,

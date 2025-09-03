@@ -4,7 +4,14 @@ import { FloorSectionMeasurement } from '../stores/types'
 
 
 export const FloorSectionsMeasurementApi = {
-    getByInspectionId(inspectionId: number, roomId:number) {
+    getByInspectionId(inspectionId: number) {
+        return api.get<FloorSectionMeasurement[]>(`/api/floor-section-measurement`, {
+            params: {
+                inspectionId
+            }
+        })
+    },
+    getByRoomId(inspectionId: number, roomId:number) {
         return api.get<FloorSectionMeasurement[]>(`/api/floor-section-measurement`, {
             params: {
                 inspectionId,
