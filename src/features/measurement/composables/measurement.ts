@@ -17,9 +17,9 @@ useMeasurementService = () => {
     const requestAllMeasurements = async () => {
         await requestRoomMeasurements()
         await requestOpeningMeasurements()
-        // await requestCeilSectionMeasurements()
-        // await requestFloorSectionMeasurements()
-        // await requestWallSectionMeasurements()
+        await requestCeilSectionMeasurements()
+        await requestFloorSectionMeasurements()
+        await requestWallSectionMeasurements()
     }
 
     const requestRoomMeasurements = async () => {
@@ -31,21 +31,24 @@ useMeasurementService = () => {
         const response = await OpeningMeasurementApi.getByInspectionId(selectedInspectionId.value!!)
         openingMeasurements.value = response.data
     }
-    const requestCeilSectionMeasurements = async (roomId:number) => {
-        const response = await CeilSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!, roomId)
-        return response.data
+    const requestCeilSectionMeasurements = async () => {
+        const response = await CeilSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!)
+        ceilSectionMeasurements.value = response.data
     }
-    const requestFloorSectionMeasurements = async (roomId:number) => {
-        const response = await FloorSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!,roomId)
-        return response.data
+    const requestFloorSectionMeasurements = async () => {
+        const response = await FloorSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!)
+        floorSectionMeasurements.value = response.data
     }
-    const requestWallSectionMeasurements = async (roomId:number) => {
-        const response = await WallSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!,roomId)
-        return response.data
+    const requestWallSectionMeasurements = async () => {
+        const response = await WallSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!)
+        wallSectionMeasurements.value = response.data
     }
     const requestMeasurements = async () => {
         await requestRoomMeasurements()
         await requestOpeningMeasurements()
+        await requestCeilSectionMeasurements()
+        await requestFloorSectionMeasurements()
+        await requestWallSectionMeasurements()
     }
 
     const createOpeningMeasurement = async (request: OpeningMeasurementUpdateRequest) => {

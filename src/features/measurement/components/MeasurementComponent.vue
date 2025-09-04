@@ -8,7 +8,7 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="measurements">
-        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => row.room.id"
+        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => `${row.room.id}_${row.roomNum | 0}`"
           selection="single" wrap-cells flat bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
           <template v-slot:top>
             <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
@@ -16,12 +16,11 @@
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td auto-width>
-                <q-btn size="xs" flat dense
-                  @click="() => { props.expand = !props.expand; expandClick(props.expand,props.row.room.id)}"
+                <q-btn size="xs" flat dense @click="() => { props.expand = !props.expand}"
                   :icon="props.expand ? 'remove' : 'add'" sor />
               </q-td>
               <q-td key="room" :props="props">
-                {{ props.row.room.name }}
+                {{ getLocationName(props.row) }}
               </q-td>
               <q-td key="declaredArea" :props="props">
                 <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.declaredArea as number"
@@ -38,6 +37,21 @@
               <q-td key="height" :props="props">
                 <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.height as number"
                   field="height" :row="props.row as RoomMeasurement" />
+              </q-td>
+              <q-td key="floorArea" :props="props">
+                {{ props.row.floorArea }}
+              </q-td>
+              <q-td key="ceilArea" :props="props">
+                {{ props.row.ceilArea }}
+              </q-td>
+              <q-td key="wallMaterial" :props="props">
+                {{ props.row.wallMaterial?.name }}
+              </q-td>
+              <q-td key="floorMaterial" :props="props">
+                {{ props.row.floorMaterial?.name }}
+              </q-td>
+              <q-td key="ceilMaterial" :props="props">
+                {{ props.row.ceilMaterial?.name }}
               </q-td>
               <q-td key="area" :props="props">
                 {{ props.row.area }}
@@ -65,10 +79,14 @@
                       <SectionFloorDialog section-type="wall_section" :room="props.row.room"
                         btn-text="Добавить секцию пола" />
                     </div>
-                    <OpeningTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
-                    <CeilSectionsTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])"/>
-                    <FloorSectionsTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
-                    <WallSectionsTable :room-id="props.row.room.id" :can-edit="hasPermission(['measurement.update'])" />
+                    <OpeningTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
+                    <CeilSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
+                    <FloorSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
+                    <WallSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
                   </div>
                 </div>
               </q-td>
@@ -100,7 +118,7 @@ import { useInspectionsStore } from 'src/features/inspection/store/inspection-st
 import DownloadReportButton from 'src/components/DownloadReportButton.vue';
 import { useUserStore } from "src/features/user/stores/user-store";
 import PlanTree from './plan-tree/PlanTree.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import MovableTab from './movable/MovableTab.vue'
 import SectionFloorDialog from './SectionFloorDialog.vue'
 import CeilSectionsTable from './CeilSectionsTable.vue'
@@ -116,6 +134,13 @@ const { requestCeilSectionMeasurements, requestFloorSectionMeasurements, request
 const buildDocx = async () => {
     const response = await RoomMeasurementApi.buildDocx(selectedInspectionId.value!!)
     return response.data
+}
+const getLocationName = (row: RoomMeasurement) => {
+  if (row.roomNum) {
+    return `${row.room.name} - ${row.roomNum}`
+  } else {
+    return row.room.name
+  }
 }
 const tab = ref('measurements')
 const columns = [
@@ -150,6 +175,36 @@ const columns = [
         align: 'left' as const,
     },
     {
+      name: 'floorArea',
+      field: (row: RoomMeasurement) => row.floorArea,
+      label: 'Площадь пола',
+      align: 'left' as const,
+    },
+    {
+      name: 'ceilArea',
+      field: (row: RoomMeasurement) => row.ceilArea,
+      label: 'Площадь потолка',
+      align: 'left' as const,
+    },
+    {
+      name: 'wallMaterial',
+      field: (row: RoomMeasurement) => row.wallMaterial,
+      label: 'Материал стен',
+      align: 'left' as const,
+    },
+    {
+      name: 'floorMaterial',
+      field: (row: RoomMeasurement) => row.floorMaterial,
+      label: 'Материал пола',
+      align: 'left' as const,
+    },
+    {
+      name: 'ceilMaterial',
+      field: (row: RoomMeasurement) => row.ceilMaterial,
+      label: 'Материал потолка',
+      align: 'left' as const,
+    },
+    {
         name: 'area',
         field: (row: RoomMeasurement) => row.area,
         label: 'Площадь без учета проемов',
@@ -175,19 +230,12 @@ const columns = [
     },
 ]
 
-const expandClick = async (isExpand:boolean,roomId:number) => {
-  if(isExpand){
-    await requestCeilSectionMeasurements(roomId);
-    await requestFloorSectionMeasurements(roomId);
-    await requestWallSectionMeasurements(roomId);
-  }
-}
-const getCeilSections = async (roomId:number) => {
-  try{
-    return await requestCeilSectionMeasurements(roomId);
-  }catch{
-    return []
-  }
+// onMounted(async () => {
+//   await Promise.all([
+//     requestCeilSectionMeasurements(),
+//     requestFloorSectionMeasurements(),
+//     requestWallSectionMeasurements()
+//   ]);
+// })
 
-}
 </script>
