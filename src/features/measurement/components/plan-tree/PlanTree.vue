@@ -18,7 +18,7 @@
             </template>
             <template v-slot:header-wall="prop">
               <PlanTreeNode :label="`Стена-${prop.node.index}`" :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label" @edit="editMaterial(prop.node)" />
+                :backoff-name="prop.node.label" @edit="editMaterial(prop.node); console.log(prop.node)" />
             </template>
             <template v-slot:header-opening="prop">
               <PlanTreeNode :label="openingTypeName(prop.node.rawData.type)"

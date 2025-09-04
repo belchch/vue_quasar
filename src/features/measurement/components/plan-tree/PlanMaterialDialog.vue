@@ -27,11 +27,16 @@ const openModal = defineModel<boolean>({ default: false });
 
 const { editingNode } = storeToRefs(usePlanTreeStore())
 const material = ref<{ label: string, value: number } | undefined>(undefined)
-const { savePlanTree } = usePlanTreeService()
+const { savePlanTree, setWallMaterial } = usePlanTreeService()
 const materialStore = useMaterialStore()
 
 const onSave = async () => {
   editingNode.value!.rawData.materialId = material.value?.value
+
+  if (editingNode.value?.type == 'wall' && editingNode.value.roomNodeId != undefined) {
+      setWallMaterial(editingNode.value.roomNodeId, material.value?.value)
+  }
+
   await savePlanTree()
 }
 
@@ -44,7 +49,7 @@ const optionItems = computed(() => {
 watch(openModal, (newValue) => {
   if (newValue) {
     if (editingNode.value) {
-      const id = editingNode.value.rawData.materialId;
+      const id = editingNode.value.rawData.materialId;    
       material.value = optionItems.value.find(item => item.value == id)
     }
   }

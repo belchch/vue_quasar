@@ -4,7 +4,7 @@ import { Room, TreeItem } from "./types";
 
 export const usePlanTreeStore = defineStore('plan-tree', () => {
     const planMeasurements = ref<any>()
-    const treeData = ref<object[]>([])
+    const treeData = ref<any[]>([])
     const editingNode = ref<TreeItem>()
 
     return {

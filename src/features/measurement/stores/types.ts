@@ -76,7 +76,8 @@ export type TreeItem = {
   type: string,
   label: string,
   rawData: any,
-  children: any[]
+  children: any[],
+  roomNodeId?: number | undefined
 }
 
 export type Room = {
@@ -95,7 +96,8 @@ export type Wall = {
   type: string,
   label: string,
   rawData: object,
-  children: any[]
+  children: any[],
+  roomNodeId: number
 }
 
 export type Walls = {
