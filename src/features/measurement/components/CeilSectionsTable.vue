@@ -7,22 +7,22 @@
       :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
       <template v-slot:body="props">
         <q-tr :props="props">
-          <q-td :props="props">
+          <q-td key="material"  :props="props">
             {{ props.row.material?.name }}
           </q-td>
-          <q-td>
+          <q-td key="width" >
             {{ props.row.width }}
           </q-td>
-          <q-td :props="props">
+          <q-td key="length" :props="props">
             {{ props.row.length }}
           </q-td>
-          <q-td :props="props">
+          <q-td key="area" :props="props">
             {{ props.row.area }}
           </q-td>
-          <q-td :props="props">
+          <q-td key="perimeter" :props="props">
             {{ props.row.perimeter }}
           </q-td>
-          <q-td :props="props">
+          <q-td key="actions" :props="props">
             <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative" />
           </q-td>
         </q-tr>

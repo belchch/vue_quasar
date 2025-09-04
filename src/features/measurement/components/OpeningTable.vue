@@ -47,19 +47,27 @@ const { deleteOpeningMeasurement } = useMeasurementService()
 
 const { roomId, roomNum, canEdit=true} = defineProps<{
     roomId: number,
-    roomNum?: number | undefined,
+    roomNum?: number | undefined | null,
     canEdit?: boolean
 }>()
 
 const rows = computed(() => {
     return openingMeasurements.value?.filter(item => {
-      if(roomNum && item.roomNum){
-        return item.room.id == roomId && item.roomNum == roomNum;
+      if(item.room.id == roomId){
+        if(roomNum) return _isRightLocation(item);
+        else return ( item.roomNum == null || item.roomNum == 1);
       }
-      return item.room.id == roomId
+      // if(!item.roomNum)
+      // if(roomNum && item.roomNum){
+      //   return item.room.id == roomId && item.roomNum == roomNum;
+      // }
+      // return item.room.id == roomId
     }) || []
 })
-
+const _isRightLocation = (oItem:OpeningMeasurement)=>{
+  if(oItem.roomNum == roomNum) return true;
+  if(roomNum == 1) return oItem.roomNum == null;
+}
 const deleteRow = async (id: number) => {
     await deleteOpeningMeasurement(id)
 }

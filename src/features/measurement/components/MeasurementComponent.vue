@@ -8,7 +8,7 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="measurements">
-        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => row.room.id"
+        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => `${row.room.id}_${row.roomNum | 0}`"
           selection="single" wrap-cells flat bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
           <template v-slot:top>
             <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />

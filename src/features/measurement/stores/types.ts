@@ -5,7 +5,7 @@ import { Spot } from "src/features/lookup/spot/stores/types"
 
 export type RoomMeasurement = {
     id?: number,
-    roomNum?: number,
+    roomNum?: number | null,
     inspectionId: number,
     room: Spot,
     width?: number,
