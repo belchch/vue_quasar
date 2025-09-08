@@ -15,21 +15,6 @@
                         option-value="value" emit-value map-options />
                 </div>
             </div>
-            <div class="row q-col-gutter-lg q-mt-md">
-                <div class="col-6">
-                    <FormList :disable-permission="!hasPermission(['case.update.manager'])" label="Менеджер"
-                        v-model="localCase.manager" :options="managerOptions" option-label="label" option-value="value"
-                        emit-value map-options />
-                    <FormList :disable-permission="!hasPermission(['case.update.expert'])" label="Эксперт"
-                        v-model="localCase.expert" :options="expertOptions" option-label="label" option-value="value"
-                        emit-value map-options />
-                </div>
-                <div class="col-6">
-                    <FormList :disable-permission="!hasPermission(['case.update.head'])" label="Руководитель"
-                        v-model="localCase.head" :options="headOptions" option-label="label" option-value="value"
-                        emit-value map-options />
-                </div>
-            </div>
             <div class="row justify-between items-end q-ml-none q-mt-lg">
                 <div class="row q-gutter-md">
                     <div>

@@ -44,6 +44,8 @@ export type CaseUpdateRequest = {
   createdAt: string,
   deadline: string,
   expertId?: number | undefined,
+  expertIds?: number[] | undefined,
+  inspectorId?: number | undefined,
   managerId?: number| undefined,
   headId?: number | undefined,
   expertiseType: string,

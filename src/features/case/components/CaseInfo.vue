@@ -1,206 +1,195 @@
 <template>
-    <div class="row q-col-gutter-sm text">
-        <template v-if="selectedCase">
-            <div class="col-9">
-                <q-card class="shadow_custom rounded-borders text-grey-8" bordered>
-                    <InspectionInformationBlock title="Общая информация" template="8-4">
-                        <template #appendTitle v-if="hasPermission(['case.update'])">
-                            <q-btn
-                                flat
-                                icon="edit"
-                                class="edit-btn"
-                                size="sm"
-                                color="primary"
-                                @click="openDialog"
-                            />
-                        </template>
-                        <template #s1>
-                            <div style="color:var(--q-accent)" class="text-weight-medium q-mb-sm">Дело № {{
-                                selectedCase?.number }}</div>
-                            <div class="grid-2 items-center" style="column-gap: 8px;grid-template-columns: 150px auto;">
-                                <div>Дата создания:</div>
-                                <span>{{ createdAt.format('DD.MM.YYYY') }}</span>
-                                <div>Дата сдачи: </div>
-                                <span style="width: fit-content;">{{ deadline.format('DD.MM.YYYY') }}</span>
-                                <div>Дата начала осмотра: </div>
-                                <span style="width: fit-content;">{{ inspectionStartAt }}</span>
-                                <div>Дата окончания осмотра: </div>
-                                <span style="width: fit-content;">{{ inspectionEndAt }}</span>
-                                <span>Адрес:</span>
-                                <span>{{ selectedCase.facilityAddress }}</span>
-                            </div>
-                            <div class="grid-2 q-mt-md items-center2"
-                                style="column-gap: 8px;grid-template-columns: 150px auto;">
-                                <span>Автор:</span>
-                                <span>{{ selectedCase.createdBy? userName(selectedCase.createdBy) : '' }}</span>
-                                <span>Менеджер:</span>
-                                <span>{{ selectedCase.manager? userName(selectedCase.manager) : '' }}</span>
-                                <span>Руководитель:</span>
-                                <span>{{ selectedCase.head? userName(selectedCase.head) : '' }}</span>
-                                <span>Эксперт:</span>
-                                <span>{{ selectedCase.expert? userName(selectedCase.expert) : '' }}</span>
-                            </div>
-                        </template>
-                        <template #s2>
-                            <div class="grid-2 q-mt-md items-center2"
-                                style="column-gap: 8px;grid-template-columns: 90px auto;">
-                                <span>Статус:</span>
-                                <span :class="statusClass">{{ statusLabel }}</span>
-                                <span>Приоритет:</span>
-                                <span :class="priorityClass">{{ priorityLabel
-                                }}</span>
-                            </div>
-                        </template>
-                    </InspectionInformationBlock>
+  <div class="row q-col-gutter-sm text">
+    <template v-if="selectedCase">
+      <div class="col-9">
+        <q-card class="shadow_custom rounded-borders text-grey-8" bordered>
+          <InspectionInformationBlock title="Общая информация" template="8-4">
+            <template #appendTitle v-if="hasPermission(['case.update'])">
+              <q-btn flat icon="edit" class="edit-btn" size="sm" color="primary" @click="openDialog" />
+            </template>
+            <template #s1>
+              <div style="color:var(--q-accent)" class="text-weight-medium q-mb-sm">Дело № {{
+                selectedCase?.number }}</div>
+              <div class="grid-2 items-center" style="column-gap: 8px;grid-template-columns: 150px auto;">
+                <div>Дата создания:</div>
+                <span>{{ createdAt.format('DD.MM.YYYY') }}</span>
+                <div>Дата сдачи: </div>
+                <span style="width: fit-content;">{{ deadline.format('DD.MM.YYYY') }}</span>
+                <div>Дата начала осмотра: </div>
+                <span style="width: fit-content;">{{ inspectionStartAt }}</span>
+                <div>Дата окончания осмотра: </div>
+                <span style="width: fit-content;">{{ inspectionEndAt }}</span>
+                <span>Адрес:</span>
+                <span>{{ selectedCase.facilityAddress }}</span>
+              </div>
+              <div class="grid-2 q-mt-md items-center2" v-show="false"
+                style="column-gap: 8px;grid-template-columns: 150px auto;">
+                <span>Автор:</span>
+                <span>{{ selectedCase.createdBy? userName(selectedCase.createdBy) : '' }}</span>
+                <span>Менеджер:</span>
+                <span>{{ selectedCase.manager? userName(selectedCase.manager) : '' }}</span>
+                <span>Руководитель:</span>
+                <span>{{ selectedCase.head? userName(selectedCase.head) : '' }}</span>
+                <span>Эксперт:</span>
+                <span>{{ selectedCase.expert? userName(selectedCase.expert) : '' }}</span>
+              </div>
+            </template>
+            <template #s2>
+              <div class="grid-2 q-mt-md items-center2" style="column-gap: 8px;grid-template-columns: 90px auto;">
+                <span>Статус:</span>
+                <span :class="statusClass">{{ statusLabel }}</span>
+                <span>Приоритет:</span>
+                <span :class="priorityClass">{{ priorityLabel
+                  }}</span>
+              </div>
+            </template>
+          </InspectionInformationBlock>
+          <InspectionInformationBlock title="Ответственные" template="4-4-4">
+            <template #appendTitle v-if="hasPermission(['case.update'])">
+              <q-btn flat icon="edit" class="edit-btn" size="sm" color="primary"
+                @click="openUpdateResponsablesDialog = true" />
+            </template>
+            <template #s1>
+              <div class="grid-2 items-center2" style="column-gap: 8px;grid-template-columns: 150px auto;">
+                <span>Автор:</span>
+                <span>{{ selectedCase.createdBy ? userName(selectedCase.createdBy) : '' }}</span>
+                <span>Менеджер:</span>
+                <span>{{ selectedCase.manager ? userName(selectedCase.manager) : '' }}</span>
+                <span>Руководитель:</span>
+                <span>{{ selectedCase.head ? userName(selectedCase.head) : '' }}</span>
+              </div>
+            </template>
+            <template #s2>
+              <span>Эксперты:</span>
+              <span v-if="selectedCase.experts?.length">
+                <div v-for="expert in selectedCase.experts" :key="expert.id!">{{ userName(expert) }}</div>
+              </span>
+              <div v-else>-</div>
+            </template>
+            <template #s3>
+              <span>Осмотрщик:</span>
+              <span v-if="selectedCase.inspector">
+                <div>{{ userName(selectedCase.inspector) }}</div>
+              </span>
+              <div v-else>-</div>
+            </template>
+          </InspectionInformationBlock>
+          <InspectionInformationBlock title="Организация" template="4-4-4">
+            <template #appendTitle v-if="hasPermission(['case.update'])">
+              <q-btn icon="edit" flat class="edit-btn" size="sm" color="primary"
+                @click="openUpdateOrganizationDialog=true" />
+            </template>
+            <template #s1>
+              ИНН
+              <div>{{ selectedCase.company?.inn }}</div>
+            </template>
+            <template #s2>
+              Наименовние
+              <div>{{ selectedCase.company?.name }}</div>
+            </template>
+            <template #s3>
+              Регион
+              <div>{{ selectedCase.region?.name }}</div>
+            </template>
+          </InspectionInformationBlock>
 
-                    <InspectionInformationBlock title="Организация" template="4-4-4">
-                        <template #appendTitle v-if="hasPermission(['case.update'])">
-                            <q-btn
-                                icon="edit"
-                                flat
-                                class="edit-btn"
-                                size="sm"
-                                color="primary"
-                                @click="openUpdateOrganizationDialog=true"
-                            />
-                        </template>
-                        <template #s1>
-                            ИНН
-                            <div>{{ selectedCase.company?.inn }}</div>
-                        </template>
-                        <template #s2>
-                            Наименовние
-                            <div>{{ selectedCase.company?.name }}</div>
-                        </template>
-                        <template #s3>
-                            Регион
-                            <div>{{ selectedCase.region?.name }}</div>
-                        </template>
-                    </InspectionInformationBlock>
+          <InspectionInformationBlock title="Объект исследования" template="6-6">
+            <template #appendTitle v-if="hasPermission(['case.update'])">
+              <q-btn icon="edit" flat class="edit-btn" size="sm" color="primary" @click="openUpdateObjectDialog=true" />
+            </template>
+            <template #s1>
+              Тип объекта
+              <div>{{ objectTypeText }}</div>
+            </template>
+            <template #s2>
+              Адрес осмотра
+              <div>{{ selectedCase.facilityAddress }}</div>
+            </template>
+          </InspectionInformationBlock>
 
-                    <InspectionInformationBlock title="Объект исследования" template="6-6">
-                        <template #appendTitle v-if="hasPermission(['case.update'])">
-                            <q-btn
-                                icon="edit"
-                                flat
-                                class="edit-btn"
-                                size="sm"
-                                color="primary"
-                                @click="openUpdateObjectDialog=true"
-                            />
-                        </template>
-                        <template #s1>
-                            Тип объекта
-                            <div>{{ objectTypeText }}</div>
-                        </template>
-                        <template #s2>
-                            Адрес осмотра
-                            <div>{{ selectedCase.facilityAddress }}</div>
-                        </template>
-                    </InspectionInformationBlock>
-
-                    <InspectionInformationBlock title="" template="6-6">
-                        <template #appendTitle v-if="hasPermission(['case.update'])">
-                            <q-btn
-                                style="position: absolute;right: 32px;"
-                                icon="edit"
-                                flat
-                                class="edit-btn"
-                                size="sm"
-                                color="primary"
-                                @click="openUpdateJudgeDialog = true"
-                            />
-                        </template>
-                        <template #s1>
-                            <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Суд</q-toolbar-title>
-                            <div class="grid-2 items-center gap-sm2" style="grid-template-columns: 150px auto;">
-                                <div>Дело:</div>
-                                <span>{{ selectedCase.courtCaseNum || '-'}}</span>
-                                <div>Количество томов:</div>
-                                <span>{{ selectedCase.numberOfVolumes }}</span>
-                                <div>Дата определения: </div>
-                                <span>{{ determinationDate || '-' }}</span>
-                                <span>Суд:</span>
-                                <span>{{ selectedCase.court?.name }}</span>
-                            </div>
-                        </template>
-                        <template #s2>
-                            <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Судья</q-toolbar-title>
-                            <div class="grid-2 items-center gap-sm2">
-                                <div>Судья:</div>
-                                <span>{{ selectedCase.judge ? judgeName(selectedCase.judge) : '' }}</span>
-                                <div>ФИО контактного лица:</div>
-                                <span class="text-weight-medium relative">{{selectedCase.contactPerson || '-'}}</span>
-                                <div>Телефон контактного лица:</div>
-                                <span class="text-weight-medium relative"> {{ selectedCase.contactPhone || '-' }} </span>
-                                <div>Email контактного лица:</div>
-                                <span class="text-weight-medium relative">{{ selectedCase.contactEmail || '-' }}</span>
-                            </div>
-                        </template>
-                    </InspectionInformationBlock>
-                </q-card>
-                <CaseCommets />
-            </div>
-            <div class="col-3">
-                <q-card bordered class="shadow_custom rounded-borders text-grey-8">
-                    <q-card-section class="row card-wrapper" style="border-bottom: 1px solid lightgrey;">
-                        <div class="col-12">
-                            <q-toolbar-title ellipsis class="q-pb-sm">Статус</q-toolbar-title>
-                            <q-option-group square dense2 size="sm" color="secondary" type="radio" class="text-grey-8"
-                                v-model="selectedCase.status" :options="statusOptions" @update:model-value="onChange"
-                                :disable="!hasPermission(['case.update.status'])"
-                            />
-
-                            <q-toolbar-title ellipsis class="q-pb-sm q-pl-none q-mt-lg">Приоритет</q-toolbar-title>
-                            <q-toggle v-model="selectedCase.priority" label="Срочный" color="secondary"
-                                true-value="HIGH" false-value="LOW" @update:model-value="onChange"
-                                :disable="!hasPermission(['case.update.priority'])"
-                            />
-                        </div>
-                    </q-card-section>
-                </q-card>                
-            </div>
-        </template>
-    </div>
-
-    <q-dialog v-if="selectedCase" v-model="createDialogOpen" style="width: 100%">
-        <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
-            <UpdateForm
-                v-model="selectedCase"
-                :statusOptions="statusOptions"
-                @save="handleSave"
-                @reset="resetForm"
-            />
+          <InspectionInformationBlock title="" template="6-6">
+            <template #appendTitle v-if="hasPermission(['case.update'])">
+              <q-btn style="position: absolute;right: 32px;" icon="edit" flat class="edit-btn" size="sm" color="primary"
+                @click="openUpdateJudgeDialog = true" />
+            </template>
+            <template #s1>
+              <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Суд</q-toolbar-title>
+              <div class="grid-2 items-center gap-sm2" style="grid-template-columns: 150px auto;">
+                <div>Дело:</div>
+                <span>{{ selectedCase.courtCaseNum || '-'}}</span>
+                <div>Количество томов:</div>
+                <span>{{ selectedCase.numberOfVolumes }}</span>
+                <div>Дата определения: </div>
+                <span>{{ determinationDate || '-' }}</span>
+                <span>Суд:</span>
+                <span>{{ selectedCase.court?.name }}</span>
+              </div>
+            </template>
+            <template #s2>
+              <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Судья</q-toolbar-title>
+              <div class="grid-2 items-center gap-sm2">
+                <div>Судья:</div>
+                <span>{{ selectedCase.judge ? judgeName(selectedCase.judge) : '' }}</span>
+                <div>ФИО контактного лица:</div>
+                <span class="text-weight-medium relative">{{selectedCase.contactPerson || '-'}}</span>
+                <div>Телефон контактного лица:</div>
+                <span class="text-weight-medium relative"> {{ selectedCase.contactPhone || '-' }} </span>
+                <div>Email контактного лица:</div>
+                <span class="text-weight-medium relative">{{ selectedCase.contactEmail || '-' }}</span>
+              </div>
+            </template>
+          </InspectionInformationBlock>
         </q-card>
-    </q-dialog>
-    <q-dialog v-if="selectedCase" v-model="openUpdateJudgeDialog" style="width: 100%">
-        <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
-            <UpdateFormJudge
-                v-model="selectedCase"
-                @save="handeSaveJudge"
-                @reset="openUpdateJudgeDialog = false"
-            />
+        <CaseCommets />
+      </div>
+      <div class="col-3">
+        <q-card bordered class="shadow_custom rounded-borders text-grey-8">
+          <q-card-section class="row card-wrapper" style="border-bottom: 1px solid lightgrey;">
+            <div class="col-12">
+              <q-toolbar-title ellipsis class="q-pb-sm">Статус</q-toolbar-title>
+              <q-option-group square dense2 size="sm" color="secondary" type="radio" class="text-grey-8"
+                v-model="selectedCase.status" :options="statusOptions" @update:model-value="onChange"
+                :disable="!hasPermission(['case.update.status'])" />
+
+              <q-toolbar-title ellipsis class="q-pb-sm q-pl-none q-mt-lg">Приоритет</q-toolbar-title>
+              <q-toggle v-model="selectedCase.priority" label="Срочный" color="secondary" true-value="HIGH"
+                false-value="LOW" @update:model-value="onChange" :disable="!hasPermission(['case.update.priority'])" />
+            </div>
+          </q-card-section>
         </q-card>
-    </q-dialog>
-    <q-dialog v-if="selectedCase" v-model="openUpdateOrganizationDialog" style="width: 100%">
-      <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
-          <UpdateFormOrganization
-              v-model="selectedCase"
-              @save="handeSaveOrganization"
-              @reset="openUpdateOrganizationDialog = false"
-          />
-      </q-card>
-    </q-dialog>
-    <!-- Объект исследования -->
-    <q-dialog v-if="selectedCase" v-model="openUpdateObjectDialog" style="width: 100%">
-      <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
-          <UpdateFormObject
-              v-model="selectedCase"
-              @save="handeSaveObject"
-              @reset="openUpdateObjectDialog = false"
-          />
-      </q-card>
-    </q-dialog>
+      </div>
+    </template>
+  </div>
+
+  <q-dialog v-if="selectedCase" v-model="createDialogOpen" style="width: 100%">
+    <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+      <UpdateForm v-model="selectedCase" :statusOptions="statusOptions" @save="handleSave" @reset="resetForm" />
+    </q-card>
+  </q-dialog>
+  <q-dialog v-if="selectedCase" v-model="openUpdateJudgeDialog" style="width: 100%">
+    <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+      <UpdateFormJudge v-model="selectedCase" @save="handeSaveJudge" @reset="openUpdateJudgeDialog = false" />
+    </q-card>
+  </q-dialog>
+  <q-dialog v-if="selectedCase" v-model="openUpdateOrganizationDialog" style="width: 100%">
+    <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+      <UpdateFormOrganization v-model="selectedCase" @save="handeSaveOrganization"
+        @reset="openUpdateOrganizationDialog = false" />
+    </q-card>
+  </q-dialog>
+  <!-- Объект исследования -->
+  <q-dialog v-if="selectedCase" v-model="openUpdateObjectDialog" style="width: 100%">
+    <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+      <UpdateFormObject v-model="selectedCase" @save="handeSaveObject" @reset="openUpdateObjectDialog = false" />
+    </q-card>
+  </q-dialog>
+  <!-- Ответственные -->
+  <q-dialog v-if="selectedCase" v-model="openUpdateResponsablesDialog" style="width: 100%">
+    <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+      <UpdateFormResponsables v-model="selectedCase" @save="handeSaveResponsables"
+        @reset="openUpdateResponsablesDialog = false" />
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -226,6 +215,7 @@ import CaseCommets from 'src/features/case/components/comments/CaseCommets.vue'
 import UpdateFormJudge from 'src/features/inspection/components/form/UpdateFormJudge.vue'
 import UpdateFormOrganization from 'src/features/inspection/components/form/UpdateFormOrganization.vue'
 import UpdateFormObject from 'src/features/inspection/components/form/UpdateFormObject.vue'
+import UpdateFormResponsables from 'src/features/inspection/components/form/UpdateFormResponsables.vue'
 const { selectedCase } = storeToRefs(useSelectedCaseStore())
 const { updateCase } = useSelectedCaseService()
 
@@ -256,6 +246,7 @@ const createDialogOpen = ref(false)
 const openUpdateJudgeDialog = ref(false)
 const openUpdateOrganizationDialog = ref(false)
 const openUpdateObjectDialog = ref(false)
+const openUpdateResponsablesDialog = ref(false)
 
 const openDialog = () => {
   createDialogOpen.value = true
@@ -265,6 +256,13 @@ const openDialog = () => {
 const save = async () => {
     console.log(selectedCase.value)
     await updateCase()
+}
+const handeSaveResponsables = async (localCase: any) => {
+  if (localCase) {
+    selectedCase.value = localCase
+    await save()
+  }
+  openUpdateResponsablesDialog.value = false;
 }
 const handeSaveObject = async (localCase: any) => {
   if (localCase) {

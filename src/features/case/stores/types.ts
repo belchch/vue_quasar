@@ -21,6 +21,8 @@ export type Case = {
   inspectionIds: number[],
   stages: CaseStages,
   expert?: User,
+  experts?: User[],
+  inspector?: User,
   manager?: User,
   head?: User,
   inspectionStartAt?: string | undefined,

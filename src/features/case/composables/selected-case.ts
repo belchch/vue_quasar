@@ -29,7 +29,7 @@ export const useSelectedCaseService = () => {
     const caseResponse = await CaseApi.getCase(caseId)
     selectedCase.value = caseResponse.data
     await requestInspections()
-    
+
     await requestLookupIfEmpty(spotStore)
     await requestLookupIfEmpty(structElemStore)
     await requestLookupIfEmpty(materialStore)
@@ -76,6 +76,8 @@ const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {
     createdAt: data.createdAt,
     deadline: data.deadline,
     expertId: data.expert?.id,
+    expertIds: data.experts?.map(expert => expert.id!),
+    inspectorId: data.inspector?.id,
     managerId: data.manager?.id,
     headId: data.head?.id,
     expertiseType: data.expertiseType,
