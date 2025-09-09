@@ -16,7 +16,7 @@
       <div class="row q-col-gutter-lg">
         <div class="col-6">
           <FormList :disable-permission="!hasPermission(['case.update.expert'])" label="Осмотрщик"
-            v-model="localCase.inspector" :options="allUsersOptions" option-label="label" option-value="value" emit-value
+            v-model="localCase.inspector" :options="inspectorOptions" option-label="label" option-value="value" emit-value
             map-options />
         </div>
         <div class="col-6">
@@ -70,7 +70,7 @@ const resetForm = () => {
 const managerOptions = ref<any[]>()
 const headOptions = ref<any[]>()
 const expertOptions = ref<any[]>()
-const allUsersOptions = ref<any[]>()
+const inspectorOptions = ref<any[]>()
 
 const initLocalForm = () => {
     if (!model.value) return
@@ -84,7 +84,7 @@ onMounted(async () => {
         label: userName(u),
         value: u
     })
-    allUsersOptions.value = users.map(toOptions)
+    inspectorOptions.value = users.filter(item => item.role == 'INSPECTOR').map(toOptions)
     managerOptions.value = users.filter(item => item.role == 'MANAGER').map(toOptions)
     headOptions.value = users.filter(item => item.role == 'HEAD').map(toOptions)
     expertOptions.value = users.filter(item => item.role == 'EXPERT').map(toOptions)

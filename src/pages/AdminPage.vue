@@ -3,11 +3,11 @@
         <q-inner-loading :showing="loading">
             <q-spinner size="50px" color="primary" />
         </q-inner-loading>
-        <q-table :class="{'is-loading': loading}" 
-            wrap-cells 
-            flat bordered 
-            title="Пользователи" 
-            :rows="rows" 
+        <q-table :class="{'is-loading': loading}"
+            wrap-cells
+            flat bordered
+            title="Пользователи"
+            :rows="rows"
             :columns="columns"
             row-key="id" v-model:pagination="pagination" hide-pagination no-data-label="Нет данных" :filter="filter"
             separator="cell">
@@ -41,7 +41,7 @@
                 </q-td>
             </template>
 
-            
+
         </q-table>
         <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
             <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="sm" />
@@ -51,7 +51,7 @@
     <q-dialog v-model="showCreateFrom">
         <q-card class="q-pa-lg">
             <CreateUserForm
-                v-model="newUser" 
+                v-model="newUser"
                 @save="handleSave"
                 @reset="handleReset"
             />
@@ -152,7 +152,11 @@ const formFields = computed((): Field[] => [
             {
                 id: 'EXPERT',
                 name: userRoleLabel('EXPERT')
-            }            
+            },
+            {
+                id: 'INSPECTOR',
+                name: userRoleLabel('INSPECTOR')
+            }
         ],
         emitValue: true
     },
