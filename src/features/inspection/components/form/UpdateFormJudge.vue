@@ -14,11 +14,19 @@
       </div>
       <div class="row q-col-gutter-lg">
         <div class="col-6">
+          <FormList label="Суд" v-model="selectedCoutr" :options="courtStore.items" />
+        </div>
+        <div class="col-6">
+          <FormInput v-model="localCase.initiator" label="Инициатор" title="Инициатор" />
+        </div>
+      </div>
+      <div class="row q-col-gutter-lg">
+        <div class="col-6">
           <FormList label="Судья" v-model="localCase.judge" @change="judgeChange" :options="judgeOptions"
             option-label="label" option-value="value" emit-value map-options />
         </div>
         <div class="col-6">
-          <FormList label="Суд" v-model="selectedCoutr" :options="courtStore.items" />
+          <FormInput v-model="localCase.customer" label="Заказчик" title="Заказчик" />
         </div>
       </div>
       <div class="row q-col-gutter-lg q-mb-sm">

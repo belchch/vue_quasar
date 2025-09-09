@@ -17,6 +17,8 @@ export type CaseFilterRequest = {
   expertId?: number[] | undefined
   managerId?: number[] | undefined
   headId?: number[] | undefined
+  initiator?: string | undefined
+  customer?: string | undefined
 }
 
 
@@ -48,6 +50,8 @@ export type CaseUpdateRequest = {
   inspectorId?: number | undefined,
   managerId?: number| undefined,
   headId?: number | undefined,
+  initiator?: string | undefined,
+  customer?: string | undefined,
   expertiseType: string,
   inspectionStartAt?: string | undefined,
   inspectionEndAt?: string | undefined,

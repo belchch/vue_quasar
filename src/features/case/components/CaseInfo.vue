@@ -8,7 +8,7 @@
               <q-btn flat icon="edit" class="edit-btn" size="sm" color="primary" @click="openDialog" />
             </template>
             <template #s1>
-              <div style="color:var(--q-accent)" class="text-weight-medium q-mb-sm">Дело № {{
+              <div style="color:var(--q-accent)" class="text-weight-medium q-mb-sm">Дело (договор) № {{
                 selectedCase?.number }}</div>
               <div class="grid-2 items-center" style="column-gap: 8px;grid-template-columns: 150px auto;">
                 <div>Дата создания:</div>
@@ -113,8 +113,10 @@
                 @click="openUpdateJudgeDialog = true" />
             </template>
             <template #s1>
-              <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Суд</q-toolbar-title>
+              <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Суд (инициатор)</q-toolbar-title>
               <div class="grid-2 items-center gap-sm2" style="grid-template-columns: 150px auto;">
+                <div>Инициатор:</div>
+                <span>{{ selectedCase.initiator || '-' }}</span>
                 <div>Дело:</div>
                 <span>{{ selectedCase.courtCaseNum || '-'}}</span>
                 <div>Количество томов:</div>
@@ -122,14 +124,16 @@
                 <div>Дата определения: </div>
                 <span>{{ determinationDate || '-' }}</span>
                 <span>Суд:</span>
-                <span>{{ selectedCase.court?.name }}</span>
+                <span>{{ selectedCase.court?.name || '-' }}</span>
               </div>
             </template>
             <template #s2>
-              <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Судья</q-toolbar-title>
+              <q-toolbar-title ellipsis class="text-weight-mediu2 q-pb-lg">Судья (заказчик)</q-toolbar-title>
               <div class="grid-2 items-center gap-sm2">
+                <div>Заказчик:</div>
+                <span>{{ selectedCase.customer || '-' }}</span>
                 <div>Судья:</div>
-                <span>{{ selectedCase.judge ? judgeName(selectedCase.judge) : '' }}</span>
+                <span>{{ selectedCase.judge ? judgeName(selectedCase.judge) : '-' }}</span>
                 <div>ФИО контактного лица:</div>
                 <span class="text-weight-medium relative">{{selectedCase.contactPerson || '-'}}</span>
                 <div>Телефон контактного лица:</div>
@@ -222,10 +226,13 @@ const { updateCase } = useSelectedCaseService()
 const dateOrNull = (date?: string) => {
     return date && dayjs(date).format('DD.MM.YYYY')
 }
+const dateTimeOrNull = (date?: string) => {
+    return date && dayjs(date).format('DD.MM.YYYY HH:mm')
+}
 
 const deadline = computed(() => dayjs(selectedCase.value?.deadline))
 const createdAt = computed(() => dayjs(selectedCase.value?.createdAt))
-const inspectionStartAt = computed(() => dateOrNull(selectedCase.value?.inspectionStartAt))
+const inspectionStartAt = computed(() => dateTimeOrNull(selectedCase.value?.inspectionStartAt))
 const inspectionEndAt = computed(() => dateOrNull(selectedCase.value?.inspectionEndAt))
 const determinationDate = computed(() => dateOrNull(selectedCase.value?.determinationDate))
 const { hasPermission } = useUserStore()

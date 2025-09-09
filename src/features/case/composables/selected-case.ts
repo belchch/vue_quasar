@@ -80,6 +80,8 @@ const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {
     inspectorId: data.inspector?.id,
     managerId: data.manager?.id,
     headId: data.head?.id,
+    customer: data.customer,
+    initiator: data.initiator,
     expertiseType: data.expertiseType,
     inspectionStartAt: data.inspectionStartAt,
     inspectionEndAt: data.inspectionEndAt,

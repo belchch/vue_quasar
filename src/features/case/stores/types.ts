@@ -25,6 +25,8 @@ export type Case = {
   inspector?: User,
   manager?: User,
   head?: User,
+  initiator?: string | undefined,
+  customer?: string | undefined,
   inspectionStartAt?: string | undefined,
   inspectionEndAt?: string | undefined,
   numberOfVolumes?: number | undefined,
