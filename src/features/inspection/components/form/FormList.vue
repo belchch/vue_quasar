@@ -3,6 +3,7 @@
       <div class="text-subtitle1 q-mb-xs">{{ title ? title : label }}</div>
         <q-select v-if="required"
             :disable="props.disablePermission"
+              :multiple="props.multiple"
             v-bind="$attrs"
               v-model="model"
               use-input
@@ -16,6 +17,7 @@
               :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
           />
         <q-select v-else
+              :multiple="props.multiple"
               @update:model-value="changeHandler"
               :disable="props.disablePermission"
               v-bind="$attrs"
@@ -40,6 +42,7 @@ const props = defineProps<{
   optionValue?: string
   optionLabel?: string,
   disablePermission?: boolean
+  multiple?: boolean
 }>()
 
 const emit = defineEmits<{
