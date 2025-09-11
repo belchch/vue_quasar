@@ -1,6 +1,6 @@
 import { User, UserRole } from "../stores/types"
 
-export type UserCreateRequest = {    
+export type UserCreateRequest = {
       username: string,
       password: string,
       role: UserRole,
@@ -19,12 +19,14 @@ export const userRoleLabel = (role: string) => {
             return 'Администратор'
         case 'BUSINESS_ADMIN':
             return 'Бизнес администратор'
-        case 'HEAD': 
+        case 'HEAD':
             return 'Руководитель'
-        case 'MANAGER': 
+        case 'MANAGER':
             return 'Менеджер'
-        case 'EXPERT': 
-            return 'Эксперт'        
+        case 'EXPERT':
+            return 'Эксперт'
+        case 'INSPECTOR':
+            return 'Осмотрщик'
         default:
             return ''
     }

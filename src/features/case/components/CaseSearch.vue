@@ -17,8 +17,8 @@
         <q-form class="q-gutter-sm" @submit="submitCreateForm">
           <div class="text-h6">Новая экспертиза</div>
           <div>
-            <div class="text-subtitle1 q-mb-sm">Дело</div>
-            <q-input dense outlined v-model="createForm.number" lazy-rules label="Номер дела"
+            <div class="text-subtitle1 q-mb-sm">Дело (договор)</div>
+            <q-input dense outlined v-model="createForm.number" lazy-rules label="Номер"
               :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
           </div>
           <div>
