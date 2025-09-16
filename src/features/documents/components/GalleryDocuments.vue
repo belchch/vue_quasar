@@ -3,7 +3,7 @@
     <q-slider v-model="cardSize" :min="150" :max="800" style="width: 100px;" color="primary" class="q-mb-md" />
   </div>
   <LightBoxImage v-model="showLightbox" :images="lightBoxImg" />
-  <div v-if="docs.length==0" class="text-h5 text-weight-light text-center">Документы отсутствуют</div>
+  <div v-if="docs.length==0" class="text-h5 text-weight-light text-center">{{ emptyDocsLabel }}</div>
   <div class="q-col-gutter-md row items-start">
     <div class="col-auto" v-for="doc in props.docs" :key="doc.id" style="align-self: stretch;">
       <q-card class="cord-hover full-height" flat bordered :style="{ width: cardSize + 'px', height: cardSize + 'px' }">
@@ -61,6 +61,7 @@ const { hasPermission } = useUserStore()
 
 const props = defineProps<{
   docs: CaseDocumentResponse[],
+  emptyDocsLabel: string
 }>();
 const emit = defineEmits<{
   remove: [id: number];

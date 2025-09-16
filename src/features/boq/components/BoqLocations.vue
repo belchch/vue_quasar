@@ -2,7 +2,7 @@
     <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
         :pagination="{ rowsPerPage: 20 }" separator="cell">
         <template v-slot:top>
-            <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
+            <q-btn @click="onBuilding" :loading="building" color="primary" size="sm">
                 Сформировать
             </q-btn>
         </template>
@@ -27,7 +27,7 @@
     </q-table>
 </template>
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { ref } from 'vue';
 import { useBoqService } from '../composables/boq';
 import { useBoqStore } from '../stores/boq-store';
 import { storeToRefs } from 'pinia';
@@ -37,12 +37,18 @@ import LocationCellEditor from './LocationCellEditor.vue';
 const emits = defineEmits<{
     navigateLocation: [location: BoqLocation]
 }>()
-
+const building = ref(false)
 const { buildAndRequestBoq } = useBoqService()
 const { locations } = storeToRefs(useBoqStore())
 
 const navigateLocation = (location: BoqLocation) => {
     emits('navigateLocation', location)
+}
+
+const onBuilding = async () => {
+  building.value = true
+  await buildAndRequestBoq()
+  building.value = false;
 }
 
 const columns = [
