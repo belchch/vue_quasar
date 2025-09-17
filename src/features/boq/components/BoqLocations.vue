@@ -2,9 +2,21 @@
     <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
         :pagination="{ rowsPerPage: 20 }" separator="cell">
         <template v-slot:top>
-            <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
+            <div class="row q-gutter-md">
+                <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
                 Сформировать
             </q-btn>
+            <template v-if="boq">
+                <!-- <q-btn @click="BoqApi.buildReport(boq.id)" color="primary" outline size="sm">
+                    Скачать
+                </q-btn> -->
+                <DownloadReportButton
+                    label="Скачать"
+                    :disable="false"
+                    :api-fn="async () => ( await BoqApi.buildReport(selectedInspectionId!!)).data"
+                />
+            </template>
+            </div>
         </template>
         <template v-slot:body="props">
             <q-tr :props="props">
@@ -33,13 +45,17 @@ import { useBoqStore } from '../stores/boq-store';
 import { storeToRefs } from 'pinia';
 import { BoqLocation } from '../api/types';
 import LocationCellEditor from './LocationCellEditor.vue';
+import { BoqApi } from '../api/boq-api';
+import DownloadReportButton from 'src/components/DownloadReportButton.vue';
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 
 const emits = defineEmits<{
     navigateLocation: [location: BoqLocation]
 }>()
 
 const { buildAndRequestBoq } = useBoqService()
-const { locations } = storeToRefs(useBoqStore())
+const { locations, boq } = storeToRefs(useBoqStore())
+const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const navigateLocation = (location: BoqLocation) => {
     emits('navigateLocation', location)
