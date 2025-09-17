@@ -11,6 +11,7 @@
 
         </div>
         <q-table v-if="!loading"
+            ref="tableRef"
             wrap-cells
             flat
             bordered
@@ -22,6 +23,7 @@
             hide-pagination
             no-data-label="Нет данных"
             :filter="filter"
+            :filter-method="customFilter"
             separator="cell"
             :visible-columns="localVisibleColumns">
             <template v-slot:top>
@@ -150,6 +152,7 @@ const props = defineProps({
 
 const loading = ref(false);
 const rows = ref<any[]>([]);
+const tableRef = ref();
 
 // Автоматическая загрузка при изменении store
 watchEffect(async () => {
@@ -177,7 +180,26 @@ const pagination = ref({
     rowsPerPage: 15
     // rowsNumber: xx if getting data from a server
 })
-const pagesNumber = computed(() => Math.ceil(rows.value.length / pagination.value.rowsPerPage))
+const pagesNumber = computed(() => Math.ceil(filtredRowsCount.value / pagination.value.rowsPerPage))
+
+const filtredRowsCount = computed(() => {
+  if (tableRef?.value?.filteredSortedRows) return tableRef.value.filteredSortedRows.length;
+  return rows.value.length;
+})
+
+const customFilter = (rowsTable: readonly any[], terms: string, cols: readonly any[], cellValue:any) => {
+  const lowerTerms = terms ? terms.toLowerCase().trim() : '';
+  const strArr = lowerTerms.split(' ');
+  return rowsTable.filter(row =>
+    cols.some(col => {
+      const val = cellValue(col, row)?.toString().toLowerCase() || '';
+      for(const term of strArr){
+        if(val.includes(term.trim())) return true
+      }
+      return false;
+    })
+  )
+}
 
 const processedColumns = computed<TableColumn[]>(() => [
     ...props.columns.map(col => ({

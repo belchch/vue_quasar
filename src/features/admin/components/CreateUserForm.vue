@@ -2,17 +2,17 @@
     <q-card-section >
         <q-form  @submit="handleSave">
             <div class="grid">
-                
+
                 <FormInput v-model="localUser.username" label="Email (username)" :hideTitle="true" :required="true"/>
-                
+
                 <FormInput class="q-mb-md" v-model="localUser.password" label="Пароль" type="password" :hideTitle="true" :required="true"/>
-               
+
                 <FormInput v-model="localUser.lastName" label="Фамилия" :hideTitle="true" :required="true"/>
-                
+
                 <FormInput v-model="localUser.firstName" label="Имя" :hideTitle="true" :required="true"/>
-                
+
                 <FormInput v-model="localUser.middleName!" :hideTitle="true" label="Отчество" />
-               
+
                 <q-select class="q-pt-lg"
                     v-model="localUser.role"
                     :options="[
@@ -21,6 +21,7 @@
                         roleOption('HEAD'),
                         roleOption('BUSINESS_ADMIN'),
                         roleOption('ADMIN'),
+                        roleOption('INSPECTOR'),
                     ]"
                     label="Роль"
                     emit-value
@@ -30,7 +31,7 @@
                     dense
                     outlined
                 />
-               
+
             </div>
             <div class="row justify-between items-end q-ml-none q-mt-lg">
 
@@ -61,11 +62,11 @@ const localUser = ref<UserCreateRequest>({
     lastName: '',
     middleName: '',
     password: '',
-    role: 'USER',
+    role: 'EXPERT',
 })
 
 const initLocalForm = () => {
-    
+
 }
 onMounted(() => {
     initLocalForm()
@@ -85,7 +86,7 @@ const resetForm = () => {
         lastName: '',
         middleName: '',
         password: '',
-        role: 'USER',
+        role: 'EXPERT',
     }
 }
 </script>
