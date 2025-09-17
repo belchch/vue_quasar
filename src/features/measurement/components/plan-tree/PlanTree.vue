@@ -52,7 +52,7 @@
             </template>
             <template v-slot:header-notmovable-objects>
               <q-item-section>
-                <q-item-label>Конструкции</q-item-label>
+                <q-item-label>Конструктив</q-item-label>
               </q-item-section>
             </template>
             <template v-slot:header-notmovable-item="prop">

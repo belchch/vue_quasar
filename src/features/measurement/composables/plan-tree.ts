@@ -253,7 +253,7 @@ const transformPlanJson = (planJson: any): object[] => {
     else {
       const result: TreeItem[] = [];
       const filtredObjects = objects.filter((item: any) => {
-        return !item.moveable
+        return !item.moveable && item.type != 'text';
       })
     filtredObjects.forEach((item: any) => {
       const objectNode: TreeItem = {
