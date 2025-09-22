@@ -50,6 +50,15 @@
               <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
                 @edit="editObject(prop.node)" />
             </template>
+            <template v-slot:header-notmovable-objects>
+              <q-item-section>
+                <q-item-label>Конструктив</q-item-label>
+              </q-item-section>
+            </template>
+            <template v-slot:header-notmovable-item="prop">
+              <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
+                @edit="editObject(prop.node)" />
+            </template>
           </q-tree>
         </div>
       </template>
@@ -91,6 +100,18 @@
               <FloorInfo :section="selectedNode.rawData.floor" />
               <CeilInfo :section="selectedNode.rawData.ceiling" />
             </div>
+            <div class="q-pa-md">
+              <div class="text-h6">Фотографии</div>
+              <div class="text-h6 text-weight-light" v-if="selectedNode.rawData.photos.length == 0">Фотографии
+                отсутствуют</div>
+              <q-list v-else bordered separator>
+                <q-item v-for="photo in selectedNode.rawData.photos" :key="photo.fileName">
+                  <q-item-section>
+                    {{ photo.fileName }}
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
           </q-tab-panel>
           <!-- Стены -->
           <q-tab-panel name="root-walls">
@@ -126,6 +147,9 @@
           </q-tab-panel>
           <!-- Объекты -->
           <q-tab-panel name="movable-item">
+            <ObjectInfo :selected-node="selectedNode" />
+          </q-tab-panel>
+          <q-tab-panel name="notmovable-item">
             <ObjectInfo :selected-node="selectedNode" />
           </q-tab-panel>
         </q-tab-panels>

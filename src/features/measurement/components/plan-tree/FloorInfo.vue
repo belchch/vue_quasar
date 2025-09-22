@@ -27,7 +27,7 @@
       <!--  -->
       <q-card flat bordered>
         <q-card-section>
-          <div class="text-h6 text-weight-light">baseboardLength</div>
+          <div class="text-h6 text-weight-light">Длина плинтуса</div>
           <div class="text-body1">{{ section.baseboardLength || '-' }}</div>
         </q-card-section>
       </q-card>

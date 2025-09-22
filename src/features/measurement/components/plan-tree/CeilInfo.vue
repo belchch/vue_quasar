@@ -34,7 +34,7 @@
       <!--  -->
       <q-card flat bordered>
         <q-card-section>
-          <div class="text-h6 text-weight-light">moldingLength</div>
+          <div class="text-h6 text-weight-light">Длина молдинга</div>
           <div class="text-body1">{{ section.moldingLength || '-' }}</div>
         </q-card-section>
       </q-card>
