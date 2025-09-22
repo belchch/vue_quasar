@@ -100,6 +100,18 @@
               <FloorInfo :section="selectedNode.rawData.floor" />
               <CeilInfo :section="selectedNode.rawData.ceiling" />
             </div>
+            <div class="q-pa-md">
+              <div class="text-h6">Фотографии</div>
+              <div class="text-h6 text-weight-light" v-if="selectedNode.rawData.photos.length == 0">Фотографии
+                отсутствуют</div>
+              <q-list v-else bordered separator>
+                <q-item v-for="photo in selectedNode.rawData.photos" :key="photo.fileName">
+                  <q-item-section>
+                    {{ photo.fileName }}
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
           </q-tab-panel>
           <!-- Стены -->
           <q-tab-panel name="root-walls">
