@@ -50,6 +50,15 @@
               <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
                 @edit="editObject(prop.node)" />
             </template>
+            <template v-slot:header-notmovable-objects>
+              <q-item-section>
+                <q-item-label>Конструктив</q-item-label>
+              </q-item-section>
+            </template>
+            <template v-slot:header-notmovable-item="prop">
+              <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
+                @edit="editObject(prop.node)" />
+            </template>
           </q-tree>
         </div>
       </template>
@@ -126,6 +135,9 @@
           </q-tab-panel>
           <!-- Объекты -->
           <q-tab-panel name="movable-item">
+            <ObjectInfo :selected-node="selectedNode" />
+          </q-tab-panel>
+          <q-tab-panel name="notmovable-item">
             <ObjectInfo :selected-node="selectedNode" />
           </q-tab-panel>
         </q-tab-panels>

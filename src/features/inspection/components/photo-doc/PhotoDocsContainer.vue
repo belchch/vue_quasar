@@ -44,12 +44,15 @@ const groupedItems = computed(() => {
     if (!useToolbar.isGroupedBy) return {}
 
     const groups: Record<string, any[]> = {}
-
-    props.items.forEach(item => {
+    const sortedItems = [...props.items].sort((a, b) =>
+      (a.spot?.name || 'Без локации').localeCompare(b.spot?.name || 'Без локации')
+    );
+    sortedItems.forEach(item => {
         let groupName = ''
 
         if (useToolbar.isGroupedBy === 'location') {
             groupName = item.spot?.name || 'Без локации'
+            if(item.spotNum) groupName += ` ${item.spotNum}`;
         }
         else if (useToolbar.isGroupedBy === 'type') {
             groupName = photoDocTypeDesc(item.type) || 'Неизвестный тип'
