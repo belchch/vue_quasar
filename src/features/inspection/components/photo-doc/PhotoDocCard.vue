@@ -17,9 +17,7 @@
     <q-card-section v-if="!collapsed">
       <div class="q-mb-xs q-gutter-md">
         <q-btn-dropdown :label="photoDocTypeDesc(photoDoc.type)" icon="image" size="sm" no-caps color="grey-8" flat
-          square
-          :disabled="!hasPermission(['inspection.update'])"
-        >
+          square :disabled="!hasPermission(['inspection.update'])">
           <q-list>
             <q-item v-for="item in ['DEFECT', 'GENERAL_VIEW']" :key="item!!" clickable v-close-popup
               @click="() => onSelectType(item as PhotoDocType)">
@@ -29,10 +27,8 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-btn-dropdown
-          :disable="!hasPermission(['inspection.update'])"
-          :label="displaySpotName(photoDoc)" icon="house" size="sm" no-caps color="grey-8" flat square
-        >
+        <q-btn-dropdown :disable="!hasPermission(['inspection.update'])" :label="displaySpotName(photoDoc)" icon="house"
+          size="sm" no-caps color="grey-8" flat square>
           <q-list>
             <q-item v-for="item in inspectionSpotOptions" :key="item.id!!" clickable v-close-popup
               @click="() => onSelectSpot(item)">
@@ -47,6 +43,10 @@
       <DefectInfo v-if="photoDoc.type == 'DEFECT'" :defect-info="photoDoc.defectInfo"
         @changeDefectInfo="onChangeDefectInfo" :photo-doc-id="photoDoc.id!!" />
     </q-card-section>
+
+    <div class="text-accent text-caption text-no-wrap row items-center q-pa-xs q-ml-xs" v-if="photoDoc.photographable">
+      <q-icon name="photo_camera"  class="q-mr-xs" /> {{  photographableDesc(photoDoc.photographable)  }}
+    </div>
 
     <div v-if="hasPermission(['inspection.update'])">
       <template v-if="!unionStore.isUnionMode">
@@ -108,6 +108,7 @@ import {
   type PhotoDocDefectInfo,
   type PhotoDocType,
   photoDocTypeDesc,
+  photographableDesc,
 } from 'src/features/inspection/store/types'
 import { Spot } from 'src/features/lookup/spot/stores/types'
 import DefectInfo from 'src/features/inspection/components/photo-doc/DefectInfo.vue'
@@ -130,7 +131,7 @@ const props = defineProps<{
   collapsed: boolean
 }>()
 const showLightbox = ref(false)
-const {inspectionSpots} = storeToRefs(useInspectionSpotStore())
+const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
 const { requestTechnicalReport } = useTechnicalReportService()
 const selectedInspectionService = useSelectedInspection()
 const selected = ref([])
