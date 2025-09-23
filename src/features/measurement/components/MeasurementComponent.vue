@@ -128,6 +128,7 @@ const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 import { useMeasurementService } from '../composables/measurement';
 const { hasPermission } = useUserStore()
+import { useOpeningStore } from "src/features/lookup/opening/opening-store";
 
 const { requestCeilSectionMeasurements, requestFloorSectionMeasurements, requestWallSectionMeasurements} = useMeasurementService()
 
@@ -142,6 +143,7 @@ const getLocationName = (row: RoomMeasurement) => {
     return row.room.name
   }
 }
+const openingStore = useOpeningStore()
 const tab = ref('measurements')
 const columns = [
     {
@@ -230,12 +232,8 @@ const columns = [
     },
 ]
 
-// onMounted(async () => {
-//   await Promise.all([
-//     requestCeilSectionMeasurements(),
-//     requestFloorSectionMeasurements(),
-//     requestWallSectionMeasurements()
-//   ]);
-// })
+onMounted(async () => {
+  await openingStore.requestLookup()
+})
 
 </script>
