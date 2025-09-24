@@ -8,8 +8,9 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="measurements">
-        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => `${row.room.id}_${row.roomNum | 0}`"
-          selection="single" wrap-cells flat bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
+        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns"
+          :row-key="row => `${row.room.id}_${row.roomNum | 0}`" selection="single" wrap-cells flat bordered
+          :pagination="{ rowsPerPage: 20 }" separator="cell">
           <template v-slot:top>
             <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
           </template>
@@ -87,6 +88,8 @@
                       :can-edit="hasPermission(['measurement.update'])" />
                     <WallSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])" />
+                    <FixedAssetsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
                   </div>
                 </div>
               </q-td>
@@ -124,6 +127,7 @@ import SectionFloorDialog from './SectionFloorDialog.vue'
 import CeilSectionsTable from './CeilSectionsTable.vue'
 import FloorSectionsTable from './FloorSectionsTable.vue'
 import WallSectionsTable from './WallSectionsTable.vue'
+import FixedAssetsTable from './FixedAssetsTable.vue'
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 import { useMeasurementService } from '../composables/measurement';
