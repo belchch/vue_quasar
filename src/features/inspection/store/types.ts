@@ -29,7 +29,7 @@ export type Photographable = {
   entityType: PhotographableType
 }
 
-export type PhotographableType = 'OPENING' | 'WALL_SECTION' |  'FLOOR_SECTION' |  'CEIL_SECTION' |  'ROOM'
+export type PhotographableType = 'OPENING' | 'FIXED_ASSET' | 'WALL_SECTION' |  'FLOOR_SECTION' |  'CEIL_SECTION' |  'ROOM'
 
 export type PhotoDocDefectInfo = {
   structElem?: StructElem | undefined
@@ -51,6 +51,7 @@ export const photographableDesc = (item: Photographable) => {
     case 'FLOOR_SECTION': return 'Секция пола'
     case 'CEIL_SECTION': return 'Секция потолка'
     case 'ROOM': return 'Помещение'
+    case 'FIXED_ASSET': return 'Конструктив'
   }
 }
 
