@@ -34,7 +34,8 @@ export type OpeningMeasurement = {
     area: number,
     hasTrims: boolean,
     trimWidth: boolean,
-    opening: Opening
+    opening: Opening,
+    photoUrls: string[]
 }
 
 export type FloorSectionMeasurement = {
@@ -46,6 +47,7 @@ export type FloorSectionMeasurement = {
     length: number,
     area: number,
     perimeter: number,
+    photoUrls: string[]
 }
 
 export type CeilSectionMeasurement = {
@@ -57,6 +59,7 @@ export type CeilSectionMeasurement = {
     length: number,
     area: number,
     perimeter: number,
+    photoUrls: string[]
 }
 
 export type WallSectionMeasurement = {
@@ -68,6 +71,24 @@ export type WallSectionMeasurement = {
     height: number,
     area: number,
     perimeter: number,
+    photoUrls: string[]
+}
+
+export interface FixedAssetMeasurament {
+  id: number;
+  name: string;
+  width: number;
+  length: number;
+  height: number;
+  heightFromFloor: number;
+  perimeter: number;
+  area: number;
+  hasCustomShape: boolean;
+  sources: string[];
+  urls: string[];
+  room: Spot;
+  roomNum?: number,
+  inspectionId: number;
 }
 
 export type TreeItem = {

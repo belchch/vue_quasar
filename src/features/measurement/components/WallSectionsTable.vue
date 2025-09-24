@@ -3,8 +3,8 @@
     <div class="text-subtitle1 q-mb-sm">
       Секции стены
     </div>
-    <q-table :rows="getWallCeilSections(roomId, roomNum)" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
-      :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
+    <q-table :rows="getWallCeilSections(roomId, roomNum)" :columns="columns" :row-key="row => row.id" wrap-cells flat
+      bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="material" :props="props">
@@ -21,13 +21,21 @@
           </q-td>
           <q-td key="perimeter" :props="props">
             {{ props.row.perimeter }}
-          </q-td>        
+          </q-td>
           <q-td key="actions" :props="props">
-            <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative" />
+            <q-btn class="action-btn" v-if="props.row.photoUrls.length" size="sm" flat round color="primary"
+              icon="o_image" @click.stop="openPhotos(props.row.photoUrls)">
+              <q-tooltip anchor="top middle" self="bottom middle">
+                Посмотреть фотографии
+              </q-tooltip>
+            </q-btn>
+            <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" flat round
+              color="negative" />
           </q-td>
         </q-tr>
       </template>
     </q-table>
+    <light-box-image :images="photos" v-model="showLightbox" />
   </div>
 
 </template>
@@ -37,9 +45,17 @@ import { useMeasurementStore } from '../stores/measurement-store';
 import { WallSectionMeasurement } from '../stores/types';
 import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
+import LightBoxImage from 'src/components/LightBoxImage.vue'
 
 const { getWallCeilSections } = storeToRefs(useMeasurementStore())
 const { deleteWallSectionMeasurement, requestWallSectionMeasurements } = useMeasurementService()
+
+const photos = ref<string[]>([])
+const showLightbox = ref(false);
+const openPhotos = (urls: string[]) => {
+  photos.value = urls;
+  showLightbox.value = true;
+}
 
 const rows = ref<WallSectionMeasurement[]>([]);
 

@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from "pinia"
-import { OpeningMeasurement, RoomMeasurement, CeilSectionMeasurement, FloorSectionMeasurement, WallSectionMeasurement } from "./types"
+import { OpeningMeasurement, RoomMeasurement, CeilSectionMeasurement, FloorSectionMeasurement, WallSectionMeasurement, FixedAssetMeasurament } from "./types"
 import { computed, ref } from "vue"
 import { useOpeningStore } from "src/features/lookup/opening/opening-store"
 import InspectionLocations from "src/features/inspection/components/InspectionLocations.vue"
@@ -13,6 +13,7 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
     const ceilSectionMeasurements = ref<CeilSectionMeasurement[]>([])
     const floorSectionMeasurements = ref<FloorSectionMeasurement[]>([])
     const wallSectionMeasurements = ref<WallSectionMeasurement[]>([])
+    const fixedAssetMeasurements = ref<FixedAssetMeasurament[]>([])
     const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
     const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
@@ -50,7 +51,7 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
 
         // return _.sortBy(result, 'room.name')
     })
-    type SectionsTypes = CeilSectionMeasurement[] | FloorSectionMeasurement[] | WallSectionMeasurement[];
+    type SectionsTypes = CeilSectionMeasurement[] | FloorSectionMeasurement[] | WallSectionMeasurement[] | FixedAssetMeasurament[];
     const _findItemsByIdAndNum = (items: SectionsTypes, id: number, num?: number | null) => {
       const filteredRoom = items.filter(item=>item.room.id == id);
       const result = [];
@@ -83,7 +84,11 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
         return _findItemsByIdAndNum(wallSectionMeasurements.value,roomId,roomNum)
       }
     })
-
+    const getFixedAssets = computed(() => {
+      return (roomId:number,roomNum?:number)=>{
+        return _findItemsByIdAndNum(fixedAssetMeasurements.value,roomId,roomNum)
+      }
+    })
     return {
         allRoomMeasurements,
         roomMeasurements,
@@ -91,8 +96,10 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
         ceilSectionMeasurements,
         floorSectionMeasurements,
         wallSectionMeasurements,
+        fixedAssetMeasurements,
         getRoomCeilSections,
         getFloorCeilSections,
-        getWallCeilSections
+        getWallCeilSections,
+        getFixedAssets
     }
 })
