@@ -2,6 +2,7 @@ import { Inspection } from "src/features/inspection/store/types"
 import { Material } from "src/features/lookup/material/stores/types"
 import { Opening } from "src/features/lookup/opening/types"
 import { Spot } from "src/features/lookup/spot/stores/types"
+import { inspect } from "util"
 
 export type RoomMeasurement = {
     id?: number,
@@ -48,6 +49,16 @@ export type FloorSectionMeasurement = {
     area: number,
     perimeter: number,
     photoUrls: string[]
+}
+
+export type SectionMeasurementCreate = {
+    inspectionId?: number,
+    roomId?: number,
+    roomNum?: number,
+    materialId?: number,
+    width: number,
+    length?: number,
+    height?: number,
 }
 
 export type CeilSectionMeasurement = {

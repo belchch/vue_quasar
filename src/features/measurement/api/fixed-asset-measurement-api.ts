@@ -2,7 +2,7 @@ import { api } from 'boot/axios'
 import { FixedAssetMeasurament } from '../stores/types'
 import { FixedAssetCreateRequest, FixedAssetUpdateRequest } from './types'
 
-export const FicedAssetMeasurementApi = {
+export const FixedAssetMeasurementApi = {
   getByInspectionId(inspectionId: number) {
       return api.get<FixedAssetMeasurament[]>(`/api/fixed-asset-measurements`, {
           params: {

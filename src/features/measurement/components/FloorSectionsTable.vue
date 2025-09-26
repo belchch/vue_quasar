@@ -46,7 +46,9 @@ import { FloorSectionMeasurement } from '../stores/types';
 import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
+import { useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const { getFloorCeilSections } = storeToRefs(useMeasurementStore())
 const { deleteFloorSectionMeasurement } = useMeasurementService()
 
@@ -63,8 +65,19 @@ const { roomId, roomNum, canEdit=true} = defineProps<{
     canEdit?: boolean
 }>()
 
-const deleteRow = async (id: number) => {
-  await deleteFloorSectionMeasurement(id)
+const deleteRow = (id: number) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить секцию пола?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await deleteFloorSectionMeasurement(id)
+      $q.notify({ type: 'positive', message: 'Успешно удалено' });
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
+    }
+  });
 }
 
 const columns = [

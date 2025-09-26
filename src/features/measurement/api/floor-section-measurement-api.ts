@@ -1,5 +1,5 @@
 import {api} from 'boot/axios'
-import { FloorSectionMeasurement } from '../stores/types'
+import { FloorSectionMeasurement, SectionMeasurementCreate } from '../stores/types'
 
 
 
@@ -18,6 +18,9 @@ export const FloorSectionsMeasurementApi = {
                 roomId
             }
         })
+    },
+    create(request: SectionMeasurementCreate) {
+      return api.post<FloorSectionMeasurement>(`/api/floor-section-measurement`, request);
     },
     delete(id: number) {
         return api.delete(`/api/floor-section-measurement/${id}`)

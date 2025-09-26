@@ -74,17 +74,20 @@
                     <div class="row q-gutter-sm q-ma-none">
                       <AddOpeningDialog v-if="hasPermission(['measurement.update'])" :room="props.row.room" />
                       <!-- Секция пола-->
-                      <SectionFloorDialog section-type="floor_section" :room="props.row.room" btn-text="Секция пола" />
+                      <SectionFloorDialog section-type="floor_section" :room="props.row.room"
+                        :room-num="props.row.roomNum" btn-text="Секция пола" />
                       <SectionFloorDialog section-type="ceil_section" :room="props.row.room"
-                        btn-text="Добавить секцию потолка" />
+                        :room-num="props.row.roomNum" btn-text="Секция потолка" />
                       <SectionFloorDialog section-type="wall_section" :room="props.row.room"
-                        btn-text="Добавить секцию пола" />
+                        :room-num="props.row.roomNum" btn-text="Секция стены" />
+                      <SectionFloorDialog section-type="fixed_asset" :room="props.row.room"
+                        :room-num="props.row.roomNum" btn-text="Конструктив" />
                     </div>
                     <OpeningTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])" />
-                    <CeilSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
-                      :can-edit="hasPermission(['measurement.update'])" />
                     <FloorSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
+                    <CeilSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])" />
                     <WallSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])" />
