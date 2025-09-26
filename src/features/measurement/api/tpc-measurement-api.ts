@@ -7,7 +7,11 @@ export const tpcMeasurementApi = {
   },
 
   saveTpcMeasurements(inspectionId: number, measurements: any) {
-    return api.post(`/api/tpc/projects/${inspectionId}/measurements`, measurements)
+    return api.post(`/api/tpc/projects/${inspectionId}/measurements`, measurements, {
+      params: {
+        analyzeComments: false
+      }
+    })
   },
 
   propagateTpcMeasurements(inspectionId: number) {
