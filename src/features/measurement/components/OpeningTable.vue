@@ -50,7 +50,9 @@ import { OpeningMeasurement } from '../stores/types';
 import { computed, ref } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
+import { useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const { openingMeasurements } = storeToRefs(useMeasurementStore())
 const { deleteOpeningMeasurement } = useMeasurementService()
 
@@ -84,8 +86,19 @@ const _isRightLocation = (oItem:OpeningMeasurement)=>{
   if(oItem.roomNum == roomNum) return true;
   if(roomNum == 1) return oItem.roomNum == null;
 }
-const deleteRow = async (id: number) => {
-    await deleteOpeningMeasurement(id)
+const deleteRow = (id: number) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить проем?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await deleteOpeningMeasurement(id)
+      $q.notify({ type: 'positive', message: 'Успешно удалено' });
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
+    }
+  });
 }
 
 const columns = [

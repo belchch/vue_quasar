@@ -46,8 +46,10 @@ import { CeilSectionMeasurement } from '../stores/types';
 import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
+import { useQuasar } from 'quasar';
 
-const { ceilSectionMeasurements, getRoomCeilSections } = storeToRefs(useMeasurementStore())
+const $q = useQuasar();
+const { getRoomCeilSections } = storeToRefs(useMeasurementStore())
 const { deleteCeilSectionMeasurement } = useMeasurementService()
 
 const { roomId, roomNum, canEdit=true} = defineProps<{
@@ -56,8 +58,19 @@ const { roomId, roomNum, canEdit=true} = defineProps<{
     canEdit?: boolean,
 }>()
 
-const deleteRow = async (id: number) => {
-  await deleteCeilSectionMeasurement(id)
+const deleteRow = (id: number) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить секцию потолка?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await deleteCeilSectionMeasurement(id)
+      $q.notify({ type: 'positive', message: 'Успешно удалено' });
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
+    }
+  });
 }
 
 const photos = ref<string[]>([])

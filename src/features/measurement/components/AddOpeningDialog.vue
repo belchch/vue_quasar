@@ -1,47 +1,39 @@
 <template>
-    <q-dialog v-model="open" style="width: 100%">
-        <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
-            <q-card-section>
-                <q-form ref="formRef" class="q-gutter-sm" @submit="submit">
-                    <div class="text-h6">{{ room.name }}. Добавить проем</div>
-                    <div>
-                        <div class="text-subtitle1 q-mb-sm">Проем</div>
-                        <q-select use-input dense outlined v-model="formValues.opening" lazy-rules
-                            :options="openingStore.items" label="Проем"
-                            option-label="name"
-                            option-value="id"
-                            @update:model-value="onSelectOpening"                        
-                            :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
-                    </div>
-                    <div>
-                        <div class="text-subtitle1 q-mb-sm">Проем</div>
-                        <q-select use-input dense outlined v-model="formValues.material" lazy-rules
-                            :options="materialStore.items" label="Материал"
-                            option-label="name"
-                            option-value="id"
-                            />
-                    </div>
-                    <div>
-                        <div class="text-subtitle1 q-mb-sm">Ширина</div>
-                        <q-input dense outlined v-model="formValues.width" lazy-rules label="Ширина" type="number"/>
-                    </div>
-                    <div>
-                        <div class="text-subtitle1 q-mb-sm">Высота</div>
-                        <q-input dense outlined v-model="formValues.height" lazy-rules label="Высота" type="number"/>
-                    </div>                
-                    <div class="row justify-between items-end">                        
-                        <div>
-                            <q-btn label="Сохранить" type="submit" color="primary" />
-                            <q-btn label="Отмена" @click="reset" color="primary" flat class="q-ml-sm" />
-                        </div>
-                    </div>
-                </q-form>
-            </q-card-section>
-        </q-card>
-    </q-dialog>
-    <q-btn @click="doOpen" color="secondary" size="sm" >
-        Добавить проем
-    </q-btn>
+  <q-dialog v-model="open" style="width: 100%">
+    <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+      <q-card-section>
+        <q-form ref="formRef" class="q-gutter-sm" @submit="submit">
+          <div class="text-h6">{{ room.name }}. Добавить проем</div>
+          <div>
+            <div class="text-subtitle1 q-mb-sm">Проем</div>
+            <q-select use-input dense outlined v-model="formValues.opening" lazy-rules :options="openingStore.items"
+              label="Проем" option-label="name" option-value="id" @update:model-value="onSelectOpening"
+              :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']" />
+          </div>
+          <div>
+            <div class="text-subtitle1 q-mb-sm">Проем</div>
+            <q-select use-input dense outlined v-model="formValues.material" lazy-rules :options="materialStore.items"
+              label="Материал" option-label="name" option-value="id" />
+          </div>
+          <div>
+            <div class="text-subtitle1 q-mb-sm">Ширина</div>
+            <q-input dense outlined v-model="formValues.width" lazy-rules label="Ширина" type="number" />
+          </div>
+          <div>
+            <div class="text-subtitle1 q-mb-sm">Высота</div>
+            <q-input dense outlined v-model="formValues.height" lazy-rules label="Высота" type="number" />
+          </div>
+          <div class="row justify-between items-end">
+            <div>
+              <q-btn label="Сохранить" type="submit" color="primary" />
+              <q-btn label="Отмена" @click="reset" color="primary" flat class="q-ml-sm" />
+            </div>
+          </div>
+        </q-form>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+  <q-btn @click="doOpen" icon="add" color="secondary" size="sm" label="Проем" />
 </template>
 <script setup lang="ts">
 import { useMaterialStore } from 'src/features/lookup/material/stores/material-store';
@@ -109,7 +101,7 @@ const submit = async () => {
         materialId: data.material?.id,
         openingId: data.opening!.id!,
         width: data.width!,
-        height: data.height!,    
+        height: data.height!,
     })
 
     formValues.value = {}
