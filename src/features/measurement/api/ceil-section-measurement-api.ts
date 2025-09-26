@@ -1,5 +1,5 @@
 import {api} from 'boot/axios'
-import { CeilSectionMeasurement } from '../stores/types'
+import { CeilSectionMeasurement,SectionMeasurementCreate } from '../stores/types'
 
 
 
@@ -18,6 +18,9 @@ export const CeilSectionsMeasurementApi = {
                 roomId
             }
         })
+    },
+    create(request: SectionMeasurementCreate) {
+      return api.post<CeilSectionMeasurement>(`/api/ceil-section-measurement`, request);
     },
     delete(id: number) {
         return api.delete(`/api/ceil-section-measurement/${id}`)
