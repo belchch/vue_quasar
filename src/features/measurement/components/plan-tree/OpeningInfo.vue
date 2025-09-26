@@ -34,7 +34,7 @@
           <div class="text-body1">{{ selectedNode.rawData.area || '-' }}</div>
         </q-card-section>
       </q-card>
-      <q-card flat bordered v-if="selectedNode.rawData.type =='door'">
+      <q-card flat bordered v-if="selectedNode.rawData.type == 'door' || selectedNode.rawData.type == 'doorway'">
         <q-card-section>
           <div class="text-h6 text-weight-light">Наличники</div>
           <div v-if="selectedNode.rawData.hasTrims" class="text-body1">{{ selectedNode.rawData.trimsWidth}}</div>

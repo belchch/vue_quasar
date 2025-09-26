@@ -38,5 +38,49 @@ const {images} = defineProps<{
 </script>
 
 <style scoped>
+.lightbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
+.carousel-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.full-height-carousel {
+  height: 100vh;
+  width: 100vw;
+}
+
+.full-height-slide {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.full-height-img {
+  max-height: 100vh;
+  max-width: 100vw;
+  width: auto;
+  height: auto;
+}
+
+/* Для одиночного изображения */
+.single-img {
+  max-height: 90vh;
+  max-width: 100vw;
+}
+
+/* Кнопка закрытия */
+.dialog-img-close-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+}
 </style>

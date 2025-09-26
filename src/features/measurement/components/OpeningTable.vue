@@ -27,11 +27,19 @@
             {{ props.row.trimWidth || '-' }}
           </q-td>
           <q-td key="actions" :props="props">
-            <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" color="negative" />
+            <q-btn class="action-btn" v-if="props.row.photoUrls.length" size="sm" flat round color="primary" icon="o_image"
+              @click.stop="openPhotos(props.row.photoUrls)">
+              <q-tooltip anchor="top middle" self="bottom middle">
+                Посмотреть фотографии
+              </q-tooltip>
+            </q-btn>
+            <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" flat round
+              color="negative" />
           </q-td>
         </q-tr>
       </template>
     </q-table>
+    <light-box-image :images="photos" v-model="showLightbox" />
   </div>
 
 </template>
@@ -39,11 +47,21 @@
 import { storeToRefs } from 'pinia';
 import { useMeasurementStore } from '../stores/measurement-store';
 import { OpeningMeasurement } from '../stores/types';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
+import LightBoxImage from 'src/components/LightBoxImage.vue'
+import { useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const { openingMeasurements } = storeToRefs(useMeasurementStore())
 const { deleteOpeningMeasurement } = useMeasurementService()
+
+const photos = ref<string[]>([])
+const showLightbox = ref(false);
+const openPhotos = (urls: string[]) => {
+  photos.value = urls;
+  showLightbox.value = true;
+}
 
 const { roomId, roomNum, canEdit=true} = defineProps<{
     roomId: number,
@@ -68,8 +86,19 @@ const _isRightLocation = (oItem:OpeningMeasurement)=>{
   if(oItem.roomNum == roomNum) return true;
   if(roomNum == 1) return oItem.roomNum == null;
 }
-const deleteRow = async (id: number) => {
-    await deleteOpeningMeasurement(id)
+const deleteRow = (id: number) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить проем?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await deleteOpeningMeasurement(id)
+      $q.notify({ type: 'positive', message: 'Успешно удалено' });
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
+    }
+  });
 }
 
 const columns = [
