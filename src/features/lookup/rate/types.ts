@@ -7,7 +7,14 @@ export type Rate = {
     unitOfMeasure : UnitOfMeasureType,
     boqWorkParamsType?: ParamsType | '' | null,
     boqWorkParams?: BoqFloor | BoqFloorSection | BoqFloorSectionUpdateRequest | BoqSectionBaseUpdateRequest | BoqCeil | BoqDoor | BoqWindow | BoqWallSection | BoqWallSectionUpdateReuest | null,
-    factor?: number | null
+    factor?: number | null,
+    sources?: RateSources[],
+}
+
+export type RateSources = {
+  id?: number,
+  url: string,
+  price: number
 }
 
 export enum ParamsTypeEnum {
@@ -21,6 +28,7 @@ export enum ParamsTypeEnum {
   BOQ = 'Дополнительные работы',
   SUPPORTING = 'Дополнительные работы в помещении',
 }
+
 export type ParamsType = keyof typeof ParamsTypeEnum
 export enum DimensionEnum {
   AREA = 'Площадь',
