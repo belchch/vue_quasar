@@ -50,6 +50,14 @@
               <q-icon name="edit" class="edit-icon" />
             </q-td>
           </template>
+          <template v-slot:body-cell-sources="props">
+            <q-td :props="props">
+              <template v-for="(item,index) in props.value" :key="index">
+                <div>{{ item.url }}</div>
+              </template>
+              <q-icon name="edit" class="edit-icon" />
+            </q-td>
+          </template>
         </q-table>
         <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
           <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
@@ -116,8 +124,8 @@ const columns = [
       sortable: true,
     },
     {
-      name: 'sourceUrl',
-      field: 'sourceUrl',
+      name: 'sources',
+      field: 'sources',
       label: 'Ссылка',
       align: 'left' as const,
       sortable: true,

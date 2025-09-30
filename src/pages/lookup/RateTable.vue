@@ -33,7 +33,7 @@
       </template>
     </q-table>
 
-    <q-table v-show="false" ref="tableRate" v-model:pagination="pagination" :filter="filter" separator="cell"
+    <!-- <q-table v-show="false" ref="tableRate" v-model:pagination="pagination" :filter="filter" separator="cell"
       hide-pagination flat bordered :rows="rateStore.rates" :columns="columns" row-key="id">
       <template v-slot:top>
         <div class="table-header row items-center full-width">
@@ -75,7 +75,7 @@
     </q-table>
     <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
       <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
-    </div>
+    </div> -->
   </div>
 </template>
 
