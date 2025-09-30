@@ -1,7 +1,8 @@
 import { defineStore, storeToRefs } from "pinia"
 import { api } from 'boot/axios'
 import { Rate } from "./types";
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import _ from 'lodash';
 
 export const useRateStore = defineStore('rates-store',()=>{
   const rates = ref<Rate[]>([]);
@@ -32,8 +33,13 @@ export const useRateStore = defineStore('rates-store',()=>{
     rates.value = rates.value.filter((rate) =>{ return rate.id != id } );
     // await requestLookup();
   }
+  const groupedByType = computed(() => {
+    const grouped = _.groupBy(rates.value, 'boqWorkParamsType');
+    return grouped
+  })
   return{
     rates,
+    groupedByType,
     loading,
     requestLookup,
     deleteRate,
