@@ -59,7 +59,8 @@ const optionItems = computed(() => {
 watch(openModal, (newValue) => {
   if (newValue) {
     if (editingNode.value) {
-      const locationId = editingNode.value.rawData.roomId;
+      let locationId = editingNode.value.rawData.roomId;
+      if (editingNode.value.rawData.roomNum) locationId += `_${editingNode.value.rawData.roomNum}`
       locationModel.value = optionItems.value.find(item => item.value == locationId)
     }
   }
