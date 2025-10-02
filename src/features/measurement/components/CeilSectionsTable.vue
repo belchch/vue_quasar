@@ -4,18 +4,21 @@
       Секции потолка
     </div>
     <q-table :rows="getRoomCeilSections(roomId, roomNum)" :columns="columns" :row-key="row => row.id" wrap-cells flat
-      bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
+      bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination class="ceil-table">
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="material" :props="props">
             {{ props.row.material?.name }}
             <cell-editor-section-material :value="props.row.material.id" block="ceil_section" :row="props.row" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="width">
             <cell-editor-section field="width" block="ceil_section" :value="props.row.width" :row="props.row" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="length" :props="props">
             <cell-editor-section field="length" block="ceil_section" :value="props.row.length" :row="props.row" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
@@ -122,3 +125,16 @@ const columns = [
     }
 ]
 </script>
+<style scoped>
+.ceil-table td .edit-icon {
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.ceil-table td:hover .edit-icon {
+  opacity: .5;
+}
+</style>

@@ -131,6 +131,14 @@ useMeasurementService = () => {
       }
     }
 
+    const updateWallSectionMeasurement = async (id:number, section: SectionMeasurementUpdateRequest) => {
+      const response = await WallSectionsMeasurementApi.update(id, section);
+      const indx = wallSectionMeasurements.value.findIndex(item => item.id == id);
+      if(indx>=0){
+        wallSectionMeasurements.value[indx] = response.data;
+      }
+    }
+
     const updateRoomMeasurement = async (roomMeasurement: RoomMeasurement) => {
         const request = toRoomUpdateRequest(roomMeasurement)
 
@@ -151,6 +159,7 @@ useMeasurementService = () => {
         updateFloorSectionMeasurement,
         updateFixedAssetMeasurement,
         updateCeilSectionMeasurement,
+        updateWallSectionMeasurement,
         createOpeningMeasurement,
         requestCeilSectionMeasurements,
         requestFloorSectionMeasurements,
