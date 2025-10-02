@@ -4,20 +4,22 @@
       hide-header hide-bottom hide-pagination bordered wrap-cells>
       <template v-slot:top-row>
         <q-tr class="main-row">
-          <q-th colspan="100%">
+          <q-td colspan="100%" style="text-align: center;">
             <div>СМЕТА</div>
             <div>на выполнение строительно-ремонтных работ</div>
-          </q-th>
+          </q-td>
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr class="second-row" :props="props" @click="props.expand = !props.expand">
-          <q-td>
+        <q-tr :props="props" @click="props.expand = !props.expand">
+          <q-td class="second-row">
             <span>{{ props.row.description }}</span>
           </q-td>
           <q-td auto-width style="text-align: right;">
-            <q-btn size="sm" color="primary" unelevated outline round dense
-              :icon="props.expand ? 'expand_less' : 'expand_more'" @click.stop="props.expand = !props.expand" />
+            <q-icon :name="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+              @click.stop="props.expand = !props.expand" size="sm" color="grey-7" />
+            <!-- <q-btn size="sm" color="primary" unelevated flat round dense
+              :icon="props.expand ? 'expand_less' : 'expand_more'" @click.stop="props.expand = !props.expand" /> -->
           </q-td>
         </q-tr>
 
@@ -88,11 +90,11 @@ onMounted(async() => {
 </script>
 <style scoped>
 .main-row{
-  background-color: #e2e2e2;
+  /* background-color: #e2e2e2; */
   font-weight: bold;
 }
 .second-row{
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
   font-weight: bold;
 }
 .edit-icon {

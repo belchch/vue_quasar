@@ -13,15 +13,15 @@
             <span class="text-h6 text-weight-regular">{{ props.row.title }}</span>
           </q-td>
           <q-td auto-width>
-            <q-btn size="sm" color="primary" unelevated outline round dense
-              :icon="props.expand ? 'expand_less' : 'expand_more'" @click.stop="props.expand = !props.expand" />
+            <q-icon :name="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+              @click.stop="props.expand = !props.expand" size="sm" color="grey-7" />
           </q-td>
         </q-tr>
 
         <q-tr v-show="props.expand" :props="props" no-hover>
           <q-td colspan="100%">
             <q-table :rows="rateStore.groupedByType[props.row.type] || []" :rows-per-page-options="[0]"
-              :columns="detailsColumn" row-key="id" flat dense>
+              :columns="detailsColumn" row-key="id" flat dense separator="cell" bordered>
               <template #body-cell-sources="props">
                 <q-td>
                   <RatePriceTable :rate="props.row" :sources="props.row.sources" />
