@@ -4,17 +4,22 @@
       Секции пола
     </div>
     <q-table :rows="getFloorCeilSections(roomId, roomNum)" :columns="columns" :row-key="row => row.id" wrap-cells flat
-      bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
+      bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination class="floor-table">
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="material" :props="props">
             {{ props.row.material?.name }}
+            <cell-editor-section-material field="materialId" :row="props.row" block="floor_section"
+              :value="props.row.material?.id as string" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="width">
-            {{ props.row.width }}
+            <CellEditorSection block="floor_section" :value="props.row.width || 0" field="width" :row="props.row" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="length" :props="props">
-            {{ props.row.length }}
+            <CellEditorSection block="floor_section" :value="props.row.length || 0" field="length" :row="props.row" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
@@ -47,6 +52,8 @@ import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
 import { useQuasar } from 'quasar';
+import CellEditorSection from './CellEditorSection.vue'
+import CellEditorSectionMaterial from './CellEditorSectionMaterial.vue'
 
 const $q = useQuasar();
 const { getFloorCeilSections } = storeToRefs(useMeasurementStore())
@@ -119,3 +126,16 @@ const columns = [
     }
 ]
 </script>
+<style scoped>
+.floor-table td .edit-icon {
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.floor-table td:hover .edit-icon {
+  opacity: .5;
+}
+</style>

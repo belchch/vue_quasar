@@ -3,8 +3,32 @@
     <div class="text-subtitle1 q-mb-sm">
       Конструктив
     </div>
-    <q-table :rows="getFixedAssets(roomId, roomNum)" :columns="columns" :row-key="row => row.id" wrap-cells flat
-      bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
+    <q-table :rows="getFixedAssets(roomId, roomNum)" :columns="columns" :row-key="row => row.id" class="fixed-table"
+      wrap-cells flat bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
+      <template #body-cell-name="props">
+        <q-td>
+          <CellEditorSection block="fixed" :value="props.row.name as string" field="name" type="string" :row="props.row" />
+          <q-icon name="edit" class="edit-icon" />
+        </q-td>
+      </template>
+      <template #body-cell-width="props">
+        <q-td>
+          <CellEditorSection block="fixed" :value="props.row.width || 0" field="width" :row="props.row" />
+          <q-icon name="edit" class="edit-icon" />
+        </q-td>
+      </template>
+      <template #body-cell-length="props">
+        <q-td>
+          <CellEditorSection block="fixed" :value="props.row.length || 0" field="length" :row="props.row" />
+          <q-icon name="edit" class="edit-icon" />
+        </q-td>
+      </template>
+      <template #body-cell-height="props">
+        <q-td>
+          <CellEditorSection block="fixed" :value="props.row.height || 0" field="height" :row="props.row" />
+          <q-icon name="edit" class="edit-icon" />
+        </q-td>
+      </template>
       <template v-slot:header-cell-actions>
         <q-th style="width: 100px;border-left: 0"></q-th>
       </template>
@@ -52,6 +76,7 @@ import { FixedAssetMeasurament } from '../stores/types';
 import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import { useQuasar } from 'quasar';
+import CellEditorSection from './CellEditorSection.vue'
 
 const { getFixedAssets } = storeToRefs(useMeasurementStore())
 const { deletefixedAssetMeasurement } = useMeasurementService()
@@ -123,6 +148,20 @@ const columns = [
     sortable: true
   },
   {
+    name: 'area',
+    label: 'Площадь',
+    align: 'left' as const,
+    field: 'area',
+    sortable: true
+  },
+  {
+    name: 'perimeter',
+    label: 'Периметр',
+    align: 'left' as const,
+    field: 'perimeter',
+    sortable: true
+  },
+  {
     name: 'actions',
     label: '',
     align: 'right' as const,
@@ -176,4 +215,16 @@ const columns = [
   right: 20px;
   z-index: 10000;
 }
+.fixed-table td .edit-icon {
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.fixed-table td:hover .edit-icon {
+  opacity: .5;
+}
+
 </style>

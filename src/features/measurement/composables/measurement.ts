@@ -7,8 +7,8 @@ import { FloorSectionsMeasurementApi } from "../api/floor-section-measurement-ap
 import { WallSectionsMeasurementApi } from "../api/wall-section-measurement-api"
 import { FixedAssetMeasurementApi } from "../api/fixed-asset-measurement-api"
 import { useMeasurementStore } from "../stores/measurement-store"
-import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreate } from "../stores/types"
-import { FixedAssetCreateRequest, OpeningMeasurementUpdateRequest, RoomMeasurementUpdateRequest } from "../api/types"
+import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreate, FloorSectionMeasurement } from "../stores/types"
+import { FixedAssetCreateRequest, OpeningMeasurementUpdateRequest, RoomMeasurementUpdateRequest, SectionMeasurementUpdateRequest, FixedAssetUpdateRequest } from "../api/types"
 
 export const
 useMeasurementService = () => {
@@ -108,6 +108,21 @@ useMeasurementService = () => {
       fixedAssetMeasurements.value = fixedAssetMeasurements.value.filter(item=> item.id != id)
     }
 
+    const updateFixedAssetMeasurement = async (id:number, fixedAssetMeasurement: FixedAssetUpdateRequest) => {
+      const response = await FixedAssetMeasurementApi.update(id, fixedAssetMeasurement)
+      const findIndx  = fixedAssetMeasurements.value.findIndex(item => item.id == id);
+      if(findIndx>=0) fixedAssetMeasurements.value[findIndx] = response.data;
+    }
+
+    const updateFloorSectionMeasurement = async (section: FloorSectionMeasurement) => {
+      const request = toFloorSectionUpdateRequest(section)
+      const response = await FloorSectionsMeasurementApi.update(section.id, request)
+      const indx = floorSectionMeasurements.value.findIndex(item => item.id == section.id);
+      if(indx>=0){
+        floorSectionMeasurements.value[indx] = response.data;
+      }
+    }
+
     const updateRoomMeasurement = async (roomMeasurement: RoomMeasurement) => {
         const request = toRoomUpdateRequest(roomMeasurement)
 
@@ -125,6 +140,8 @@ useMeasurementService = () => {
         deleteOpeningMeasurement,
         requestMeasurements,
         updateRoomMeasurement,
+        updateFloorSectionMeasurement,
+        updateFixedAssetMeasurement,
         createOpeningMeasurement,
         requestCeilSectionMeasurements,
         requestFloorSectionMeasurements,
@@ -156,4 +173,12 @@ const toOpeningUpdateRequest = (opening: OpeningMeasurement): OpeningMeasurement
         openingId: opening.opening.id,
         materialId: opening.material?.id,
     }
+}
+
+const toFloorSectionUpdateRequest = (section: FloorSectionMeasurement): SectionMeasurementUpdateRequest => {
+  return {
+    width: section.width,
+    length: section.length,
+    materialId: section.material?.id,
+  }
 }
