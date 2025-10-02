@@ -13,14 +13,13 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { BoqLocation } from '../api/types';
 import { useBoqLocationService } from '../composables/boq-location';
 import { useBoqWorkStore } from '../stores/boq-work-store';
 import BoqLocations from './BoqLocations.vue';
+import CommonWorksEditor from './CommonWorksEditor.vue';
 import WorkTable from './WorkTable.vue';
-import { BoqLocation } from '../api/types';
-import CommonWorksEditor from './CommonWorksEditor.vue'
-import { storeToRefs } from 'pinia';
 
 const { works } = storeToRefs(useBoqWorkStore())
 const { navigateLocation } = useBoqLocationService()

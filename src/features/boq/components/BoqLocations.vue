@@ -22,7 +22,7 @@
             <q-tr :props="props">
                 <q-td key="name" :props="props" @click="navigateLocation(props.row)">
                     <div class="text-accent" style="cursor: pointer;">
-                        {{ props.row.room.name }}
+                        {{ props.row.room.name }} {{ props.row.roomNum }}
                     </div>
                 </q-td>
                 <q-td key="area" :props="props">
