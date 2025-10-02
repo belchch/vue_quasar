@@ -9,12 +9,13 @@
         <q-tr :props="props">
           <q-td key="material" :props="props">
             {{ props.row.material?.name }}
+            <cell-editor-section-material :value="props.row.material.id" block="ceil_section" :row="props.row" />
           </q-td>
           <q-td key="width">
-            {{ props.row.width }}
+            <cell-editor-section field="width" block="ceil_section" :value="props.row.width" :row="props.row" />
           </q-td>
           <q-td key="length" :props="props">
-            {{ props.row.length }}
+            <cell-editor-section field="length" block="ceil_section" :value="props.row.length" :row="props.row" />
           </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
@@ -47,6 +48,8 @@ import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
 import { useQuasar } from 'quasar';
+import CellEditorSection from './CellEditorSection.vue'
+import CellEditorSectionMaterial from './CellEditorSectionMaterial.vue'
 
 const $q = useQuasar();
 const { getRoomCeilSections } = storeToRefs(useMeasurementStore())

@@ -10,13 +10,13 @@ import { useMeasurementService } from '../composables/measurement';
 import _ from 'lodash';
 import { useMaterialStore } from "src/features/lookup/material/stores/material-store";
 
-const { updateFloorSectionMeasurement } = useMeasurementService()
+const { updateFloorSectionMeasurement, updateCeilSectionMeasurement } = useMeasurementService()
 const materialStore = useMaterialStore()
 
 
 const { value, row, canEdit = true, block, } = defineProps<{
     value: string | number | undefined,
-    block: 'floor_section'
+    block: 'floor_section' | 'ceil_section',
     row: FloorSectionMeasurement,
     canEdit?: boolean
 }>()
@@ -35,6 +35,11 @@ const updateValue = async () => {
     update.material.id = localValue.value
     if(block === 'floor_section'){
       await updateFloorSectionMeasurement(update as FloorSectionMeasurement)
+    }
+    if(block === 'ceil_section'){
+      await updateCeilSectionMeasurement(row.id,{
+        ['materialId']: localValue.value as number
+      })
     }
 }
 </script>

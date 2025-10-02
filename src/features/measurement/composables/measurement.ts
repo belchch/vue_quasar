@@ -7,7 +7,7 @@ import { FloorSectionsMeasurementApi } from "../api/floor-section-measurement-ap
 import { WallSectionsMeasurementApi } from "../api/wall-section-measurement-api"
 import { FixedAssetMeasurementApi } from "../api/fixed-asset-measurement-api"
 import { useMeasurementStore } from "../stores/measurement-store"
-import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreate, FloorSectionMeasurement } from "../stores/types"
+import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreate, FloorSectionMeasurement, CeilSectionMeasurement } from "../stores/types"
 import { FixedAssetCreateRequest, OpeningMeasurementUpdateRequest, RoomMeasurementUpdateRequest, SectionMeasurementUpdateRequest, FixedAssetUpdateRequest } from "../api/types"
 
 export const
@@ -123,6 +123,14 @@ useMeasurementService = () => {
       }
     }
 
+    const updateCeilSectionMeasurement = async (id:number, section: SectionMeasurementUpdateRequest) => {
+      const response = await CeilSectionsMeasurementApi.update(id, section);
+      const indx = ceilSectionMeasurements.value.findIndex(item => item.id == id);
+      if(indx>=0){
+        ceilSectionMeasurements.value[indx] = response.data;
+      }
+    }
+
     const updateRoomMeasurement = async (roomMeasurement: RoomMeasurement) => {
         const request = toRoomUpdateRequest(roomMeasurement)
 
@@ -142,6 +150,7 @@ useMeasurementService = () => {
         updateRoomMeasurement,
         updateFloorSectionMeasurement,
         updateFixedAssetMeasurement,
+        updateCeilSectionMeasurement,
         createOpeningMeasurement,
         requestCeilSectionMeasurements,
         requestFloorSectionMeasurements,
@@ -182,3 +191,4 @@ const toFloorSectionUpdateRequest = (section: FloorSectionMeasurement): SectionM
     materialId: section.material?.id,
   }
 }
+
