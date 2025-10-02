@@ -46,7 +46,7 @@
       <template #body-cell-links="props">
         <q-td>
           <template v-for="rate in props.row.rates" :key="rate">
-            <div>{{ rate.url }}</div>
+            <div><a :href="rate.url" target="_blank">{{ rate.url }}</a></div>
           </template>
         </q-td>
       </template>

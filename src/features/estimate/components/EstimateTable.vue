@@ -1,6 +1,6 @@
 <template>
-  <div class="q-pt-md">
-    <q-table :rows="estimateStore.processedEstimateGroups || []" :rows-per-page-options="[0]" :row-key="(row)=>row"
+  <div class="q-pt-sm">
+    <q-table :rows="estimateStore.processedEstimateGroups || []" :rows-per-page-options="[0]" :row-key="(row: EstimateGroup) => getKey(row)"
       hide-header hide-bottom hide-pagination bordered wrap-cells>
       <template v-slot:top-row>
         <q-tr class="main-row">
@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Estimate } from 'src/features/estimate/api/types'
+import { Estimate,EstimateGroup } from 'src/features/estimate/api/types'
 import { useEstimateStore } from "src/features/estimate/stores/estimate-store"
 import { useEstimateService } from 'src/features/estimate/composables/estimate-service'
 import { useQuasar } from 'quasar';
@@ -70,6 +70,10 @@ import EstimateTableGroup from './EstimateTableGroup.vue'
 
 const estimateStore = useEstimateStore()
 const estimateService = useEstimateService()
+
+const getKey = (row: EstimateGroup) => {
+  return estimateStore.processedEstimateGroups.indexOf(row) + '_' + row.type;
+}
 
 onMounted(async() => {
   await estimateService.getEstimate()
@@ -90,12 +94,9 @@ onMounted(async() => {
 </script>
 <style scoped>
 .main-row{
-  /* background-color: #e2e2e2; */
-  font-weight: bold;
 }
 .second-row{
-  /* background-color: #eeeeee; */
-  font-weight: bold;
+
 }
 .edit-icon {
   opacity: 0;
