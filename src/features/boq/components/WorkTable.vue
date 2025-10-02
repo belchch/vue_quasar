@@ -40,8 +40,9 @@ import { BoqWork } from '../api/types';
 import WorkCellEditor from './WorkCellEditor.vue';
 import { ref } from 'vue';
 import { useBoqWorkService } from '../composables/boq-work';
+import { useEstimateService } from 'src/features/estimate/composables/estimate-service'
 const { updateWork } = useBoqWorkService()
-
+const estimateService = useEstimateService()
 const props = defineProps<{
     works: BoqWork[],
     editable: boolean,
@@ -63,6 +64,7 @@ const disableAllValue = () => {
 const setWorkDisabled = async (work: BoqWork, disabled: boolean) => {
     work.disabled = disabled
     await updateWork(work)
+    await estimateService.getEstimate()
 }
 
 const locationName = (row: BoqWork) => `${row.roomName || ''} ${row.roomNum || ''}`

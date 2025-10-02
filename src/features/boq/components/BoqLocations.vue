@@ -37,6 +37,7 @@
             </q-tr>
         </template>
     </q-table>
+    <EstimateTable />
 </template>
 <script lang="ts" setup>
 import { onMounted } from 'vue';
@@ -48,6 +49,7 @@ import LocationCellEditor from './LocationCellEditor.vue';
 import { BoqApi } from '../api/boq-api';
 import DownloadReportButton from 'src/components/DownloadReportButton.vue';
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
+import EstimateTable from 'src/features/estimate/components/EstimateTable.vue'
 
 const emits = defineEmits<{
     navigateLocation: [location: BoqLocation]
