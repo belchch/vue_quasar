@@ -1,33 +1,7 @@
 <template>
   <div>
-    <q-table :rows="works || []" :rows-per-page-options="[0]" :columns="columns" separator="cell" bordered row-key="id"
-      flat dense>
-      <!-- <template #body="props">
-        <q-tr :props="props">
-          <q-td v-if="props.rowIndex==0" :rowspan="props.row.rates.length">
-            {{ props.row.name }} {{ props.rowIndex }}
-          </q-td>
-          <q-td v-if="props.rowIndex == 0" :rowspan="props.row.rates.length">
-            {{ props.row.uom }}
-            {{ props.row.rates }}
-          </q-td>
-          <q-td v-if="props.rowIndex == 0" :rowspan="props.row.rates.length">
-            {{ props.row.volume }}
-          </q-td>
-          <q-td>
-            {{ props.rowIndex }}
-          </q-td>
-          <q-td>
-            {{ props.row.price }}
-          </q-td>
-          <q-td v-if="props.rowIndex == 0" :rowspan="props.row.rates.length">
-            {{ props.row.averagePrice }}
-          </q-td>
-          <q-td v-if="props.rowIndex == 0" :rowspan="props.row.rates.length">
-            {{ props.row.averageCost }}
-          </q-td>
-        </q-tr>
-      </template> -->
+    <q-table :rows="works || []" :rows-per-page-options="[10]" :columns="columns" separator="cell" bordered row-key="id"
+      flat dense wrap-cells>
       <template #header-cell-averageCost="props">
         <q-th :props="props" class="text-wrap">
           Средняя<br> рыночная<br> стоимость<br> (руб.)
@@ -57,16 +31,6 @@
           </template>
         </q-td>
       </template>
-      <template #bottom-row>
-        <q-tr class="text-weight-bold">
-          <q-td :colspan="4">
-            Итого по разделу, руб.
-          </q-td>
-          <q-td></q-td>
-          <q-td></q-td>
-          <q-td>{{ total }}</q-td>
-        </q-tr>
-      </template>
     </q-table>
   </div>
 </template>
@@ -75,9 +39,8 @@
 
 import { EstimateWork } from 'src/features/estimate/api/types';
 
-const { works, total } = defineProps<{
+const { works } = defineProps<{
   works: EstimateWork[],
-  total: number
 }>();
 
 

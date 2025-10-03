@@ -21,8 +21,11 @@ export const useEstimateStore = defineStore('estimate-work', () => {
       const sortedArray = _.sortBy(estimate.value?.groups, item => {
           return sortOrder[item.type] || 999;
       });
-      const filteredEmpty = sortedArray.filter(group => group.works?.length > 0)
-      return filteredEmpty;
+      const result = _.map(_.groupBy(sortedArray, 'type'), (items, type) => ({
+            type,
+            works: _.flatMap(items, 'works')
+      }));
+      return result;
     })
 
     return {

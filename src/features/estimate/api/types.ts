@@ -12,10 +12,12 @@ export type EstimateWork = {
   rates: EstimateRate[]
 }
 
+export type EstimateTypeItem = 'INTERIOR_DOOR' | 'FLOOR' | 'CEIL' | 'LOCATION_SUPPORTING' | 'WINDOW' | 'SUPPORTING' | 'ENTRANCE_DOOR'
+
 export type EstimateGroup = {
   description: string,
   total: number
-  type: 'INTERIOR_DOOR' | 'FLOOR' | 'CEIL' | 'LOCATION_SUPPORTING' | 'WINDOW' | 'SUPPORTING',
+  type: EstimateTypeItem,
   works: EstimateWork[]
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="q-pt-sm">
-    <q-table :rows="estimateStore.processedEstimateGroups || []" :rows-per-page-options="[0]" :row-key="(row: EstimateGroup) => getKey(row)"
+    <q-table :rows="estimateStore.processedEstimateGroups || []" :rows-per-page-options="[0]" :row-key="(row) => getKey(row)"
       hide-header hide-bottom hide-pagination bordered wrap-cells>
       <template v-slot:top-row>
         <q-tr class="main-row">
@@ -13,16 +13,13 @@
       <template v-slot:body="props">
         <q-tr :props="props" @click="props.expand = !props.expand">
           <q-td class="second-row">
-            <span>{{ props.row.description }}</span>
+            <span>{{ getGroupTitle(props.row.type) }}</span>
           </q-td>
           <q-td auto-width style="text-align: right;">
             <q-icon :name="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
               @click.stop="props.expand = !props.expand" size="sm" color="grey-7" />
-            <!-- <q-btn size="sm" color="primary" unelevated flat round dense
-              :icon="props.expand ? 'expand_less' : 'expand_more'" @click.stop="props.expand = !props.expand" /> -->
           </q-td>
         </q-tr>
-
         <q-tr v-show="props.expand" :props="props" no-hover>
           <q-td colspan="100%">
             <estimate-table-group :total="props.row.total" :works="props.row.works" />
@@ -61,17 +58,16 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Estimate,EstimateGroup } from 'src/features/estimate/api/types'
+import { EstimateTypeItem } from 'src/features/estimate/api/types'
 import { useEstimateStore } from "src/features/estimate/stores/estimate-store"
 import { useEstimateService } from 'src/features/estimate/composables/estimate-service'
-import { useQuasar } from 'quasar';
 import EstimateTableGroup from './EstimateTableGroup.vue'
 
 
 const estimateStore = useEstimateStore()
 const estimateService = useEstimateService()
 
-const getKey = (row: EstimateGroup) => {
+const getKey = (row:any) => {
   return estimateStore.processedEstimateGroups.indexOf(row) + '_' + row.type;
 }
 
@@ -79,25 +75,30 @@ onMounted(async() => {
   await estimateService.getEstimate()
 })
 
-// const groupHeaders = computed(() => {
-//   return Object.entries(rateStore.groupedByType).map(([type]) => ({
-//     type,
-//     title: getGroupTitle(type as ParamsType),
-//   }))
-// })
-
-// const getGroupTitle = (type: ParamsType) => {
-//   return ParamsTypeEnum[type];
-// }
+const getGroupTitle = (type: EstimateTypeItem) => {
+  switch (type) {
+    case 'INTERIOR_DOOR':
+      return 'Межкомнатные двери'
+    case 'ENTRANCE_DOOR':
+      return 'Входные двери'
+    case 'FLOOR':
+      return 'Пол'
+    case 'CEIL':
+      return 'Потолок'
+    case 'LOCATION_SUPPORTING':
+      return 'Дополнительные работы по помещению'
+    case 'WINDOW':
+      return 'Окна'
+    case 'SUPPORTING':
+      return 'Дополнительные работы'
+      default:
+        return ''
+  }
+}
 
 
 </script>
 <style scoped>
-.main-row{
-}
-.second-row{
-
-}
 .edit-icon {
   opacity: 0;
   transition: opacity 0.3s;
