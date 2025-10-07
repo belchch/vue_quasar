@@ -139,6 +139,15 @@ useMeasurementService = () => {
       }
     }
 
+    const updateOpeningMeasurement = async (id:number, opening: OpeningMeasurement) => {
+      const request = toOpeningUpdateRequest(opening);
+      const response = await OpeningMeasurementApi.update(id, request);
+      const indx = openingMeasurements.value?.findIndex(item => item.id == id);
+      if(indx>=0){
+        openingMeasurements.value[indx] = response.data;
+      }
+    }
+
     const updateRoomMeasurement = async (roomMeasurement: RoomMeasurement) => {
         const request = toRoomUpdateRequest(roomMeasurement)
 
@@ -160,6 +169,7 @@ useMeasurementService = () => {
         updateFixedAssetMeasurement,
         updateCeilSectionMeasurement,
         updateWallSectionMeasurement,
+        updateOpeningMeasurement,
         createOpeningMeasurement,
         requestCeilSectionMeasurements,
         requestFloorSectionMeasurements,

@@ -11,13 +11,18 @@ import { RoomMeasurement, FloorSectionMeasurement, FixedAssetMeasurament } from 
 import { useMeasurementService } from '../composables/measurement';
 import _ from 'lodash';
 
-const { updateFloorSectionMeasurement, updateFixedAssetMeasurement, updateCeilSectionMeasurement, updateWallSectionMeasurement } = useMeasurementService()
+const {
+  updateFloorSectionMeasurement,
+  updateFixedAssetMeasurement,
+  updateCeilSectionMeasurement,
+  updateWallSectionMeasurement,
+  updateOpeningMeasurement } = useMeasurementService()
 
 const { field, value = 0, row, canEdit = true, block, type = 'number' } = defineProps<{
     field: string,
     value: number | string | undefined ,
     type?: 'number' | 'string',
-    block: 'fixed' | 'floor_section' | 'ceil_section' | 'wall_section'
+    block: 'fixed' | 'floor_section' | 'ceil_section' | 'wall_section' | 'opening'
     row: FloorSectionMeasurement | FixedAssetMeasurament,
     canEdit?: boolean
 }>()
@@ -49,6 +54,8 @@ const updateValue = async () => {
         [field]: localValue.value
       })
     }
-    // await updateFloorSectionMeasurement(update)
+    if(block === 'opening'){
+      await updateOpeningMeasurement(row.id,update)
+    }
 }
 </script>

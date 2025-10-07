@@ -2,33 +2,42 @@
   <div v-if="rows.length > 0">
     <div class="text-subtitle1 q-mb-sm">Проемы</div>
     <q-table :rows="rows" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
-      :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
+      :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination class="opening-table">
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="opening" :props="props">
             {{ props.row.opening.name }}
+            <cell-editor-section-opening :value="props.row.opening.id" :row="props.row" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="material" :props="props">
             {{ props.row.material?.name }}
+            <cell-editor-section-material :value="props.row.material.id" block="opening" :row="props.row" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="width">
-            {{ props.row.width }}
+            <cell-editor-section field="width" :row="props.row" block="opening" :value="props.row.width" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="height" :props="props">
-            {{ props.row.height }}
+            <cell-editor-section field="height" :row="props.row" block="opening" :value="props.row.height" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
           </q-td>
           <q-td key="hasTrims" :props="props">
             {{ props.row.hasTrims ? 'Да' : 'Нет' }}
+            <cell-editor-section-bool field="hasTrims" :row="props.row" :value="props.row.hasTrims" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="trimWidth" :props="props">
-            {{ props.row.trimWidth || '-' }}
+            <cell-editor-section field="trimWidth" :row="props.row" block="opening" :value="props.row.trimWidth" />
+            <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="actions" :props="props">
-            <q-btn class="action-btn" v-if="props.row.photoUrls.length" size="sm" flat round color="primary" icon="o_image"
-              @click.stop="openPhotos(props.row.photoUrls)">
+            <q-btn class="action-btn" v-if="props.row.photoUrls.length" size="sm" flat round color="primary"
+              icon="o_image" @click.stop="openPhotos(props.row.photoUrls)">
               <q-tooltip anchor="top middle" self="bottom middle">
                 Посмотреть фотографии
               </q-tooltip>
@@ -51,6 +60,10 @@ import { computed, ref } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
 import { useQuasar } from 'quasar';
+import CellEditorSectionMaterial from './CellEditorSectionMaterial.vue'
+import CellEditorSection from './CellEditorSection.vue'
+import CellEditorSectionOpening from './CellEditorSectionOpening.vue'
+import CellEditorSectionBool from './CellEditorSectionBool.vue'
 
 const $q = useQuasar();
 const { openingMeasurements } = storeToRefs(useMeasurementStore())
@@ -75,11 +88,6 @@ const rows = computed(() => {
         if(roomNum) return _isRightLocation(item);
         else return ( item.roomNum == null || item.roomNum == 1);
       }
-      // if(!item.roomNum)
-      // if(roomNum && item.roomNum){
-      //   return item.room.id == roomId && item.roomNum == roomNum;
-      // }
-      // return item.room.id == roomId
     }) || []
 })
 const _isRightLocation = (oItem:OpeningMeasurement)=>{
@@ -123,7 +131,7 @@ const columns = [
     {
         name: 'height',
         field: (row: OpeningMeasurement) => row.height,
-        label: 'Длина',
+        label: 'Высота',
         align: 'left' as const,
     },
     {
@@ -152,3 +160,16 @@ const columns = [
     }
 ]
 </script>
+<style scoped>
+.opening-table td .edit-icon {
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.opening-table td:hover .edit-icon {
+  opacity: .5;
+}
+</style>

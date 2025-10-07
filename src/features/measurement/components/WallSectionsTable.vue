@@ -13,12 +13,10 @@
             <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="width">
-            {{ props.row.width }}
             <cell-editor-section field="width" :row="props.row" block="wall_section" :value="props.row.width" />
             <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="height" :props="props">
-            {{ props.row.height }}
             <cell-editor-section field="height" :row="props.row" block="wall_section" :value="props.row.height" />
             <q-icon name="edit" class="edit-icon" />
           </q-td>
