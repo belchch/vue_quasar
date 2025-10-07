@@ -2,21 +2,6 @@
   <div>
     <q-table :rows="works || []" :rows-per-page-options="[10]" :columns="columns" separator="cell" bordered row-key="id"
       flat dense wrap-cells>
-      <template #header-cell-averageCost="props">
-        <q-th :props="props" class="text-wrap">
-          Средняя<br> рыночная<br> стоимость<br> (руб.)
-        </q-th>
-      </template>
-      <template #header-cell-averagePrice="props">
-        <q-th :props="props" class="text-wrap">
-          Средняя<br>цена<br>(руб.)
-        </q-th>
-      </template>
-      <template #header-cell-price="props">
-        <q-th :props="props" class="text-wrap">
-          Цена<br>услуги<br>(руб.)
-        </q-th>
-      </template>
       <template #body-cell-links="props">
         <q-td>
           <template v-for="rate in props.row.rates" :key="rate">
@@ -31,6 +16,16 @@
           </template>
         </q-td>
       </template>
+      <template #bottom-row>
+        <q-tr>
+          <q-td :colspan="4">
+            Итого по разделу, руб.
+          </q-td>
+          <q-td></q-td>
+          <q-td></q-td>
+          <q-td>{{ total }}</q-td>
+        </q-tr>
+      </template>
     </q-table>
   </div>
 </template>
@@ -39,8 +34,9 @@
 
 import { EstimateWork } from 'src/features/estimate/api/types';
 
-const { works } = defineProps<{
+const { works, total } = defineProps<{
   works: EstimateWork[],
+  total: number
 }>();
 
 
@@ -90,7 +86,3 @@ const columns = [
 ]
 
 </script>
-
-<style lang="scss" scoped>
-
-</style>
