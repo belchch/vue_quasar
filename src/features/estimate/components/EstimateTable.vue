@@ -47,6 +47,12 @@
         </q-tr>
         <q-tr class="main-row">
           <q-td>
+            Транспортные расходы (5% от итоговой суммы), руб
+          </q-td>
+          <q-td>{{ estimateStore.estimate?.transportation }}</q-td>
+        </q-tr>
+        <q-tr class="main-row">
+          <q-td>
             Итого по всем разделам с непредвиденными расходами, руб.
           </q-td>
           <q-td>{{ estimateStore.estimate?.total }}</q-td>

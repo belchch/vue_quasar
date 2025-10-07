@@ -26,5 +26,6 @@ export type Estimate = {
     unexpectedExpenses: number,
     worksTotal: number,
     total: number,
+    transportation: number,
     groups: EstimateGroup[]
 }
