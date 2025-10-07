@@ -1,42 +1,39 @@
 <template>
-    <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
-        :pagination="{ rowsPerPage: 20 }" separator="cell">
-        <template v-slot:top>
-            <div class="row q-gutter-md">
-                <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
-                Сформировать
-            </q-btn>
-            <template v-if="boq">
-                <!-- <q-btn @click="BoqApi.buildReport(boq.id)" color="primary" outline size="sm">
+  <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
+    :pagination="{ rowsPerPage: 20 }" separator="cell">
+    <template v-slot:top>
+      <div class="row q-gutter-md">
+        <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
+          Сформировать
+        </q-btn>
+        <template v-if="boq">
+          <!-- <q-btn @click="BoqApi.buildReport(boq.id)" color="primary" outline size="sm">
                     Скачать
                 </q-btn> -->
-                <DownloadReportButton
-                    label="Скачать"
-                    :disable="false"
-                    :api-fn="async () => ( await BoqApi.buildReport(selectedInspectionId!!)).data"
-                />
-            </template>
-            </div>
+          <DownloadReportButton label="Скачать" :disable="false"
+            :api-fn="async () => ( await BoqApi.buildReport(selectedInspectionId!!)).data" />
         </template>
-        <template v-slot:body="props">
-            <q-tr :props="props">
-                <q-td key="name" :props="props" @click="navigateLocation(props.row)">
-                    <div class="text-accent" style="cursor: pointer;">
-                        {{ props.row.room.name }} {{ props.row.roomNum }}
-                    </div>
-                </q-td>
-                <q-td key="area" :props="props">
-                    <LocationCellEditor field="area" :value="props.row.area" :row="props.row" />
-                </q-td>
-                <q-td key="height">
-                    <LocationCellEditor field="height" :value="props.row.height" :row="props.row" />
-                </q-td>
-                <q-td key="perimeter" :props="props">
-                    <LocationCellEditor field="perimeter" :value="props.row.perimeter" :row="props.row" />
-                </q-td>
-            </q-tr>
-        </template>
-    </q-table>
+      </div>
+    </template>
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td key="name" :props="props" @click="navigateLocation(props.row)">
+          <div class="text-accent" style="cursor: pointer;">
+            {{ props.row.room.name }} {{ props.row.roomNum }}
+          </div>
+        </q-td>
+        <q-td key="area" :props="props" class="cell-edit">
+          <LocationCellEditor field="area" :value="props.row.area" :row="props.row" />
+        </q-td>
+        <q-td key="height" class="cell-edit">
+          <LocationCellEditor field="height" :value="props.row.height" :row="props.row" />
+        </q-td>
+        <q-td key="perimeter" :props="props" class="cell-edit">
+          <LocationCellEditor field="perimeter" :value="props.row.perimeter" :row="props.row" />
+        </q-td>
+      </q-tr>
+    </template>
+  </q-table>
 </template>
 <script lang="ts" setup>
 import { onMounted } from 'vue';
@@ -89,3 +86,20 @@ const columns = [
 ]
 
 </script>
+<style scoped>
+.cell-edit :deep(.edit-icon) {
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.cell-edit:hover {
+  cursor: pointer;
+}
+
+.cell-edit:hover :deep(.edit-icon) {
+  opacity: .5;
+}
+</style>
