@@ -9,7 +9,7 @@
         <q-tr :props="props">
           <q-td key="material" :props="props">
             {{ props.row.material?.name }}
-            <cell-editor-section-material :value="props.row.material.id" block="wall_section" :row="props.row" />
+            <cell-editor-section-material :value="props.row.material?.id" block="wall_section" :row="props.row" />
             <q-icon name="edit" class="edit-icon" />
           </q-td>
           <q-td key="width">
