@@ -1,5 +1,5 @@
 import {api} from 'boot/axios'
-import { CeilSectionMeasurement,SectionMeasurementCreate } from '../stores/types'
+import { CeilSectionMeasurement,SectionMeasurementCreateRequest } from '../stores/types'
 import { SectionMeasurementUpdateRequest } from './types'
 
 
@@ -20,7 +20,7 @@ export const CeilSectionsMeasurementApi = {
             }
         })
     },
-    create(request: SectionMeasurementCreate) {
+    create(request: SectionMeasurementCreateRequest) {
       return api.post<CeilSectionMeasurement>(`/api/ceil-section-measurement`, request);
     },
     update(id: number, request: SectionMeasurementUpdateRequest) {

@@ -51,7 +51,7 @@ export type FloorSectionMeasurement = {
     photoUrls: string[]
 }
 
-export type SectionMeasurementCreate = {
+export type SectionMeasurementCreateRequest = {
     inspectionId?: number,
     roomId?: number,
     roomNum?: number,

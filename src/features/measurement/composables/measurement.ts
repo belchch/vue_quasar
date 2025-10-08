@@ -7,7 +7,7 @@ import { FloorSectionsMeasurementApi } from "../api/floor-section-measurement-ap
 import { WallSectionsMeasurementApi } from "../api/wall-section-measurement-api"
 import { FixedAssetMeasurementApi } from "../api/fixed-asset-measurement-api"
 import { useMeasurementStore } from "../stores/measurement-store"
-import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreate, FloorSectionMeasurement, CeilSectionMeasurement } from "../stores/types"
+import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreateRequest, FloorSectionMeasurement, CeilSectionMeasurement, WallSectionMeasurement } from "../stores/types"
 import { FixedAssetCreateRequest, OpeningMeasurementUpdateRequest, RoomMeasurementUpdateRequest, SectionMeasurementUpdateRequest, FixedAssetUpdateRequest } from "../api/types"
 
 export const
@@ -68,17 +68,17 @@ useMeasurementService = () => {
         await requestMeasurements()
     }
 
-    const createFloorSectionMeasurement = async (request: SectionMeasurementCreate) => {
+    const createFloorSectionMeasurement = async (request: SectionMeasurementCreateRequest) => {
       const response = await FloorSectionsMeasurementApi.create(request)
       floorSectionMeasurements.value.push(response.data);
     }
 
-    const createCeilSectionMeasurement = async (request: SectionMeasurementCreate) => {
+    const createCeilSectionMeasurement = async (request: SectionMeasurementCreateRequest) => {
       const response = await CeilSectionsMeasurementApi.create(request)
       ceilSectionMeasurements.value.push(response.data);
     }
 
-    const createWallSectionMeasurement = async (request: SectionMeasurementCreate) => {
+    const createWallSectionMeasurement = async (request: SectionMeasurementCreateRequest) => {
       const response = await WallSectionsMeasurementApi.create(request)
       wallSectionMeasurements.value.push(response.data);
     }
@@ -114,25 +114,27 @@ useMeasurementService = () => {
       if(findIndx>=0) fixedAssetMeasurements.value[findIndx] = response.data;
     }
 
-    const updateFloorSectionMeasurement = async (section: FloorSectionMeasurement) => {
-      const request = toFloorSectionUpdateRequest(section)
-      const response = await FloorSectionsMeasurementApi.update(section.id, request)
-      const indx = floorSectionMeasurements.value.findIndex(item => item.id == section.id);
+    const updateFloorSectionMeasurement = async (id:number, section: FloorSectionMeasurement) => {
+      const request = toSectionUpdateRequest(section)
+      const response = await FloorSectionsMeasurementApi.update(id, request)
+      const indx = floorSectionMeasurements.value.findIndex(item => item.id == id);
       if(indx>=0){
         floorSectionMeasurements.value[indx] = response.data;
       }
     }
 
-    const updateCeilSectionMeasurement = async (id:number, section: SectionMeasurementUpdateRequest) => {
-      const response = await CeilSectionsMeasurementApi.update(id, section);
+    const updateCeilSectionMeasurement = async (id:number, section: CeilSectionMeasurement) => {
+      const request = toSectionUpdateRequest(section)
+      const response = await CeilSectionsMeasurementApi.update(id, request);
       const indx = ceilSectionMeasurements.value.findIndex(item => item.id == id);
       if(indx>=0){
         ceilSectionMeasurements.value[indx] = response.data;
       }
     }
 
-    const updateWallSectionMeasurement = async (id:number, section: SectionMeasurementUpdateRequest) => {
-      const response = await WallSectionsMeasurementApi.update(id, section);
+    const updateWallSectionMeasurement = async (id:number, section: WallSectionMeasurement) => {
+      const request = toSectionUpdateRequest(section)
+      const response = await WallSectionsMeasurementApi.update(id, request);
       const indx = wallSectionMeasurements.value.findIndex(item => item.id == id);
       if(indx>=0){
         wallSectionMeasurements.value[indx] = response.data;
@@ -203,10 +205,10 @@ const toOpeningUpdateRequest = (opening: OpeningMeasurement): OpeningMeasurement
     }
 }
 
-const toFloorSectionUpdateRequest = (section: FloorSectionMeasurement): SectionMeasurementUpdateRequest => {
+type SectionsMeasurement = FloorSectionMeasurement | CeilSectionMeasurement | WallSectionMeasurement
+const toSectionUpdateRequest = (section: SectionsMeasurement): SectionMeasurementUpdateRequest => {
   return {
-    width: section.width,
-    length: section.length,
+    ...section,
     materialId: section.material?.id,
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="getWallCeilSections(roomId,roomNum).length > 0">
+  <div v-if="getWallCeilSections(roomId, roomNum).length > 0">
     <div class="text-subtitle1 q-mb-sm">
       Секции стены
     </div>
@@ -9,16 +9,16 @@
         <q-tr :props="props">
           <q-td key="material" :props="props">
             {{ props.row.material?.name }}
-            <cell-editor-section-material :value="props.row.material?.id" block="wall_section" :row="props.row" />
-            <q-icon name="edit" class="edit-icon" />
+            <SectionMaterialCellEditor :api-fn="updateWallSectionMeasurement" :value="props.row.material?.id"
+              :row="props.row" />
           </q-td>
           <q-td key="width">
-            <cell-editor-section field="width" :row="props.row" block="wall_section" :value="props.row.width" />
-            <q-icon name="edit" class="edit-icon" />
+            <SectionCellEditor :api-fn="updateWallSectionMeasurement" field="width" :row="props.row"
+              :value="props.row.width" />
           </q-td>
           <q-td key="height" :props="props">
-            <cell-editor-section field="height" :row="props.row" block="wall_section" :value="props.row.height" />
-            <q-icon name="edit" class="edit-icon" />
+            <SectionCellEditor :api-fn="updateWallSectionMeasurement" field="height" :row="props.row"
+              :value="props.row.height" />
           </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
@@ -51,12 +51,12 @@ import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
 import { useQuasar } from 'quasar';
-import CellEditorSection from './CellEditorSection.vue'
-import CellEditorSectionMaterial from './CellEditorSectionMaterial.vue'
+import SectionCellEditor from './SectionCellEditor.vue'
+import SectionMaterialCellEditor from './SectionMaterialCellEditor.vue'
 
 const $q = useQuasar();
 const { getWallCeilSections } = storeToRefs(useMeasurementStore())
-const { deleteWallSectionMeasurement, requestWallSectionMeasurements } = useMeasurementService()
+const { deleteWallSectionMeasurement, updateWallSectionMeasurement } = useMeasurementService()
 
 const photos = ref<string[]>([])
 const showLightbox = ref(false);
@@ -65,12 +65,10 @@ const openPhotos = (urls: string[]) => {
   showLightbox.value = true;
 }
 
-const rows = ref<WallSectionMeasurement[]>([]);
-
-const { roomId, roomNum, canEdit=true} = defineProps<{
-    roomId: number,
-    roomNum?: number | undefined,
-    canEdit?: boolean
+const { roomId, roomNum, canEdit = true } = defineProps<{
+  roomId: number,
+  roomNum?: number | undefined,
+  canEdit?: boolean
 }>()
 
 const deleteRow = (id: number) => {
@@ -88,59 +86,42 @@ const deleteRow = (id: number) => {
   });
 }
 
-// onMounted(async () => {
-//   rows.value = await requestWallSectionMeasurements(roomId)
-// });
-
 const columns = [
-    {
-        name: 'material',
-        field: (row: WallSectionMeasurement) => row.material?.name,
-        label: 'Материал',
-        align: 'left' as const,
-    },
-    {
-        name: 'width',
-        field: (row: WallSectionMeasurement) => row.width,
-        label: 'Ширина',
-        align: 'left' as const,
-    },
-    {
-        name: 'height',
-        field: (row: WallSectionMeasurement) => row.height,
-        label: 'Высота',
-        align: 'left' as const,
-    },
-    {
-        name: 'area',
-        field: (row: WallSectionMeasurement) => row.area,
-        label: 'Площадь',
-        align: 'left' as const,
-    },
-    {
-      name: 'perimeter',
-      field: (row: WallSectionMeasurement) => row.perimeter,
-      label: 'Периметр',
-      align: 'left' as const,
-    },
-    {
-        name: 'actions',
-        field: '',
-        label: '',
-        align: 'right' as const
-    }
+  {
+    name: 'material',
+    field: (row: WallSectionMeasurement) => row.material?.name,
+    label: 'Материал',
+    align: 'left' as const,
+  },
+  {
+    name: 'width',
+    field: (row: WallSectionMeasurement) => row.width,
+    label: 'Ширина',
+    align: 'left' as const,
+  },
+  {
+    name: 'height',
+    field: (row: WallSectionMeasurement) => row.height,
+    label: 'Высота',
+    align: 'left' as const,
+  },
+  {
+    name: 'area',
+    field: (row: WallSectionMeasurement) => row.area,
+    label: 'Площадь',
+    align: 'left' as const,
+  },
+  {
+    name: 'perimeter',
+    field: (row: WallSectionMeasurement) => row.perimeter,
+    label: 'Периметр',
+    align: 'left' as const,
+  },
+  {
+    name: 'actions',
+    field: '',
+    label: '',
+    align: 'right' as const
+  }
 ]
 </script>
-<style scoped>
-.wall-table td .edit-icon {
-  opacity: 0;
-  transition: opacity 0.3s;
-  position: absolute;
-  top: 2px;
-  right: 2px;
-}
-
-.wall-table td:hover .edit-icon {
-  opacity: .5;
-}
-</style>

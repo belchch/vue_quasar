@@ -9,16 +9,16 @@
         <q-tr :props="props">
           <q-td key="material" :props="props">
             {{ props.row.material?.name }}
-            <cell-editor-section-material :value="props.row.material?.id" block="ceil_section" :row="props.row" />
-            <q-icon name="edit" class="edit-icon" />
+            <SectionMaterialCellEditor :api-fn="updateCeilSectionMeasurement" :value="props.row.material?.id"
+              block="ceil_section" :row="props.row" />
           </q-td>
           <q-td key="width">
-            <cell-editor-section field="width" block="ceil_section" :value="props.row.width" :row="props.row" />
-            <q-icon name="edit" class="edit-icon" />
+            <SectionCellEditor :api-fn="updateCeilSectionMeasurement" field="width" block="ceil_section"
+              :value="props.row.width" :row="props.row" />
           </q-td>
           <q-td key="length" :props="props">
-            <cell-editor-section field="length" block="ceil_section" :value="props.row.length" :row="props.row" />
-            <q-icon name="edit" class="edit-icon" />
+            <SectionCellEditor :api-fn="updateCeilSectionMeasurement" field="length" block="ceil_section"
+              :value="props.row.length" :row="props.row" />
           </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
@@ -51,17 +51,17 @@ import { ref, onMounted } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import LightBoxImage from 'src/components/LightBoxImage.vue'
 import { useQuasar } from 'quasar';
-import CellEditorSection from './CellEditorSection.vue'
-import CellEditorSectionMaterial from './CellEditorSectionMaterial.vue'
+import SectionCellEditor from './SectionCellEditor.vue'
+import SectionMaterialCellEditor from './SectionMaterialCellEditor.vue'
 
 const $q = useQuasar();
 const { getRoomCeilSections } = storeToRefs(useMeasurementStore())
-const { deleteCeilSectionMeasurement } = useMeasurementService()
+const { deleteCeilSectionMeasurement, updateCeilSectionMeasurement } = useMeasurementService()
 
-const { roomId, roomNum, canEdit=true} = defineProps<{
-    roomId: number,
-    roomNum?: number | undefined,
-    canEdit?: boolean,
+const { roomId, roomNum, canEdit = true } = defineProps<{
+  roomId: number,
+  roomNum?: number | undefined,
+  canEdit?: boolean,
 }>()
 
 const deleteRow = (id: number) => {
@@ -87,54 +87,41 @@ const openPhotos = (urls: string[]) => {
 }
 
 const columns = [
-    {
-        name: 'material',
-        field: (row: CeilSectionMeasurement) => row.material?.name,
-        label: 'Материал',
-        align: 'left' as const,
-    },
-    {
-        name: 'width',
-        field: (row: CeilSectionMeasurement) => row.width,
-        label: 'Ширина',
-        align: 'left' as const,
-    },
-    {
-        name: 'length',
-        field: (row: CeilSectionMeasurement) => row.length,
-        label: 'Длина',
-        align: 'left' as const,
-    },
-    {
-        name: 'area',
-        field: (row: CeilSectionMeasurement) => row.area,
-        label: 'Площадь',
-        align: 'left' as const,
-    },
-    {
-      name: 'perimeter',
-      field: (row: CeilSectionMeasurement) => row.perimeter,
-      label: 'Периметр',
-      align: 'left' as const,
-    },
-    {
-        name: 'actions',
-        field: '',
-        label: '',
-        align: 'right' as const
-    }
+  {
+    name: 'material',
+    field: (row: CeilSectionMeasurement) => row.material?.name,
+    label: 'Материал',
+    align: 'left' as const,
+  },
+  {
+    name: 'width',
+    field: (row: CeilSectionMeasurement) => row.width,
+    label: 'Ширина',
+    align: 'left' as const,
+  },
+  {
+    name: 'length',
+    field: (row: CeilSectionMeasurement) => row.length,
+    label: 'Длина',
+    align: 'left' as const,
+  },
+  {
+    name: 'area',
+    field: (row: CeilSectionMeasurement) => row.area,
+    label: 'Площадь',
+    align: 'left' as const,
+  },
+  {
+    name: 'perimeter',
+    field: (row: CeilSectionMeasurement) => row.perimeter,
+    label: 'Периметр',
+    align: 'left' as const,
+  },
+  {
+    name: 'actions',
+    field: '',
+    label: '',
+    align: 'right' as const
+  }
 ]
 </script>
-<style scoped>
-.ceil-table td .edit-icon {
-  opacity: 0;
-  transition: opacity 0.3s;
-  position: absolute;
-  top: 2px;
-  right: 2px;
-}
-
-.ceil-table td:hover .edit-icon {
-  opacity: .5;
-}
-</style>

@@ -26,22 +26,18 @@
               <q-td key="declaredArea" :props="props">
                 <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.declaredArea as number"
                   field="declaredArea" :row="props.row as RoomMeasurement" />
-                <q-icon name="edit" class="edit-icon" />
               </q-td>
               <q-td key="width">
                 <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.width as number"
                   field="width" :row="props.row as RoomMeasurement" />
-                <q-icon name="edit" class="edit-icon" />
               </q-td>
               <q-td key="length" :props="props">
                 <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.length as number"
                   field="length" :row="props.row as RoomMeasurement" />
-                <q-icon name="edit" class="edit-icon" />
               </q-td>
               <q-td key="height" :props="props">
                 <CellEditor :can-edit="hasPermission(['measurement.update'])" :value="props.row.height as number"
                   field="height" :row="props.row as RoomMeasurement" />
-                <q-icon name="edit" class="edit-icon" />
               </q-td>
               <q-td key="floorArea" :props="props">
                 {{ props.row.floorArea }}
@@ -249,20 +245,8 @@ onMounted(async () => {
 
 </script>
 <style scoped>
-.edit-icon {
-  opacity: 0;
-  transition: opacity 0.3s;
-  position: absolute;
-  top: 2px;
-  right: 2px;
-}
-
 td:hover {
   cursor: pointer;
-}
-
-td:hover .edit-icon {
-  opacity: .5;
 }
 
 .action-btn {

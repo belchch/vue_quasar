@@ -1,5 +1,5 @@
 <template>
-  <div v-if="getFixedAssets(roomId,roomNum).length > 0">
+  <div v-if="getFixedAssets(roomId, roomNum).length > 0">
     <div class="text-subtitle1 q-mb-sm">
       Конструктив
     </div>
@@ -7,26 +7,26 @@
       wrap-cells flat bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
       <template #body-cell-name="props">
         <q-td>
-          <CellEditorSection block="fixed" :value="props.row.name as string" field="name" type="string" :row="props.row" />
-          <q-icon name="edit" class="edit-icon" />
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.name as string" field="name"
+            type="string" :row="props.row" />
         </q-td>
       </template>
       <template #body-cell-width="props">
         <q-td>
-          <CellEditorSection block="fixed" :value="props.row.width || 0" field="width" :row="props.row" />
-          <q-icon name="edit" class="edit-icon" />
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.width || 0" field="width"
+            :row="props.row" />
         </q-td>
       </template>
       <template #body-cell-length="props">
         <q-td>
-          <CellEditorSection block="fixed" :value="props.row.length || 0" field="length" :row="props.row" />
-          <q-icon name="edit" class="edit-icon" />
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.length || 0" field="length"
+            :row="props.row" />
         </q-td>
       </template>
       <template #body-cell-height="props">
         <q-td>
-          <CellEditorSection block="fixed" :value="props.row.height || 0" field="height" :row="props.row" />
-          <q-icon name="edit" class="edit-icon" />
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.height || 0" field="height"
+            :row="props.row" />
         </q-td>
       </template>
       <template v-slot:header-cell-actions>
@@ -73,13 +73,13 @@
 import { storeToRefs } from 'pinia';
 import { useMeasurementStore } from '../stores/measurement-store';
 import { FixedAssetMeasurament } from '../stores/types';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import { useQuasar } from 'quasar';
-import CellEditorSection from './CellEditorSection.vue'
+import SectionCellEditor from './SectionCellEditor.vue'
 
 const { getFixedAssets } = storeToRefs(useMeasurementStore())
-const { deletefixedAssetMeasurement } = useMeasurementService()
+const { deletefixedAssetMeasurement, updateFixedAssetMeasurement } = useMeasurementService()
 
 const rows = ref<FixedAssetMeasurament[]>([]);
 const $q = useQuasar();
@@ -88,10 +88,10 @@ const showLightbox = ref(false);
 const photos = ref<string[]>([]);
 const slide = ref(0);
 
-const { roomId, roomNum, canEdit=true} = defineProps<{
-    roomId: number,
-    roomNum?: number | undefined,
-    canEdit?: boolean
+const { roomId, roomNum, canEdit = true } = defineProps<{
+  roomId: number,
+  roomNum?: number | undefined,
+  canEdit?: boolean
 }>()
 
 const openPhotos = (urls: string[]) => {
@@ -114,9 +114,6 @@ const confirmDelete = (row: any) => {
     }
   });
 };
-// onMounted(async () => {
-//   rows.value = await requestWallSectionMeasurements(roomId)
-// });
 
 const columns = [
   {
@@ -202,29 +199,15 @@ const columns = [
   height: auto;
 }
 
-/* Для одиночного изображения */
 .single-img {
   max-height: 90vh;
   max-width: 100vw;
 }
 
-/* Кнопка закрытия */
 .dialog-img-close-btn {
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 10000;
 }
-.fixed-table td .edit-icon {
-  opacity: 0;
-  transition: opacity 0.3s;
-  position: absolute;
-  top: 2px;
-  right: 2px;
-}
-
-.fixed-table td:hover .edit-icon {
-  opacity: .5;
-}
-
 </style>
