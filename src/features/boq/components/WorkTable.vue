@@ -17,7 +17,7 @@
         <q-td key="unitOfMeasure" :props="props">
           {{ uomDescription(props.row.rate.unitOfMeasure) }}
         </q-td>
-        <q-td key="volume" :class="editable?'ceil-edit':''">
+        <q-td key="volume" :class="editable ? 'ceil-edit' : ''">
           <template v-if="editable">
             <WorkCellEditor field="volume" :row="props.row" :value="props.row.volume" />
             <q-icon name="edit" class="edit-icon" />
@@ -25,7 +25,7 @@
           <div v-else>{{ props.row.volume }}</div>
         </q-td>
         <q-td v-if="showLocation" key="location" :props="props">
-          {{ locationName(props.row)}}
+          {{ locationName(props.row) }}
         </q-td>
       </q-tr>
     </template>
@@ -45,70 +45,67 @@ import { useBoqWorkService } from '../composables/boq-work';
 const { updateWork } = useBoqWorkService()
 
 const props = defineProps<{
-    works: BoqWork[],
-    editable: boolean,
-    showLocation: boolean
+  works: BoqWork[],
+  editable: boolean,
+  showLocation: boolean
 }>()
 
 
 const setDisabledAll = (value: boolean) => {
-    props.works.forEach(async item => {
-        item.disabled = value
-        await updateWork(item)
-    })
+  props.works.forEach(async item => {
+    item.disabled = value
+    await updateWork(item)
+  })
 }
 
 const disableAllValue = () => {
-    return props.works.filter(item => item.disabled).length == 0
+  return props.works.filter(item => item.disabled).length == 0
 }
 
 const setWorkDisabled = async (work: BoqWork, disabled: boolean) => {
-    work.disabled = disabled
-    await updateWork(work)
+  work.disabled = disabled
+  await updateWork(work)
 }
 
 const locationName = (row: BoqWork) => `${row.roomName || ''} ${row.roomNum || ''}`
 
 const columns = [
-    {
-        name: 'name',
-        field: (row: BoqWork) => row.rate.name,
-        label: 'Работа',
-        align: 'left' as const,
-    },
-    {
-        name: 'unitOfMeasure',
-        field: (row: BoqWork) => uomDescription(row.rate.unitOfMeasure),
-        label: 'Ед. изм.',
-        align: 'left' as const,
-    },
-    {
-        name: 'volume',
-        field: (row: BoqWork) => row.volume,
-        label: 'Объем',
-        align: 'left' as const,
-    }
+  {
+    name: 'name',
+    field: (row: BoqWork) => row.rate.name,
+    label: 'Работа',
+    align: 'left' as const,
+  },
+  {
+    name: 'unitOfMeasure',
+    field: (row: BoqWork) => uomDescription(row.rate.unitOfMeasure),
+    label: 'Ед. изм.',
+    align: 'left' as const,
+  },
+  {
+    name: 'volume',
+    field: (row: BoqWork) => row.volume,
+    label: 'Объем',
+    align: 'left' as const,
+  }
 ].concat(
-    props.showLocation ? [{
-        name: 'location',
-        field: (row: BoqWork) => locationName(row),
-        label: 'Локация',
-        align: 'left' as const,
-    }] : []
+  props.showLocation ? [{
+    name: 'location',
+    field: (row: BoqWork) => locationName(row),
+    label: 'Локация',
+    align: 'left' as const,
+  }] : []
 )
 </script>
 <style scoped>
 .ceil-edit .edit-icon {
-  opacity: 0;
-  transition: opacity 0.3s;
+  opacity: .5;
   position: absolute;
   top: 2px;
   right: 2px;
 }
-.ceil-edit:hover{
+
+.ceil-edit:hover {
   cursor: pointer;
-}
-.ceil-edit:hover .edit-icon {
-  opacity: .5;
 }
 </style>
