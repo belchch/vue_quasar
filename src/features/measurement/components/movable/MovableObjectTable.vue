@@ -133,6 +133,20 @@ const columns = [
     field: 'height',
     sortable: true
   },
+  {
+    name: 'area',
+    label: 'Площадь',
+    align: 'left' as const,
+    field: 'area',
+    sortable: true
+  },
+  {
+    name: 'perimeter',
+    label: 'Периметр',
+    align: 'left' as const,
+    field: 'perimeter',
+    sortable: true
+  },
   { name: 'actions',
     label: '',
     align: 'right' as const,
