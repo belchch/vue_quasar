@@ -27,7 +27,7 @@
         <q-card-section class="q-pb-none">
             <q-toolbar-title ellipsis class="q-ml-md">Локации</q-toolbar-title>
             <div class="text-body2 q-pl-md q-mt-xs">
-                Список и количество локаций на объекте исследнования
+                Список и количество локаций на объекте исследования
             </div>
         </q-card-section>
         <q-card-section class="q-ml-sm q-pt-sm">

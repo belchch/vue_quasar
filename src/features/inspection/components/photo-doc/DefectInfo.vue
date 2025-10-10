@@ -14,7 +14,16 @@
               </q-tooltip>
             </q-icon>
           </template>
-          <template v-else>
+          <template v-if="isWithoutDefect">
+            <q-icon name="link" color="green-8">
+              <q-tooltip v-if="technicalReport">
+                {{ technicalReportItem?.description }}
+                <br>
+                {{ technicalReportItem?.standard?.name }}
+              </q-tooltip>
+            </q-icon>
+          </template>
+          <template v-if="!isConsistency && !isWithoutDefect">
             <q-icon name="error" size="'lg'" color="red">
               <q-tooltip>
                 Несоответствие с техническим заключением
@@ -88,5 +97,10 @@ const isConsistency = computed (() => {
   if(!rowReport) return false;
   return props.defectInfo?.defect?.standard?.id === rowReport?.standard?.id;
 });
+
+const isWithoutDefect = computed(() => {
+  if(!props.defectInfo?.defect) { return true; }
+  return false;
+})
 
 </script>

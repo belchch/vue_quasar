@@ -27,7 +27,7 @@
           />
 
           <div>
-            <q-btn label="Сохранить" type="submit" color="primary" />
+            <q-btn label="Сохранить" :loading="creating" type="submit" color="primary" />
             <q-btn label="Отмена" type="reset" color="primary" flat class="q-ml-sm" />
           </div>
         </q-form>
@@ -47,12 +47,15 @@ const technicalReportName = ref<string>()
 const createForm = ref()
 const createDialogOpen = ref(false)
 const { hasPermission } = useUserStore()
+const creating = ref(false)
 
 const onSubmit = async () => {
+  creating.value = true
   createForm.value.validate()
   await createTechnicalReport({
     name: technicalReportName.value!!
   })
+  creating.value = false
   createDialogOpen.value = false
 }
 

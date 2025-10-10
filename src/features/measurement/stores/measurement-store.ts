@@ -9,7 +9,7 @@ import _ from "lodash"
 
 export const useMeasurementStore = defineStore('room-measurements', () => {
     const roomMeasurements = ref<RoomMeasurement[]>()
-    const openingMeasurements = ref<OpeningMeasurement[]>()
+    const openingMeasurements = ref<OpeningMeasurement[]>([])
     const ceilSectionMeasurements = ref<CeilSectionMeasurement[]>([])
     const floorSectionMeasurements = ref<FloorSectionMeasurement[]>([])
     const wallSectionMeasurements = ref<WallSectionMeasurement[]>([])

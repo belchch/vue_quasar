@@ -117,3 +117,10 @@ export type FixedAssetUpdateRequest = {
   height?: number;
   name?: string;
 }
+
+export type SectionMeasurementUpdateRequest = {
+  width?: number;
+  length?: number;
+  height?: number;
+  materialId?: number | undefined,
+}

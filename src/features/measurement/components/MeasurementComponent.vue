@@ -244,3 +244,17 @@ onMounted(async () => {
 })
 
 </script>
+<style scoped>
+td:hover {
+  cursor: pointer;
+}
+
+.action-btn {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+tr:hover .action-btn {
+  opacity: 1;
+}
+</style>

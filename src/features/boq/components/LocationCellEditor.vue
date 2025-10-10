@@ -3,6 +3,7 @@
     <q-popup-edit v-if="canEdit" v-model="localValue" buttons v-slot="scope" @update:model-value="updateValue">
         <q-input type="number" v-model="scope.value" dense autofocus />
     </q-popup-edit>
+    <q-icon name="edit" class="edit-icon" />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
