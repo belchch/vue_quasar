@@ -84,7 +84,7 @@
               <div>{{ selectedCase.company?.inn }}</div>
             </template>
             <template #s2>
-              Наименовние
+              Наименование
               <div>{{ selectedCase.company?.name }}</div>
             </template>
             <template #s3>

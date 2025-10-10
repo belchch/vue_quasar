@@ -3,7 +3,7 @@
     :pagination="{ rowsPerPage: 20 }" separator="cell">
     <template v-slot:top>
       <div class="row q-gutter-md">
-        <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
+        <q-btn @click="onBuilding" :loading="building" color="primary" size="sm">
           Сформировать
         </q-btn>
         <template v-if="boq">
@@ -33,6 +33,7 @@
   </q-table>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { useBoqService } from '../composables/boq';
 import { useBoqStore } from '../stores/boq-store';
 import { storeToRefs } from 'pinia';
@@ -44,13 +45,19 @@ import { useInspectionsStore } from 'src/features/inspection/store/inspection-st
 const emits = defineEmits<{
   navigateLocation: [location: BoqLocation]
 }>()
-
+const building = ref(false)
 const { buildAndRequestBoq } = useBoqService()
 const { locations, boq } = storeToRefs(useBoqStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const navigateLocation = (location: BoqLocation) => {
   emits('navigateLocation', location)
+}
+
+const onBuilding = async () => {
+  building.value = true
+  await buildAndRequestBoq()
+  building.value = false;
 }
 
 const columns = [

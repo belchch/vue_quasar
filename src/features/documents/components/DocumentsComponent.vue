@@ -15,7 +15,7 @@
               <DownloadReportButton label="Скачать отчет" :disable="false" :api-fn="downloadReport" />
             </div>
             <TableDocuments v-if="displayMode=='table'" :docs="filteredAct" @remove="onRemove"></TableDocuments>
-            <GalleryDocuments v-else :docs="filteredAct" @remove="onRemove" />
+            <GalleryDocuments empty-docs-label="Акты отсутствуют" v-else :docs="filteredAct" @remove="onRemove" />
           </q-tab-panel>
           <q-tab-panel name="scheme" class="q-pt-none">
             <div class="row justify-between q-pb-lg">
@@ -24,7 +24,7 @@
               <DownloadReportButton label="Скачать отчет" :disable="false" :api-fn="downloadReport" />
             </div>
             <TableDocuments v-if="displayMode == 'table'" :docs="filteredPlan" @remove="onRemove"></TableDocuments>
-            <GalleryDocuments v-else :docs="filteredPlan" @remove="onRemove" />
+            <GalleryDocuments v-else :docs="filteredPlan" empty-docs-label="Схемы отсутствуют" @remove="onRemove" />
           </q-tab-panel>
         </q-tab-panels>
       </div>
