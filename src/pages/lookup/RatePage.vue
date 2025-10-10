@@ -30,12 +30,6 @@
           </template>
           <template #body-cell-actions="props">
             <q-td style="border-left: 0" class="text-right">
-              <!-- <q-btn @click="openEditRateDialog(props.row)" class="action-btn" size="sm" flat round color="primary"
-            icon="edit">
-            <q-tooltip anchor="top middle" self="bottom middle">
-              Редактировать
-            </q-tooltip>
-          </q-btn> -->
               <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
                 @click.stop="confirmDelete(props.row)">
                 <q-tooltip anchor="top middle" self="bottom middle">
