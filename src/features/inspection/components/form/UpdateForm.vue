@@ -52,7 +52,34 @@
             </q-input>
           </div>
           <div>
-            <FormDate v-model="localCase.inspectionEndAt" title="Дата окончания осмотра" />
+            <!-- <FormDate v-model="localCase.inspectionEndAt" title="Дата окончания осмотра" /> -->
+            <div class="text-subtitle1 q-mb-sm">Дата и время окончания осмотра</div>
+            <q-input dense outlined readonly v-model="endDateInspection">
+              <template v-slot:prepend>
+                <q-btn icon="event" flat no-caps round2 class="bg-grey-3 text-grey-8" style="margin:0px 0px 0px -11px"
+                  size="md">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="localCase.inspectionEndAt" mask="YYYY-MM-DDTHH:mm:ssZ">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Закрыть" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-btn>
+              </template>
+              <template v-slot:append>
+                <q-btn icon="access_time" flat no-caps round2 class="bg-grey-3 text-grey-8" style="margin: 1px -11px"
+                  size="md">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-time v-model="localCase.inspectionEndAt" mask="YYYY-MM-DDTHH:mm:ssZ" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Закрыть" color="primary" flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-btn>
+              </template>
+            </q-input>
           </div>
         </div>
         <div>
@@ -90,10 +117,24 @@ const localCase = ref<Case>()
 const selectedJudge = ref(null)
 const model = defineModel<Case>()
 
+const toDateTime = (date: string | undefined) => {
+  if (!date) {
+    return '';
+  }
+  try {
+    const dateString = new Date(date);
+    return dateString.toLocaleDateString("ru-RU") + " " + dateString.toLocaleTimeString("ru", { hour: "2-digit", minute: "2-digit" });
+  } catch (error) {
+    return '';
+  }
+}
+
 const startDate = computed(() => {
-  if (!localCase.value?.inspectionStartAt) return '';
-  const dateString = new Date(localCase.value.inspectionStartAt);
-  return dateString.toLocaleDateString("ru-RU") + " " + dateString.toLocaleTimeString("ru", { hour: "2-digit", minute: "2-digit" });
+  return toDateTime(localCase.value?.inspectionStartAt);
+})
+
+const endDateInspection = computed(() => {
+  return toDateTime(localCase.value?.inspectionEndAt);
 })
 
 defineProps({

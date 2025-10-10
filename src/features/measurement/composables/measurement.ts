@@ -5,13 +5,14 @@ import { OpeningMeasurementApi } from "../api/opening-measurement-api"
 import { CeilSectionsMeasurementApi } from "../api/ceil-section-measurement-api"
 import { FloorSectionsMeasurementApi } from "../api/floor-section-measurement-api"
 import { WallSectionsMeasurementApi } from "../api/wall-section-measurement-api"
+import { FixedAssetMeasurementApi } from "../api/fixed-asset-measurement-api"
 import { useMeasurementStore } from "../stores/measurement-store"
-import { OpeningMeasurement, RoomMeasurement } from "../stores/types"
-import { OpeningMeasurementUpdateRequest, RoomMeasurementUpdateRequest } from "../api/types"
+import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreateRequest, FloorSectionMeasurement, CeilSectionMeasurement, WallSectionMeasurement } from "../stores/types"
+import { FixedAssetCreateRequest, OpeningMeasurementUpdateRequest, RoomMeasurementUpdateRequest, SectionMeasurementUpdateRequest, FixedAssetUpdateRequest } from "../api/types"
 
 export const
 useMeasurementService = () => {
-    const {roomMeasurements, openingMeasurements, ceilSectionMeasurements, floorSectionMeasurements, wallSectionMeasurements} = storeToRefs(useMeasurementStore())
+    const {roomMeasurements, openingMeasurements, ceilSectionMeasurements, floorSectionMeasurements, wallSectionMeasurements, fixedAssetMeasurements} = storeToRefs(useMeasurementStore())
     const {selectedInspectionId} = storeToRefs(useInspectionsStore())
 
     const requestAllMeasurements = async () => {
@@ -20,6 +21,7 @@ useMeasurementService = () => {
         await requestCeilSectionMeasurements()
         await requestFloorSectionMeasurements()
         await requestWallSectionMeasurements()
+        await requestFixedAssetMeasurements()
     }
 
     const requestRoomMeasurements = async () => {
@@ -43,12 +45,17 @@ useMeasurementService = () => {
         const response = await WallSectionsMeasurementApi.getByInspectionId(selectedInspectionId.value!!)
         wallSectionMeasurements.value = response.data
     }
+    const requestFixedAssetMeasurements = async () => {
+      const response = await FixedAssetMeasurementApi.getByInspectionId(selectedInspectionId.value!!)
+      fixedAssetMeasurements.value = response.data;
+    }
     const requestMeasurements = async () => {
         await requestRoomMeasurements()
         await requestOpeningMeasurements()
         await requestCeilSectionMeasurements()
         await requestFloorSectionMeasurements()
         await requestWallSectionMeasurements()
+        await requestFixedAssetMeasurements()
     }
 
     const createOpeningMeasurement = async (request: OpeningMeasurementUpdateRequest) => {
@@ -61,19 +68,86 @@ useMeasurementService = () => {
         await requestMeasurements()
     }
 
+    const createFloorSectionMeasurement = async (request: SectionMeasurementCreateRequest) => {
+      const response = await FloorSectionsMeasurementApi.create(request)
+      floorSectionMeasurements.value.push(response.data);
+    }
+
+    const createCeilSectionMeasurement = async (request: SectionMeasurementCreateRequest) => {
+      const response = await CeilSectionsMeasurementApi.create(request)
+      ceilSectionMeasurements.value.push(response.data);
+    }
+
+    const createWallSectionMeasurement = async (request: SectionMeasurementCreateRequest) => {
+      const response = await WallSectionsMeasurementApi.create(request)
+      wallSectionMeasurements.value.push(response.data);
+    }
+
+    const createFixedAssetMeasurement = async (request: FixedAssetCreateRequest) => {
+      const response = await FixedAssetMeasurementApi.create(request)
+      fixedAssetMeasurements.value.push(response.data);
+    }
+
     const deleteCeilSectionMeasurement = async (id: number) => {
         await CeilSectionsMeasurementApi.delete(id)
-        //TODO: обновить стор
+        ceilSectionMeasurements.value = ceilSectionMeasurements.value.filter(item=> item.id != id)
     }
 
     const deleteFloorSectionMeasurement = async (id: number) => {
         await FloorSectionsMeasurementApi.delete(id)
-        //TODO: обновить стор
+        floorSectionMeasurements.value = floorSectionMeasurements.value.filter(item=> item.id != id)
     }
 
     const deleteWallSectionMeasurement = async (id: number) => {
         await WallSectionsMeasurementApi.delete(id)
-        //TODO: обновить стор
+        wallSectionMeasurements.value = wallSectionMeasurements.value.filter(item=> item.id !=id)
+    }
+
+    const deletefixedAssetMeasurement = async (id: number) => {
+      await FixedAssetMeasurementApi.delete(id)
+      fixedAssetMeasurements.value = fixedAssetMeasurements.value.filter(item=> item.id != id)
+    }
+
+    const updateFixedAssetMeasurement = async (id:number, fixedAssetMeasurement: FixedAssetUpdateRequest) => {
+      const response = await FixedAssetMeasurementApi.update(id, fixedAssetMeasurement)
+      const findIndx  = fixedAssetMeasurements.value.findIndex(item => item.id == id);
+      if(findIndx>=0) fixedAssetMeasurements.value[findIndx] = response.data;
+    }
+
+    const updateFloorSectionMeasurement = async (id:number, section: FloorSectionMeasurement) => {
+      const request = toSectionUpdateRequest(section)
+      const response = await FloorSectionsMeasurementApi.update(id, request)
+      const indx = floorSectionMeasurements.value.findIndex(item => item.id == id);
+      if(indx>=0){
+        floorSectionMeasurements.value[indx] = response.data;
+      }
+    }
+
+    const updateCeilSectionMeasurement = async (id:number, section: CeilSectionMeasurement) => {
+      const request = toSectionUpdateRequest(section)
+      const response = await CeilSectionsMeasurementApi.update(id, request);
+      const indx = ceilSectionMeasurements.value.findIndex(item => item.id == id);
+      if(indx>=0){
+        ceilSectionMeasurements.value[indx] = response.data;
+      }
+    }
+
+    const updateWallSectionMeasurement = async (id:number, section: WallSectionMeasurement) => {
+      const request = toSectionUpdateRequest(section)
+      const response = await WallSectionsMeasurementApi.update(id, request);
+      const indx = wallSectionMeasurements.value.findIndex(item => item.id == id);
+      if(indx>=0){
+        wallSectionMeasurements.value[indx] = response.data;
+      }
+    }
+
+    const updateOpeningMeasurement = async (id:number, opening: OpeningMeasurement) => {
+      const request = toOpeningUpdateRequest(opening);
+      const response = await OpeningMeasurementApi.update(id, request);
+      const indx = openingMeasurements.value?.findIndex(item => item.id == id);
+      if(indx>=0){
+        openingMeasurements.value[indx] = response.data;
+      }
     }
 
     const updateRoomMeasurement = async (roomMeasurement: RoomMeasurement) => {
@@ -93,13 +167,24 @@ useMeasurementService = () => {
         deleteOpeningMeasurement,
         requestMeasurements,
         updateRoomMeasurement,
+        updateFloorSectionMeasurement,
+        updateFixedAssetMeasurement,
+        updateCeilSectionMeasurement,
+        updateWallSectionMeasurement,
+        updateOpeningMeasurement,
         createOpeningMeasurement,
         requestCeilSectionMeasurements,
         requestFloorSectionMeasurements,
+        createFloorSectionMeasurement,
+        createCeilSectionMeasurement,
+        createWallSectionMeasurement,
+        createFixedAssetMeasurement,
         requestWallSectionMeasurements,
+        requestFixedAssetMeasurements,
         deleteCeilSectionMeasurement,
         deleteFloorSectionMeasurement,
-        deleteWallSectionMeasurement
+        deleteWallSectionMeasurement,
+        deletefixedAssetMeasurement
     }
 }
 
@@ -119,3 +204,12 @@ const toOpeningUpdateRequest = (opening: OpeningMeasurement): OpeningMeasurement
         materialId: opening.material?.id,
     }
 }
+
+type SectionsMeasurement = FloorSectionMeasurement | CeilSectionMeasurement | WallSectionMeasurement
+const toSectionUpdateRequest = (section: SectionsMeasurement): SectionMeasurementUpdateRequest => {
+  return {
+    ...section,
+    materialId: section.material?.id,
+  }
+}
+

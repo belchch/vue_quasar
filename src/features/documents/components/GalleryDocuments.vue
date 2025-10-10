@@ -48,7 +48,7 @@ import { useQuasar } from 'quasar';
 import { CaseDocumentResponse } from '../types';
 import { DocumentsAPI } from '../api/documents-api';
 import { useUserStore } from 'src/features/user/stores/user-store';
-
+import LightBoxImage from 'src/components/LightBoxImage.vue'
 const cardSize = ref(400);
 
 const showLightbox = ref(false);

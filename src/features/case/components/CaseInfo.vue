@@ -233,7 +233,7 @@ const dateTimeOrNull = (date?: string) => {
 const deadline = computed(() => dayjs(selectedCase.value?.deadline))
 const createdAt = computed(() => dayjs(selectedCase.value?.createdAt))
 const inspectionStartAt = computed(() => dateTimeOrNull(selectedCase.value?.inspectionStartAt))
-const inspectionEndAt = computed(() => dateOrNull(selectedCase.value?.inspectionEndAt))
+const inspectionEndAt = computed(() => dateTimeOrNull(selectedCase.value?.inspectionEndAt))
 const determinationDate = computed(() => dateOrNull(selectedCase.value?.determinationDate))
 const { hasPermission } = useUserStore()
 const companyStore = useCompanyStore()

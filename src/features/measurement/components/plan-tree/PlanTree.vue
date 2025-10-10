@@ -22,8 +22,8 @@
             </template>
             <template v-slot:header-opening="prop">
               <PlanTreeNode :label="openingTypeName(prop.node.rawData.type)"
-                :name="openingLookupName(prop.node.rawData.openingId, prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label" @edit="editOpening(prop.node)" />
+                :name="openingFullName(prop.node.rawData.openingId, prop.node.rawData.materialId)"
+                :backoff-name="openingBackOffName(prop.node.label, prop.node.rawData.openingId, prop.node.rawData.materialId)" @edit="editOpening(prop.node)" />
             </template>
             <template v-slot:header-wall-section="prop">
               <PlanTreeNode label="Секция" :name="materialLookupName(prop.node.rawData.materialId)"
@@ -47,6 +47,15 @@
               </q-item-section>
             </template>
             <template v-slot:header-movable-item="prop">
+              <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
+                @edit="editObject(prop.node)" />
+            </template>
+            <template v-slot:header-notmovable-objects>
+              <q-item-section>
+                <q-item-label>Конструктив</q-item-label>
+              </q-item-section>
+            </template>
+            <template v-slot:header-notmovable-item="prop">
               <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
                 @edit="editObject(prop.node)" />
             </template>
@@ -91,6 +100,18 @@
               <FloorInfo :section="selectedNode.rawData.floor" />
               <CeilInfo :section="selectedNode.rawData.ceiling" />
             </div>
+            <div class="q-pa-md">
+              <div class="text-h6">Фотографии</div>
+              <div class="text-h6 text-weight-light" v-if="selectedNode.rawData.photos.length == 0">Фотографии
+                отсутствуют</div>
+              <q-list v-else bordered separator>
+                <q-item v-for="photo in selectedNode.rawData.photos" :key="photo.fileName">
+                  <q-item-section>
+                    {{ photo.fileName }}
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
           </q-tab-panel>
           <!-- Стены -->
           <q-tab-panel name="root-walls">
@@ -126,6 +147,9 @@
           </q-tab-panel>
           <!-- Объекты -->
           <q-tab-panel name="movable-item">
+            <ObjectInfo :selected-node="selectedNode" />
+          </q-tab-panel>
+          <q-tab-panel name="notmovable-item">
             <ObjectInfo :selected-node="selectedNode" />
           </q-tab-panel>
         </q-tab-panels>
@@ -171,13 +195,23 @@ const roomLookupName = ({roomId, roomNum}: {roomId: number, roomNum: number}) =>
 const materialLookupName = (materialId: number) => {
   return materialId != undefined ? materialStore.items.find(item => item.id == materialId)?.name : undefined
 }
-
-const openingLookupName = (openingId: number, materialId: number) => {
-  const materialName = () => materialStore.items.find(item => item.id == materialId)?.name
-  const openingName = () => openingStore.items.find(item => item.id == openingId)?.name
-  return materialId != undefined && openingId != null ? `${openingName()} (${materialName()})` : undefined
+const openingLookupName = (openingId: number) => {
+  return openingStore.items.find(item => item.id == openingId)?.name
 }
 
+const openingFullName = (openingId: number, materialId: number) => {
+  const openingName = openingLookupName(openingId);
+  const materialName = materialLookupName(materialId);
+  if(openingName && materialName) return `${openingName} (${materialName})`;
+  return undefined;
+}
+const openingBackOffName = (label: string, openingId: number, materialId: number) => {
+  const openingName = openingLookupName(openingId);
+  const materialName = materialLookupName(materialId);
+  if(openingName) return label?`${openingName} (${label})`:`${openingName}`;
+  if(materialName) return `${materialName}`;
+  return label;
+};
 const openingTypeName = (openningType: string) => {
   if(openningType == 'window') {
     return 'Окно'

@@ -8,8 +8,9 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="measurements">
-        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns" :row-key="row => `${row.room.id}_${row.roomNum | 0}`"
-          selection="single" wrap-cells flat bordered :pagination="{ rowsPerPage: 20 }" separator="cell">
+        <q-table v-if="allRoomMeasurements" :rows="allRoomMeasurements" :columns="columns"
+          :row-key="row => `${row.room.id}_${row.roomNum | 0}`" selection="single" wrap-cells flat bordered
+          :pagination="{ rowsPerPage: 20 }" separator="cell">
           <template v-slot:top>
             <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
           </template>
@@ -73,19 +74,24 @@
                     <div class="row q-gutter-sm q-ma-none">
                       <AddOpeningDialog v-if="hasPermission(['measurement.update'])" :room="props.row.room" />
                       <!-- Секция пола-->
-                      <SectionFloorDialog section-type="floor_section" :room="props.row.room" btn-text="Секция пола" />
+                      <SectionFloorDialog section-type="floor_section" :room="props.row.room"
+                        :room-num="props.row.roomNum" btn-text="Секция пола" />
                       <SectionFloorDialog section-type="ceil_section" :room="props.row.room"
-                        btn-text="Добавить секцию потолка" />
+                        :room-num="props.row.roomNum" btn-text="Секция потолка" />
                       <SectionFloorDialog section-type="wall_section" :room="props.row.room"
-                        btn-text="Добавить секцию пола" />
+                        :room-num="props.row.roomNum" btn-text="Секция стены" />
+                      <SectionFloorDialog section-type="fixed_asset" :room="props.row.room"
+                        :room-num="props.row.roomNum" btn-text="Конструктив" />
                     </div>
                     <OpeningTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])" />
-                    <CeilSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
-                      :can-edit="hasPermission(['measurement.update'])" />
                     <FloorSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])" />
+                    <CeilSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
                     <WallSectionsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])" />
+                    <FixedAssetsTable :room-id="props.row.room.id" :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])" />
                   </div>
                 </div>
@@ -124,10 +130,12 @@ import SectionFloorDialog from './SectionFloorDialog.vue'
 import CeilSectionsTable from './CeilSectionsTable.vue'
 import FloorSectionsTable from './FloorSectionsTable.vue'
 import WallSectionsTable from './WallSectionsTable.vue'
+import FixedAssetsTable from './FixedAssetsTable.vue'
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 import { useMeasurementService } from '../composables/measurement';
 const { hasPermission } = useUserStore()
+import { useOpeningStore } from "src/features/lookup/opening/opening-store";
 
 const { requestCeilSectionMeasurements, requestFloorSectionMeasurements, requestWallSectionMeasurements} = useMeasurementService()
 
@@ -142,6 +150,7 @@ const getLocationName = (row: RoomMeasurement) => {
     return row.room.name
   }
 }
+const openingStore = useOpeningStore()
 const tab = ref('measurements')
 const columns = [
     {
@@ -230,12 +239,22 @@ const columns = [
     },
 ]
 
-// onMounted(async () => {
-//   await Promise.all([
-//     requestCeilSectionMeasurements(),
-//     requestFloorSectionMeasurements(),
-//     requestWallSectionMeasurements()
-//   ]);
-// })
+onMounted(async () => {
+  await openingStore.requestLookup()
+})
 
 </script>
+<style scoped>
+td:hover {
+  cursor: pointer;
+}
+
+.action-btn {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+tr:hover .action-btn {
+  opacity: 1;
+}
+</style>

@@ -1,5 +1,6 @@
 import { api } from "src/boot/axios"
 import { Boq, BoqLocation, BoqLocationUpdateRequest } from "./types"
+import { FileInfo } from "src/common/types"
 
 export const BoqApi = {
     buildBoq: (inspectionId: number) => {
@@ -32,5 +33,13 @@ export const BoqApi = {
 
     deleteLocation: (id: number) => {
         return api.delete(`/api/boq/locations/${id}`)
+    },
+
+    buildReport: (inspectionId: number) => {
+        return api.post<FileInfo>(`/api/boq-report/build-docx`, {}, {
+            params: {
+                inspectionId
+            }
+        })
     }
 }

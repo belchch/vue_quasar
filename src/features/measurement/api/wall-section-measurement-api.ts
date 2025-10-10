@@ -1,5 +1,6 @@
 import {api} from 'boot/axios'
-import { WallSectionMeasurement } from '../stores/types'
+import { WallSectionMeasurement,SectionMeasurementCreateRequest } from '../stores/types'
+import { SectionMeasurementUpdateRequest } from './types'
 
 
 
@@ -18,6 +19,12 @@ export const WallSectionsMeasurementApi = {
                 roomId
             }
         })
+    },
+    create(request: SectionMeasurementCreateRequest) {
+      return api.post<WallSectionMeasurement>(`/api/wall-section-measurement`, request);
+    },
+    update(id:number,request: SectionMeasurementUpdateRequest) {
+      return api.put<WallSectionMeasurement>(`/api/wall-section-measurement/${id}`, request);
     },
     delete(id: number) {
         return api.delete(`/api/wall-section-measurement/${id}`)

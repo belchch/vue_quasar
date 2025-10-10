@@ -1,15 +1,36 @@
 <template>
-  <div>
-    <q-table
-      :pagination="{ rowsPerPage: 0 }"
-      hide-pagination
-      flat
-      bordered
-      :rows="items"
-      :columns="columns"
-      row-key="id">
+  <div v-if="getFixedAssets(roomId, roomNum).length > 0">
+    <div class="text-subtitle1 q-mb-sm">
+      Конструктив
+    </div>
+    <q-table :rows="getFixedAssets(roomId, roomNum)" :columns="columns" :row-key="row => row.id" class="fixed-table"
+      wrap-cells flat bordered :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination>
+      <template #body-cell-name="props">
+        <q-td>
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.name as string" field="name"
+            type="string" :row="props.row" />
+        </q-td>
+      </template>
+      <template #body-cell-width="props">
+        <q-td>
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.width || 0" field="width"
+            :row="props.row" />
+        </q-td>
+      </template>
+      <template #body-cell-length="props">
+        <q-td>
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.length || 0" field="length"
+            :row="props.row" />
+        </q-td>
+      </template>
+      <template #body-cell-height="props">
+        <q-td>
+          <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.height || 0" field="height"
+            :row="props.row" />
+        </q-td>
+      </template>
       <template v-slot:header-cell-actions>
-        <q-th style="width: 82px;border-left: 0"></q-th>
+        <q-th style="width: 100px;border-left: 0"></q-th>
       </template>
       <template #body-cell-actions="props">
         <q-td style="border-left: 0" class="text-right">
@@ -17,12 +38,6 @@
             @click.stop="openPhotos(props.row.urls)">
             <q-tooltip anchor="top middle" self="bottom middle">
               Посмотреть фотографии
-            </q-tooltip>
-          </q-btn>
-          <q-btn class="action-btn" size="sm" flat round color="primary" icon="edit"
-          @click="onEdit(props.row)">
-            <q-tooltip anchor="top middle" self="bottom middle">
-              Редактировать
             </q-tooltip>
           </q-btn>
           <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
@@ -34,7 +49,6 @@
         </q-td>
       </template>
     </q-table>
-    <!-- <movable-edit-dialog :movable="props.row" /> -->
     <!-- Карусель -->
     <q-dialog v-model="showLightbox" full-width full-height maximized backdrop-filter="brightness(40%)">
       <q-card class="lightbox-container" style="background: transparent; box-shadow: none">
@@ -53,49 +67,32 @@
       </q-card>
     </q-dialog>
   </div>
+
 </template>
-
 <script setup lang="ts">
-import {ref} from 'vue';
-import { Movable } from 'src/features/measurement/stores/types'
+import { storeToRefs } from 'pinia';
+import { useMeasurementStore } from '../stores/measurement-store';
+import { FixedAssetMeasurament } from '../stores/types';
+import { ref } from 'vue';
+import { useMeasurementService } from '../composables/measurement';
 import { useQuasar } from 'quasar';
-import { useMovableSrvice } from '../../composables/movable';
-import MovableEditDialog from './MovableEditDialog.vue'
-const { deleteMovable } = useMovableSrvice();
-const $q = useQuasar();
-const { items } = defineProps<{
-  items: Movable[] | [],
-}>();
+import SectionCellEditor from './SectionCellEditor.vue'
 
-const editItem = ref(null);
+const { getFixedAssets } = storeToRefs(useMeasurementStore())
+const { deletefixedAssetMeasurement, updateFixedAssetMeasurement } = useMeasurementService()
+
+const rows = ref<FixedAssetMeasurament[]>([]);
+const $q = useQuasar();
 
 const showLightbox = ref(false);
 const photos = ref<string[]>([]);
 const slide = ref(0);
 
-const confirmDelete = (row: any) => {
-  $q.dialog({
-    title: 'Подтвердите удаление',
-    message: `Вы действительно хотите удалить объект?`,
-    cancel: true,
-  }).onOk(async () => {
-    try {
-      await deleteMovable(row.id);
-      $q.notify({ type: 'positive', message: 'Успешно удалено' });
-    } catch (error) {
-      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
-    }
-  });
-};
-
-const onEdit = (row: Movable) => {
-  $q.dialog({
-    component: MovableEditDialog,
-    componentProps: {
-      movable: row,
-    },
-  });
-}
+const { roomId, roomNum, canEdit = true } = defineProps<{
+  roomId: number,
+  roomNum?: number | undefined,
+  canEdit?: boolean
+}>()
 
 const openPhotos = (urls: string[]) => {
   if (urls.length > 0) {
@@ -103,6 +100,20 @@ const openPhotos = (urls: string[]) => {
     photos.value = urls;
   }
 }
+const confirmDelete = (row: any) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить объект?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await deletefixedAssetMeasurement(row.id);
+      $q.notify({ type: 'positive', message: 'Успешно удалено' });
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
+    }
+  });
+};
 
 const columns = [
   {
@@ -147,14 +158,14 @@ const columns = [
     field: 'perimeter',
     sortable: true
   },
-  { name: 'actions',
+  {
+    name: 'actions',
     label: '',
     align: 'right' as const,
     field: 'actions'
   },
 ]
 </script>
-
 <style scoped>
 .lightbox-container {
   display: flex;
@@ -162,11 +173,13 @@ const columns = [
   align-items: center;
   height: 100%;
 }
+
 .carousel-wrapper {
   width: 100%;
   height: 100%;
   position: relative;
 }
+
 .full-height-carousel {
   height: 100vh;
   width: 100vw;
@@ -186,13 +199,11 @@ const columns = [
   height: auto;
 }
 
-/* Для одиночного изображения */
 .single-img {
   max-height: 90vh;
   max-width: 100vw;
 }
 
-/* Кнопка закрытия */
 .dialog-img-close-btn {
   position: fixed;
   top: 20px;

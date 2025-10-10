@@ -18,7 +18,7 @@
             <q-card-section>
                 <div class="q-gutter-md">
                     <q-btn v-if="canDelete" color="negative" size="sm" icon="delete" @click="deleteInspection"
-                        :loading="deleteInProgress">Удалть осмотр</q-btn>
+                        :loading="deleteInProgress">Удалить осмотр</q-btn>
                 </div>
             </q-card-section>
         </div>
@@ -37,7 +37,12 @@
                         :disable="!hasPermission(['inspection.update'])" @update:model-value="onChange(item)" />
                 </div>
                 <q-input :disable="!item.inUse || !hasPermission(['inspection.update'])" v-model="item.count"
-                    type="number" outlined style="width: 80px;" dense @update:model-value="onChange(item)" />
+                    type="number" outlined style="width: 80px;" dense @update:model-value="onChange(item)"
+                    :rules="[
+                        val => (val >= 0 && val <= 10) || 'От 0 до 10',
+                        val => Number.isInteger(Number(val)) || 'Только целые числа'
+                      ]"
+                />
             </div>
         </q-card-section>
     </q-card>
@@ -103,6 +108,9 @@ const sortedConfigs = computed(() => {
 })
 
 const onChange = async (item: InspectionSpot) => {
+    if(item.count<0 || item.count>10){
+      return
+    }
     await updateInspectionSpot(item)
 }
 </script>

@@ -21,7 +21,7 @@ const init = async () => {
     const location = await selectLocation(parseInt(route.params.locationId!.toString()))
 
     pageBreadcrumbs.value = [{
-        label: location.room.name
+        label: `${location.room.name} ${location.roomNum || ''}`
     }]
 }
 

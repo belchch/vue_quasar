@@ -8,8 +8,8 @@ import { Spot } from "src/features/lookup/spot/stores/types"
 import _ from "lodash"
 
 export const useInspectionSpotService = () => {
-    const {inspectionSpots} = storeToRefs(useInspectionSpotStore())
-    const {selectedInspectionId} = storeToRefs(useInspectionsStore())
+    const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
+    const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
     const requestInspectionSpots = async () => {
         const response = await InspectionSpotApi.getInspectionSpots(selectedInspectionId.value!!)
@@ -39,19 +39,21 @@ export type InspectionSpotOption = {
     spotNum?: number | undefined
 }
 
-export const buildInspectionSpotOptions = (inspectionSpots: InspectionSpot[]) => {
+export const buildInspectionSpotOptions = (inspectionSpots: InspectionSpot[], exclude?: [number, number?][]) => {
     const result = [] as InspectionSpotOption[]
-    
+
     inspectionSpots.filter(item => item.inUse).forEach(item => {
         const counted = item.count > 1
 
         for (let i = 1; i <= item.count; i++) {
-            result.push({
-                id: counted ? `${item.spot.id}_${i}` : `${item.spot.id}`,
-                name: counted ? `${item.spot.name} ${i}` : `${item.spot.name}`,
-                spot: item.spot,
-                spotNum: counted ? i : undefined
-            })
+            if (!exclude?.some(([id, roomNum]) => id == item.spot.id && (i == roomNum || !counted)) || exclude == undefined) {
+                result.push({
+                    id: counted ? `${item.spot.id}_${i}` : `${item.spot.id}`,
+                    name: counted ? `${item.spot.name} ${i}` : `${item.spot.name}`,
+                    spot: item.spot,
+                    spotNum: counted ? i : undefined
+                })
+            }
         }
     })
 

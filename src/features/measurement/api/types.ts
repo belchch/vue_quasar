@@ -100,3 +100,27 @@ export type MovableUpdateRequest = {
   height?: number;
   name?: string;
 }
+
+export type FixedAssetCreateRequest = {
+  width: number;
+  length: number;
+  height: number;
+  name: string;
+  inspectionId: number;
+  roomId: number;
+  roomNum?: number | undefined;
+}
+
+export type FixedAssetUpdateRequest = {
+  width?: number;
+  length?: number;
+  height?: number;
+  name?: string;
+}
+
+export type SectionMeasurementUpdateRequest = {
+  width?: number;
+  length?: number;
+  height?: number;
+  materialId?: number | undefined,
+}

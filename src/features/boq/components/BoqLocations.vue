@@ -1,30 +1,36 @@
 <template>
-    <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
-        :pagination="{ rowsPerPage: 20 }" separator="cell">
-        <template v-slot:top>
-            <q-btn @click="onBuilding" :loading="building" color="primary" size="sm">
-                Сформировать
-            </q-btn>
+  <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
+    :pagination="{ rowsPerPage: 20 }" separator="cell">
+    <template v-slot:top>
+      <div class="row q-gutter-md">
+        <q-btn @click="onBuilding" :loading="building" color="primary" size="sm">
+          Сформировать
+        </q-btn>
+        <template v-if="boq">
+          <DownloadReportButton label="Скачать" :disable="false"
+            :api-fn="async () => (await BoqApi.buildReport(selectedInspectionId!!)).data" />
         </template>
-        <template v-slot:body="props">
-            <q-tr :props="props">
-                <q-td key="name" :props="props" @click="navigateLocation(props.row)">
-                    <div class="text-accent" style="cursor: pointer;">
-                        {{ props.row.room.name }}
-                    </div>
-                </q-td>
-                <q-td key="area" :props="props">
-                    <LocationCellEditor field="area" :value="props.row.area" :row="props.row" />
-                </q-td>
-                <q-td key="height">
-                    <LocationCellEditor field="height" :value="props.row.height" :row="props.row" />
-                </q-td>
-                <q-td key="perimeter" :props="props">
-                    <LocationCellEditor field="perimeter" :value="props.row.perimeter" :row="props.row" />
-                </q-td>
-            </q-tr>
-        </template>
-    </q-table>
+      </div>
+    </template>
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td key="name" :props="props" @click="navigateLocation(props.row)">
+          <div class="text-accent" style="cursor: pointer;">
+            {{ props.row.room.name }} {{ props.row.roomNum }}
+          </div>
+        </q-td>
+        <q-td key="area" :props="props" class="cell-edit">
+          {{ props.row.area }}
+        </q-td>
+        <q-td key="height" class="cell-edit">
+          {{ props.row.height }}
+        </q-td>
+        <q-td key="perimeter" :props="props" class="cell-edit">
+          {{ props.row.perimeter }}
+        </q-td>
+      </q-tr>
+    </template>
+  </q-table>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
@@ -32,17 +38,20 @@ import { useBoqService } from '../composables/boq';
 import { useBoqStore } from '../stores/boq-store';
 import { storeToRefs } from 'pinia';
 import { BoqLocation } from '../api/types';
-import LocationCellEditor from './LocationCellEditor.vue';
+import { BoqApi } from '../api/boq-api';
+import DownloadReportButton from 'src/components/DownloadReportButton.vue';
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 
 const emits = defineEmits<{
-    navigateLocation: [location: BoqLocation]
+  navigateLocation: [location: BoqLocation]
 }>()
 const building = ref(false)
 const { buildAndRequestBoq } = useBoqService()
-const { locations } = storeToRefs(useBoqStore())
+const { locations, boq } = storeToRefs(useBoqStore())
+const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const navigateLocation = (location: BoqLocation) => {
-    emits('navigateLocation', location)
+  emits('navigateLocation', location)
 }
 
 const onBuilding = async () => {
@@ -52,30 +61,30 @@ const onBuilding = async () => {
 }
 
 const columns = [
-    {
-        name: 'name',
-        field: 'name',
-        label: 'Локация',
-        align: 'left' as const,
-    },
-    {
-        name: 'area',
-        field: 'area',
-        label: 'Общая площадь',
-        align: 'left' as const,
-    },
-    {
-        name: 'height',
-        field: 'height',
-        label: 'Высота потолков',
-        align: 'left' as const,
-    },
-    {
-        name: 'perimeter',
-        field: 'perimeter',
-        label: 'Периметр',
-        align: 'left' as const,
-    }
+  {
+    name: 'name',
+    field: 'name',
+    label: 'Локация',
+    align: 'left' as const,
+  },
+  {
+    name: 'area',
+    field: 'area',
+    label: 'Общая площадь',
+    align: 'left' as const,
+  },
+  {
+    name: 'height',
+    field: 'height',
+    label: 'Высота потолков',
+    align: 'left' as const,
+  },
+  {
+    name: 'perimeter',
+    field: 'perimeter',
+    label: 'Периметр',
+    align: 'left' as const,
+  }
 ]
 
 </script>

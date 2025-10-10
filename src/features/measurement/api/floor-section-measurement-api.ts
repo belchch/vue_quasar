@@ -1,5 +1,6 @@
 import {api} from 'boot/axios'
-import { FloorSectionMeasurement } from '../stores/types'
+import { FloorSectionMeasurement, SectionMeasurementCreateRequest } from '../stores/types'
+import { SectionMeasurementUpdateRequest } from './types'
 
 
 
@@ -11,6 +12,7 @@ export const FloorSectionsMeasurementApi = {
             }
         })
     },
+
     getByRoomId(inspectionId: number, roomId:number) {
         return api.get<FloorSectionMeasurement[]>(`/api/floor-section-measurement`, {
             params: {
@@ -19,6 +21,15 @@ export const FloorSectionsMeasurementApi = {
             }
         })
     },
+
+    create(request: SectionMeasurementCreateRequest) {
+      return api.post<FloorSectionMeasurement>(`/api/floor-section-measurement`, request);
+    },
+
+    update(id: number, request: SectionMeasurementUpdateRequest) {
+      return api.put<FloorSectionMeasurement>(`/api/floor-section-measurement/${id}`, request);
+    },
+
     delete(id: number) {
         return api.delete(`/api/floor-section-measurement/${id}`)
     }

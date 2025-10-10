@@ -67,15 +67,30 @@ const transformPlanJson = (planJson: any): object[] => {
       rawData: room.objects || [],
       children: []
     }
+
+    const notMovabelObjects: TreeItem = {
+      id: globalIndex++,
+      header: 'notmovable-objects',
+      type: 'notmovable-objects',
+      label: `Конструкции`,
+      rawData: room.objects || [],
+      children: []
+    }
+
     const transformedWalls = createWalls(roomNodeId, room.walls);
     const rootFloor = transformRoomFloor(room.floor);
     const rootCeiling = transformRoomCeiling(room.ceiling);
     resultRoom.children.push(rootFloor);
     resultRoom.children.push(rootCeiling);
     const treeMovableObjects = transformMovableObjects(room.objects);
+    const treeNotMovableObjects = transformNotMovableObjects(room.objects);
     if (treeMovableObjects.length > 0) {
       movabelObjects.children.push(...treeMovableObjects);
       resultRoom.children.push(movabelObjects);
+    }
+    if(treeNotMovableObjects.length > 0){
+      notMovabelObjects.children.push(...treeNotMovableObjects);
+      resultRoom.children.push(notMovabelObjects);
     }
     resultRoom.children.push(...transformedWalls);
     return resultRoom;
@@ -216,7 +231,10 @@ const transformPlanJson = (planJson: any): object[] => {
   const transformMovableObjects = (objects: any) => {
     if (!objects || objects.length === 0) return [];
     const result: TreeItem[] = [];
-    objects.forEach((item: any) => {
+    const filtredObjects = objects.filter((item: any) => {
+      return item.movable
+    })
+    filtredObjects.forEach((item: any) => {
       const objectNode: TreeItem = {
         id: globalIndex++,
         header: 'movable-item',
@@ -229,6 +247,28 @@ const transformPlanJson = (planJson: any): object[] => {
     });
     return result;
   }
+
+  const transformNotMovableObjects = (objects: any) => {
+    if (!objects || objects.length === 0) return [];
+    else {
+      const result: TreeItem[] = [];
+      const filtredObjects = objects.filter((item: any) => {
+        return !item.movable && item.type != 'text';
+      })
+    filtredObjects.forEach((item: any) => {
+      const objectNode: TreeItem = {
+        id: globalIndex++,
+        header: 'notmovable-item',
+        type: 'notmovable-item',
+        label: item.comment,
+        rawData: item,
+        children: []
+      }
+      result.push(objectNode);
+    });
+    return result;
+  }
+}
 
   const result: object[] = [];
   planJson.forEach((room: any) => {
