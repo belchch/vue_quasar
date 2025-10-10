@@ -1,6 +1,6 @@
 <template>
   <div>
-    <raw-material-dialog :raw-material="editedItem" v-model="openDialog" />
+    <RawMaterialDialog :raw-material="editedItem" v-model="openDialog" />
     <q-table
       ref="table"
       v-model:pagination="pagination"
@@ -58,7 +58,7 @@
         </q-td>
       </template>
       <template v-slot:body-cell-sources="props">
-        <q-td :props="props">
+        <q-td :props="props" @click="openEditDialog(props.row)">
           <template v-for="(item, index) in props.value" :key="index">
             <div>
               <a :href="item.url" target="_blank">{{ item.url }}</a>
@@ -68,7 +68,7 @@
         </q-td>
       </template>
       <template v-slot:body-cell-price="props">
-        <q-td :props="props">
+        <q-td :props="props" @click="openEditDialog(props.row)">
           <template v-for="(item, index) in props.row.sources" :key="index">
             <div>{{ item.price }}</div>
           </template>
@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { UnitOfMeasureEnum } from 'src/features/lookup/rate/types'
+import { UnitOfMeasureEnum, UnitOfMeasureType } from 'src/features/lookup/rate/types'
 import { RawMaterial } from '../../raw-material/types'
 import { useRawMaterialStore } from '../../raw-material/raw-material-store'
 import RawMaterialDialog from './RawMaterialDialog.vue'
@@ -94,7 +94,14 @@ const table = ref()
 const filter = ref('')
 const storeRawMaterial = useRawMaterialStore()
 const openDialog = ref(false)
-const editedItem = ref<RawMaterial | null>(null)
+const defaultNewObject: RawMaterial = {
+  name: '',
+  unitOfMeasure: 'PIECE',
+  factor: 0,
+  sources: [],
+  rates: [],
+}
+const editedItem = ref<RawMaterial>({ ...defaultNewObject })
 
 const confirmDelete = (row: any) => {
   $q.dialog({
@@ -112,12 +119,12 @@ const confirmDelete = (row: any) => {
 }
 
 const openNewDialog = () => {
-  editedItem.value = null
+  editedItem.value = Object.assign({}, defaultNewObject)
   openDialog.value = true
 }
 
 const openEditDialog = (row: RawMaterial) => {
-  editedItem.value = row
+  editedItem.value = Object.assign({}, row)
   openDialog.value = true
 }
 
@@ -140,6 +147,13 @@ const columns = [
     name: 'factor',
     field: 'factor',
     label: 'Коэф.',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'works',
+    field: (row: RawMaterial) => row.rates.length,
+    label: 'Работ',
     align: 'left' as const,
     sortable: true,
   },

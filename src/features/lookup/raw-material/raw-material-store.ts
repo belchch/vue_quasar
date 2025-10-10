@@ -3,7 +3,7 @@ import { lookupApi } from 'src/features/lookup/base/api/lookup-api'
 import { RawMaterial, RawMaterialUpdateRequest } from './types'
 import { ref } from 'vue'
 
-export const useRawMaterialStore = defineStore('rates-store', () => {
+export const useRawMaterialStore = defineStore('raw-materials-store', () => {
   const rawMaterials = ref<RawMaterial[]>([])
   const api = lookupApi<RawMaterial, RawMaterialUpdateRequest>('raw-materials')
   const loading = ref<boolean>(true)
