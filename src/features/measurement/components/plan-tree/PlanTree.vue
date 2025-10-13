@@ -271,13 +271,4 @@ const editObject = (node: any) => {
 </script>
 
 <style scoped>
-/*
-В PhotoDocsContainer.vue глобально переопределен стиль .q-panel
-срывает overflow, поэтому если зайти сначала на вкладку Фото
-и потом на вкладку Размеры->План, то скролл отключиться
-//TODO: Убрать, если .q-panel будет в scoped
-*/
-.tree-tabs :deep(.q-panel) {
-  overflow: auto !important;
-}
 </style>
