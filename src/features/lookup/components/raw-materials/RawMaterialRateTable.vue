@@ -79,13 +79,14 @@
 import { ref } from 'vue'
 import { Rate, UnitOfMeasureEnum, ParamsTypeEnum } from 'src/features/lookup/rate/types'
 import { useRateStore } from 'src/features/lookup/rate/rate-store'
+import _ from 'lodash'
 const rateStore = useRateStore()
 const rates = defineModel<Rate[]>('rates', { required: true })
 const linkWorksDialog = ref(false)
 const selectedRates = ref<Rate[]>([])
 const filter = ref('')
 const addNewRate = () => {
-  rates.value = [...rates.value, ...selectedRates.value]
+  rates.value = _.union(rates.value, selectedRates.value)
 }
 const remove = (row: Rate) => {
   rates.value = rates.value.filter((item) => item !== row)

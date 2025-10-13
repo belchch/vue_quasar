@@ -96,21 +96,6 @@ const numberOrEmptyRule = (val: any) => {
 const isEditMode = computed(() => !!rawMaterial?.id)
 const formData = ref<RawMaterial>({ ...defautObj })
 
-// watch(
-//   openModal,
-//   (newValue) => {
-//     formData.value = { ...defautObj }
-//     if (newValue) {
-//       if (rawMaterial) {
-//         Object.assign(formData.value, rawMaterial)
-//       } else {
-//         Object.assign(formData.value, { ...defautObj })
-//         if (formData.value.id) delete formData.value.id
-//       }
-//     }
-//   },
-//   { immediate: true },
-// )
 watch(
   openModal,
   (newValue) => {
