@@ -2,7 +2,7 @@
     <div class="row q-col-gutter-sm">
         <div class="col-7">
             <BoqLocations @navigate-location="(location: BoqLocation) => navigateLocation(location.id)" />
-            <EstimateTable />
+            <EstimateTabs />
         </div>
         <div class="col-5">
             <WorkTable :works="works" :editable="true" :show-location="true">
@@ -21,7 +21,8 @@ import { useBoqWorkStore } from '../stores/boq-work-store';
 import BoqLocations from './BoqLocations.vue';
 import CommonWorksEditor from './CommonWorksEditor.vue';
 import WorkTable from './WorkTable.vue';
-import EstimateTable from 'src/features/estimate/components/EstimateTable.vue'
+import EstimateTabs from 'src/features/estimate/components/EstimateTabs.vue'
+
 
 const { works } = storeToRefs(useBoqWorkStore())
 const { navigateLocation } = useBoqLocationService()
