@@ -17,7 +17,7 @@ export const OpeningMeasurementApi = {
     },
 
     update(id: number, request: OpeningMeasurementUpdateRequest) {
-        return api.put<OpeningMeasurement>(`/api/opening-measurement/${id}`, request)
+        return api.put<OpeningMeasurement>(`/api/opening-measurements/${id}`, request)
     },
 
     delete(id: number) {

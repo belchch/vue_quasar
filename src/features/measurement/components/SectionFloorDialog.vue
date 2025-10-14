@@ -47,7 +47,7 @@ import { Spot } from 'src/features/lookup/spot/stores/types';
 import { Material } from 'src/features/lookup/material/stores/types';
 import { useMaterialStore } from 'src/features/lookup/material/stores/material-store';
 import { useMeasurementService } from 'src/features/measurement/composables/measurement'
-import { SectionMeasurementCreate } from 'src/features/measurement/stores/types';
+import { SectionMeasurementCreateRequest } from 'src/features/measurement/stores/types';
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
 
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
@@ -142,7 +142,7 @@ const onConfirmClick = async () => {
         length: objectForm.value.length,
       })
     }
-    const request: SectionMeasurementCreate = {
+    const request: SectionMeasurementCreateRequest = {
       inspectionId: selectedInspectionId.value!!,
       roomId: room.id!!,
       roomNum: roomNum,

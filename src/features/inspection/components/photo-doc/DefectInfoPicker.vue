@@ -92,13 +92,22 @@ const checkAndEmitChangeDefectInfo = () => {
   ){
     $q.dialog({
       title: 'Внимание',
-      message: 'Необходимо выбрать поверхность',
+      message: 'Для того, чтобы запись попала в отчет необходимо выбрать поверхность',
     }).onOk(() => {
       tab.value = 'defect';
-    })
-  } else {
-    emitChangeDefectInfo();
+    });
+    return;
   }
+  if(technicalReportRow.value.length == 1 && defectSearchService.response.materials.length>1){
+    $q.dialog({
+      title: 'Внимание',
+      message: 'Для того, чтобы запись попала в отчет необходимо выбрать материал',
+    }).onOk(() => {
+      tab.value = 'defect';
+    });
+    return;
+  }
+  emitChangeDefectInfo();
 
 }
 const emitChangeDefectInfo = () => {

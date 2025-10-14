@@ -1,6 +1,6 @@
 <template>
     <q-btn-dropdown flat :size="'sm'"
-      :label="model == 'gallery' ? 'Галлерея' : 'Список'"
+      :label="model == 'gallery' ? 'Галерея' : 'Список'"
       :icon="model == 'gallery' ? 'o_grid_view' : 'o_dns'" class="q-px-sm">
       <q-list>
         <q-item clickable v-close-popup @click="changeMode('gallery')"
