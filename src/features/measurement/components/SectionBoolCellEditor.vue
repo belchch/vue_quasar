@@ -1,31 +1,35 @@
 <template>
-  {{ value }}
   <q-popup-edit v-if="canEdit" v-model="localValue" buttons v-slot="scope" @update:model-value="updateValue">
-    <q-input type="number" v-model="scope.value" dense autofocus />
+    <q-select dense outlined v-model="scope.value" emit-value map-options :options="optionItems" />
   </q-popup-edit>
-  <q-icon v-if="canEdit" name="edit" class="edit-icon" />
+  <q-icon name="edit" class="edit-icon" />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { RoomMeasurement } from '../stores/types';
-import { useMeasurementService } from '../composables/measurement';
 import _ from 'lodash';
 
-const { updateRoomMeasurement } = useMeasurementService()
-
-const { field, value, row, canEdit = true } = defineProps<{
+const { field, value, row, canEdit = true, apiFn } = defineProps<{
   field: string,
-  value: number,
-  row: RoomMeasurement,
+  value: boolean,
+  row: any,
+  apiFn: (id: number, updateRow: any) => Promise<void>,
   canEdit?: boolean
 }>()
 
 const localValue = ref(value)
-
+const optionItems = ref([{
+  label: "Да",
+  value: true,
+},
+{
+  label: "Нет",
+  value: false,
+}
+])
 const updateValue = async () => {
   const update = _.cloneDeep(row) as any
   update[field] = localValue.value
-  await updateRoomMeasurement(update as RoomMeasurement)
+  await apiFn(row.id, update)
 }
 </script>
 <style scoped>

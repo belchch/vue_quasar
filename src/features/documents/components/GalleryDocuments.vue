@@ -2,13 +2,8 @@
   <div class="row justify-end">
     <q-slider v-model="cardSize" :min="150" :max="800" style="width: 100px;" color="primary" class="q-mb-md" />
   </div>
-  <q-dialog v-model="showLightbox" full-width full-height maximized backdrop-filter="brightness(40%)">
-    <q-card class="lightbox-container" style="background: transparent; box-shadow: none">
-      <q-img :src="lightBoxImg" fit="contain" class="single-img" />
-      <q-btn icon="close" flat round dense v-close-popup class="dialog-img-close-btn bg-primary text-white" />
-    </q-card>
-  </q-dialog>
-  <div v-if="docs.length==0" class="text-h5 text-weight-light text-center">Документы отсутствуют</div>
+  <LightBoxImage v-model="showLightbox" :images="lightBoxImg" />
+  <div v-if="docs.length==0" class="text-h5 text-weight-light text-center">{{ emptyDocsLabel }}</div>
   <div class="q-col-gutter-md row items-start">
     <div class="col-auto" v-for="doc in props.docs" :key="doc.id" style="align-self: stretch;">
       <q-card class="cord-hover full-height" flat bordered :style="{ width: cardSize + 'px', height: cardSize + 'px' }">
@@ -66,6 +61,7 @@ const { hasPermission } = useUserStore()
 
 const props = defineProps<{
   docs: CaseDocumentResponse[],
+  emptyDocsLabel: string
 }>();
 const emit = defineEmits<{
   remove: [id: number];
@@ -170,50 +166,5 @@ async function downloadFile(url:string, filename:string) {
 }
 .cord-hover:hover .hover-controls {
   opacity: 1;
-}
-.lightbox-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.carousel-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.full-height-carousel {
-  height: 100vh;
-  width: 100vw;
-}
-
-.full-height-slide {
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.full-height-img {
-  max-height: 100vh;
-  max-width: 100vw;
-  width: auto;
-  height: auto;
-}
-
-/* Для одиночного изображения */
-.single-img {
-  max-height: 90vh;
-  max-width: 100vw;
-}
-
-/* Кнопка закрытия */
-.dialog-img-close-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10000;
 }
 </style>

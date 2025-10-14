@@ -12,8 +12,10 @@ import { BoqWork, toWorkUpdateRequest } from '../api/types';
 import { BoqWorkApi } from '../api/boq-work-api';
 import { useBoqWorkStore } from '../stores/boq-work-store';
 import { useBoqWorkService } from '../composables/boq-work';
+import { useEstimateService } from 'src/features/estimate/composables/estimate-service'
 
 const { updateWork } = useBoqWorkService()
+const { getEstimate } = useEstimateService()
 
 const { field, value, row, canEdit = true } = defineProps<{
     field: string,
@@ -28,5 +30,6 @@ const updateValue = async () => {
     const update = _.cloneDeep(row) as any
     update[field] = localValue.value
     await updateWork(update)
+    await getEstimate()
 }
 </script>

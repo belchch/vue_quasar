@@ -47,7 +47,7 @@
             </div>
 
             <div>
-              <q-btn label="Сохранить" type="submit" color="primary" />
+              <q-btn label="Сохранить" :loading="creating" type="submit" color="primary" />
               <q-btn label="Отмена" type="reset" color="primary" flat class="q-ml-sm" />
             </div>
           </q-form>
@@ -82,6 +82,7 @@ const photoDocService = usePhotoDocs()
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 const { refreshPhotoDocs } = useSelectedInspection()
 const form = ref<QForm>()
+const creating = ref(false)
 
 const props = defineProps<{
   rowId: number | undefined
@@ -177,6 +178,7 @@ const cleanAndClose = () => {
 
 //TODO - refactor двусторонняя связь
 const onSubmit = async () => {
+  creating.value = true
   await form.value?.validate()
 
   await updateTechnicalReportRow({
@@ -206,6 +208,7 @@ const onSubmit = async () => {
   await refreshPhotoDocs()
 
   cleanAndClose()
+  creating.value = false
 }
 const onReset = () => {
   form.value?.resetValidation()

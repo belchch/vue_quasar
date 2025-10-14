@@ -41,5 +41,13 @@ export const BoqApi = {
                 inspectionId
             }
         })
+    },
+
+    buildEstimateReport: (inspectionId: number) => {
+        return api.post<FileInfo>(`/api/stock-report/build-docx`, {}, {
+            params: {
+                inspectionId
+            }
+        })
     }
 }

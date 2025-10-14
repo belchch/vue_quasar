@@ -7,7 +7,11 @@
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
       <q-card-section class="q-pl-none">
-        <q-list>
+        <div class="text-center" v-if="loading">
+          <q-spinner color="primary" size="3em" :thickness="2" />
+          <div class="q-mt-md">Загрузка...</div>
+        </div>
+        <q-list v-else>
           <q-item v-if="works.length == 0">
             <q-item-section class="text-center">
               Список пуст
@@ -15,13 +19,8 @@
           </q-item>
           <q-item v-for="(item, index) in works" :key="index">
             <q-item-section>
-              <q-toggle
-                size="sm"
-                color="secondary"
-                @update:model-value="(val) => updateVisible(item, val)"
-                :label="`${item.rate.name}`"
-                v-model="item.visible"
-              />
+              <q-toggle size="sm" color="secondary" @update:model-value="(val) => updateVisible(item, val)"
+                :label="`${item.rate.name}`" v-model="item.visible" />
             </q-item-section>
           </q-item>
         </q-list>
@@ -40,22 +39,26 @@ import { BoqWork } from '../api/types';
 import { useBoqWorkService } from 'src/features/boq/composables/boq-work';
 import { useBoqStore } from '../stores/boq-store';
 import { storeToRefs } from 'pinia';
+import { useEstimateService } from 'src/features/estimate/composables/estimate-service'
 const open = ref<boolean>(false)
 const { requestWorks, updateWork } = useBoqCommonWorkService();
 const {boq} = storeToRefs(useBoqStore())
 const works = ref<BoqWork[]>([]);
 const boqService = useBoqWorkService()
-
+const estimateService = useEstimateService()
 const openDialog = async () => {
   open.value = true
+  loading.value = true
   works.value = await requestWorks();
+  loading.value = false
 };
-
+const loading = ref<boolean>(false)
 const updateVisible = async (item: BoqWork, val: boolean) => {
   item.visible = val;
   try {
     await updateWork(item);
     await boqService.requestWorks()
+    await estimateService.getEstimate();
   } catch {
     item.visible = !val;
   }
