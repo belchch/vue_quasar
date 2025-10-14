@@ -59,7 +59,7 @@ const columns = [
     {
         name: 'name',
         field: (row: BoqRawMaterial) => row.rawMaterial.name,
-        label: 'Работа',
+        label: 'Материал',
         align: 'left' as const,
     },
     {
@@ -71,7 +71,7 @@ const columns = [
     {
         name: 'volume',
         field: (row: BoqRawMaterial) => row.volume,
-        label: 'Объем',
+        label: 'Количество',
         align: 'left' as const,
     }
 ]
