@@ -6,10 +6,7 @@
                 <q-btn @click="buildAndRequestBoq" color="primary" size="sm">
                 Сформировать
             </q-btn>
-            <template v-if="boq">
-                <!-- <q-btn @click="BoqApi.buildReport(boq.id)" color="primary" outline size="sm">
-                    Скачать
-                </q-btn> -->
+            <template v-if="boq">        
                 <DownloadReportButton
                     label="Скачать"
                     :disable="false"
