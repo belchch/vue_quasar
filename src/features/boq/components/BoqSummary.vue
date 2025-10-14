@@ -14,8 +14,7 @@ import { BoqLocation } from '../api/types';
 import { useBoqLocationService } from '../composables/boq-location';
 
 import BoqLocations from './BoqLocations.vue';
-import CommonWorksEditor from './CommonWorksEditor.vue';
-import WorkTable from './WorkTable.vue';
+import BoqResultItems from './BoqResultItems.vue';
 import EstimateTable from 'src/features/estimate/components/EstimateTable.vue'
 
 const { navigateLocation } = useBoqLocationService()

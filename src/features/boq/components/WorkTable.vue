@@ -1,8 +1,8 @@
 <template>
   <q-table :rows="works" :columns="columns" :row-key="row => row.id" wrap-cells
+    :bordered="false"
     :selection="editable ? 'multiple' : 'none'" :pagination="{ rowsPerPage: 20 }" separator="cell">
-    <template v-slot:top>
-      <div class="caption">Работы</div>
+    <template v-if="$slots['additional-top']" v-slot:top>
       <slot name="additional-top"></slot>
     </template>
     <template v-slot:body="props">
