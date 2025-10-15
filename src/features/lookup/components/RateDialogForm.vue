@@ -41,6 +41,7 @@
           <rate-door-params v-if="formData.boqWorkParamsType == 'DOOR'" v-model="doorParams" />
           <rate-window-params v-if="formData.boqWorkParamsType == 'WINDOW'" v-model="windowParams" />
           <rate-wall-section-params v-if="formData.boqWorkParamsType == 'WALL_SECTION'" v-model="wallSectionParams" />
+          <rate-fixed-asset-params v-if="formData.boqWorkParamsType == 'FIXED_ASSET'" v-model="fixedAssetParams" />
         </div>
       </div>
       <q-card-actions align="right">
@@ -63,7 +64,8 @@ import { Rate,
   BoqSectionBase,
   BoqDoor,
   BoqWindow,
-  BoqWallSection } from 'src/features/lookup/rate/types';
+  BoqWallSection, 
+  BoqFixedAssetParams} from 'src/features/lookup/rate/types';
 import RateFloorParams from './RateFloorParams.vue'
 import { useRateStore } from 'src/features/lookup/rate/rate-store'
 import RateFloorSectionParams from './RateFloorSectionParams.vue'
@@ -72,6 +74,7 @@ import RateCeilSectionParams from './RateCeilSectionParams.vue'
 import RateDoorParams from './RateDoorParams.vue'
 import RateWindowParams from './RateWindowParams.vue'
 import RateWallSectionParams from './RateWallSectionParams.vue'
+import RateFixedAssetParams from "./RateFixedAssetParams.vue";
 const rateStore = useRateStore()
 const openModal = defineModel<boolean>({ default: false });
 const { rate } = defineProps<{
@@ -117,6 +120,14 @@ const defaultWallSectionParams: BoqWallSection = {
   painting: null,
   plaster: null,
 }
+
+const defaultFixedAssetParams: BoqFixedAssetParams = {
+  material: null,
+  replacement: null,
+  painting: null,
+  plaster: null
+}
+
 const floorSectionParams = ref<BoqFloorSection>(defaultFloorSectionParams);
 const ceilSectionParams = ref<BoqSectionBase>({ ...defaultCeilSectionParams });
 const doorParams = ref<BoqDoor>({ ...defaultDoorParams });
@@ -128,6 +139,9 @@ const floorSectionParamsUpdate = ref<BoqFloorSectionUpdateRequest>({
   materialPreservation: null,
   screedLeveling: null
 });
+
+const fixedAssetParams = ref<BoqFixedAssetParams>({...defaultFixedAssetParams})
+
 const unitOfMeasureOptions = computed(() => {
   return Object.keys(UnitOfMeasureEnum).map(key => ({
     value: key as UnitOfMeasureType,
@@ -192,6 +206,9 @@ watch(openModal, (newValue) => {
         case 'WALL_SECTION':
           Object.assign(wallSectionParams.value, rate.boqWorkParams)
           break;
+        case 'FIXED_ASSET':
+          Object.assign(fixedAssetParams.value, rate.boqWorkParams)
+          break;
       }
     } else {
       Object.assign(formData.value,{...defautObj});
@@ -202,6 +219,7 @@ watch(openModal, (newValue) => {
       ceilSectionParams.value = {...defaultCeilSectionParams};
       windowParams.value = {...defaultWindowParams};
       wallSectionParams.value = {...defaultWallSectionParams};
+      fixedAssetParams.value = {...defaultFixedAssetParams}
       if (formData.value.id) delete formData.value.id;
     }
   }
@@ -266,6 +284,14 @@ async function onSave() {
         replacement: wallSectionParams.value.replacement,
         painting: wallSectionParams.value.painting,
         plaster: wallSectionParams.value.plaster,
+      }
+      break;
+    case 'FIXED_ASSET':
+      formData.value.boqWorkParams = {
+        materialId: fixedAssetParams.value.material?.id || null,
+        replacement: fixedAssetParams.value.replacement,
+        painting: fixedAssetParams.value.painting,
+        plaster: fixedAssetParams.value.plaster,
       }
       break;
     default:

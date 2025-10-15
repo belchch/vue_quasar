@@ -101,7 +101,7 @@ const columns = [
 </script>
 <style scoped>
 .ceil-edit .edit-icon {
-  opacity: .5;
+  opacity: .2;
   position: absolute;
   top: 2px;
   right: 2px;
