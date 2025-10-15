@@ -22,6 +22,7 @@ const boqSectionOptions = [
     {id: 'DOOR', name: 'Двери'},
     {id: 'WINDOW', name: 'Окна'},
     {id: 'WALL', name: 'Стены'},
+    {id: 'FIXED_ASSET', name: 'Конструктив'},
 ]
 
 const columns = [

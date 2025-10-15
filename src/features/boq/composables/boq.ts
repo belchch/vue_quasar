@@ -4,6 +4,7 @@ import { useInspectionsStore } from "src/features/inspection/store/inspection-st
 import { BoqApi } from "../api/boq-api"
 import { BoqLocation, toLocationUpdateRequest } from "../api/types"
 import { useBoqWorkService } from "./boq-work"
+import { useBoqRawMaterialService } from "./boq-material"
 
 export const useBoqService = () => {
     const { boq, locations, initialized } = storeToRefs(useBoqStore())

@@ -1,10 +1,11 @@
 import { Spot } from "src/features/lookup/spot/stores/types"
-import { Rate } from "src/features/rate/stores/types"
+import { Rate, UnitOfMeasure } from "src/features/rate/stores/types"
 import { BoqCeilModel } from "./ceil/types"
 import { BoqFloorModel } from "./floor/types"
 import { BoqInteriorDoorModel } from "./interior-door/types"
 import { BoqWallSectionModel } from "./wall/types"
 import { BoqWindowModel } from "./window/types"
+import { BoqFixedAssetModel } from "./fixed-asset/types"
 
 export type BoqLocation = {
     id: number,
@@ -18,7 +19,8 @@ export type BoqLocation = {
     ceil: BoqCeilModel,
     interiorDoors: BoqInteriorDoorModel[],
     windows: BoqWindowModel[],
-    wallSections: BoqWallSectionModel[]
+    wallSections: BoqWallSectionModel[],
+    fixedAssets: BoqFixedAssetModel[]
 }
 
 export type Boq = {
@@ -58,12 +60,40 @@ export type BoqWork = {
     mountType: WorkMountType
 }
 
+export type BoqRawMaterial = {
+    id: number,
+    rawMaterial: RawMaterial,
+    boqId: number,
+    volume: number,
+    disabled: boolean,
+    visible: boolean,
+    workId: number
+}
+
+export type BoqRawMaterialUpdateRequest = {
+    volume: number,
+    disabled: boolean
+}
+
+export type RawMaterial = {
+    id: number,
+    name: string,
+    unitOfMeasure: UnitOfMeasure,
+}
+
 export type BoqWorkUpdateRequest = {
     id: number,
     volume: number,
     disabled: boolean,
     visible: boolean,
     mountType: WorkMountType
+}
+
+export const toMaterialUpdateRequest = (material: BoqRawMaterial): BoqRawMaterialUpdateRequest => {
+    return {
+        volume: material.volume,
+        disabled: material.disabled
+    }
 }
 
 export const toWorkUpdateRequest = (work: BoqWork): BoqWorkUpdateRequest => {

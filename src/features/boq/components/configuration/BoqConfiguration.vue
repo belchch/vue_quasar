@@ -8,6 +8,7 @@
                     <q-tab name="interior-door" label="Двери"/>
                     <q-tab name="window" label="Окна"/>
                     <q-tab name="wall" label="Стены" />
+                    <q-tab name="fixed-asset" label="Конструктив" />
                     <q-tab name="supporting" label="Дополнительные работы" />
                 </q-tabs>
             </q-card>
@@ -28,6 +29,9 @@
                     <q-tab-panel name="wall">
                         <BoqWallSections :wall-sections="location!.wallSections"/>
                     </q-tab-panel>
+                    <q-tab-panel name="fixed-asset">
+                        <BoqFixedAssets :fixed-assets="location!.fixedAssets"/>
+                    </q-tab-panel>
                     <q-tab-panel name="supporting">
                         <BoqSupportingWorks :location-id="location!.id"/>
                     </q-tab-panel>
@@ -35,7 +39,7 @@
             </q-card>
         </div>
         <div class="col-4">
-            <WorkTable :works="locationWorks" :editable="true" :show-location="false"/>
+            <WorkTable :works="locationWorks" :editable="true" :show-location="false" :flat="false"/>
         </div>
     </div>
 </template>
@@ -51,6 +55,7 @@ import BoqInteriorDoors from './BoqInteriorDoors.vue';
 import BoqWindows from './BoqWindows.vue';
 import BoqWallSections from './BoqWallSections.vue';
 import BoqSupportingWorks from './BoqSupportingWorks.vue';
+import BoqFixedAssets from './BoqFixedAssets.vue';
 
 const { location } = storeToRefs(useBoqLocationStore())
 const { works } = storeToRefs(useBoqWorkStore())
