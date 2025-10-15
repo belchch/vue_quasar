@@ -34,7 +34,7 @@ const updateValue = async () => {
 </script>
 <style scoped>
 .edit-icon {
-  opacity: .5;
+  opacity: var(--e-opacity-edit-icon);
   position: absolute;
   top: 2px;
   right: 2px;
