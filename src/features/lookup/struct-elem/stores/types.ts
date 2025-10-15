@@ -13,5 +13,5 @@ export type StructElemUpdateRequest = {
   boqSection?: BoqSection | undefined
 }
 
-export type BoqSection = 'FLOOR' | 'CEIL' | 'DOOR' | 'WINDOW' | 'WALL'
+export type BoqSection = 'FLOOR' | 'CEIL' | 'DOOR' | 'WINDOW' | 'WALL' | 'FIXED_ASSET'
 export type BoqSectionOption = {id: BoqSection, name: string}

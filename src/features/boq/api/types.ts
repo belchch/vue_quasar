@@ -5,6 +5,7 @@ import { BoqFloorModel } from "./floor/types"
 import { BoqInteriorDoorModel } from "./interior-door/types"
 import { BoqWallSectionModel } from "./wall/types"
 import { BoqWindowModel } from "./window/types"
+import { BoqFixedAssetModel } from "./fixed-asset/types"
 
 export type BoqLocation = {
     id: number,
@@ -18,7 +19,8 @@ export type BoqLocation = {
     ceil: BoqCeilModel,
     interiorDoors: BoqInteriorDoorModel[],
     windows: BoqWindowModel[],
-    wallSections: BoqWallSectionModel[]
+    wallSections: BoqWallSectionModel[],
+    fixedAssets: BoqFixedAssetModel[]
 }
 
 export type Boq = {
