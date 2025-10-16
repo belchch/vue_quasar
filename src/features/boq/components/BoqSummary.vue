@@ -2,7 +2,7 @@
     <div class="row q-col-gutter-sm">
         <div class="col-7">
             <BoqLocations @navigate-location="(location: BoqLocation) => navigateLocation(location.id)" />
-            <EstimateTable />
+            <EstimateTabs />
         </div>
         <div class="col-5">
             <BoqResultItems/>
@@ -15,7 +15,7 @@ import { useBoqLocationService } from '../composables/boq-location';
 
 import BoqLocations from './BoqLocations.vue';
 import BoqResultItems from './BoqResultItems.vue';
-import EstimateTable from 'src/features/estimate/components/EstimateTable.vue'
+import EstimateTabs from 'src/features/estimate/components/EstimateTabs.vue'
 
 const { navigateLocation } = useBoqLocationService()
 
