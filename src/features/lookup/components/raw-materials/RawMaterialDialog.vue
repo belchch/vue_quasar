@@ -6,57 +6,65 @@
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
-      <div class="row">
-        <div class="col">
-          <q-card-section class="q-pt-none">
-            <div class="text-subtitle1 q-pb-sm">Общие параметры</div>
-            <q-input outlined dense v-model="formData.name" label="Наименование" />
-          </q-card-section>
-          <div class="row">
-            <div class="col">
-              <q-card-section class="q-pt-none">
-                <q-select
-                  dense
-                  outlined
-                  v-model="formData.unitOfMeasure"
-                  :options="unitOfMeasureOptions"
-                  option-value="value"
-                  option-label="label"
-                  emit-value
-                  map-options
-                  label="Еденицы измерени"
-                />
-              </q-card-section>
+      <q-form @submit.prevent="onSave">
+        <div class="row">
+          <div class="col">
+            <q-card-section class="q-pt-none">
+              <div class="text-subtitle1 q-pb-sm">Общие параметры</div>
+              <q-input
+                outlined
+                dense
+                v-model="formData.name"
+                label="Наименование"
+                :rules="[(val) => (val && val.length > 0) || 'Обязательное поле']"
+              />
+            </q-card-section>
+            <div class="row">
+              <div class="col">
+                <q-card-section class="q-pt-none">
+                  <q-select
+                    dense
+                    outlined
+                    v-model="formData.unitOfMeasure"
+                    :options="unitOfMeasureOptions"
+                    option-value="value"
+                    option-label="label"
+                    emit-value
+                    map-options
+                    label="Еденицы измерени"
+                  />
+                </q-card-section>
+              </div>
+              <div class="col">
+                <q-card-section class="q-pt-none">
+                  <q-input
+                    type="number"
+                    outlined
+                    dense
+                    v-model="formData.factor"
+                    label="Коэффициент"
+                    :rules="[numberOrEmptyRule]"
+                  />
+                </q-card-section>
+              </div>
             </div>
-            <div class="col">
-              <q-card-section class="q-pt-none">
-                <q-input
-                  outlined
-                  dense
-                  v-model="formData.factor"
-                  label="Коэффициент"
-                  :rules="[numberOrEmptyRule]"
-                />
-              </q-card-section>
-            </div>
+            <q-card-section class="q-pt-none">
+              <RawMaterialLinksTable
+                v-model:links="formData.sources"
+                :rows="rawMaterial?.sources || []"
+              />
+            </q-card-section>
           </div>
-          <q-card-section class="q-pt-none">
-            <RawMaterialLinksTable
-              v-model:links="formData.sources"
-              :rows="rawMaterial?.sources || []"
-            />
-          </q-card-section>
+          <div class="col">
+            <q-card-section class="q-pt-none">
+              <RawMaterialRateTable v-model:rates="formData.rates" />
+            </q-card-section>
+          </div>
         </div>
-        <div class="col">
-          <q-card-section class="q-pt-none">
-            <RawMaterialRateTable v-model:rates="formData.rates" />
-          </q-card-section>
-        </div>
-      </div>
-
-      <q-card-actions align="right">
-        <q-btn flat label="Сохранить" color="primary" :loading="loading" @click="onSave" />
-      </q-card-actions>
+        <q-card-actions align="right">
+          <q-btn flat label="Сохранить" color="primary" :loading="loading" type="submit" />
+        </q-card-actions>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
@@ -73,7 +81,7 @@ const openModal = defineModel<boolean>({ default: false })
 const { rawMaterial } = defineProps<{
   rawMaterial: RawMaterial
 }>()
-const defautObj: RawMaterial = {
+const defaultObj: RawMaterial = {
   name: '',
   rates: [],
   sources: [],
@@ -94,7 +102,7 @@ const numberOrEmptyRule = (val: any) => {
 }
 
 const isEditMode = computed(() => !!rawMaterial?.id)
-const formData = ref<RawMaterial>({ ...defautObj })
+const formData = ref<RawMaterial>({ ...defaultObj })
 
 watch(
   openModal,

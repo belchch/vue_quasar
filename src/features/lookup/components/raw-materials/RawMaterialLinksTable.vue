@@ -10,21 +10,29 @@
         </q-card-section>
         <q-form ref="formRef" @submit.prevent="addLink" class="full-width q-mt-sm">
           <q-card-section>
-            <q-input v-model="newLink" type="textarea" autogrow label="Ссылка" dense outlined />
+            <q-input
+              v-model="newLink"
+              :rules="[(val) => (val && val.length > 0) || 'Обязательное поле']"
+              type="textarea"
+              autogrow
+              label="Ссылка"
+              dense
+              outlined
+            />
           </q-card-section>
           <q-card-section>
-            <q-input v-model="newPrice" type="number" label="Цена" dense outlined />
+            <q-input
+              v-model="newPrice"
+              :rules="[(val) => (val && val.length > 0) || 'Обязательное поле']"
+              type="number"
+              label="Цена"
+              dense
+              outlined
+            />
           </q-card-section>
           <q-card-actions align="right">
             <q-btn flat label="Отмена" color="primary" v-close-popup />
-            <q-btn
-              flat
-              label="Добавить"
-              type="submit"
-              color="primary"
-              v-close-popup
-              @click="addLink"
-            />
+            <q-btn flat label="Добавить" type="submit" color="primary" />
           </q-card-actions>
         </q-form>
       </q-card>
