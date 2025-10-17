@@ -85,21 +85,22 @@ export type WallSectionMeasurement = {
     photoUrls: string[]
 }
 
-export interface FixedAssetMeasurament {
-  id: number;
-  name: string;
-  width: number;
-  length: number;
-  height: number;
-  heightFromFloor: number;
-  perimeter: number;
-  area: number;
-  hasCustomShape: boolean;
-  sources: string[];
-  urls: string[];
-  room: Spot;
-  roomNum?: number,
-  inspectionId: number;
+export interface FixedAssetMeasurement {
+  id: number
+  name: string
+  width: number
+  length: number
+  height: number
+  heightFromFloor: number
+  perimeter: number
+  area: number
+  hasCustomShape: boolean
+  sources: string[]
+  urls: string[]
+  room: Spot
+  roomNum?: number
+  material: Material | null
+  inspectionId: number
 }
 
 export type TreeItem = {
