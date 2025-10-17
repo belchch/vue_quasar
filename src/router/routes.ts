@@ -166,6 +166,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/lookup/RatePage.vue'),
         name: 'lookup.rates',
       },
+      {
+        path: 'raw_materials',
+        component: () => import('pages/lookup/RawMaterialPage.vue'),
+        name: 'lookup.raw_materials',
+      },
     ],
     meta: { requiredAuth: true },
   },
