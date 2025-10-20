@@ -2,13 +2,13 @@ import { casePages } from 'src/features/case/constants/case-pages'
 import { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 
-const casePage = ({ name, component }: { name: string, component: Component}) => {
+const casePage = ({ name, component }: { name: string; component: Component }) => {
   const page = casePages[name]!
 
   return {
     path: page.segment,
     component,
-    name
+    name,
   }
 }
 
@@ -35,11 +35,11 @@ const routes: RouteRecordRaw[] = [
         children: [
           casePage({
             name: 'case-information',
-            component: () => import('pages/case/CaseInfoPage.vue')
+            component: () => import('pages/case/CaseInfoPage.vue'),
           }),
           casePage({
             name: 'case-questions',
-            component: () => import('pages/case/CaseQuestionsPage.vue')
+            component: () => import('pages/case/CaseQuestionsPage.vue'),
           }),
           {
             path: 'inspection/:inspectionId',
@@ -49,19 +49,19 @@ const routes: RouteRecordRaw[] = [
             children: [
               casePage({
                 name: 'inspection-photos',
-                component: () => import('pages/inspection/InspectionPhotoPage.vue')
+                component: () => import('pages/inspection/InspectionPhotoPage.vue'),
               }),
               casePage({
                 name: 'inspection-gv',
-                component: () => import('pages/inspection/InspectionGeneralViewPage.vue')
+                component: () => import('pages/inspection/InspectionGeneralViewPage.vue'),
               }),
               casePage({
                 name: 'inspection-measurements',
-                component: () => import('pages/inspection/InspectionMeasurementsPage.vue')
+                component: () => import('pages/inspection/InspectionMeasurementsPage.vue'),
               }),
               casePage({
                 name: 'inspection-defects',
-                component: () => import('pages/inspection/InspectionDefectsPage.vue')
+                component: () => import('pages/inspection/InspectionDefectsPage.vue'),
               }),
               {
                 name: 'inspection-boq',
@@ -70,29 +70,29 @@ const routes: RouteRecordRaw[] = [
                 children: [
                   casePage({
                     name: 'boq-summary',
-                    component: () => import('pages/inspection/boq/BoqSummaryPage.vue')
+                    component: () => import('pages/inspection/boq/BoqSummaryPage.vue'),
                   }),
                   casePage({
                     name: 'boq-configuration',
-                    component: () => import('pages/inspection/boq/BoqConfigurationPage.vue')
-                  })
-                ]
+                    component: () => import('pages/inspection/boq/BoqConfigurationPage.vue'),
+                  }),
+                ],
               },
               casePage({
                 name: 'inspection-documents',
-                component: () => import('pages/inspection/InspectionDocumentsPage.vue')
+                component: () => import('pages/inspection/InspectionDocumentsPage.vue'),
               }),
               casePage({
                 name: 'inspection-report',
-                component: () => import('pages/inspection/InspectionReportPage.vue')
+                component: () => import('pages/inspection/InspectionReportPage.vue'),
               }),
               casePage({
                 name: 'inspection-settings',
-                component: () => import('pages/inspection/InspectionSettingsPage.vue')
-              })
-            ]
+                component: () => import('pages/inspection/InspectionSettingsPage.vue'),
+              }),
+            ],
           },
-        ]
+        ],
       },
     ],
     meta: { requiredAuth: true },
@@ -170,6 +170,11 @@ const routes: RouteRecordRaw[] = [
         path: 'raw_materials',
         component: () => import('pages/lookup/RawMaterialPage.vue'),
         name: 'lookup.raw_materials',
+      },
+      {
+        path: 'flood_damages',
+        component: () => import('pages/lookup/FloodPropertyDamagePage.vue'),
+        name: 'lookup.flood_damages',
       },
     ],
     meta: { requiredAuth: true },
