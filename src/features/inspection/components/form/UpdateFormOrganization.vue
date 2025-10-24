@@ -2,10 +2,10 @@
   <q-card-section v-if="localCase">
     <q-form class="q-gutter-sm" @submit="handleSave">
       <div class="row q-col-gutter-lg">
-        <div class="col-6">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
           <FormList label="Организация" v-model="localCase.company" :options="companyStore.items" />
         </div>
-        <div class="col-6">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
           <FormList label="Регион" v-model="localCase.region" :options="regionStore.items" />
         </div>
       </div>
@@ -23,7 +23,7 @@
 import { onMounted, ref } from 'vue'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
 import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
-import { useUserStore } from 'src/features/user/stores/user-store';
+import { useUserStore } from 'src/features/user/stores/user-store'
 import FormInput from './FormInput.vue'
 import FormList from './FormList.vue'
 import { Case } from 'src/features/case/stores/types'
@@ -38,21 +38,20 @@ const model = defineModel<Case>()
 const emit = defineEmits(['update:modelValue', 'save', 'reset'])
 
 const handleSave = () => {
-    emit('save', {
-        ...localCase.value,
-    })
+  emit('save', {
+    ...localCase.value,
+  })
 }
 const resetForm = () => {
-    initLocalForm()
-    emit('reset')
+  initLocalForm()
+  emit('reset')
 }
 
 const initLocalForm = () => {
-    if (!model.value) return
-    localCase.value = { ...model.value }
+  if (!model.value) return
+  localCase.value = { ...model.value }
 }
 onMounted(() => {
-    initLocalForm()
+  initLocalForm()
 })
-
 </script>
