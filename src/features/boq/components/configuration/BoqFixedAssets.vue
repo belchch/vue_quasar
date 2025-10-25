@@ -1,6 +1,5 @@
 <template>
     <div class="row justify-between">
-        <q-btn color="secondary" label="Добавить конструкцию" size="sm" @click="addFixedAsset()"/>
         <PhotoGallery :urls="wallPhotos"/>
     </div>
     <q-separator class="q-mt-md"/>

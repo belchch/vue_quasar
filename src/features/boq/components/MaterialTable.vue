@@ -15,8 +15,9 @@
                 <q-td key="unitOfMeasure" :props="props">
                     {{ uomDescription(props.row.rawMaterial.unitOfMeasure) }}
                 </q-td>
-                <q-td key="volume">
-                    <MaterialCellEditor field="volume" :row="props.row" :value="props.row.volume" />                
+                <q-td key="volume" class="ceil-edit">
+                    <MaterialCellEditor field="volume" :row="props.row" :value="props.row.volume" />
+                    <q-icon name="edit" class="edit-icon" />
                 </q-td>
             </q-tr>
         </template>
@@ -76,3 +77,15 @@ const columns = [
     }
 ]
 </script>
+<style scoped>
+.ceil-edit .edit-icon {
+  opacity: var(--e-opacity-edit-icon);
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.ceil-edit:hover {
+  cursor: pointer;
+}
+</style>

@@ -1,6 +1,5 @@
 <template>
     <div class="row justify-between">
-        <q-btn color="secondary" label="Добавить окно" size="sm" @click="addWindow()"/>
         <PhotoGallery :urls="windowPhotos"/>
     </div>
     <q-separator class="q-mt-md"/>

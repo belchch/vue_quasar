@@ -1,9 +1,6 @@
 <template>
     <div style="position: relative;">
         <div class="text-caption q-ma-sm text-accent">Дверь {{ index + 1 }}</div>
-        <div class="absolute-top-right">
-            <q-btn icon="delete" color="secondary" flat size="md" @click="emits('remove')" />
-        </div>
         <q-card-section>
             <div style="width: 180px">
                 <q-select v-model="interiorDoorLocal.type" :options="doorTypeOptions" dense emit-value map-options
@@ -14,29 +11,16 @@
                     <q-card bordered flat style="width: 400px;">
                         <div class="text-caption q-ma-sm">Размеры</div>
                         <q-card-section class="q-pt-none">
-                            <div class="row q-gutter-x-xl">
-                                <q-input type="number" v-model.number="interiorDoorLocal.width" label="Ширина"
-                                    style="width: 120px;" @update:model-value="updateInteriorDoor(true)" />
-
-                                <q-input type="number" v-model.number="interiorDoorLocal.height" label="Высота"
-                                    style="width: 120px;" @update:model-value="updateInteriorDoor(true)" />
-                            </div>
-                            <div class="row q-gutter-md q-mt-none">
-                                <div class="row">
-                                    <div class="text-caption">Полщадь:</div>
-                                    <div class="q-ml-sm text-accent computed-value">
-                                        {{ interiorDoorLocal.area }}
-                                        <q-tooltip>{{ interiorDoorLocal.area }}</q-tooltip>
-                                    </div>
+                            <div class="row q-gutter-xl">
+                                <div>
+                                    <LabeledValue label="Ширина" :value="interiorDoorLocal.width" />
+                                    <LabeledValue label="Площадь" :value="interiorDoorLocal.area" :accent="true"/>
                                 </div>
-                                <div class="row">
-                                    <div class="text-caption">Периметер:</div>
-                                    <div class="q-ml-sm text-accent computed-value">
-                                        {{ interiorDoorLocal.perimeter }}
-                                        <q-tooltip>{{ interiorDoorLocal.perimeter }}</q-tooltip>
-                                    </div>
+                                <div>
+                                    <LabeledValue label="Высота" :value="interiorDoorLocal.height" />
+                                    <LabeledValue label="Периметер" :value="interiorDoorLocal.perimeter" :accent="true"/>
                                 </div>
-                            </div>
+                            </div>                            
                         </q-card-section>
                     </q-card>
                 </div>
@@ -69,6 +53,7 @@ import { BoqInteriorDoorApi } from '../../api/interior-door/boq-interior-door-ap
 import { BoqInteriorDoorModel, toInteriorDoorUpdateRequest } from '../../api/interior-door/types';
 import { useBoqWorkService } from '../../composables/boq-work';
 import ReplacementToggles from './common/ReplacementToggles.vue';
+import LabeledValue from './common/LabeledValue.vue';
 
 const { requestWorks } = useBoqWorkService()
 

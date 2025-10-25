@@ -16,9 +16,11 @@
         <SectionLayout :sections="ceilLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">
                 <div class="q-gutter-md" style="width: 400px;">
-                    <q-input type="number" v-model.number="section.area" label="Полщадь секции потолка"
-                        style="width: 180px;"
-                        @update:model-value="updateCeilSection(section as BoqCeilSectionModel, true)" />                    
+                    <LabeledValue
+                        label="Площадь"
+                        :value="section.area"
+                        :accent="true"
+                    />
                 </div>
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"
@@ -44,6 +46,7 @@ import { useBoqWorkService } from '../../composables/boq-work';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
 import PhotoGallery from './common/PhotoGallery.vue';
 import SectionLayout from './common/SectionLayout.vue';
+import LabeledValue from './common/LabeledValue.vue';
 
 const { ceilPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()

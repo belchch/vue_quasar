@@ -1,6 +1,5 @@
 <template>
     <div class="row justify-between">
-        <q-btn color="secondary" label="Добавить секцию" size="sm" @click="addWallSection()"/>
         <PhotoGallery :urls="wallPhotos"/>
     </div>
     <q-separator class="q-mt-md"/>
