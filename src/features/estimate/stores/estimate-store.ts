@@ -1,11 +1,12 @@
-import { defineStore } from "pinia"
-import { Estimate } from "../api/types"
-import { ref } from "vue"
+import { defineStore } from 'pinia'
+import { Estimate, EstimateMaterial } from '../api/types'
+import { ref } from 'vue'
 
 export const useEstimateStore = defineStore('estimate-work', () => {
-    const estimate = ref<Estimate>()
-
-    return {
-        estimate
-    }
+  const estimateWorks = ref<Estimate>()
+  const estimateMaterials = ref<EstimateMaterial>()
+  return {
+    estimateWorks,
+    estimateMaterials,
+  }
 })

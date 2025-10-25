@@ -23,7 +23,8 @@
             <template v-slot:header-opening="prop">
               <PlanTreeNode :label="openingTypeName(prop.node.rawData.type)"
                 :name="openingFullName(prop.node.rawData.openingId, prop.node.rawData.materialId)"
-                :backoff-name="openingBackOffName(prop.node.label, prop.node.rawData.openingId, prop.node.rawData.materialId)" @edit="editOpening(prop.node)" />
+                :backoff-name="openingBackOffName(prop.node.label, prop.node.rawData.openingId, prop.node.rawData.materialId)"
+                @edit="editOpening(prop.node)" />
             </template>
             <template v-slot:header-wall-section="prop">
               <PlanTreeNode label="Секция" :name="materialLookupName(prop.node.rawData.materialId)"
@@ -64,8 +65,8 @@
       </template>
 
       <template v-slot:after>
-        <q-tab-panels v-if="selectedNode" v-model="selectedNodeType" style="height: calc(100vh - 280px);" animated
-          transition-prev="jump-up" transition-next="jump-up">
+        <q-tab-panels class="tree-tabs" v-if="selectedNode" v-model="selectedNodeType"
+          style="height: calc(100vh - 280px);" animated transition-prev="jump-up" transition-next="jump-up">
           <q-tab-panel name="room">
             <div class="text-blue-grey">Помещение</div>
             <div class="text-h6">{{ selectedNode['label'] || '-' }}</div>
@@ -269,4 +270,5 @@ const editObject = (node: any) => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
