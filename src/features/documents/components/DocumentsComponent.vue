@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-pa-md">
-    <div class="row no-wrap">
-      <q-tabs vertical v-model="tab" no-caps active-color="primary">
+    <div class="row no-wrap column-xs row-md no-wrap-md">
+      <q-tabs :vertical="tabVertical" v-model="tab" no-caps active-color="primary" class="q-mb-md">
         <q-tab label="Акт осмотра" name="act" class="justify-between" />
         <q-tab label="Схемы объекта" name="scheme" class="justify-between" />
       </q-tabs>
@@ -9,22 +9,55 @@
         <q-tab-panels v-model="tab">
           <q-tab-panel name="act" class="q-pt-none">
             <div class="row justify-between q-pb-lg">
-              <UploadDocumentBtn v-if="hasPermission(['document.update'])" @add="addDocument"
-                file-type="INSPECTION_REPORT" />
+              <UploadDocumentBtn
+                v-if="hasPermission(['document.update'])"
+                @add="addDocument"
+                file-type="INSPECTION_REPORT"
+              />
               <DisplayModeBtn v-model="displayMode" />
-              <DownloadReportButton label="Скачать отчет" :disable="false" :api-fn="downloadReport" />
+              <DownloadReportButton
+                label="Скачать отчет"
+                :disable="false"
+                :api-fn="downloadReport"
+              />
             </div>
-            <TableDocuments v-if="displayMode=='table'" :docs="filteredAct" @remove="onRemove"></TableDocuments>
-            <GalleryDocuments empty-docs-label="Акты отсутствуют" v-else :docs="filteredAct" @remove="onRemove" />
+            <TableDocuments
+              v-if="displayMode == 'table'"
+              :docs="filteredAct"
+              @remove="onRemove"
+            ></TableDocuments>
+            <GalleryDocuments
+              empty-docs-label="Акты отсутствуют"
+              v-else
+              :docs="filteredAct"
+              @remove="onRemove"
+            />
           </q-tab-panel>
           <q-tab-panel name="scheme" class="q-pt-none">
             <div class="row justify-between q-pb-lg">
-              <UploadDocumentBtn v-if="hasPermission(['document.update'])" file-type="FLOOR_PLAN" @add="addDocument" />
+              <UploadDocumentBtn
+                v-if="hasPermission(['document.update'])"
+                file-type="FLOOR_PLAN"
+                @add="addDocument"
+              />
               <DisplayModeBtn v-model="displayMode" />
-              <DownloadReportButton label="Скачать отчет" :disable="false" :api-fn="downloadReport" />
+              <DownloadReportButton
+                label="Скачать отчет"
+                :disable="false"
+                :api-fn="downloadReport"
+              />
             </div>
-            <TableDocuments v-if="displayMode == 'table'" :docs="filteredPlan" @remove="onRemove"></TableDocuments>
-            <GalleryDocuments v-else :docs="filteredPlan" empty-docs-label="Схемы отсутствуют" @remove="onRemove" />
+            <TableDocuments
+              v-if="displayMode == 'table'"
+              :docs="filteredPlan"
+              @remove="onRemove"
+            ></TableDocuments>
+            <GalleryDocuments
+              v-else
+              :docs="filteredPlan"
+              empty-docs-label="Схемы отсутствуют"
+              @remove="onRemove"
+            />
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -33,39 +66,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { DocumentsAPI } from '../api/documents-api';
+import { ref, computed } from 'vue'
+import { DocumentsAPI } from '../api/documents-api'
 
-import UploadDocumentBtn from './UploadDocumentBtn.vue';
-import TableDocuments from "./TableDocuments.vue";
-import GalleryDocuments from './GalleryDocuments.vue';
+import UploadDocumentBtn from './UploadDocumentBtn.vue'
+import TableDocuments from './TableDocuments.vue'
+import GalleryDocuments from './GalleryDocuments.vue'
 import DisplayModeBtn from './DisplayModeBtn.vue'
-import { useUserStore } from 'src/features/user/stores/user-store';
-import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
-import { useDocumentStore } from '../stores/documents-store';
-import { storeToRefs } from 'pinia';
+import { useUserStore } from 'src/features/user/stores/user-store'
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
+import { useDocumentStore } from '../stores/documents-store'
+import { storeToRefs } from 'pinia'
+import { useQuasar } from 'quasar'
 
 const { hasPermission } = useUserStore()
-const tab = ref('act');
+const tab = ref('act')
 const { actDocuments } = storeToRefs(useDocumentStore())
+const $q = useQuasar()
 
-const displayMode = ref('gallery');
+const displayMode = ref('gallery')
 
-const filteredAct = computed(() => actDocuments.value.filter((item: any) => { return item.fileType == 'INSPECTION_REPORT' }));
+const filteredAct = computed(() =>
+  actDocuments.value.filter((item: any) => {
+    return item.fileType == 'INSPECTION_REPORT'
+  }),
+)
 
-const filteredPlan = computed(() => actDocuments.value.filter((item: any) => { return item.fileType == 'FLOOR_PLAN' }));
-const inspectionStore = useInspectionsStore();
+const tabVertical = computed(() => {
+  console.log($q.screen.gt.sm)
+  return $q.screen.gt.sm
+})
+
+const filteredPlan = computed(() =>
+  actDocuments.value.filter((item: any) => {
+    return item.fileType == 'FLOOR_PLAN'
+  }),
+)
+const inspectionStore = useInspectionsStore()
 
 const downloadReport = async () => {
   return (await DocumentsAPI.downloadReport(inspectionStore.selectedInspectionId!)).data
 }
 
 const addDocument = (item: any) => {
-  actDocuments.value.push(item);
+  actDocuments.value.push(item)
 }
 
 const onRemove = (id: number) => {
-  actDocuments.value = actDocuments.value.filter((item: any) => item.id !== id);
+  actDocuments.value = actDocuments.value.filter((item: any) => item.id !== id)
 }
 </script>
 
