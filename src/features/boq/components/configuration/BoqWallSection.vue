@@ -1,13 +1,16 @@
 <template>
     <div style="position: relative;">
         <div class="text-caption q-ma-sm text-accent">Секция {{ index + 1 }}</div>
-        <div class="absolute-top-right">
-            <q-btn icon="delete" color="secondary" flat size="md" @click="emits('remove')" />
-        </div>
         
         <q-card-section>
-            <q-input type="number" v-model.number="wallSectionLocal.area" label="Полщадь секции" style="width: 180px;"
-                    @update:model-value="updateWallSection(true)" />
+            <!-- <q-input type="number" v-model.number="wallSectionLocal.area" label="Полщадь секции" style="width: 180px;"
+                    @update:model-value="updateWallSection(true)" /> -->
+
+                <LabeledValue
+                    label="Площадь"
+                    :value="wallSection.area"
+                    :accent="true"
+                />
 
                 <div class="q-mt-md">
                     <q-toggle color="secondary" v-model="wallSectionLocal.plaster" label="Штукатурка" size="sm"
@@ -27,6 +30,7 @@ import { BoqWallSectionApi } from '../../api/wall/boq-wall-section-api';
 import { BoqWallSectionModel, toWallSectionUpdateRequest } from '../../api/wall/types';
 import { useBoqWorkService } from '../../composables/boq-work';
 import MaterialReplacement from './common/MaterialReplacement.vue';
+import LabeledValue from './common/LabeledValue.vue';
 
 const { requestWorks } = useBoqWorkService()
 

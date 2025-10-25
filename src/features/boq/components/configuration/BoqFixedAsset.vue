@@ -1,32 +1,26 @@
 <template>
     <div style="position: relative;">
-        <div class="text-caption q-ma-sm text-accent">Конструкция {{ index + 1 }}</div>
-        <div class="absolute-top-right">
-            <q-btn icon="delete" color="secondary" flat size="md" @click="emits('remove')" />
-        </div>
+        <div class="text-caption q-ma-sm text-accent">{{ fixedAssetLocal.name }}</div>
 
         <q-card-section>
-            <!-- <q-input type="number" v-model.number="fixedAssetLocal.area" label="Полщадь секции" style="width: 180px;"
-                @update:model-value="updateFixedAsset(true)" /> -->
-
             <q-card bordered flat style="width: 400px;">
                 <div class="text-caption q-ma-sm">Размеры</div>
                 <q-card-section class="q-pt-none">
                     <div class="row q-gutter-x-xl">
-                        <q-input type="number" v-model.number="fixedAssetLocal.height" label="Высота" style="width: 120px;"
-                            @update:model-value="updateFixedAsset(true)" />
-
-                        <q-input type="number" v-model.number="fixedAssetLocal.perimeter" label="Периметр" style="width: 120px;"
-                            @update:model-value="updateFixedAsset(true)" />
-                    </div>
+                        <div>                        
+                            <LabeledValue label="Ширина" :value="fixedAssetLocal.height" />
+                            <LabeledValue label="Площадь" :value="fixedAssetLocal.area" />                            
+                        </div>
+                        <div>                            
+                            <LabeledValue label="Высота" :value="fixedAssetLocal.height" />
+                            <LabeledValue label="Периметр" :value="fixedAssetLocal.perimeter" />                            
+                        </div>
+                        <div>             
+                            <LabeledValue label="Длина" :value="fixedAssetLocal.length" />                        
+                        </div>
+                    </div>                    
                     <div class="row q-gutter-md q-mt-none">
-                        <div class="row">
-                            <div class="text-caption">Полщадь поверхности:</div>
-                            <div class="q-ml-sm text-accent computed-value">
-                                {{ fixedAssetLocal.surfaceArea }}
-                                <q-tooltip>{{ fixedAssetLocal.surfaceArea }}</q-tooltip>
-                            </div>
-                        </div>                        
+                        <LabeledValue label="Полщадь поверхности" :value="fixedAssetLocal.surfaceArea" :accent="true" />
                     </div>
                 </q-card-section>
             </q-card>
@@ -51,6 +45,7 @@ import { useBoqWorkService } from '../../composables/boq-work';
 import MaterialReplacement from './common/MaterialReplacement.vue';
 import { BoqFixedAssetModel, toFixedAssetUpdateRequest } from '../../api/fixed-asset/types';
 import { BoqFixedAssetApi } from '../../api/fixed-asset/boq-fixed-asset-api';
+import LabeledValue from './common/LabeledValue.vue';
 
 const { requestWorks } = useBoqWorkService()
 
@@ -74,7 +69,7 @@ const updateReplacement = async () => {
         fixedAssetLocal.value.painting = false
     }
 
-   await updateFixedAsset(false)
+    await updateFixedAsset(false)
 }
 
 const updateFixedAsset = async (updateVolume: boolean) => {

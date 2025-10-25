@@ -1,38 +1,22 @@
 <template>
     <div style="position: relative;">
         <div class="text-caption q-ma-sm text-accent">Окно {{ index + 1 }}</div>
-        <div class="absolute-top-right">
-            <q-btn icon="delete" color="secondary" flat size="md" @click="emits('remove')" />
-        </div>
         <q-card-section>            
             <div class="row q-gutter-x-lg q-mt-md">
                 <div>
                     <q-card bordered flat style="width: 400px;">
                         <div class="text-caption q-ma-sm">Размеры</div>
                         <q-card-section class="q-pt-none">
-                            <div class="row q-gutter-x-xl">
-                                <q-input type="number" v-model.number="windowLocal.width" label="Ширина"
-                                    style="width: 120px;" @update:model-value="updateWindow(true)" />
-
-                                <q-input type="number" v-model.number="windowLocal.height" label="Высота"
-                                    style="width: 120px;" @update:model-value="updateWindow(true)" />
-                            </div>
-                            <div class="row q-gutter-md q-mt-none">
-                                <div class="row">
-                                    <div class="text-caption">Полщадь:</div>
-                                    <div class="q-ml-sm text-accent computed-value">
-                                        {{ windowLocal.area }}
-                                        <q-tooltip>{{ windowLocal.area }}</q-tooltip>
-                                    </div>
+                            <div class="row q-gutter-xl">
+                                <div>
+                                    <LabeledValue label="Ширина" :value="windowLocal.width" />
+                                    <LabeledValue label="Площадь" :value="windowLocal.area" :accent="true"/>
                                 </div>
-                                <div class="row">
-                                    <div class="text-caption">Периметер:</div>
-                                    <div class="q-ml-sm text-accent computed-value">
-                                        {{ windowLocal.perimeter }}
-                                        <q-tooltip>{{ windowLocal.perimeter }}</q-tooltip>
-                                    </div>
+                                <div>
+                                    <LabeledValue label="Высота" :value="windowLocal.height" />
+                                    <LabeledValue label="Периметер" :value="windowLocal.perimeter" :accent="true"/>
                                 </div>
-                            </div>
+                            </div>       
                         </q-card-section>
                     </q-card>
                 </div>
@@ -59,6 +43,7 @@ import { computed, ref } from 'vue';
 import { BoqWindowApi } from '../../api/window/boq-window-api';
 import { BoqWindowModel, toWindowUpdateRequest } from '../../api/window/types';
 import { useBoqWorkService } from '../../composables/boq-work';
+import LabeledValue from './common/LabeledValue.vue';
 import ReplacementToggles from './common/ReplacementToggles.vue';
 
 const { requestWorks } = useBoqWorkService()

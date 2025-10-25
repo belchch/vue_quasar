@@ -15,10 +15,13 @@
         </div>
         <SectionLayout :sections="floorLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">
-                <div class="q-gutter-md" style="width: 400px;">
-                    <q-input type="number" v-model.number="section.area" label="Полщадь секции пола"
-                        style="width: 180px;"
-                        @update:model-value="updateFloorSection(section as BoqFloorSectionModel, true)" />
+                <div class="q-gutter-md" style="width: 400px;">                    
+                    <LabeledValue 
+                        label="Площадь"
+                        :value="section.area"
+                        :accent="true"
+                    />
+
                     <q-toggle color="secondary" v-model="section.screedLeveling" label="Выравнивание стяжки"
                         @update:model-value="updateFloorSection(section as BoqFloorSectionModel, false)" />
                 </div>
@@ -46,6 +49,7 @@ import { useBoqWorkService } from '../../composables/boq-work';
 import { useBoqLocationStore } from '../../stores/boq-location-store';
 import PhotoGallery from './common/PhotoGallery.vue';
 import SectionLayout from './common/SectionLayout.vue';
+import LabeledValue from './common/LabeledValue.vue';
 
 const { floorPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
