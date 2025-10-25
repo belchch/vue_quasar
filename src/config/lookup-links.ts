@@ -13,7 +13,8 @@ export const menuLinks = [
   { name: 'Организации', route: 'lookup.companies' },
   { name: 'Регионы', route: 'lookup.regions' },
   { name: 'Локации', route: 'lookup.spots' },
-  { name: 'Проемы', route: 'lookup.openings'},
-  { name: 'Работы', route: 'lookup.rates'},
-  { name: 'Стройматериалы', route: 'lookup.raw_materials'}
+  { name: 'Проемы', route: 'lookup.openings' },
+  { name: 'Работы', route: 'lookup.rates' },
+  { name: 'Стройматериалы', route: 'lookup.raw_materials' },
+  { name: 'Заливы', route: 'lookup.flood_damages' },
 ]
