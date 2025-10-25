@@ -2,7 +2,7 @@
   <q-card-section v-if="localCase">
     <q-form class="q-gutter-sm" @submit="handleSave">
       <div class="row q-col-gutter-lg justify-between">
-        <div class="col-grow">
+        <div class="col-xs-12 col-sm-6">
           <FormInput
             v-model="localCase.number"
             label="Номер"
@@ -28,7 +28,7 @@
             :options="companyStore.items"
           />
         </div>
-        <div class="col-grow">
+        <div class="col-xs-12 col-sm-6">
           <FormList
             v-show="false"
             label="Суд"
@@ -48,8 +48,8 @@
           />
         </div>
       </div>
-      <div class="q-ml-none q-mt-lg row gap-md">
-        <div class="row justify-between q-gutter-md">
+      <div class="q-ml-none q-mt-lg row column gap-md">
+        <div class="row q-gutter-lg">
           <div class="col-grow">
             <FormDate
               v-model="localCase.deadline"
@@ -60,7 +60,7 @@
           <div class="col-grow">
             <!-- <FormDate v-model="localCase.inspectionStartAt" title="Дата начала осмотра" /> -->
             <div class="text-subtitle1 q-mb-sm">Дата и время начала осмотра</div>
-            <q-input dense outlined readonly v-model="startDate">
+            <q-input dense outlined readonly style="margin-top: -4px" v-model="startDate">
               <template v-slot:prepend>
                 <q-btn
                   icon="event"
@@ -108,7 +108,7 @@
           <div class="col-grow">
             <!-- <FormDate v-model="localCase.inspectionEndAt" title="Дата окончания осмотра" /> -->
             <div class="text-subtitle1 q-mb-sm">Дата и время окончания осмотра</div>
-            <q-input dense outlined readonly v-model="endDateInspection">
+            <q-input dense outlined readonly style="margin-top: -4px" v-model="endDateInspection">
               <template v-slot:prepend>
                 <q-btn
                   icon="event"
@@ -154,7 +154,7 @@
             </q-input>
           </div>
         </div>
-        <div>
+        <div class="q-mt-lg">
           <q-btn label="Сохранить" type="submit" color="primary" />
           <q-btn label="Отмена" @click="resetForm" color="primary" flat class="q-ml-sm" />
         </div>
