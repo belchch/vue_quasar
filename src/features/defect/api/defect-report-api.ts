@@ -47,14 +47,13 @@ export const DefectReportApi = {
     })
   },
 
-  // TODO: refactor
-  async moveMovable(itemId: number, fromIndex: number, toIndex: number) {
+  async moveMovable(objectId: number, fromIndex: number, toIndex: number) {
     return api.post(
-      '/api/defect-report/move-spot2222',
+      '/api/movable-report/move-object',
       {},
       {
         params: {
-          itemId,
+          objectId,
           fromIndex,
           toIndex,
         },
@@ -62,14 +61,13 @@ export const DefectReportApi = {
     )
   },
 
-  // TODO: refactor
-  async moveMovableRow(id: number, fromIndex: number, toIndex: number) {
+  async moveMovableRow(rowId: number, fromIndex: number, toIndex: number) {
     return api.post(
-      '/api/defect-report/move-struct-elem',
+      '/api/movable-report/move-row',
       {},
       {
         params: {
-          id,
+          rowId,
           fromIndex,
           toIndex,
         },
