@@ -19,7 +19,7 @@
     <q-card flat style="background: #fafafa" class="q-pa-lg root-card">
       <q-card-section v-if="defectMovableReport">
         <draggable
-          v-model="defectMovableReport.movables"
+          v-model="defectMovableReport.objects"
           item-key="id"
           tag="div"
           handle=".drag-handle"

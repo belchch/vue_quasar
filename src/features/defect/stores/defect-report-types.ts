@@ -35,7 +35,7 @@ export type DefectReportModel = {
 }
 
 export type DefectMovableItemRowModel = {
-  name: string
+  defect: string
   measurements: string
   photos: DefectReportPhotoModel[]
 }
@@ -47,5 +47,5 @@ export type DefectMovableModel = {
 }
 export type DefectMovableReportModel = {
   id: number
-  movables: DefectMovableModel[]
+  objects: DefectMovableModel[]
 }

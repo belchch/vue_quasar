@@ -6,18 +6,18 @@ import {
 } from 'src/features/defect/stores/defect-report-types'
 const defaultMovableDefectReport: DefectMovableReportModel = {
   id: 0,
-  movables: [
+  objects: [
     {
       id: 0,
       text: 'Ящик',
       rows: [
         {
-          name: 'Вздутие покрытия1_1',
+          defect: 'Вздутие покрытия1_1',
           measurements: '10x43x12',
           photos: [],
         },
         {
-          name: 'Вздутие покрытия1_2',
+          defect: 'Вздутие покрытия1_2',
           measurements: '10x43x12',
           photos: [],
         },
@@ -28,12 +28,12 @@ const defaultMovableDefectReport: DefectMovableReportModel = {
       text: 'Столд',
       rows: [
         {
-          name: 'Вздутие покрытия_2-1',
+          defect: 'Вздутие покрытия_2-1',
           measurements: '10x43x12',
           photos: [],
         },
         {
-          name: 'Вздутие покрытия_2-2',
+          defect: 'Вздутие покрытия_2-2',
           measurements: '10x43x12',
           photos: [],
         },

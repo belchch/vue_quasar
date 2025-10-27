@@ -2,7 +2,7 @@
   <q-card class="row no-wrap" flat>
     <q-card-section class="row no-wrap full-width">
       <div class="col-4">
-        <DefectReportTextItem label="Описание" :value="row.name" />
+        <DefectReportTextItem label="Описание" :value="row.defect" />
       </div>
       <div class="col-4">
         <DefectReportTextItem label="Размеры" :value="row.measurements" />
