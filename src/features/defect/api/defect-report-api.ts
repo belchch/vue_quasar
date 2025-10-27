@@ -1,61 +1,162 @@
 import { api } from 'boot/axios'
-import {DefectReportPhotoModel} from "src/features/defect/stores/defect-report-types";
-import { FileInfo } from './types';
+import {
+  DefectReportPhotoModel,
+  DefectMovableReportModel,
+} from 'src/features/defect/stores/defect-report-types'
+import { FileInfo } from './types'
 
 export const DefectReportApi = {
   async buildReport(inspectionId: number, useTechnicalReport: boolean) {
-    return api.post(`/api/defect-report/build`, {}, {
-      params: {
-        inspectionId, useTechnicalReport
-      }
-    })
+    return api.post(
+      `/api/defect-report/build`,
+      {},
+      {
+        params: {
+          inspectionId,
+          useTechnicalReport,
+        },
+      },
+    )
+  },
+
+  // TODO: refactor
+  async buildMovableReport(inspectionId: number) {
+    return api.post(
+      `/api/defect-movable-report/build`,
+      {},
+      {
+        params: {
+          inspectionId,
+        },
+      },
+    )
   },
 
   async getReport(inspectionId: number) {
     return api.get<any>(`/api/defect-report`, {
       params: {
-        inspectionId
-      }
+        inspectionId,
+      },
     })
+  },
+
+  // TODO: refactor
+  async getMovableReport(inspectionId: number) {
+    return api.get<DefectMovableReportModel>(`/api/defect-movable-report`, {
+      params: {
+        inspectionId,
+      },
+    })
+  },
+
+  // TODO: refactor
+  async moveMovable(itemId: number, fromIndex: number, toIndex: number) {
+    return api.post(
+      '/api/defect-report/move-spot2222',
+      {},
+      {
+        params: {
+          itemId,
+          fromIndex,
+          toIndex,
+        },
+      },
+    )
+  },
+
+  // TODO: refactor
+  async moveMovableRow(id: number, fromIndex: number, toIndex: number) {
+    return api.post(
+      '/api/defect-report/move-struct-elem',
+      {},
+      {
+        params: {
+          id,
+          fromIndex,
+          toIndex,
+        },
+      },
+    )
   },
 
   async moveSpot(spotId: number, fromIndex: number, toIndex: number) {
-    return api.post('/api/defect-report/move-spot', {}, {
-      params: {
-        spotId, fromIndex, toIndex
-      }
-    })
+    return api.post(
+      '/api/defect-report/move-spot',
+      {},
+      {
+        params: {
+          spotId,
+          fromIndex,
+          toIndex,
+        },
+      },
+    )
   },
 
   async moveStructElem(structElemId: number, fromIndex: number, toIndex: number) {
-    return api.post('/api/defect-report/move-struct-elem', {}, {
-      params: {
-        structElemId, fromIndex, toIndex
-      }
-    })
+    return api.post(
+      '/api/defect-report/move-struct-elem',
+      {},
+      {
+        params: {
+          structElemId,
+          fromIndex,
+          toIndex,
+        },
+      },
+    )
   },
 
   async moveRow(rowId: number, fromIndex: number, toIndex: number) {
-    return api.post('/api/defect-report/move-row', {}, {
-      params: {
-        rowId, fromIndex, toIndex
-      }
-    })
+    return api.post(
+      '/api/defect-report/move-row',
+      {},
+      {
+        params: {
+          rowId,
+          fromIndex,
+          toIndex,
+        },
+      },
+    )
   },
 
   async usePhoto(photoId: number, use: boolean, scope: number) {
-    return api.post<DefectReportPhotoModel[]>('/api/defect-report/use-photo', {}, {
-      params: {
-        photoId, use, scope
-      }
-    })
+    return api.post<DefectReportPhotoModel[]>(
+      '/api/defect-report/use-photo',
+      {},
+      {
+        params: {
+          photoId,
+          use,
+          scope,
+        },
+      },
+    )
   },
 
   buildDocx(inspectionId: number) {
-    return api.post<FileInfo>(`/api/defect-report/build-docx`, {}, {
-      params: {
-        inspectionId
-      }
-    })
-  }
+    return api.post<FileInfo>(
+      `/api/defect-report/build-docx`,
+      {},
+      {
+        params: {
+          inspectionId,
+        },
+      },
+    )
+  },
+
+  // TODO: refactor
+  builMovableDocx(inspectionId: number) {
+    return api.post<FileInfo>(
+      `/api/defect-report/build-movable-docx`,
+      {},
+      {
+        params: {
+          inspectionId,
+        },
+      },
+    )
+  },
 }
