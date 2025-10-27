@@ -19,10 +19,9 @@ export const DefectReportApi = {
     )
   },
 
-  // TODO: refactor
   async buildMovableReport(inspectionId: number) {
     return api.post(
-      `/api/defect-movable-report/build`,
+      `/api/movable-report/build`,
       {},
       {
         params: {
@@ -40,9 +39,8 @@ export const DefectReportApi = {
     })
   },
 
-  // TODO: refactor
   async getMovableReport(inspectionId: number) {
-    return api.get<DefectMovableReportModel>(`/api/defect-movable-report`, {
+    return api.get<DefectMovableReportModel>(`/api/movable-report`, {
       params: {
         inspectionId,
       },
