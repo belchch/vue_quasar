@@ -19,7 +19,7 @@
         <q-btn-dropdown :label="photoDocTypeDesc(photoDoc.type)" icon="image" size="sm" no-caps color="grey-8" flat
           square :disabled="!hasPermission(['inspection.update'])">
           <q-list>
-            <q-item v-for="item in ['DEFECT', 'GENERAL_VIEW']" :key="item!!" clickable v-close-popup
+            <q-item v-for="item in ['DEFECT', 'GENERAL_VIEW', 'MOVABLE']" :key="item!!" clickable v-close-popup
               @click="() => onSelectType(item as PhotoDocType)">
               <q-item-section>
                 <q-item-label>{{ photoDocTypeDesc(item as PhotoDocType) }}</q-item-label>
@@ -42,10 +42,13 @@
 
       <DefectInfo v-if="photoDoc.type == 'DEFECT'" :defect-info="photoDoc.defectInfo"
         @changeDefectInfo="onChangeDefectInfo" :photo-doc-id="photoDoc.id!!" />
+
+      <MovableInfo v-if="photoDoc.type == 'MOVABLE'" :movable-info="photoDoc.movableInfo" :photo-doc-id="photoDoc.id!!"
+        @change-movable-info="onChangeMovableInfo" />
     </q-card-section>
 
     <div class="text-accent text-caption text-no-wrap row items-center q-pa-xs q-ml-xs" v-if="photoDoc.photographable">
-      <q-icon name="photo_camera"  class="q-mr-xs" /> {{  photographableDesc(photoDoc.photographable)  }}
+      <q-icon name="photo_camera" class="q-mr-xs" /> {{ photographableDesc(photoDoc.photographable) }}
     </div>
 
     <div v-if="hasPermission(['inspection.update'])">
@@ -106,6 +109,7 @@ import { computed, onMounted, ref } from 'vue'
 import {
   type PhotoDoc,
   type PhotoDocDefectInfo,
+  PhotoDocMovableInfo,
   type PhotoDocType,
   photoDocTypeDesc,
   photographableDesc,
@@ -121,6 +125,7 @@ import { buildInspectionSpotOptions, InspectionSpotOption } from '../../composab
 import { useInspectionSpotStore } from '../../store/inspection-spot-store'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from 'src/features/user/stores/user-store';
+import MovableInfo from './MovableInfo.vue'
 
 const unionStore = usePhotoDocsUnionStore()
 const { hasPermission } = useUserStore()
@@ -190,6 +195,13 @@ const onChangeDefectInfo = async (defectInfo: PhotoDocDefectInfo) => {
     defectInfo,
   })
   await requestTechnicalReport()
+}
+
+const onChangeMovableInfo = async (movableInfo: PhotoDocMovableInfo) => {
+  await updatePhotoDoc({
+    ...props.photoDoc,
+    movableInfo,
+  })
 }
 
 function openLightbox(index = 0) {

@@ -3,6 +3,8 @@ import type { StructElem } from 'src/features/lookup/struct-elem/stores/types'
 import type { Material } from 'src/features/lookup/material/stores/types'
 import type { User } from 'src/features/user/stores/types'
 import { Defect, Flaw } from 'src/features/defect/flaw/stores/types'
+import { Movable } from 'src/features/measurement/stores/types'
+import { FloodDamage } from 'src/features/lookup/flood-damage/types'
 
 export type Inspection = {
   id?: number
@@ -21,6 +23,7 @@ export type PhotoDoc = {
   spotNum?: number | undefined,
   type?: PhotoDocType
   defectInfo?: PhotoDocDefectInfo,
+  movableInfo?: PhotoDocMovableInfo,
   photographable?: Photographable
 }
 
@@ -42,7 +45,24 @@ export type PhotoDocDefectInfo = {
   description?: string | undefined
 }
 
-export type PhotoDocType = 'DEFECT' | 'GENERAL_VIEW'
+export type PhotoDocMovableInfo = {
+  movable: PhotoDocMovable | undefined,
+  floodPropertyDamage: FloodDamage | undefined
+}
+
+export type PhotoDocMovable = {
+  id: number,
+  name: string,
+  width: number,
+  length: number,
+  height: number,
+  heightFromFloor: number,
+  perimeter: number,
+  area: number,
+  hasCustomShape: boolean
+}
+
+export type PhotoDocType = 'DEFECT' | 'GENERAL_VIEW' | 'MOVABLE'
 
 export const photographableDesc = (item: Photographable) => {
   switch (item.entityType) {
@@ -61,6 +81,8 @@ export const photoDocTypeDesc = (type?: PhotoDocType) => {
       return 'Дефект'
     case 'GENERAL_VIEW':
       return 'Общий вид'
+      case 'MOVABLE':
+      return 'Движемое имущество'
     default:
       return undefined
   }

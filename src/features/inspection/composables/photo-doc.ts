@@ -4,6 +4,7 @@ import { PhotoDoc } from 'src/features/inspection/store/types'
 import { PhotoDocSearchRequest } from "src/features/inspection/api/types";
 import { storeToRefs } from "pinia";
 import { useAllPhotoDocStore } from '../store/all-photo-doc-store';
+import MovableInfo from '../components/photo-doc/MovableInfo.vue';
 
 export const usePhotoDocs = () => {
   const photoDocsStore = usePhotoDocsStore()
@@ -31,6 +32,10 @@ export const usePhotoDocs = () => {
         cause: photoDoc.defectInfo?.cause,
         technicalReportRowId: photoDoc.defectInfo?.technicalReportRowId
       },
+      movableInfo: {
+        movableId: photoDoc.movableInfo?.movable?.id,
+        floodPropertyDamageId: photoDoc.movableInfo?.floodPropertyDamage?.id
+      }
     }
 
     const response =  await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
