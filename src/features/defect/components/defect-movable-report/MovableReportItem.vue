@@ -29,14 +29,14 @@
   </q-card>
 </template>
 <script setup lang="ts">
-import MovableElemReportItem from 'src/features/defect/components/defect-report/MovableElemReportItem.vue'
-import { DefectMovableModel } from 'src/features/defect/stores/defect-report-types'
+import MovableElemReportItem from 'src/features/defect/components/defect-movable-report/MovableElemReportItem.vue'
+import { DefectMovableModel } from 'src/features/defect/stores/defect-movable-report-types'
 import draggable from 'vuedraggable'
 import { ref } from 'vue'
-import { useDefectReportService } from 'src/features/defect/composables/defect-report-service'
+import { useDefectMovableReportService } from 'src/features/defect/composables/defect-movable-report-service'
 import { useUserStore } from 'src/features/user/stores/user-store'
 
-const { moveMovableRow } = useDefectReportService()
+const { moveMovableRow } = useDefectMovableReportService()
 const { hasPermission } = useUserStore()
 
 const props = defineProps<{
