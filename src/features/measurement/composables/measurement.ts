@@ -7,7 +7,15 @@ import { FloorSectionsMeasurementApi } from "../api/floor-section-measurement-ap
 import { WallSectionsMeasurementApi } from "../api/wall-section-measurement-api"
 import { FixedAssetMeasurementApi } from "../api/fixed-asset-measurement-api"
 import { useMeasurementStore } from "../stores/measurement-store"
-import { OpeningMeasurement, RoomMeasurement, SectionMeasurementCreateRequest, FloorSectionMeasurement, CeilSectionMeasurement, WallSectionMeasurement } from "../stores/types"
+import {
+  OpeningMeasurement,
+  RoomMeasurement,
+  SectionMeasurementCreateRequest,
+  FloorSectionMeasurement,
+  CeilSectionMeasurement,
+  WallSectionMeasurement,
+  FixedAssetMeasurement,
+} from '../stores/types'
 import { FixedAssetCreateRequest, OpeningMeasurementUpdateRequest, RoomMeasurementUpdateRequest, SectionMeasurementUpdateRequest, FixedAssetUpdateRequest } from "../api/types"
 
 export const
@@ -108,8 +116,9 @@ useMeasurementService = () => {
       fixedAssetMeasurements.value = fixedAssetMeasurements.value.filter(item=> item.id != id)
     }
 
-    const updateFixedAssetMeasurement = async (id:number, fixedAssetMeasurement: FixedAssetUpdateRequest) => {
-      const response = await FixedAssetMeasurementApi.update(id, fixedAssetMeasurement)
+    const updateFixedAssetMeasurement = async (id:number, fixedAssetMeasurement: FixedAssetMeasurement) => {
+      const request = toSectionUpdateRequest(fixedAssetMeasurement)
+      const response = await FixedAssetMeasurementApi.update(id, request)
       const findIndx  = fixedAssetMeasurements.value.findIndex(item => item.id == id);
       if(findIndx>=0) fixedAssetMeasurements.value[findIndx] = response.data;
     }
@@ -205,7 +214,7 @@ const toOpeningUpdateRequest = (opening: OpeningMeasurement): OpeningMeasurement
     }
 }
 
-type SectionsMeasurement = FloorSectionMeasurement | CeilSectionMeasurement | WallSectionMeasurement
+type SectionsMeasurement = FloorSectionMeasurement | CeilSectionMeasurement | WallSectionMeasurement | FixedAssetMeasurement
 const toSectionUpdateRequest = (section: SectionsMeasurement): SectionMeasurementUpdateRequest => {
   return {
     ...section,

@@ -11,6 +11,13 @@
             type="string" :row="props.row" />
         </q-td>
       </template>
+      <template #body-cell-material="props">
+          <q-td :props="props">
+            {{ props.row.material?.name }}
+            <SectionMaterialCellEditor :api-fn="updateFixedAssetMeasurement" field="materialId" :row="props.row"
+              :value="props.row.material?.id as string" />
+          </q-td>
+      </template>
       <template #body-cell-width="props">
         <q-td>
           <SectionCellEditor :api-fn="updateFixedAssetMeasurement" :value="props.row.width || 0" field="width"
@@ -72,16 +79,16 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useMeasurementStore } from '../stores/measurement-store';
-import { FixedAssetMeasurament } from '../stores/types';
+import { FixedAssetMeasurement } from '../stores/types';
 import { ref } from 'vue';
 import { useMeasurementService } from '../composables/measurement';
 import { useQuasar } from 'quasar';
 import SectionCellEditor from './SectionCellEditor.vue'
+import SectionMaterialCellEditor from './SectionMaterialCellEditor.vue'
 
 const { getFixedAssets } = storeToRefs(useMeasurementStore())
 const { deletefixedAssetMeasurement, updateFixedAssetMeasurement } = useMeasurementService()
 
-const rows = ref<FixedAssetMeasurament[]>([]);
 const $q = useQuasar();
 
 const showLightbox = ref(false);
@@ -121,6 +128,13 @@ const columns = [
     label: 'Наименование',
     align: 'left' as const,
     field: 'name',
+    sortable: true
+  },
+  {
+    name: 'material',
+    label: 'Материал',
+    align: 'left' as const,
+    field: 'materialId',
     sortable: true
   },
   {

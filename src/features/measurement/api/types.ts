@@ -106,6 +106,7 @@ export type FixedAssetCreateRequest = {
   length: number;
   height: number;
   name: string;
+  materialId: number | null;
   inspectionId: number;
   roomId: number;
   roomNum?: number | undefined;
@@ -116,6 +117,7 @@ export type FixedAssetUpdateRequest = {
   length?: number;
   height?: number;
   name?: string;
+  materialId?: number
 }
 
 export type SectionMeasurementUpdateRequest = {

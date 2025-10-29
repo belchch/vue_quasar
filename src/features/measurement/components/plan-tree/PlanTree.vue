@@ -6,41 +6,79 @@
     <PlanMaterialDialog v-if="editingNode" v-model="materialDialogOpen" />
     <PlanOpeningDialog v-if="editingNode" v-model="openingDialogOpen" />
     <PlanObjectDialog v-if="editingNode" v-model="objectDialogOpen" />
-    <q-splitter v-model="splitterModel" style="min-height: 400px;">
+    <q-splitter v-model="splitterModel" style="min-height: 400px">
       <template v-slot:before>
-        <div class="q-pa-md scroll" style="height: calc(100vh - 280px);">
-
-          <q-tree ref="treePlan" @update:selected="nodeSelected" :nodes="treeData" node-key="id"
-            selected-color="primary" v-model:selected="selected" no-selection-unset>
+        <div class="q-pa-md scroll" style="height: calc(100vh - 280px)">
+          <q-tree
+            ref="treePlan"
+            @update:selected="nodeSelected"
+            :nodes="treeData"
+            node-key="id"
+            selected-color="primary"
+            v-model:selected="selected"
+            no-selection-unset
+          >
             <template v-slot:header-room="prop">
-              <PlanTreeNode label="Помещение" :name="roomLookupName(prop.node.rawData)" :backoff-name="prop.node.label"
-                @edit="editLocation(prop.node)" />
+              <PlanTreeNode
+                label="Помещение"
+                :name="roomLookupName(prop.node.rawData)"
+                :backoff-name="prop.node.label"
+                @edit="editLocation(prop.node)"
+              />
             </template>
             <template v-slot:header-wall="prop">
-              <PlanTreeNode :label="`Стена-${prop.node.index}`" :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label" @edit="editMaterial(prop.node); console.log(prop.node)" />
+              <PlanTreeNode
+                :label="`Стена-${prop.node.index}`"
+                :name="materialLookupName(prop.node.rawData.materialId)"
+                :backoff-name="prop.node.label"
+                @edit="editMaterial(prop.node)"
+              />
             </template>
             <template v-slot:header-opening="prop">
-              <PlanTreeNode :label="openingTypeName(prop.node.rawData.type)"
+              <PlanTreeNode
+                :label="openingTypeName(prop.node.rawData.type)"
                 :name="openingFullName(prop.node.rawData.openingId, prop.node.rawData.materialId)"
-                :backoff-name="openingBackOffName(prop.node.label, prop.node.rawData.openingId, prop.node.rawData.materialId)"
-                @edit="editOpening(prop.node)" />
+                :backoff-name="
+                  openingBackOffName(
+                    prop.node.label,
+                    prop.node.rawData.openingId,
+                    prop.node.rawData.materialId,
+                  )
+                "
+                @edit="editOpening(prop.node)"
+              />
             </template>
             <template v-slot:header-wall-section="prop">
-              <PlanTreeNode label="Секция" :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label" @edit="editMaterial(prop.node)" />
+              <PlanTreeNode
+                label="Секция"
+                :name="materialLookupName(prop.node.rawData.materialId)"
+                :backoff-name="prop.node.label"
+                @edit="editMaterial(prop.node)"
+              />
             </template>
             <template v-slot:header-section="prop">
-              <PlanTreeNode label="Секция" :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label" @edit="editMaterial(prop.node)" />
+              <PlanTreeNode
+                label="Секция"
+                :name="materialLookupName(prop.node.rawData.materialId)"
+                :backoff-name="prop.node.label"
+                @edit="editMaterial(prop.node)"
+              />
             </template>
             <template v-slot:header-root-ceiling="prop">
-              <PlanTreeNode label="Потолок" :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label" @edit="editMaterial(prop.node)" />
+              <PlanTreeNode
+                label="Потолок"
+                :name="materialLookupName(prop.node.rawData.materialId)"
+                :backoff-name="prop.node.label"
+                @edit="editMaterial(prop.node)"
+              />
             </template>
             <template v-slot:header-root-floor="prop">
-              <PlanTreeNode label="Пол" :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label" @edit="editMaterial(prop.node)" />
+              <PlanTreeNode
+                label="Пол"
+                :name="materialLookupName(prop.node.rawData.materialId)"
+                :backoff-name="prop.node.label"
+                @edit="editMaterial(prop.node)"
+              />
             </template>
             <template v-slot:header-movable-objects>
               <q-item-section>
@@ -48,8 +86,12 @@
               </q-item-section>
             </template>
             <template v-slot:header-movable-item="prop">
-              <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
-                @edit="editObject(prop.node)" />
+              <PlanTreeNode
+                label="Объект"
+                :name="ObjectName(true, prop.node.rawData.comment)"
+                backoff-name="Без названия"
+                @edit="editObject(prop.node)"
+              />
             </template>
             <template v-slot:header-notmovable-objects>
               <q-item-section>
@@ -57,16 +99,29 @@
               </q-item-section>
             </template>
             <template v-slot:header-notmovable-item="prop">
-              <PlanTreeNode label="Объект" :name="movabelName(prop.node.rawData.comment)" backoff-name="Без названия"
-                @edit="editObject(prop.node)" />
+              <PlanTreeNode
+                label="Объект"
+                :name="ObjectName(false, prop.node.rawData.comment, prop.node.rawData.materialId)"
+                :backoff-name="
+                  fixedObjectBackOffName(prop.node.rawData.comment, prop.node.rawData.materialId)
+                "
+                @edit="editObject(prop.node)"
+              />
             </template>
           </q-tree>
         </div>
       </template>
 
       <template v-slot:after>
-        <q-tab-panels class="tree-tabs" v-if="selectedNode" v-model="selectedNodeType"
-          style="height: calc(100vh - 280px);" animated transition-prev="jump-up" transition-next="jump-up">
+        <q-tab-panels
+          class="tree-tabs"
+          v-if="selectedNode"
+          v-model="selectedNodeType"
+          style="height: calc(100vh - 280px)"
+          animated
+          transition-prev="jump-up"
+          transition-next="jump-up"
+        >
           <q-tab-panel name="room">
             <div class="text-blue-grey">Помещение</div>
             <div class="text-h6">{{ selectedNode['label'] || '-' }}</div>
@@ -92,7 +147,9 @@
               <q-card flat bordered>
                 <q-card-section>
                   <div class="text-h6 text-weight-light">Периметр без проемов</div>
-                  <div class="text-body1">{{ selectedNode.rawData.floor.perimeterExcludingOpenings || '-' }}</div>
+                  <div class="text-body1">
+                    {{ selectedNode.rawData.floor.perimeterExcludingOpenings || '-' }}
+                  </div>
                 </q-card-section>
               </q-card>
             </div>
@@ -103,8 +160,9 @@
             </div>
             <div class="q-pa-md">
               <div class="text-h6">Фотографии</div>
-              <div class="text-h6 text-weight-light" v-if="selectedNode.rawData.photos.length == 0">Фотографии
-                отсутствуют</div>
+              <div class="text-h6 text-weight-light" v-if="selectedNode.rawData.photos.length == 0">
+                Фотографии отсутствуют
+              </div>
               <q-list v-else bordered separator>
                 <q-item v-for="photo in selectedNode.rawData.photos" :key="photo.fileName">
                   <q-item-section>
@@ -188,87 +246,95 @@ const spotStore = useSpotStore()
 const materialStore = useMaterialStore()
 const openingStore = useOpeningStore()
 
-const roomLookupName = ({roomId, roomNum}: {roomId: number, roomNum: number}) => {
-  const spotName = () => spotStore.items.find(item => item.id == roomId)?.name
+const roomLookupName = ({ roomId, roomNum }: { roomId: number; roomNum: number }) => {
+  const spotName = () => spotStore.items.find((item) => item.id == roomId)?.name
   return roomId ? `${spotName()} ${roomNum != undefined ? ' ' + roomNum : ''}` : ''
 }
 
 const materialLookupName = (materialId: number) => {
-  return materialId != undefined ? materialStore.items.find(item => item.id == materialId)?.name : undefined
+  return materialId != undefined
+    ? materialStore.items.find((item) => item.id == materialId)?.name
+    : undefined
 }
 const openingLookupName = (openingId: number) => {
-  return openingStore.items.find(item => item.id == openingId)?.name
+  return openingStore.items.find((item) => item.id == openingId)?.name
 }
 
 const openingFullName = (openingId: number, materialId: number) => {
-  const openingName = openingLookupName(openingId);
-  const materialName = materialLookupName(materialId);
-  if(openingName && materialName) return `${openingName} (${materialName})`;
-  return undefined;
+  const openingName = openingLookupName(openingId)
+  const materialName = materialLookupName(materialId)
+  if (openingName && materialName) return `${openingName} (${materialName})`
+  return undefined
 }
 const openingBackOffName = (label: string, openingId: number, materialId: number) => {
-  const openingName = openingLookupName(openingId);
-  const materialName = materialLookupName(materialId);
-  if(openingName) return label?`${openingName} (${label})`:`${openingName}`;
-  if(materialName) return `${materialName}`;
-  return label;
-};
+  const openingName = openingLookupName(openingId)
+  const materialName = materialLookupName(materialId)
+  if (openingName) return label ? `${openingName} (${label})` : `${openingName}`
+  if (materialName) return `${materialName}`
+  return label
+}
 const openingTypeName = (openningType: string) => {
-  if(openningType == 'window') {
+  if (openningType == 'window') {
     return 'Окно'
-  } else if(openningType == 'door') {
+  } else if (openningType == 'door') {
     return 'Дверь'
   } else {
     return 'Проем'
   }
 }
 
-const movabelName = (comment:string) => {
-  if(!comment) return undefined;
-  return comment;
+const ObjectName = (isMovable: boolean, comment: string, materialId: number | null = null) => {
+  if (isMovable) return comment ? comment : undefined
+  if (!materialId) return undefined
+  const materialName = materialLookupName(materialId)
+  if (!comment || !materialName) return undefined
+  return `${comment} (${materialName})`
+}
+const fixedObjectBackOffName = (comment: string, materialId: number | null = null) => {
+  if (!materialId && !comment) return ''
+  const materialName = materialId ? materialLookupName(materialId) : ''
+  return comment ? comment : materialName ? materialName : ''
 }
 
-const treePlan = ref();
-const splitterModel = ref(30);
-const selected = ref<number | null>(null);
-const selectedNode = ref<TreeItem | null>(null);
-const selectedNodeType = ref('');
-const locationDialogOpen = ref(false);
-const materialDialogOpen = ref(false);
-const openingDialogOpen = ref(false);
-const objectDialogOpen = ref(false);
+const treePlan = ref()
+const splitterModel = ref(30)
+const selected = ref<number | null>(null)
+const selectedNode = ref<TreeItem | null>(null)
+const selectedNodeType = ref('')
+const locationDialogOpen = ref(false)
+const materialDialogOpen = ref(false)
+const openingDialogOpen = ref(false)
+const objectDialogOpen = ref(false)
 
 const nodeSelected = (node: any) => {
   const item = treePlan.value.getNodeByKey(node)
   if (!item) {
-    selectedNode.value = null;
-    selectedNodeType.value = '';
-    return;
+    selectedNode.value = null
+    selectedNodeType.value = ''
+    return
   }
-  selectedNode.value = item;
-  selectedNodeType.value = item.type;
+  selectedNode.value = item
+  selectedNodeType.value = item.type
 }
 
 const editLocation = (node: any) => {
-  locationDialogOpen.value = true;
+  locationDialogOpen.value = true
   editingNode.value = node
 }
 
 const editMaterial = (node: any) => {
-  materialDialogOpen.value = true;
+  materialDialogOpen.value = true
   editingNode.value = node
 }
 
 const editOpening = (node: any) => {
-  openingDialogOpen.value = true;
+  openingDialogOpen.value = true
   editingNode.value = node
 }
 const editObject = (node: any) => {
-  objectDialogOpen.value = true;
+  objectDialogOpen.value = true
   editingNode.value = node
 }
-
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
