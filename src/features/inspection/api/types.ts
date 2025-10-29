@@ -1,10 +1,10 @@
-import { Inspection, PhotoDocType } from 'src/features/inspection/store/types'
-import type {StructElem} from "src/features/lookup/struct-elem/stores/types";
-import type {Material} from "src/features/lookup/material/stores/types";
-import {Defect} from "src/features/defect/flaw/stores/types";
-import {Flaw} from "src/features/defect/flaw/stores/types";
-import { Spot } from 'src/features/lookup/spot/stores/types';
-import dayjs from 'dayjs';
+import { Inspection, PhotoDocType, PhotoDocMovable } from 'src/features/inspection/store/types'
+import type { StructElem } from 'src/features/lookup/struct-elem/stores/types'
+import type { Material } from 'src/features/lookup/material/stores/types'
+import { Defect } from 'src/features/defect/flaw/stores/types'
+import { Flaw } from 'src/features/defect/flaw/stores/types'
+import { Spot } from 'src/features/lookup/spot/stores/types'
+import dayjs from 'dayjs'
 
 export type PhotoDocUpdateRequest = {
   id: number
@@ -13,7 +13,7 @@ export type PhotoDocUpdateRequest = {
   spotNum?: number | undefined
   type?: PhotoDocType | undefined
   defectInfo?: PhotoDocDefectInfoUpdateRequest | undefined
-  movableInfo?: PhotoDocMovableInfoUpdateRequest | undefined 
+  movableInfo?: PhotoDocMovableInfoUpdateRequest | undefined
 }
 
 export type PhotoDocDefectInfoUpdateRequest = {
@@ -27,26 +27,26 @@ export type PhotoDocDefectInfoUpdateRequest = {
 }
 
 export type PhotoDocMovableInfoUpdateRequest = {
-  movableId: number | undefined,
+  movable: PhotoDocMovable | undefined
   floodPropertyDamageId: number | undefined
 }
 
 export type DefectSearchRequest = {
-  structElemId: number | undefined,
-  materialId: number | undefined,
-  flawId: number | undefined,
+  structElemId: number | undefined
+  materialId: number | undefined
+  flawId: number | undefined
   defectId: number | undefined
 }
 
 export type DefectSearchResponse = {
-  structElems: StructElem[],
-  materials: Material[],
-  flaws: Flaw[],
+  structElems: StructElem[]
+  materials: Material[]
+  flaws: Flaw[]
   defects: Defect[]
 }
 
 export type PhotoDocSpotSearchRequest = {
-  spotId: number,
+  spotId: number
   spotNum?: number | undefined
 }
 
@@ -62,25 +62,25 @@ export type PhotoDocSearchRequest = {
 }
 
 export type InspectionSpot = {
-  id?: number | undefined,
-  spot: Spot,
-  count: number,
+  id?: number | undefined
+  spot: Spot
+  count: number
   inUse: boolean
 }
 
 export type InspectionSpotUpdateRequest = {
-  id?: number | undefined,
-  spotId: number,
-  count: number,
+  id?: number | undefined
+  spotId: number
+  count: number
   inUse: boolean
 }
 
 export type InspectionUpdateRequest = {
-    apartment: string,
-    address: string,
-    performedDate?: string,
-    performedById?: number | undefined,
-    caseId: number
+  apartment: string
+  address: string
+  performedDate?: string
+  performedById?: number | undefined
+  caseId: number
 }
 
 export const toInspectionUpdateRequest = (inspection: Inspection): InspectionUpdateRequest => {
@@ -89,6 +89,6 @@ export const toInspectionUpdateRequest = (inspection: Inspection): InspectionUpd
     address: inspection.address,
     performedDate: inspection.performedDate,
     performedById: inspection.performedBy?.id,
-    caseId: inspection.caseId
+    caseId: inspection.caseId,
   }
 }
