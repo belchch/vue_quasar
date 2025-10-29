@@ -34,23 +34,26 @@
           </template>
         </draggable>
       </q-card-section>
+      <q-card-section v-else>
+        <div>Необходимо сформировать отчет</div>
+      </q-card-section>
     </q-card>
   </div>
 </template>
 <script setup lang="ts">
-import MovableReportItem from 'src/features/defect/components/defect-report/MovableReportItem.vue'
-import { useDefectReportService } from 'src/features/defect/composables/defect-report-service'
-import { useDefectReportStore } from 'src/features/defect/stores/defect-report-store'
+import MovableReportItem from 'src/features/defect/components/defect-movable-report/MovableReportItem.vue'
+import { useDefectMovableReportService } from 'src/features/defect/composables/defect-movable-report-service'
+import { useDefectMovableReportStore } from 'src/features/defect/stores/defect-movable-report-store'
 import { storeToRefs } from 'pinia'
 import draggable from 'vuedraggable'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import DownloadReportButton from 'src/components/DownloadReportButton.vue'
-import { DefectReportApi } from '../../api/defect-report-api'
+import { DefectMovableReportApi } from '../../api/defect-movable-report-api'
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
 import { useUserStore } from 'src/features/user/stores/user-store'
 
-const { buildAndRequestMovableDefectReport, moveMovable } = useDefectReportService()
-const { defectMovableReport } = storeToRefs(useDefectReportStore())
+const { buildAndRequestMovableDefectReport, moveMovable } = useDefectMovableReportService()
+const { defectMovableReport } = storeToRefs(useDefectMovableReportStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 const { hasPermission } = useUserStore()
 
@@ -58,7 +61,7 @@ const drag = ref(false)
 const isBuilding = ref(false)
 
 const buildDocx = async () => {
-  const response = await DefectReportApi.buildMovableDocx(selectedInspectionId.value!!)
+  const response = await DefectMovableReportApi.buildMovableDocx(selectedInspectionId.value!!)
   return response.data
 }
 

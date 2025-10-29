@@ -28,7 +28,7 @@ import { ref } from 'vue'
 import TechnicalReportContent from 'src/features/defect/components/TechnicalReportContent.vue'
 import DefectContent from 'src/features/defect/components/DefectContent.vue'
 import DefectReport from 'src/features/defect/components/defect-report/DefectReport.vue'
-import DefectMovableReport from 'src/features/defect/components/defect-report/DefectMovableReport.vue'
+import DefectMovableReport from 'src/features/defect/components/defect-movable-report/DefectMovableReport.vue'
 const tab = ref('defects')
 </script>
 <style scoped>

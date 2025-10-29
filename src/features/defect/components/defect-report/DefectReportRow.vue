@@ -11,7 +11,7 @@
         <DefectReportTextItem label="Норматив" :value="row.standard" />
       </div>
       <div class="col-3">
-        <DefectReportPhotos :photos="row.photos" />
+        <DefectReportPhotos :use-photo-api="usePhoto" :photos="row.photos" />
       </div>
     </q-card-section>
   </q-card>
@@ -21,11 +21,14 @@
 import DefectReportTextItem from 'src/features/defect/components/defect-report/DefectReportTextItem.vue'
 import DefectReportPhotos from 'src/features/defect/components/defect-report/DefectReportPhotos.vue'
 import { DefectReportRowModel } from 'src/features/defect/stores/defect-report-types'
+import { useDefectReportService } from 'src/features/defect/composables/defect-report-service'
 
 const props = defineProps<{
-  showTechnicalReport: boolean,
+  showTechnicalReport: boolean
   row: DefectReportRowModel
 }>()
+
+const { usePhoto } = useDefectReportService()
 
 const defectSpan = props.showTechnicalReport ? 3 : 4
 const standardSpan = props.showTechnicalReport ? 4 : 5

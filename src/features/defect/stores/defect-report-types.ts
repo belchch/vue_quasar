@@ -33,19 +33,3 @@ export type DefectReportModel = {
   spots: DefectReportSpotModel[]
   useTechnicalReport: boolean
 }
-
-export type DefectMovableItemRowModel = {
-  defect: string
-  measurements: string
-  photos: DefectReportPhotoModel[]
-}
-
-export type DefectMovableModel = {
-  id: number
-  text: string
-  rows: DefectMovableItemRowModel[]
-}
-export type DefectMovableReportModel = {
-  id: number
-  objects: DefectMovableModel[]
-}
