@@ -58,7 +58,7 @@ const drag = ref(false)
 const isBuilding = ref(false)
 
 const buildDocx = async () => {
-  const response = await DefectReportApi.builMovableDocx(selectedInspectionId.value!!)
+  const response = await DefectReportApi.buildMovableDocx(selectedInspectionId.value!!)
   return response.data
 }
 

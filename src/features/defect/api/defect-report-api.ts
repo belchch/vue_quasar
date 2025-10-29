@@ -143,10 +143,9 @@ export const DefectReportApi = {
     )
   },
 
-  // TODO: refactor
-  builMovableDocx(inspectionId: number) {
+  buildMovableDocx(inspectionId: number) {
     return api.post<FileInfo>(
-      `/api/defect-report/build-movable-docx`,
+      `/api/movable-report/build-docx`,
       {},
       {
         params: {
