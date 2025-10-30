@@ -56,7 +56,14 @@ const editDialog = ref(false)
 const movable = ref<PhotoDocMovable | undefined>(props.photoDoc?.movableInfo?.movable)
 const floodDamage = ref<FloodDamage | undefined>(props.photoDoc?.movableInfo?.floodPropertyDamage)
 const update = async () => {
-  await updatePhotoDoc(props.photoDoc!)
+  const clone = { ...props.photoDoc }
+  if (!clone.movableInfo)
+    clone['movableInfo'] = {
+      movable: undefined,
+      floodPropertyDamage: undefined,
+    }
+  clone.movableInfo.floodPropertyDamage = floodDamage.value
+  await updatePhotoDoc(clone as PhotoDoc)
 }
 const getMeasurement = (movable: PhotoDocMovable | undefined) => {
   if (movable) {
