@@ -1,33 +1,35 @@
 <template>
   <div class="text-subtitle1 q-mb-sm">{{ title }}</div>
-      <q-input dense outlined
-        v-model="displayDate"
-        lazy-rules
-        readonly
-
-        :disable="disabledPermission"
-        :rules="[(value) => (!_.isEmpty(value) || !required) || 'Обязательное поле']"
-        >
-          <q-btn
-              :disable="disabledPermission"
-              icon="event"
-              flat
-              no-caps
-              round2
-              class="bg-grey-3 text-grey-8"
-              style="margin: 1px -11px"
-              size="md"
-          >
-              <q-popup-proxy @before-show="openDatePicker" transition-show="scale" transition-hide="scale">
-                  <q-date color="grey" v-model="tempDate" minimal mask="YYYY-MM-DDTHH:mm:ssZ" >
-                  <div class="row items-center justify-end q-gutter-sm">
-                      <q-btn label="Отмена" color="primary" flat v-close-popup />
-                      <q-btn label="OK" color="primary" flat @click="applyDate" v-close-popup />
-                  </div>
-                  </q-date>
-              </q-popup-proxy>
-          </q-btn>
-      </q-input>
+  <q-input
+    dense
+    outlined
+    v-model="displayDate"
+    readonly
+    :disable="disabledPermission"
+    :rules="[(value) => !_.isEmpty(value) || !required || 'Обязательное поле']"
+    hide-bottom-space
+    style="margin-top: -4px"
+  >
+    <q-btn
+      :disable="disabledPermission"
+      icon="event"
+      flat
+      no-caps
+      round2
+      class="bg-grey-3 text-grey-8"
+      style="margin: 1px -11px"
+      size="md"
+    >
+      <q-popup-proxy @before-show="openDatePicker" transition-show="scale" transition-hide="scale">
+        <q-date color="grey" v-model="tempDate" minimal mask="YYYY-MM-DDTHH:mm:ssZ">
+          <div class="row items-center justify-end q-gutter-sm">
+            <q-btn label="Отмена" color="primary" flat v-close-popup />
+            <q-btn label="OK" color="primary" flat @click="applyDate" v-close-popup />
+          </div>
+        </q-date>
+      </q-popup-proxy>
+    </q-btn>
+  </q-input>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
@@ -36,13 +38,17 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 
-const model = defineModel<string | undefined,number>()
+const model = defineModel<string | undefined, number>()
 const emit = defineEmits(['update:modelValue'])
 const tempDate = ref('')
 
-const { title = '', disabledPermission = false, required = false } = defineProps<{
-  title: string,
-  disabledPermission?: boolean,
+const {
+  title = '',
+  disabledPermission = false,
+  required = false,
+} = defineProps<{
+  title: string
+  disabledPermission?: boolean
   required?: boolean
 }>()
 
@@ -52,7 +58,7 @@ const displayDate = computed({
     if (!model.value) return ''
     return dayjs.utc(model.value).format('YYYY/MM/DD')
   },
-  set() {} // read-only
+  set() {}, // read-only
 })
 
 // Открытие date picker и инициализация временного значения
@@ -65,5 +71,4 @@ const applyDate = () => {
   const isoDate = dayjs.utc(tempDate.value).format('YYYY-MM-DDTHH:mm:ss[Z]')
   emit('update:modelValue', isoDate)
 }
-
 </script>
