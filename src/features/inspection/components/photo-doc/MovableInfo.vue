@@ -1,24 +1,23 @@
 <template>
   <movable-info-dialog :photo-doc="photoDoc" v-model="editDialog" />
-  <div class="q-gutter-xs q-mb-xs q-mt-md" v-if="photoDoc?.movableInfo?.movable">
-    <q-separator />
-    <div style="position: relative; cursor: pointer" @click="editDialog = true">
-      <q-input
-        borderless
-        readonly
-        dense
-        :model-value="photoDoc?.movableInfo?.movable?.name"
-        label="Наименование"
-      />
-      <div class="text-caption">{{ getMeasurement(photoDoc?.movableInfo?.movable) }}</div>
-      <q-icon
-        style="top: 4px; right: 4px; position: absolute; opacity: var(--e-opacity-edit-icon)"
-        name="edit"
-        class="edit-icon"
-      />
+  <q-separator class="q-mb-xs q-mt-md" />
+  <q-card flat>
+    <div class="row items-center text-grey-8">
+      <q-icon name="chair" class="q-ml-sm text-grey-8" />
+      <div class="text-caption text-grey-8">
+        &nbsp;&nbsp;&nbsp;{{ photoDoc?.movableInfo?.movable?.name }}
+      </div>
+      <q-space />
+      <q-btn square icon="edit" color="secondary" size="xs" outline @click="editDialog = true" />
     </div>
-    <q-separator />
+    <div class="text-caption text-grey-8">
+      {{ getMeasurement(photoDoc?.movableInfo?.movable) }}
+      <!-- <q-chip square ext-color="white" size="sm" color="blue-1" text-color="blue-7" clickable>
+        {{ getMeasurement(photoDoc?.movableInfo?.movable) }}
+      </q-chip> -->
+    </div>
     <q-select
+      class="q-mt-sm"
       borderless
       v-model="floodDamage"
       :options="filteredFloodDamage"
@@ -35,18 +34,7 @@
       hide-selected
       behavior="dialog"
     />
-  </div>
-  <div v-else>
-    <q-btn
-      outline
-      no-caps
-      size="sm"
-      label="Задать параметры"
-      class="full-width"
-      @click="editDialog = true"
-      color="secondary"
-    />
-  </div>
+  </q-card>
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
@@ -70,9 +58,9 @@ const floodDamage = ref<FloodDamage | undefined>(props.photoDoc?.movableInfo?.fl
 const update = async () => {
   await updatePhotoDoc(props.photoDoc!)
 }
-const getMeasurement = (movable: PhotoDocMovable) => {
+const getMeasurement = (movable: PhotoDocMovable | undefined) => {
   if (movable) {
-    return `Ш: ${movable.width} x В: ${movable.height} x Д: ${movable.length}`
+    return `${movable.width} x ${movable.height} x ${movable.length}`
   } else {
     return '-'
   }
