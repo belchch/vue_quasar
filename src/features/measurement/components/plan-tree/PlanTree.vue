@@ -95,7 +95,7 @@
             </template>
             <template v-slot:header-notmovable-objects>
               <q-item-section>
-                <q-item-label>Конструктив</q-item-label>
+                <q-item-label>Колонны</q-item-label>
               </q-item-section>
             </template>
             <template v-slot:header-notmovable-item="prop">
@@ -220,7 +220,7 @@
             <ObjectInfo :selected-node="selectedNode" />
           </q-tab-panel>
           <q-tab-panel name="notmovable-item">
-            <ObjectInfo :selected-node="selectedNode" label-block="Конструктив" />
+            <ObjectInfo :selected-node="selectedNode" label-block="Колонна" />
           </q-tab-panel>
           <!-- Лестницы -->
           <q-tab-panel name="stairway-item">
