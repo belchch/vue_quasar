@@ -2,7 +2,7 @@ import { useDefectReportStore } from 'src/features/defect/stores/defect-report-s
 import { DefectReportApi } from 'src/features/defect/api/defect-report-api'
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
 import { storeToRefs } from 'pinia'
-import {DefectReportPhotoModel} from "src/features/defect/stores/defect-report-types";
+import { DefectReportPhotoModel } from 'src/features/defect/stores/defect-report-types'
 
 export const useDefectReportService = () => {
   const { defectReport } = storeToRefs(useDefectReportStore())
@@ -33,10 +33,21 @@ export const useDefectReportService = () => {
     await requestDefectReport()
   }
 
-  const usePhoto = async (photoId: number, use: boolean, scope: number): Promise<DefectReportPhotoModel[]> => {
+  const usePhoto = async (
+    photoId: number,
+    use: boolean,
+    scope: number,
+  ): Promise<DefectReportPhotoModel[]> => {
     const response = await DefectReportApi.usePhoto(photoId, use, scope)
     return response.data
   }
 
-  return { buildAndRequestDefectReport, requestDefectReport, moveSpot, moveStructElem, moveRow, usePhoto }
+  return {
+    buildAndRequestDefectReport,
+    requestDefectReport,
+    moveSpot,
+    moveStructElem,
+    moveRow,
+    usePhoto,
+  }
 }

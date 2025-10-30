@@ -12,7 +12,7 @@
             <div class="text-subtitle1 q-mb-sm">Наименование</div>
             <q-input outlined dense v-model="objectForm.name" label="Наименование" :rules="nameRules" />
           </q-card-section>
-          <q-card-section v-if="sectionType != 'fixed_asset'" class="q-pt-none">
+          <q-card-section class="q-pt-none">
             <div class="text-subtitle1 q-mb-sm">Материал</div>
             <q-select use-input dense outlined v-model="objectForm.material" :options="materialStore.items"
               label="Материал" option-label="name" option-value="id" :rules="materialRules"/>
@@ -137,6 +137,7 @@ const onConfirmClick = async () => {
         roomId: room.id!!,
         roomNum: roomNum,
         name: objectForm.value.name,
+        materialId: objectForm.value.material?.id || null,
         width: objectForm.value.width,
         height: objectForm.value.height,
         length: objectForm.value.length,

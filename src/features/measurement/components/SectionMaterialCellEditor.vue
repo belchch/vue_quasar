@@ -29,6 +29,10 @@ const optionItems = computed(() => {
 
 const updateValue = async () => {
   const update = _.cloneDeep(row) as any
+  if(!update.material) update.material = {
+    id: null,
+    name: null
+  }
   update.material.id = localValue.value
   await apiFn(row.id, update)
 }

@@ -1,37 +1,76 @@
 <template>
   <q-card flat bordered class="card">
     <div v-if="photoDoc.urls?.length && photoDoc.urls?.length > 1">
-      <q-carousel v-model="slide" transition-prev="slide-right" transition-next="slide-left" swipeable animated arrows
-        navigation infinite2 class="img">
-        <q-carousel-slide v-for="(url, index) in photoDoc.urls" :key="index" :name="index" :img-src="url"
-          @click="openLightbox(index)" />
-
+      <q-carousel
+        v-model="slide"
+        transition-prev="slide-right"
+        transition-next="slide-left"
+        swipeable
+        animated
+        arrows
+        navigation
+        infinite2
+        class="img"
+      >
+        <q-carousel-slide
+          v-for="(url, index) in photoDoc.urls"
+          :key="index"
+          :name="index"
+          :img-src="url"
+          @click="openLightbox(index)"
+        />
       </q-carousel>
       <q-badge class="img-badge" color="accent" text-color="white">{{
-        photoDoc.urls?.length }}</q-badge>
+        photoDoc.urls?.length
+      }}</q-badge>
     </div>
     <div v-else>
       <q-img :src="_.first(photoDoc.urls)" class="img" @click="openLightbox()" />
-
     </div>
     <q-card-section v-if="!collapsed">
       <div class="q-mb-xs q-gutter-md">
-        <q-btn-dropdown :label="photoDocTypeDesc(photoDoc.type)" icon="image" size="sm" no-caps color="grey-8" flat
-          square :disabled="!hasPermission(['inspection.update'])">
+        <q-btn-dropdown
+          :label="photoDocTypeDesc(photoDoc.type)"
+          icon="image"
+          size="sm"
+          no-caps
+          color="grey-8"
+          flat
+          square
+          :disabled="!hasPermission(['inspection.update'])"
+        >
           <q-list>
-            <q-item v-for="item in ['DEFECT', 'GENERAL_VIEW', 'MOVABLE']" :key="item!!" clickable v-close-popup
-              @click="() => onSelectType(item as PhotoDocType)">
+            <q-item
+              v-for="item in ['DEFECT', 'GENERAL_VIEW', 'MOVABLE']"
+              :key="item!!"
+              clickable
+              v-close-popup
+              @click="() => onSelectType(item as PhotoDocType)"
+            >
               <q-item-section>
                 <q-item-label>{{ photoDocTypeDesc(item as PhotoDocType) }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-btn-dropdown :disable="!hasPermission(['inspection.update'])" :label="displaySpotName(photoDoc)" icon="house"
-          size="sm" no-caps color="grey-8" flat square>
+        <q-btn-dropdown
+          :disable="!hasPermission(['inspection.update'])"
+          :label="displaySpotName(photoDoc)"
+          icon="house"
+          size="sm"
+          no-caps
+          color="grey-8"
+          flat
+          square
+        >
           <q-list>
-            <q-item v-for="item in inspectionSpotOptions" :key="item.id!!" clickable v-close-popup
-              @click="() => onSelectSpot(item)">
+            <q-item
+              v-for="item in inspectionSpotOptions"
+              :key="item.id!!"
+              clickable
+              v-close-popup
+              @click="() => onSelectSpot(item)"
+            >
               <q-item-section>
                 <q-item-label>{{ item.name }}</q-item-label>
               </q-item-section>
@@ -40,59 +79,124 @@
         </q-btn-dropdown>
       </div>
 
-      <DefectInfo v-if="photoDoc.type == 'DEFECT'" :defect-info="photoDoc.defectInfo"
-        @changeDefectInfo="onChangeDefectInfo" :photo-doc-id="photoDoc.id!!" />
-
-      <MovableInfo v-if="photoDoc.type == 'MOVABLE'" :movable-info="photoDoc.movableInfo" :photo-doc-id="photoDoc.id!!"
-        @change-movable-info="onChangeMovableInfo" />
+      <DefectInfo
+        v-if="photoDoc.type == 'DEFECT'"
+        :defect-info="photoDoc.defectInfo"
+        @changeDefectInfo="onChangeDefectInfo"
+        :photo-doc-id="photoDoc.id!!"
+      />
+      <MovableInfo :photo-doc="photoDoc" v-if="photoDoc.type == 'MOVABLE'" />
     </q-card-section>
 
-    <div class="text-accent text-caption text-no-wrap row items-center q-pa-xs q-ml-xs" v-if="photoDoc.photographable">
-      <q-icon name="photo_camera" class="q-mr-xs" /> {{ photographableDesc(photoDoc.photographable) }}
+    <div
+      class="text-accent text-caption text-no-wrap row items-center q-pa-xs q-ml-xs"
+      v-if="photoDoc.photographable"
+    >
+      <q-icon name="photo_camera" class="q-mr-xs" />
+      {{ photographableDesc(photoDoc.photographable) }}
     </div>
 
     <div v-if="hasPermission(['inspection.update'])">
       <template v-if="!unionStore.isUnionMode">
         <div class="hover-controls absolute-top column">
-          <q-btn flat text-color="white" icon="filter" class="union-btn" @click.stop="startUnionMode">
+          <q-btn
+            flat
+            text-color="white"
+            icon="filter"
+            class="union-btn"
+            @click.stop="startUnionMode"
+          >
             <q-tooltip>Добавить к фотографии другие фото</q-tooltip>
           </q-btn>
-          <q-btn v-if="photoDoc.urls?.length && photoDoc.urls?.length > 1" flat text-color="white" icon="view_cozy"
-            class="hover-delete-btn" @click.stop="ungroupPhotoDoc">
+          <q-btn
+            v-if="photoDoc.urls?.length && photoDoc.urls?.length > 1"
+            flat
+            text-color="white"
+            icon="view_cozy"
+            class="hover-delete-btn"
+            @click.stop="ungroupPhotoDoc"
+          >
             <q-tooltip>Разгруппировать</q-tooltip>
           </q-btn>
-          <q-btn flat text-color="white" icon="delete" class="hover-delete-btn" @click.stop="confirmDelete" />
+          <q-btn
+            flat
+            text-color="white"
+            icon="delete"
+            class="hover-delete-btn"
+            @click.stop="confirmDelete"
+          />
         </div>
       </template>
       <template v-else>
         <div class="hover-controls hover-controls--union-mode absolute-top column">
-          <q-btn v-if="unionStore.mainPhotoDoc?.id == photoDoc.id" flat color="white" text-color="white" icon="filter"
-            class="union-btn union-btn-active" @click.stop="unionStore.resetUnion">
+          <q-btn
+            v-if="unionStore.mainPhotoDoc?.id == photoDoc.id"
+            flat
+            color="white"
+            text-color="white"
+            icon="filter"
+            class="union-btn union-btn-active"
+            @click.stop="unionStore.resetUnion"
+          >
             <q-tooltip>Сбросить объединение</q-tooltip>
           </q-btn>
-          <q-checkbox v-else flat :model-value="unionStore.isSelected(photoDoc)" color="secondary"
-            @update:model-value="handleCheckboxChange" class="hover-checkbox" @click.stop />
+          <q-checkbox
+            v-else
+            flat
+            :model-value="unionStore.isSelected(photoDoc)"
+            color="secondary"
+            @update:model-value="handleCheckboxChange"
+            class="hover-checkbox"
+            @click.stop
+          />
         </div>
       </template>
     </div>
   </q-card>
-  <q-dialog v-model="showLightbox" full-width full-height maximized backdrop-filter="brightness(40%)">
+  <q-dialog
+    v-model="showLightbox"
+    full-width
+    full-height
+    maximized
+    backdrop-filter="brightness(40%)"
+  >
     <q-card class="lightbox-container" style="background: transparent; box-shadow: none">
       <!-- Для нескольких изображений -->
       <div v-if="photoDoc.urls?.length && photoDoc.urls?.length > 1" class="carousel-wrapper">
-        <q-carousel v-model="slide" swipeable animated arrows navigation infinite2 transition-prev="slide-right"
-          transition-next="slide-left" class="full-height-carousel" style="background-color: transparent;">
-          <q-carousel-slide v-for="(url, index) in photoDoc.urls" :key="index" :name="index" class="full-height-slide">
+        <q-carousel
+          v-model="slide"
+          swipeable
+          animated
+          arrows
+          navigation
+          infinite2
+          transition-prev="slide-right"
+          transition-next="slide-left"
+          class="full-height-carousel"
+          style="background-color: transparent"
+        >
+          <q-carousel-slide
+            v-for="(url, index) in photoDoc.urls"
+            :key="index"
+            :name="index"
+            class="full-height-slide"
+          >
             <q-img :src="url" fit="contain" class="full-height-img" />
           </q-carousel-slide>
         </q-carousel>
-
       </div>
 
       <!-- Для одного изображения -->
       <q-img v-else :src="_.first(photoDoc.urls)" fit="contain" class="single-img" />
 
-      <q-btn icon="close" flat round dense v-close-popup class="dialog-img-close-btn bg-primary text-white" />
+      <q-btn
+        icon="close"
+        flat
+        round
+        dense
+        v-close-popup
+        class="dialog-img-close-btn bg-primary text-white"
+      />
     </q-card>
   </q-dialog>
   <!-- <q-dialog v-model="showLightbox" backdrop-filter="brightness(60%)" full-height2 full-width2 maximized2>
@@ -124,7 +228,7 @@ import { useTechnicalReportService } from 'src/features/defect/composables/techn
 import { buildInspectionSpotOptions, InspectionSpotOption } from '../../composables/inspection-spot'
 import { useInspectionSpotStore } from '../../store/inspection-spot-store'
 import { storeToRefs } from 'pinia'
-import { useUserStore } from 'src/features/user/stores/user-store';
+import { useUserStore } from 'src/features/user/stores/user-store'
 import MovableInfo from './MovableInfo.vue'
 
 const unionStore = usePhotoDocsUnionStore()
@@ -141,6 +245,7 @@ const { requestTechnicalReport } = useTechnicalReportService()
 const selectedInspectionService = useSelectedInspection()
 const selected = ref([])
 const slide = ref(0)
+
 const confirmDelete = () => {
   $q.dialog({
     title: 'Подтвердите удаление',
@@ -178,7 +283,7 @@ const onSelectSpot = async (option: InspectionSpotOption) => {
   await updatePhotoDoc({
     ...props.photoDoc,
     spot: option.spot,
-    spotNum: option.spotNum
+    spotNum: option.spotNum,
   })
 }
 
@@ -195,13 +300,6 @@ const onChangeDefectInfo = async (defectInfo: PhotoDocDefectInfo) => {
     defectInfo,
   })
   await requestTechnicalReport()
-}
-
-const onChangeMovableInfo = async (movableInfo: PhotoDocMovableInfo) => {
-  await updatePhotoDoc({
-    ...props.photoDoc,
-    movableInfo,
-  })
 }
 
 function openLightbox(index = 0) {
@@ -260,7 +358,6 @@ const handleCheckboxChange = () => {
   // justify-content: center;
   // align-items: center;
 }
-
 
 .hover-controls {
   background: rgba(0, 0, 0, 0.47);
@@ -355,12 +452,11 @@ const handleCheckboxChange = () => {
     pointer-events: none;
   }
 
-  .q-img>div:first-child {
+  .q-img > div:first-child {
     display: none;
   }
 }
 </style>
-
 
 <style>
 .lightbox-container {
