@@ -8,10 +8,10 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { FloorSectionMeasurement, FixedAssetMeasurament, OpeningMeasurement, CeilSectionMeasurement, WallSectionMeasurement } from '../stores/types';
+import { FloorSectionMeasurement, FixedAssetMeasurement, OpeningMeasurement, CeilSectionMeasurement, WallSectionMeasurement } from '../stores/types';
 import _ from 'lodash';
 
-type RowsType = FloorSectionMeasurement | OpeningMeasurement | FixedAssetMeasurament | CeilSectionMeasurement | WallSectionMeasurement
+type RowsType = FloorSectionMeasurement | OpeningMeasurement | FixedAssetMeasurement | CeilSectionMeasurement | WallSectionMeasurement
 
 const { field, value = 0, row, canEdit = true, type = 'number', apiFn } = defineProps<{
   field: string,

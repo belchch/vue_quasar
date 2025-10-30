@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from "pinia"
-import { OpeningMeasurement, RoomMeasurement, CeilSectionMeasurement, FloorSectionMeasurement, WallSectionMeasurement, FixedAssetMeasurament } from "./types"
+import { OpeningMeasurement, RoomMeasurement, CeilSectionMeasurement, FloorSectionMeasurement, WallSectionMeasurement, FixedAssetMeasurement } from "./types"
 import { computed, ref } from "vue"
 import { useOpeningStore } from "src/features/lookup/opening/opening-store"
 import InspectionLocations from "src/features/inspection/components/InspectionLocations.vue"
@@ -13,7 +13,7 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
     const ceilSectionMeasurements = ref<CeilSectionMeasurement[]>([])
     const floorSectionMeasurements = ref<FloorSectionMeasurement[]>([])
     const wallSectionMeasurements = ref<WallSectionMeasurement[]>([])
-    const fixedAssetMeasurements = ref<FixedAssetMeasurament[]>([])
+    const fixedAssetMeasurements = ref<FixedAssetMeasurement[]>([])
     const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
     const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
@@ -51,7 +51,7 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
 
         // return _.sortBy(result, 'room.name')
     })
-    type SectionsTypes = CeilSectionMeasurement[] | FloorSectionMeasurement[] | WallSectionMeasurement[] | FixedAssetMeasurament[];
+    type SectionsTypes = CeilSectionMeasurement[] | FloorSectionMeasurement[] | WallSectionMeasurement[] | FixedAssetMeasurement[];
     const _findItemsByIdAndNum = (items: SectionsTypes, id: number, num?: number | null) => {
       const filteredRoom = items.filter(item=>item.room.id == id);
       const result = [];
