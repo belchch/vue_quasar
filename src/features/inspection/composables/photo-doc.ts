@@ -1,16 +1,16 @@
 import { InspectionApi } from 'src/features/inspection/api/inspection-api'
 import { usePhotoDocsStore } from 'src/features/inspection/store/photo-doc-store'
 import { PhotoDoc } from 'src/features/inspection/store/types'
-import { PhotoDocSearchRequest } from "src/features/inspection/api/types";
-import { storeToRefs } from "pinia";
-import { useAllPhotoDocStore } from '../store/all-photo-doc-store';
-import MovableInfo from '../components/photo-doc/MovableInfo.vue';
+import { PhotoDocSearchRequest } from 'src/features/inspection/api/types'
+import { storeToRefs } from 'pinia'
+import { useAllPhotoDocStore } from '../store/all-photo-doc-store'
+import MovableInfo from '../components/photo-doc/MovableInfo.vue'
 
 export const usePhotoDocs = () => {
   const photoDocsStore = usePhotoDocsStore()
   const { setSearch, setPhotoDocs } = photoDocsStore
   const { search, photoDocsLoading, photoDocs } = storeToRefs(photoDocsStore)
-  const {allPhotoDocs} = storeToRefs(useAllPhotoDocStore())
+  const { allPhotoDocs } = storeToRefs(useAllPhotoDocStore())
 
   const createPhotoDoc = async (inspectionId: number, source: string) => {
     return InspectionApi.createPhotoDoc(inspectionId, { sources: [source] })
@@ -30,21 +30,20 @@ export const usePhotoDocs = () => {
         defectId: photoDoc.defectInfo?.defect?.id,
         value: photoDoc.defectInfo?.value,
         cause: photoDoc.defectInfo?.cause,
-        technicalReportRowId: photoDoc.defectInfo?.technicalReportRowId
+        technicalReportRowId: photoDoc.defectInfo?.technicalReportRowId,
       },
       movableInfo: {
-        movableId: photoDoc.movableInfo?.movable?.id,
-        floodPropertyDamageId: photoDoc.movableInfo?.floodPropertyDamage?.id
-      }
+        movable: photoDoc.movableInfo?.movable,
+        floodPropertyDamageId: photoDoc.movableInfo?.floodPropertyDamage?.id,
+      },
     }
-
-    const response =  await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
-    photoDocs.value = replacePhotoDoc(photoDocs.value, response.data) 
+    const response = await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
+    photoDocs.value = replacePhotoDoc(photoDocs.value, response.data)
     allPhotoDocs.value = replacePhotoDoc(allPhotoDocs.value, response.data)
   }
 
   const replacePhotoDoc = (target: PhotoDoc[], replacement: PhotoDoc): PhotoDoc[] => {
-    return photoDocs.value.map(item => {
+    return photoDocs.value.map((item) => {
       if (item.id == replacement.id) {
         return replacement
       } else {
@@ -53,7 +52,11 @@ export const usePhotoDocs = () => {
     })
   }
 
-  const searchAndSet = async (inspectionId: number, newSearch?: PhotoDocSearchRequest, generatePresignedUrls?: boolean) => {
+  const searchAndSet = async (
+    inspectionId: number,
+    newSearch?: PhotoDocSearchRequest,
+    generatePresignedUrls?: boolean,
+  ) => {
     try {
       photoDocsLoading.value = true
 
@@ -72,12 +75,19 @@ export const usePhotoDocs = () => {
     await searchAndSet(inspectionId, search.value, generatePresignedUrls)
   }
 
-  const requestPhotoDocs = async (inspectionId: number, newSearch?: PhotoDocSearchRequest, generatePresignedUrls: boolean = false) => {
+  const requestPhotoDocs = async (
+    inspectionId: number,
+    newSearch?: PhotoDocSearchRequest,
+    generatePresignedUrls: boolean = false,
+  ) => {
     setSearch(newSearch)
     await searchAndSet(inspectionId, newSearch, generatePresignedUrls)
   }
 
-  const requestAllPhotoDocs = async (inspectionId: number, generatePresignedUrls: boolean = false) => {
+  const requestAllPhotoDocs = async (
+    inspectionId: number,
+    generatePresignedUrls: boolean = false,
+  ) => {
     if (generatePresignedUrls) {
       await InspectionApi.generatePresignedUrls(inspectionId)
     }
