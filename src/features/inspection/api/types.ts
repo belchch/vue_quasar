@@ -13,6 +13,7 @@ export type PhotoDocUpdateRequest = {
   spotNum?: number | undefined
   type?: PhotoDocType | undefined
   defectInfo?: PhotoDocDefectInfoUpdateRequest | undefined
+  movableInfo?: PhotoDocMovableInfoUpdateRequest | undefined 
 }
 
 export type PhotoDocDefectInfoUpdateRequest = {
@@ -23,6 +24,11 @@ export type PhotoDocDefectInfoUpdateRequest = {
   value?: string | undefined
   cause?: string | undefined
   technicalReportId?: number | undefined
+}
+
+export type PhotoDocMovableInfoUpdateRequest = {
+  movableId: number | undefined,
+  floodPropertyDamageId: number | undefined
 }
 
 export type DefectSearchRequest = {

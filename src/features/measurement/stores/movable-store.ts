@@ -9,7 +9,7 @@ export const useMovableStore = defineStore('movable-store', () => {
     const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
     const { selectedInspectionId } = storeToRefs(useInspectionsStore())
     const movables = ref<Movable[]>([])
-    const requestMovables = async () => {}
+    
     const addItem = (item: Movable) => {
       movables.value.push(item);
     }
