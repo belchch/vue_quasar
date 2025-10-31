@@ -15,8 +15,11 @@ export type BoqFixedAssetModel = {
     width?: number,
     length?: number,
     area?: number,
-    hasCustomShape: boolean
+    hasCustomShape: boolean,
+    type: FixedAssetType
 }
+
+export type FixedAssetType = 'COLUMN' | 'STAIRWAY'
 
 export type BoqFixedAssetUpdateRequest = {
     id: number,    

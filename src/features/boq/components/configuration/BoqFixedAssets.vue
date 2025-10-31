@@ -4,7 +4,7 @@
     </div>
     <q-separator class="q-mt-md"/>
     <template v-for="(fixedAsset, index) in fixedAssetsLocal" :key="fixedAsset.id">
-        <BoqFixedAsset :fixed-asset="fixedAsset" :index="index" @remove="deleteFixedAsset(fixedAsset.id)"/>
+        <BoqFixedAsset :fixed-asset="fixedAsset" :index="index" @remove="deleteFixedAsset(fixedAsset.id)" :prefix="prefix"/>
     </template>
 </template>
 
@@ -22,6 +22,7 @@ const { location, wallPhotos } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{
+    prefix: string,
     fixedAssets: BoqFixedAssetModel[]
 }>()
 
