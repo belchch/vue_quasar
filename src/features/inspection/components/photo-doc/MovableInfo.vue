@@ -1,45 +1,81 @@
 <template>
-  <div class="q-gutter-xs q-mb-xs q-mt-md">
-    <q-separator />
-    <q-select borderless v-model="movable" :options="movables" label="Объект" dense @update:model-value="update"
-      option-label="name" option-value="id" />
-
-    <q-select borderless v-model="floodDamage" :options="filteredFloodDamage" label="Дефект" dense
-      @update:model-value="update" option-label="name" option-value="id" menu-self="center right"
-      @filter="filterFloodDamage" use-input input-debounce="0" fill-input hide-selected behavior="dialog" />
-  </div>
-
+  <movable-info-dialog :photo-doc="photoDoc" v-model="editDialog" />
+  <q-separator class="q-mb-xs q-mt-md" />
+  <q-card flat>
+    <div class="row items-center text-grey-8">
+      <q-icon name="chair" class="q-ml-sm text-grey-8" />
+      <div class="text-caption text-grey-8">
+        &nbsp;&nbsp;&nbsp;{{ photoDoc?.movableInfo?.movable?.name }}
+      </div>
+      <q-space />
+      <q-btn square icon="edit" color="secondary" size="xs" outline @click="editDialog = true" />
+    </div>
+    <div class="text-caption text-grey-8">
+      {{ getMeasurement(photoDoc?.movableInfo?.movable) }}
+      <!-- <q-chip square ext-color="white" size="sm" color="blue-1" text-color="blue-7" clickable>
+        {{ getMeasurement(photoDoc?.movableInfo?.movable) }}
+      </q-chip> -->
+    </div>
+    <q-select
+      class="q-mt-sm"
+      borderless
+      v-model="floodDamage"
+      :options="filteredFloodDamage"
+      label="Дефект"
+      dense
+      @update:model-value="update"
+      option-label="name"
+      option-value="id"
+      menu-self="center right"
+      @filter="filterFloodDamage"
+      use-input
+      input-debounce="0"
+      fill-input
+      hide-selected
+      behavior="dialog"
+    />
+  </q-card>
 </template>
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
-import { useFloodDamageStore } from 'src/features/lookup/flood-damage/flood-damage-store';
-import { FloodDamage } from 'src/features/lookup/flood-damage/types';
-import { useMovableStore } from 'src/features/measurement/stores/movable-store';
-import { computed, ref } from 'vue';
-import { PhotoDocMovable, PhotoDocMovableInfo } from '../../store/types';
+import { storeToRefs } from 'pinia'
+import { useFloodDamageStore } from 'src/features/lookup/flood-damage/flood-damage-store'
+import { FloodDamage } from 'src/features/lookup/flood-damage/types'
+import { useMovableStore } from 'src/features/measurement/stores/movable-store'
+import { useSelectedInspection } from 'src/features/inspection/composables/selected-inspection'
+import { computed, ref } from 'vue'
+import { PhotoDocMovable, PhotoDocMovableInfo, PhotoDoc } from '../../store/types'
+import MovableInfoDialog from './MovableInfoDialog.vue'
 
 const props = defineProps<{
-  photoDocId: number,
-  movableInfo: PhotoDocMovableInfo | undefined
+  photoDoc: PhotoDoc | undefined
 }>()
-
-const { movables } = storeToRefs(useMovableStore())
+const { updatePhotoDoc } = useSelectedInspection()
 const floodDamageStore = useFloodDamageStore()
 
-const movable = ref<PhotoDocMovable | undefined>(props.movableInfo?.movable)
-const floodDamage = ref<FloodDamage | undefined>(props.movableInfo?.floodPropertyDamage)
-
-const update = () => {
-  emits('changeMovableInfo', {
-    movable: movable.value,
-    floodPropertyDamage: floodDamage.value
-  })
+const editDialog = ref(false)
+const movable = ref<PhotoDocMovable | undefined>(props.photoDoc?.movableInfo?.movable)
+const floodDamage = ref<FloodDamage | undefined>(props.photoDoc?.movableInfo?.floodPropertyDamage)
+const update = async () => {
+  const clone = { ...props.photoDoc }
+  if (!clone.movableInfo)
+    clone['movableInfo'] = {
+      movable: undefined,
+      floodPropertyDamage: undefined,
+    }
+  clone.movableInfo.floodPropertyDamage = floodDamage.value
+  await updatePhotoDoc(clone as PhotoDoc)
 }
-
+const getMeasurement = (movable: PhotoDocMovable | undefined) => {
+  if (movable) {
+    return `${movable.width} x ${movable.height} x ${movable.length}`
+  } else {
+    return '-'
+  }
+}
 const floodDamageFilter = ref<string>('')
 
 const filteredFloodDamage = computed(() => {
-  return floodDamageStore.items.filter(item => {
+  return floodDamageStore.items.filter((item) => {
     return item.name.toLocaleLowerCase().includes(floodDamageFilter.value.toLocaleLowerCase())
   })
 })
@@ -49,8 +85,11 @@ const filterFloodDamage = (val: any, update: any) => {
     floodDamageFilter.value = val
   })
 }
-
-const emits = defineEmits<{
-  changeMovableInfo: [movableInfo: PhotoDocMovableInfo]
-}>()
+// const openDialog = () => {
+//   emits('openDialogClick')
+// }
+// const emits = defineEmits<{
+//   changeMovableInfo: [movableInfo: PhotoDocMovableInfo]
+//   openDialogClick: []
+// }>()
 </script>

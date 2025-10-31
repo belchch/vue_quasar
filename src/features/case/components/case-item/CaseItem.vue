@@ -1,32 +1,52 @@
 <template>
   <q-item class="q-pa-none column full-width q-ma-none" clickable @click="selectCase">
     <q-card flat class="full-width q-pa-none">
-      <q-card-section class="row no-wrap gap-md q-pt-md q-pl-md q-pr-md q-pb-none">
+      <!-- no-wrap -->
+      <q-card-section class="row gap-md q-pt-md q-pl-md q-pr-md q-pb-none">
         <q-card-section class="q-pa-none justify-center column">
-          <!--          <q-avatar :class="statusStyle.class" class="rounded-borders" size="30px" :icon="statusStyle.icon"
-            style="color: #757575"
-          />-->
           <q-card flat bordered>
-            <q-avatar :class="statusStyle.class" class="rounded-borders" size="30px" :icon="statusStyle.icon"
-              style="color: #757575" />
+            <q-avatar
+              :class="statusStyle.class"
+              class="rounded-borders"
+              size="30px"
+              :icon="statusStyle.icon"
+              style="color: #757575"
+            />
           </q-card>
         </q-card-section>
-        <q-card-section class="col-4 q-pa-none column justify-center">
-          <q-item-label class="list_title text-weight-medium text-accent row" style="gap: 4px">{{ props.case.number }}
-            <q-chip v-if="props.case.priority == 'HIGH'" outline square color="negative" class="badge" size="xs">
+        <q-card-section class="col-xs-grow col-4 q-pa-none column justify-center">
+          <q-item-label
+            class="list_title text-weight-medium text-accent row no-wrap"
+            style="gap: 4px"
+            >{{ props.case.number }}
+            <q-chip
+              v-if="props.case.priority == 'HIGH'"
+              outline
+              square
+              color="negative"
+              class="badge"
+              size="xs"
+            >
               cрочный
             </q-chip>
           </q-item-label>
         </q-card-section>
-        <q-card-section class="full-width q-pa-none column justify-center">
-          <div class="row q-px-lg no-wrap justify-center">
+        <!-- full-width -->
+        <q-card-section class="q-pa-none column justify-center">
+          <div class="row q-px-xs-none q-px-sm-sm q-px-md-md q-px-lg-lg no-wrap justify-center">
             <q-avatar square size="md" :class="inspectionStageStyle" icon="photo_camera">
               <q-tooltip>Осмотр</q-tooltip>
             </q-avatar>
             <q-avatar square size="md" :class="generalViewStageStyle" icon="image">
               <q-tooltip>Отчет по общим видам</q-tooltip>
             </q-avatar>
-            <q-avatar square size="md" :class="defectStageStyle" icon="home_repair_service" style="">
+            <q-avatar
+              square
+              size="md"
+              :class="defectStageStyle"
+              icon="home_repair_service"
+              style=""
+            >
               <q-tooltip>Отчет по недостаткам</q-tooltip>
             </q-avatar>
             <q-avatar square size="md" :class="boqStageStyle" icon="currency_ruble" style="">
@@ -34,12 +54,15 @@
             </q-avatar>
           </div>
         </q-card-section>
-        <q-card-section class="q-pa-none q-ml-auto column justify-center items-center">
+        <q-card-section
+          class="q-pa-none column-sm row-xs justify-center items-center col-sm col-md col-lg col-xl col-xs-12 content-sm-end justify-xs-between"
+        >
           <q-chip square size="sm" class="text-center q-mr-none" :class="daysRemainingStyle">
             осталось {{ daysRemaining }} дней
           </q-chip>
-          <div class="text-grey-7 text-caption full-width text-no-wrap q-mt-xs text-left row items-center">
-            <q-icon name="event" color="accent" class="q-mr-xs" /> {{ deadline.format('DD-MM-YYYY') }}
+          <div class="text-grey-7 text-caption text-no-wrap q-mt-xs text-left row items-center">
+            <q-icon name="event" color="accent" class="q-mr-xs" />
+            {{ deadline.format('DD-MM-YYYY') }}
           </div>
         </q-card-section>
       </q-card-section>
@@ -47,8 +70,15 @@
         <q-icon name="location_on" class="text-accent q-pr-sm" />
         <span class="text-grey-7 text-caption q-pr-xs">Адрес:</span>
         <span class="text-grey-7 text-caption">{{ props.case.facilityAddress }}</span>
-        <q-btn color="grey absolute-bottom-right " round2 flat dense size="md"
-          :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click.stop="expanded = !expanded" />
+        <q-btn
+          color="grey absolute-bottom-right "
+          round2
+          flat
+          dense
+          size="md"
+          :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+          @click.stop="expanded = !expanded"
+        />
       </q-card-section>
       <q-card-section class="q-pa-none">
         <q-slide-transition>
@@ -94,9 +124,7 @@ const stageIconStyle = (completed: () => boolean) => {
   }
 }
 
-const inspectionStageStyle = computed(() =>
-  stageIconStyle(() => props.case.stages.inspection),
-)
+const inspectionStageStyle = computed(() => stageIconStyle(() => props.case.stages.inspection))
 const generalViewStageStyle = stageIconStyle(() => props.case.stages.generalView)
 const defectStageStyle = stageIconStyle(() => props.case.stages.defect)
 const boqStageStyle = stageIconStyle(() => props.case.stages.workVolume)

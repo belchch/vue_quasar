@@ -1,6 +1,6 @@
 <template>
     <div style="position: relative;">
-        <div class="text-caption q-ma-sm text-accent">{{ fixedAssetLocal.name }}</div>
+        <div class="text-caption q-ma-sm text-accent">{{ `${prefix} ${index + 1}` }}</div>
 
         <q-card-section>
             <q-card bordered flat style="width: 400px;">
@@ -51,6 +51,7 @@ const { requestWorks } = useBoqWorkService()
 
 const props = defineProps<{
     index: number,
+    prefix: string,
     fixedAsset: BoqFixedAssetModel
 }>()
 

@@ -8,7 +8,8 @@
                     <q-tab name="interior-door" label="Двери"/>
                     <q-tab name="window" label="Окна"/>
                     <q-tab name="wall" label="Стены" />
-                    <q-tab name="fixed-asset" label="Конструктив" />
+                    <q-tab name="column" label="Колонны" />
+                    <q-tab name="stairway" label="Лестницы" />
                     <q-tab name="supporting" label="Дополнительные работы" />
                 </q-tabs>
             </q-card>
@@ -29,8 +30,11 @@
                     <q-tab-panel name="wall">
                         <BoqWallSections :wall-sections="location!.wallSections"/>
                     </q-tab-panel>
-                    <q-tab-panel name="fixed-asset">
-                        <BoqFixedAssets :fixed-assets="location!.fixedAssets"/>
+                    <q-tab-panel name="column">
+                        <BoqFixedAssets :fixed-assets="columns" prefix="Колонна"/>
+                    </q-tab-panel>
+                    <q-tab-panel name="stairway">
+                        <BoqFixedAssets :fixed-assets="stairways" prefix="Лестница"/>
                     </q-tab-panel>
                     <q-tab-panel name="supporting">
                         <BoqSupportingWorks :location-id="location!.id"/>
@@ -56,11 +60,19 @@ import BoqWindows from './BoqWindows.vue';
 import BoqWallSections from './BoqWallSections.vue';
 import BoqSupportingWorks from './BoqSupportingWorks.vue';
 import BoqFixedAssets from './BoqFixedAssets.vue';
+import { FixedAssetType } from '../../api/fixed-asset/types';
 
 const { location } = storeToRefs(useBoqLocationStore())
 const { works } = storeToRefs(useBoqWorkStore())
 
 const currentTab = ref<string>('floor')
+
+const filteredFixedAssets = (type: FixedAssetType) => () => {
+    return location.value!!.fixedAssets.filter(item => item.type == type)
+}
+
+const columns = computed(filteredFixedAssets('COLUMN'))
+const stairways = computed(filteredFixedAssets('STAIRWAY'))
 
 const locationWorks = computed(() => {
     return works.value.filter(item => item.locationId == location.value!.id)

@@ -1,18 +1,22 @@
 <template>
-  <q-list class="row q-gutter-y-md list shadow_custom rounded-borders" bordered>
-    <CaseItem v-for="item in caseStore.cases" :key="item.id!!" :case="item" @select="selectCase(item)" />
+  <q-list class="row list shadow_custom rounded-borders" bordered>
+    <CaseItem
+      v-for="item in caseStore.cases"
+      :key="item.id!!"
+      :case="item"
+      @select="selectCase(item)"
+    />
   </q-list>
 </template>
 <script setup lang="ts">
-import { useNavigate } from 'src/composables/navigate';
-import CaseItem from 'src/features/case/components/case-item/CaseItem.vue';
-import { useCasesStore } from "src/features/case/stores/case-store";
-import { Case } from 'src/features/case/stores/types';
+import { useNavigate } from 'src/composables/navigate'
+import CaseItem from 'src/features/case/components/case-item/CaseItem.vue'
+import { useCasesStore } from 'src/features/case/stores/case-store'
+import { Case } from 'src/features/case/stores/types'
 const caseStore = useCasesStore()
 const { navigateCaseHome } = useNavigate()
 
-const selectCase = async (cse: Case) => {  
+const selectCase = async (cse: Case) => {
   await navigateCaseHome(cse.id)
 }
-
 </script>

@@ -20,19 +20,25 @@ export type PhotoDoc = {
   sources: string[]
   urls?: string[]
   spot?: Spot
-  spotNum?: number | undefined,
+  spotNum?: number | undefined
   type?: PhotoDocType
-  defectInfo?: PhotoDocDefectInfo,
-  movableInfo?: PhotoDocMovableInfo,
+  defectInfo?: PhotoDocDefectInfo
+  movableInfo?: PhotoDocMovableInfo
   photographable?: Photographable
 }
 
 export type Photographable = {
-  entityId: number,
+  entityId: number
   entityType: PhotographableType
 }
 
-export type PhotographableType = 'OPENING' | 'FIXED_ASSET' | 'WALL_SECTION' |  'FLOOR_SECTION' |  'CEIL_SECTION' |  'ROOM'
+export type PhotographableType =
+  | 'OPENING'
+  | 'FIXED_ASSET'
+  | 'WALL_SECTION'
+  | 'FLOOR_SECTION'
+  | 'CEIL_SECTION'
+  | 'ROOM'
 
 export type PhotoDocDefectInfo = {
   structElem?: StructElem | undefined
@@ -46,32 +52,33 @@ export type PhotoDocDefectInfo = {
 }
 
 export type PhotoDocMovableInfo = {
-  movable: PhotoDocMovable | undefined,
+  movable: PhotoDocMovable | undefined
   floodPropertyDamage: FloodDamage | undefined
 }
 
 export type PhotoDocMovable = {
-  id: number,
-  name: string,
-  width: number,
-  length: number,
-  height: number,
-  heightFromFloor: number,
-  perimeter: number,
-  area: number,
-  hasCustomShape: boolean
+  name: string | undefined
+  width: number | undefined
+  length: number | undefined
+  height: number | undefined
 }
 
 export type PhotoDocType = 'DEFECT' | 'GENERAL_VIEW' | 'MOVABLE'
 
 export const photographableDesc = (item: Photographable) => {
   switch (item.entityType) {
-    case 'OPENING': return 'Проем'
-    case 'WALL_SECTION': return 'Секция стены'
-    case 'FLOOR_SECTION': return 'Секция пола'
-    case 'CEIL_SECTION': return 'Секция потолка'
-    case 'ROOM': return 'Помещение'
-    case 'FIXED_ASSET': return 'Конструктив'
+    case 'OPENING':
+      return 'Проем'
+    case 'WALL_SECTION':
+      return 'Секция стены'
+    case 'FLOOR_SECTION':
+      return 'Секция пола'
+    case 'CEIL_SECTION':
+      return 'Секция потолка'
+    case 'ROOM':
+      return 'Помещение'
+    case 'FIXED_ASSET':
+      return 'Конструктив'
   }
 }
 
@@ -81,7 +88,7 @@ export const photoDocTypeDesc = (type?: PhotoDocType) => {
       return 'Дефект'
     case 'GENERAL_VIEW':
       return 'Общий вид'
-      case 'MOVABLE':
+    case 'MOVABLE':
       return 'Движемое имущество'
     default:
       return undefined

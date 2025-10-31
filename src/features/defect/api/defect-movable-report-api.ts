@@ -1,36 +1,36 @@
 import { api } from 'boot/axios'
 import { DefectReportPhotoModel } from 'src/features/defect/stores/defect-report-types'
+import { DefectMovableReportModel } from 'src/features/defect/stores/defect-movable-report-types'
 import { FileInfo } from './types'
 
-export const DefectReportApi = {
-  async buildReport(inspectionId: number, useTechnicalReport: boolean) {
+export const DefectMovableReportApi = {
+  async buildMovableReport(inspectionId: number) {
     return api.post(
-      `/api/defect-report/build`,
+      `/api/movable-report/build`,
       {},
       {
         params: {
           inspectionId,
-          useTechnicalReport,
         },
       },
     )
   },
 
-  async getReport(inspectionId: number) {
-    return api.get<any>(`/api/defect-report`, {
+  async getMovableReport(inspectionId: number) {
+    return api.get<DefectMovableReportModel>(`/api/movable-report`, {
       params: {
         inspectionId,
       },
     })
   },
 
-  async moveSpot(spotId: number, fromIndex: number, toIndex: number) {
+  async moveMovable(objectId: number, fromIndex: number, toIndex: number) {
     return api.post(
-      '/api/defect-report/move-spot',
+      '/api/movable-report/move-object',
       {},
       {
         params: {
-          spotId,
+          objectId,
           fromIndex,
           toIndex,
         },
@@ -38,23 +38,9 @@ export const DefectReportApi = {
     )
   },
 
-  async moveStructElem(structElemId: number, fromIndex: number, toIndex: number) {
+  async moveMovableRow(rowId: number, fromIndex: number, toIndex: number) {
     return api.post(
-      '/api/defect-report/move-struct-elem',
-      {},
-      {
-        params: {
-          structElemId,
-          fromIndex,
-          toIndex,
-        },
-      },
-    )
-  },
-
-  async moveRow(rowId: number, fromIndex: number, toIndex: number) {
-    return api.post(
-      '/api/defect-report/move-row',
+      '/api/movable-report/move-row',
       {},
       {
         params: {
@@ -68,7 +54,7 @@ export const DefectReportApi = {
 
   async usePhoto(photoId: number, use: boolean, scope: number) {
     return await api.post<DefectReportPhotoModel[]>(
-      '/api/defect-report/use-photo',
+      '/api/movable-report/use-photo',
       {},
       {
         params: {
@@ -80,9 +66,10 @@ export const DefectReportApi = {
     )
   },
 
-  buildDocx(inspectionId: number) {
+  // TODO: refactor
+  buildMovableDocx(inspectionId: number) {
     return api.post<FileInfo>(
-      `/api/defect-report/build-docx`,
+      `/api/movable-report/build-docx`,
       {},
       {
         params: {
