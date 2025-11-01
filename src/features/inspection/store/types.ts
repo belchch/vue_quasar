@@ -89,7 +89,7 @@ export const photoDocTypeDesc = (type?: PhotoDocType) => {
     case 'GENERAL_VIEW':
       return 'Общий вид'
     case 'MOVABLE':
-      return 'Движемое имущество'
+      return 'Движимое имущество'
     case 'FINISHING':
       return 'Отделка'
     default:
