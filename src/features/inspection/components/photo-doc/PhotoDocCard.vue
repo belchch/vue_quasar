@@ -41,7 +41,7 @@
         >
           <q-list>
             <q-item
-              v-for="item in ['DEFECT', 'GENERAL_VIEW', 'MOVABLE']"
+              v-for="item in ['DEFECT', 'GENERAL_VIEW', 'MOVABLE', 'FINISHING']"
               :key="item!!"
               clickable
               v-close-popup

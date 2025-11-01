@@ -63,7 +63,7 @@ export type PhotoDocMovable = {
   height: number | undefined
 }
 
-export type PhotoDocType = 'DEFECT' | 'GENERAL_VIEW' | 'MOVABLE'
+export type PhotoDocType = 'DEFECT' | 'GENERAL_VIEW' | 'MOVABLE' | 'FINISHING'
 
 export const photographableDesc = (item: Photographable) => {
   switch (item.entityType) {
@@ -90,6 +90,8 @@ export const photoDocTypeDesc = (type?: PhotoDocType) => {
       return 'Общий вид'
     case 'MOVABLE':
       return 'Движемое имущество'
+    case 'FINISHING':
+      return 'Отделка'
     default:
       return undefined
   }
