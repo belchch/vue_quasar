@@ -1,9 +1,10 @@
 import { InspectionApi } from 'src/features/inspection/api/inspection-api'
 import { usePhotoDocsStore } from 'src/features/inspection/store/photo-doc-store'
-import { PhotoDoc, PhotoDocMovableInfo } from 'src/features/inspection/store/types'
+import { PhotoDoc, PhotoDocFinishingInfo, PhotoDocMovableInfo } from 'src/features/inspection/store/types'
 import { PhotoDocSearchRequest } from 'src/features/inspection/api/types'
 import { storeToRefs } from 'pinia'
 import { useAllPhotoDocStore } from '../store/all-photo-doc-store'
+import FinishingInfo from '../components/photo-doc/FinishingInfo.vue'
 
 export const usePhotoDocs = () => {
   const photoDocsStore = usePhotoDocsStore()
@@ -35,6 +36,9 @@ export const usePhotoDocs = () => {
         movable: photoDoc.movableInfo?.movable,
         floodPropertyDamageId: photoDoc.movableInfo?.floodPropertyDamage?.id,
       },
+      finishingInfo: {
+        floodFinishingDamageId: photoDoc.finishingInfo?.floodFinishingDamage?.id
+      }
     }
     const response = await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
     photoDocs.value = replacePhotoDoc(photoDocs.value, response.data)
@@ -51,6 +55,19 @@ export const usePhotoDocs = () => {
       return Promise.reject(new Error('Не удалось найти документ: ' + photoDocId))
     }
     await updatePhotoDoc(inspectionId, { ...find, movableInfo: { ...movableInfo } })
+  }
+
+  const updatePhotoDocFinishingInfo = async (
+    inspectionId: number,
+    photoDocId: number,
+    finishingInfo: PhotoDocFinishingInfo
+  ) => {
+    const find = photoDocs.value.find((item) => item.id == photoDocId)
+    if (!find) {
+      return Promise.reject(new Error('Не удалось найти документ: ' + photoDocId))
+    }
+
+    await updatePhotoDoc(inspectionId, { ...find, finishingInfo: finishingInfo })
   }
 
   const replacePhotoDoc = (target: PhotoDoc[], replacement: PhotoDoc): PhotoDoc[] => {
@@ -110,6 +127,7 @@ export const usePhotoDocs = () => {
   return {
     createPhotoDoc,
     updatePhotoDoc,
+    updatePhotoDocFinishingInfo,
     updatePhotoDocMovableInfo,
     requestPhotoDocs,
     refreshPhotoDocs,

@@ -24,6 +24,7 @@ export type PhotoDoc = {
   type?: PhotoDocType
   defectInfo?: PhotoDocDefectInfo
   movableInfo?: PhotoDocMovableInfo
+  finishingInfo?: PhotoDocFinishingInfo
   photographable?: Photographable
 }
 
@@ -54,6 +55,10 @@ export type PhotoDocDefectInfo = {
 export type PhotoDocMovableInfo = {
   movable: PhotoDocMovable | undefined
   floodPropertyDamage: FloodDamage | undefined
+}
+
+export type PhotoDocFinishingInfo = {
+  floodFinishingDamage: FloodDamage | undefined
 }
 
 export type PhotoDocMovable = {

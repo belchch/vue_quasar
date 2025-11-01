@@ -78,7 +78,6 @@
           </q-list>
         </q-btn-dropdown>
       </div>
-
       <DefectInfo
         v-if="photoDoc.type == 'DEFECT'"
         :defect-info="photoDoc.defectInfo"
@@ -89,6 +88,11 @@
         :photo-doc-id="photoDoc.id!"
         :movable-info="photoDoc.movableInfo"
         v-if="photoDoc.type == 'MOVABLE'"
+      />    
+      <FinishingInfo
+        :photo-doc-id="photoDoc.id!"
+        :finishing-info="photoDoc.finishingInfo"
+        v-if="photoDoc.type == 'FINISHING'"
       />
     </q-card-section>
 
@@ -234,6 +238,7 @@ import { useInspectionSpotStore } from '../../store/inspection-spot-store'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from 'src/features/user/stores/user-store'
 import MovableInfo from './MovableInfo.vue'
+import FinishingInfo from './FinishingInfo.vue'
 
 const unionStore = usePhotoDocsUnionStore()
 const { hasPermission } = useUserStore()

@@ -1,10 +1,11 @@
 import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
 import { usePhotoDocs } from 'src/features/inspection/composables/photo-doc'
 import { PhotoDocSearchRequest } from 'src/features/inspection/api/types'
-import { PhotoDoc, PhotoDocMovableInfo } from 'src/features/inspection/store/types'
+import { PhotoDoc, PhotoDocFinishingInfo, PhotoDocMovableInfo } from 'src/features/inspection/store/types'
 import { InspectionApi } from 'src/features/inspection/api/inspection-api'
 import { storeToRefs } from 'pinia'
 import { useTechnicalReportService } from 'src/features/defect/composables/technical-report'
+import FinishingInfo from '../components/photo-doc/FinishingInfo.vue'
 
 export const useSelectedInspection = () => {
   const { selectedInspectionId } = storeToRefs(useInspectionsStore())
@@ -44,6 +45,14 @@ export const useSelectedInspection = () => {
     )
   }
 
+  const updatePhotoDocFinishingInfo = async(photoDocId: number, finishingInfo: PhotoDocFinishingInfo)  => {
+    await photoDocService.updatePhotoDocFinishingInfo(
+      selectedInspectionId.value!!,
+      photoDocId,
+      finishingInfo,
+    )
+  }
+
   const groupPhotoDocs = async (targetId: number, otherIds: number[]) => {
     await InspectionApi.groupPhotoDocs(selectedInspectionId.value!!, targetId, otherIds)
     await refreshPhotoDocs()
@@ -68,6 +77,7 @@ export const useSelectedInspection = () => {
     requestPhotoDocs,
     createPhotoDoc,
     updatePhotoDoc,
+    updatePhotoDocFinishingInfo,
     updatePhotoDocMovableInfo,
     groupPhotoDocs,
     deletePhotoDoc,

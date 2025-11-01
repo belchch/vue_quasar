@@ -31,6 +31,10 @@ export type PhotoDocMovableInfoUpdateRequest = {
   floodPropertyDamageId: number | undefined
 }
 
+export type PhotoDocFinishingInfoUpdateRequest = {
+  floodFinishingDamageId: number | undefined
+}
+
 export type DefectSearchRequest = {
   structElemId: number | undefined
   materialId: number | undefined
