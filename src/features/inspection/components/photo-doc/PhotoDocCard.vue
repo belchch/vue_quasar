@@ -85,7 +85,11 @@
         @changeDefectInfo="onChangeDefectInfo"
         :photo-doc-id="photoDoc.id!!"
       />
-      <MovableInfo :photo-doc="photoDoc" v-if="photoDoc.type == 'MOVABLE'" />
+      <MovableInfo
+        :photo-doc-id="photoDoc.id!"
+        :movable-info="photoDoc.movableInfo"
+        v-if="photoDoc.type == 'MOVABLE'"
+      />
     </q-card-section>
 
     <div

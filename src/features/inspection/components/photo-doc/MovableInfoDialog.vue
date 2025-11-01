@@ -21,16 +21,6 @@
             type="number"
             outlined
             dense
-            v-model.number="objectForm.height"
-            label="Высота"
-            :rules="[(val) => val > 0 || 'Высота должна быть больше 0']"
-          />
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-input
-            type="number"
-            outlined
-            dense
             v-model.number="objectForm.width"
             label="Ширина"
             :rules="[(val) => val > 0 || 'Ширина должна быть больше 0']"
@@ -46,6 +36,16 @@
             :rules="[(val) => val > 0 || 'Длина должна быть больше 0']"
           />
         </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input
+            type="number"
+            outlined
+            dense
+            v-model.number="objectForm.height"
+            label="Высота"
+            :rules="[(val) => val > 0 || 'Высота должна быть больше 0']"
+          />
+        </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Отмена" v-close-popup />
           <q-btn flat label="Сохранить" color="primary" type="submit" :loading="saving" />
@@ -57,57 +57,42 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { PhotoDocMovable, PhotoDocMovableInfo, PhotoDoc } from '../../store/types'
+import { PhotoDocMovable, PhotoDocMovableInfo } from '../../store/types'
 import { useSelectedInspection } from 'src/features/inspection/composables/selected-inspection'
-import { storeToRefs } from 'pinia'
 
-type FormPhotoDocMovable = Omit<
-  PhotoDocMovable,
-  'id' | 'heightFromFloor' | 'perimeter' | 'area' | 'hasCustomShape'
->
-const { updatePhotoDoc } = useSelectedInspection()
+const { updatePhotoDocMovableInfo } = useSelectedInspection()
 const openDialog = defineModel<boolean>({ default: false })
 
-const { photoDoc } = defineProps<{
-  photoDoc: PhotoDoc | undefined
+const { photoDocId, movableInfo } = defineProps<{
+  photoDocId: number
+  movableInfo: PhotoDocMovableInfo | undefined
 }>()
 
-const defaultForm: FormPhotoDocMovable = {
+const defaultForm: PhotoDocMovable = {
   name: '',
   height: 0,
   width: 0,
   length: 0,
 }
 
-const objectForm = ref<FormPhotoDocMovable>({ ...defaultForm })
+const objectForm = ref<PhotoDocMovable>({ ...defaultForm })
 const saving = ref(false)
 const onShowHandler = () => {
   saving.value = false
-  if (photoDoc?.movableInfo?.movable) {
-    objectForm.value = { ...photoDoc.movableInfo.movable }
+  if (movableInfo?.movable) {
+    objectForm.value = { ...movableInfo.movable }
   } else {
     objectForm.value = { ...defaultForm }
   }
 }
 const submitHandler = async () => {
   saving.value = true
-  const clone = { ...photoDoc }
-  delete clone['defectInfo']
-  if (!clone.movableInfo) {
-    clone.movableInfo = {
-      movable: { ...objectForm.value },
-      floodPropertyDamage: undefined,
-    }
-  } else if (clone.movableInfo?.movable) {
-    clone.movableInfo.movable = {
-      ...clone.movableInfo.movable,
-      ...objectForm.value,
-    }
-  } else {
-    clone.movableInfo['movable'] = { ...objectForm.value }
-  }
   try {
-    await updatePhotoDoc(clone as PhotoDoc)
+    await updatePhotoDocMovableInfo(photoDocId, {
+      ...movableInfo,
+      movable: objectForm.value,
+      floodPropertyDamage: movableInfo?.floodPropertyDamage,
+    })
     openDialog.value = false
   } finally {
     saving.value = false
