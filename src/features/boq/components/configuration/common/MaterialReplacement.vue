@@ -1,7 +1,7 @@
 <template>
     <div>
         <q-card bordered flat style="width: 400px;">
-            <div class="text-caption q-ma-sm">Метериал</div>
+            <div class="text-caption q-ma-sm">Материал</div>
             <div class="q-ma-md">
                 <ReplacementToggles v-model:replacement="replacement" v-model:preservation="preservation" :preservation-label="preservationLabel"/>
                 <q-select v-model="material" :options="materials" option-label="name" option-value="id" dense />

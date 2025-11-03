@@ -58,7 +58,9 @@ export type PhotoDocMovableInfo = {
 }
 
 export type PhotoDocFinishingInfo = {
-  floodFinishingDamage: FloodDamage | undefined
+  floodFinishingDamage?: FloodDamage | undefined
+  structElem?: StructElem | undefined,
+  material?: Material | undefined
 }
 
 export type PhotoDocMovable = {

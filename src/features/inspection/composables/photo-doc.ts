@@ -37,7 +37,9 @@ export const usePhotoDocs = () => {
         floodPropertyDamageId: photoDoc.movableInfo?.floodPropertyDamage?.id,
       },
       finishingInfo: {
-        floodFinishingDamageId: photoDoc.finishingInfo?.floodFinishingDamage?.id
+        floodFinishingDamageId: photoDoc.finishingInfo?.floodFinishingDamage?.id,
+        structElemId: photoDoc.finishingInfo?.structElem?.id,
+        material: photoDoc.finishingInfo?.material?.id
       }
     }
     const response = await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
