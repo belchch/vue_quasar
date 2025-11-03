@@ -39,7 +39,7 @@ export const usePhotoDocs = () => {
       finishingInfo: {
         floodFinishingDamageId: photoDoc.finishingInfo?.floodFinishingDamage?.id,
         structElemId: photoDoc.finishingInfo?.structElem?.id,
-        material: photoDoc.finishingInfo?.material?.id
+        materialId: photoDoc.finishingInfo?.material?.id
       }
     }
     const response = await InspectionApi.updatePhotoDoc(inspectionId, updateRequest)
