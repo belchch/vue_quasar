@@ -6,7 +6,7 @@ import { FileInfo } from './types'
 export const DefectMovableReportApi = {
   async buildMovableReport(inspectionId: number) {
     return api.post(
-      `/api/finishing-report/build`,
+      `/api/movable-report/build`,
       {},
       {
         params: {
@@ -69,7 +69,7 @@ export const DefectMovableReportApi = {
   // TODO: refactor
   buildMovableDocx(inspectionId: number) {
     return api.post<FileInfo>(
-      `/api/finishing-report/build-docx`,
+      `/api/movable-report/build-docx`,
       {},
       {
         params: {
