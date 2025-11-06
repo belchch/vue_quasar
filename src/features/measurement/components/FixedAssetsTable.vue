@@ -174,7 +174,7 @@ const {
   fixedType: FixedType
   title: string
   roomId: number
-  roomNum?: number | undefined
+  roomNum?: number | undefined | null
   canEdit?: boolean
 }>()
 
