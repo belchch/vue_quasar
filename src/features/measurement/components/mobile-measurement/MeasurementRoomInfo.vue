@@ -112,7 +112,6 @@ const columns: columnType[] = [
   },
   {
     fieldKey: 'ceilArea',
-    formatValue: getCeilMaterialName,
     field: (row: RoomMeasurement) => row.ceilArea,
     label: 'Площадь потолка',
     align: 'left' as const,
@@ -133,6 +132,7 @@ const columns: columnType[] = [
   },
   {
     fieldKey: 'ceilMaterial',
+    formatValue: getCeilMaterialName,
     field: (row: RoomMeasurement) => row.ceilMaterial,
     label: 'Материал потолка',
     align: 'left' as const,

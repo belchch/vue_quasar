@@ -6,6 +6,7 @@ import {
   FloorSectionMeasurement,
   WallSectionMeasurement,
   FixedAssetMeasurement,
+  FixedType,
 } from './types'
 import { computed, ref } from 'vue'
 import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
@@ -104,12 +105,15 @@ export const useMeasurementStore = defineStore('room-measurements', () => {
     }
   })
   const getFixedAssets = computed(() => {
-    return (roomId: number, roomNum?: number) => {
-      return _findItemsByIdAndNum(
+    return (roomId: number, roomNum: number | undefined | null, fixedType: FixedType) => {
+      const result = _findItemsByIdAndNum(
         fixedAssetMeasurements.value,
         roomId,
         roomNum,
       ) as FixedAssetMeasurement[]
+      if (result) {
+        return result.filter((item: FixedAssetMeasurement) => item?.type === fixedType)
+      } else return []
     }
   })
   return {

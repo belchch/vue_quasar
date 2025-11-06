@@ -32,11 +32,22 @@
 
             <measurement-room-info :room-measurement="item" />
           </q-card>
-          <opening-table :room-id="item.room.id!!" />
-          <wall-sections-table :room-id="item.room.id!!" />
-          <floor-sections-table :room-id="item.room.id!!" />
-          <ceil-sections-table :room-id="item.room.id!!" />
-          <fixed-assets-table :room-id="item.room.id!!" />
+          <opening-table :room-id="item.room.id!!" :room-num="item.roomNum!" />
+          <wall-sections-table :room-id="item.room.id!!" :room-num="item.roomNum!" />
+          <floor-sections-table :room-id="item.room.id!!" :room-num="item.roomNum!" />
+          <ceil-sections-table :room-id="item.room.id!!" :room-num="item.roomNum!" />
+          <fixed-assets-table
+            title="Колонны"
+            fixed-type="COLUMN"
+            :room-num="item.roomNum!"
+            :room-id="item.room.id!!"
+          />
+          <fixed-assets-table
+            title="Лестницы"
+            fixed-type="STAIRWAY"
+            :room-num="item.roomNum!"
+            :room-id="item.room.id!!"
+          />
         </q-expansion-item>
       </template>
     </q-list>

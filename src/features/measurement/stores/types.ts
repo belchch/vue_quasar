@@ -84,7 +84,7 @@ export type WallSectionMeasurement = {
   perimeter: number
   photoUrls: string[]
 }
-
+export type FixedType = 'COLUMN' | 'STAIRWAY'
 export type FixedAssetMeasurement = {
   id: number
   name: string
@@ -101,6 +101,7 @@ export type FixedAssetMeasurement = {
   roomNum?: number
   material: Material | null
   inspectionId: number
+  type: FixedType
 }
 
 export type TreeItem = {

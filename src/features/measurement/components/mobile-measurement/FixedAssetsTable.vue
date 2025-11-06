@@ -1,7 +1,7 @@
 <template>
-  <div v-if="getFixedAssets(roomId, roomNum).length > 0">
-    <div class="text-subtitle1 q-ma-sm">Колонны</div>
-    <template v-for="item in getFixedAssets(roomId, roomNum)" :key="item?.id">
+  <div v-if="getFixedAssets(roomId, roomNum, fixedType).length > 0">
+    <div class="text-subtitle1 q-ma-sm">{{ title }}</div>
+    <template v-for="item in getFixedAssets(roomId, roomNum, fixedType)" :key="item?.id">
       <q-expansion-item expand-separator :label="item?.name">
         <q-markup-table flat>
           <tr>
@@ -145,7 +145,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useMeasurementStore } from '../../stores/measurement-store'
-import { FixedAssetMeasurement } from '../../stores/types'
+import { FixedAssetMeasurement, FixedType } from '../../stores/types'
 import { ref } from 'vue'
 import { useMeasurementService } from '../../composables/measurement'
 import { useQuasar } from 'quasar'
@@ -166,7 +166,11 @@ const {
   roomId,
   roomNum,
   canEdit = true,
+  fixedType,
+  title,
 } = defineProps<{
+  fixedType: FixedType
+  title: string
   roomId: number
   roomNum?: number | undefined
   canEdit?: boolean

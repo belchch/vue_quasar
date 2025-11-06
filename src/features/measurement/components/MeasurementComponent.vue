@@ -158,6 +158,15 @@
                       :can-edit="hasPermission(['measurement.update'])"
                     />
                     <FixedAssetsTable
+                      fixedType="COLUMN"
+                      title="Колонны"
+                      :room-id="props.row.room.id"
+                      :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])"
+                    />
+                    <FixedAssetsTable
+                      fixedType="STAIRWAY"
+                      title="Лестницы"
                       :room-id="props.row.room.id"
                       :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])"
