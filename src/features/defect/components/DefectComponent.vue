@@ -5,6 +5,7 @@
       <q-tab label="Техническое заключение" name="technicalReport" class="defect-tab" />
       <q-tab label="Отчет" name="defectReport" class="defect-tab" />
       <q-tab label="Движимое имущество" name="defectMovableReport" class="defect-tab" />
+      <q-tab label="Отделка" name="finishingReport" class="defect-tab" />
     </q-tabs>
 
     <q-tab-panels v-model="tab" class="full-width q-mt-md">
@@ -20,6 +21,9 @@
       <q-tab-panel name="defectMovableReport" class="q-pt-none">
         <DefectMovableReport />
       </q-tab-panel>
+      <q-tab-panel name="finishingReport" class="q-pt-none">
+        <FinishingReport />
+      </q-tab-panel>
     </q-tab-panels>
   </q-card>
 </template>
@@ -29,6 +33,7 @@ import TechnicalReportContent from 'src/features/defect/components/TechnicalRepo
 import DefectContent from 'src/features/defect/components/DefectContent.vue'
 import DefectReport from 'src/features/defect/components/defect-report/DefectReport.vue'
 import DefectMovableReport from 'src/features/defect/components/defect-movable-report/DefectMovableReport.vue'
+import FinishingReport from './finishing-report/FinishingReport.vue'
 const tab = ref('defects')
 </script>
 <style scoped>
