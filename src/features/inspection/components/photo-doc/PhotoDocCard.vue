@@ -41,7 +41,7 @@
         >
           <q-list>
             <q-item
-              v-for="item in ['DEFECT', 'GENERAL_VIEW', 'MOVABLE', 'FINISHING']"
+              v-for="item in photoDocTypes()"
               :key="item!!"
               clickable
               v-close-popup
@@ -239,8 +239,10 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from 'src/features/user/stores/user-store'
 import MovableInfo from './MovableInfo.vue'
 import FinishingInfo from './FinishingInfo.vue'
+import { useExpertiseTypeService } from 'src/features/case/composables/expertise-type'
 
 const unionStore = usePhotoDocsUnionStore()
+const { photoDocTypes } = useExpertiseTypeService()
 const { hasPermission } = useUserStore()
 const $q = useQuasar()
 
