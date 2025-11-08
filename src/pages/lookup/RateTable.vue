@@ -4,23 +4,75 @@
     <div class="q-mt-md">Загрузка...</div>
   </div>
   <div v-else class="q-pa-md">
-    <q-table :rows="groupHeaders" :rows-per-page-options="[0]" row-key="type" hide-header hide-bottom hide-pagination
-      flat bordered>
+    <div class="row items-center q-mb-md justify-between">
+      <div class="col-auto">
+        <q-btn-group flat>
+          <q-btn
+            label="Свернуть все"
+            size="md"
+            icon="unfold_less"
+            @click="collapseAll"
+            flat
+            dense
+            no-caps
+          />
+          <q-btn
+            class="q-ml-sm"
+            label="Развернуть все"
+            size="md"
+            icon="unfold_more"
+            @click="expandAll"
+            flat
+            dense
+            no-caps
+          />
+        </q-btn-group>
+      </div>
+      <div class="col-4">
+        <q-input v-model="filter" placeholder="Поиск..." clearable outlined dense>
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
+    </div>
+    <q-table
+      :rows="groupHeaders"
+      :rows-per-page-options="[0]"
+      row-key="type"
+      hide-header
+      hide-bottom
+      hide-pagination
+      flat
+      bordered
+    >
       <template v-slot:body="props">
-        <q-tr :props="props" @click="props.expand = !props.expand">
+        <q-tr :props="props" @click="toggleRow(props)">
           <q-td>
             <span class="text-h6 text-weight-regular">{{ props.row.title }}</span>
           </q-td>
           <q-td auto-width>
-            <q-icon :name="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-              @click.stop="props.expand = !props.expand" size="sm" color="grey-7" />
+            <q-icon
+              :name="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+              @click.stop="toggleRow(props)"
+              size="sm"
+              color="grey-7"
+            />
           </q-td>
         </q-tr>
 
-        <q-tr v-show="props.expand" :props="props" no-hover>
+        <q-tr v-show="expandedRows[props.row.type]" :props="props" no-hover>
           <q-td colspan="100%">
-            <q-table :rows="rateStore.groupedByType[props.row.type] || []" :rows-per-page-options="[0]"
-              :columns="detailsColumn" row-key="id" flat dense separator="cell" bordered>
+            <q-table
+              :rows="getFilteredRates(props.row.type)"
+              :rows-per-page-options="[0]"
+              :columns="detailsColumn"
+              row-key="id"
+              flat
+              dense
+              separator="cell"
+              bordered
+            >
               <template #body-cell-sources="props">
                 <q-td>
                   <RatePriceTable :rate="props.row" :sources="props.row.sources" />
@@ -36,22 +88,70 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Rate, UnitOfMeasureEnum, ParamsTypeEnum, ParamsType } from 'src/features/lookup/rate/types'
-import { useUserStore } from "src/features/user/stores/user-store";
-import { useQuasar } from 'quasar';
+import {
+  Rate,
+  UnitOfMeasureEnum,
+  ParamsTypeEnum,
+  ParamsType,
+  RateSources,
+} from 'src/features/lookup/rate/types'
+import { useUserStore } from 'src/features/user/stores/user-store'
+import { useQuasar } from 'quasar'
 import { useRateStore } from 'src/features/lookup/rate/rate-store'
 import RatePriceTable from './RatePriceTable.vue'
-const $q = useQuasar();
-const tableRate = ref();
+const $q = useQuasar()
+const tableRate = ref()
 const { hasPermission } = useUserStore()
-const openDialog = ref(false);
-const editedRate = ref<Rate | null>(null);
+const openDialog = ref(false)
+const editedRate = ref<Rate | null>(null)
 const rateStore = useRateStore()
+const filter = ref('')
 
 const { rates = [] } = defineProps<{
-  rates: Rate[],
+  rates: Rate[]
 }>()
+const expandedRows = ref<Record<string, boolean>>({})
+const getFilteredRates = (type: string) => {
+  const ratesForType = rateStore.groupedByType[type] || []
 
+  if (!filter.value) {
+    return ratesForType
+  }
+
+  const searchTerm = filter.value.toLowerCase().trim()
+  return ratesForType.filter(
+    (rate) =>
+      rate.name?.toLowerCase().includes(searchTerm) ||
+      rate.unitOfMeasure?.toString().toLowerCase().includes(searchTerm) ||
+      rate.factor?.toString().includes(searchTerm) ||
+      searchInLinks(rate?.sources),
+  )
+}
+
+const searchInLinks = (sources: RateSources[] | undefined) => {
+  if (!sources) return false
+  for (const source of sources) {
+    if (source?.url.toLowerCase().includes(filter.value.toLowerCase().trim())) {
+      return true
+    }
+  }
+  return false
+}
+const toggleRow = (props: any) => {
+  props.expand = !props.expand
+  expandedRows.value[props.row.type] = props.expand
+}
+const collapseAll = () => {
+  expandedRows.value = {}
+}
+
+const expandAll = () => {
+  const allExpanded: Record<string, boolean> = {}
+  groupHeaders.value.forEach((header) => {
+    allExpanded[header.type] = true
+  })
+  expandedRows.value = allExpanded
+}
 const groupHeaders = computed(() => {
   return Object.entries(rateStore.groupedByType).map(([type]) => ({
     type,
@@ -60,7 +160,7 @@ const groupHeaders = computed(() => {
 })
 
 const getGroupTitle = (type: ParamsType) => {
-  return ParamsTypeEnum[type];
+  return ParamsTypeEnum[type]
 }
 const detailsColumn = [
   {
@@ -78,9 +178,9 @@ const detailsColumn = [
     sortable: true,
   },
   {
-    name: 'factor',
-    field: 'factor',
-    label: 'Коэф.',
+    name: 'averagePrice',
+    field: 'averagePrice',
+    label: 'Ср.цена',
     align: 'left' as const,
     sortable: true,
   },
@@ -90,17 +190,10 @@ const detailsColumn = [
     label: 'Ссылки',
     align: 'left' as const,
   },
-  {
-    name: 'actions',
-    field: 'actions',
-    label: '',
-    align: 'right' as const,
-  },
 ]
-
 </script>
 <style scoped>
-td:hover{
+td:hover {
   cursor: pointer;
 }
 </style>
