@@ -1,5 +1,6 @@
 import { PhotoDocType } from "src/features/inspection/store/types"
 import { useSelectedCaseStore } from "../stores/selected-case-store"
+import { computed } from "vue"
 
 export const useExpertiseTypeService = () => {
     const sharedEquityPhotoDocTypes = ['GENERAL_VIEW', 'DEFECT']
@@ -15,7 +16,18 @@ export const useExpertiseTypeService = () => {
         }
     }
 
+    const showDefects = computed(() => selectedCase?.expertiseType == 'SHARED_EQUITY')
+    const showDefectsReport = computed(() => selectedCase?.expertiseType == 'SHARED_EQUITY')
+    const showTechnicalReport = computed(() => selectedCase?.expertiseType == 'SHARED_EQUITY')
+    const showMovableReport = computed(() => selectedCase?.expertiseType == 'FLOOD_DAMAGE')
+    const showFinishingReport = computed(() => selectedCase?.expertiseType == 'FLOOD_DAMAGE')
+
     return {
-        photoDocTypes
+        photoDocTypes,
+        showDefects,
+        showDefectsReport,
+        showTechnicalReport,
+        showMovableReport,
+        showFinishingReport
     }
 }

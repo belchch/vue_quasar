@@ -1,11 +1,11 @@
 <template>
   <q-card class="q-pa-md">
     <q-tabs v-model="tab" no-caps active-color="primary" align="left">
-      <q-tab label="Дефекты" name="defects" class="defect-tab" />
-      <q-tab label="Техническое заключение" name="technicalReport" class="defect-tab" />
-      <q-tab label="Отчет" name="defectReport" class="defect-tab" />
-      <q-tab label="Движимое имущество" name="defectMovableReport" class="defect-tab" />
-      <q-tab label="Отделка" name="finishingReport" class="defect-tab" />
+      <q-tab v-if="showDefects" label="Дефекты" name="defects" class="defect-tab" />
+      <q-tab v-if="showTechnicalReport" label="Техническое заключение" name="technicalReport" class="defect-tab" />
+      <q-tab v-if="showDefectsReport" label="Отчет" name="defectReport" class="defect-tab" />
+      <q-tab v-if="showMovableReport" label="Движимое имущество" name="defectMovableReport" class="defect-tab" />
+      <q-tab v-if="showFinishingReport" label="Отделка" name="finishingReport" class="defect-tab" />
     </q-tabs>
 
     <q-tab-panels v-model="tab" class="full-width q-mt-md">
@@ -28,12 +28,22 @@
   </q-card>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
-import TechnicalReportContent from 'src/features/defect/components/TechnicalReportContent.vue'
+import { useExpertiseTypeService } from 'src/features/case/composables/expertise-type'
 import DefectContent from 'src/features/defect/components/DefectContent.vue'
-import DefectReport from 'src/features/defect/components/defect-report/DefectReport.vue'
+import TechnicalReportContent from 'src/features/defect/components/TechnicalReportContent.vue'
 import DefectMovableReport from 'src/features/defect/components/defect-movable-report/DefectMovableReport.vue'
+import DefectReport from 'src/features/defect/components/defect-report/DefectReport.vue'
+import { ref } from 'vue'
 import FinishingReport from './finishing-report/FinishingReport.vue'
+
+const {
+  showDefects,
+  showDefectsReport,
+  showTechnicalReport,
+  showMovableReport,
+  showFinishingReport
+} = useExpertiseTypeService()
+
 const tab = ref('defects')
 </script>
 <style scoped>
