@@ -2,22 +2,22 @@
   <q-card flat>
     <q-card-section>
       <div class="text-h6">Все дефекты</div>
-      <div class="text-body2">Дефекты, выявленные в ходе натурного осмотра или зафиксированные в техническом заключении</div>
+      <div class="text-body2">Таблица заливов движемого имущества и отделки</div>
     </q-card-section>
     <q-card-section>
-      <DefectTable :defects="defects"/>
+      <FloodTable :defects="defects"/>
     </q-card-section>
   </q-card>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import DefectTable from "src/features/defect/components/DefectTable.vue";
 import { useAllPhotoDocStore } from 'src/features/inspection/store/all-photo-doc-store';
 import { computed } from 'vue';
+import FloodTable from './FloodTable.vue';
 
 const { allPhotoDocs } = storeToRefs(useAllPhotoDocStore())
 
 const defects = computed(() => {
-  return allPhotoDocs.value.filter(item => !!item.defectInfo)
+  return allPhotoDocs.value.filter(item => !!item.finishingInfo || !!item.movableInfo)
 })
 </script>

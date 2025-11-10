@@ -55,15 +55,14 @@
   </q-table>
 </template>
 <script setup lang="ts">
-import { PhotoDoc, PhotoDocDefectInfo } from 'src/features/inspection/store/types'
-import { useTechnicalReportStore } from 'src/features/defect/stores/technical-report-store'
-import {computed, ref} from 'vue'
 import { storeToRefs } from 'pinia'
-import { TechnicalReportRow } from 'src/features/defect/stores/types'
-import StandardMissmatch from 'src/features/defect/components/StandardMissmatch.vue'
-import { Spot } from 'src/features/lookup/spot/stores/types'
 import DefectTablePhotos from 'src/features/defect/components/DefectTablePhotos.vue'
-import { fieldComparator } from 'src/common/table'
+import StandardMissmatch from 'src/features/defect/components/StandardMissmatch.vue'
+import { useTechnicalReportStore } from 'src/features/defect/stores/technical-report-store'
+import { TechnicalReportRow } from 'src/features/defect/stores/types'
+import { PhotoDoc, PhotoDocDefectInfo } from 'src/features/inspection/store/types'
+import { Spot } from 'src/features/lookup/spot/stores/types'
+import { computed, ref } from 'vue'
 
 
 const { technicalReport } = storeToRefs(useTechnicalReportStore())

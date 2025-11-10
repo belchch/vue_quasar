@@ -7,8 +7,9 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="measurements">
+        <MeasurementsTableMobile v-if="$q.screen.lt.sm" />
         <q-table
-          v-if="allRoomMeasurements"
+          v-if="$q.screen.gt.xs && allRoomMeasurements"
           :rows="allRoomMeasurements"
           :columns="columns"
           :row-key="(row) => `${row.room.id}_${row.roomNum | 0}`"
@@ -162,6 +163,15 @@
                       :can-edit="hasPermission(['measurement.update'])"
                     />
                     <FixedAssetsTable
+                      fixedType="COLUMN"
+                      title="Колонны"
+                      :room-id="props.row.room.id"
+                      :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])"
+                    />
+                    <FixedAssetsTable
+                      fixedType="STAIRWAY"
+                      title="Лестницы"
                       :room-id="props.row.room.id"
                       :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])"
@@ -198,6 +208,8 @@ import CeilSectionsTable from './CeilSectionsTable.vue'
 import FloorSectionsTable from './FloorSectionsTable.vue'
 import WallSectionsTable from './WallSectionsTable.vue'
 import FixedAssetsTable from './FixedAssetsTable.vue'
+import MeasurementsTableMobile from './mobile-measurement/MeasurementsTableMobile.vue'
+import { useQuasar } from 'quasar'
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 const { hasPermission } = useUserStore()
