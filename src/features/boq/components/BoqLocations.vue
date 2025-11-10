@@ -1,21 +1,27 @@
 <template>
-  <q-table :rows="locations || []" :columns="columns" :row-key="row => row.id" wrap-cells
-    :pagination="{ rowsPerPage: 20 }" separator="cell">
+  <q-table
+    :rows="locations || []"
+    :columns="columns"
+    :row-key="(row) => row.id"
+    wrap-cells
+    :pagination="{ rowsPerPage: 20 }"
+    separator="cell"
+  >
     <template v-slot:top>
       <div class="row q-gutter-md">
-        <q-btn @click="onBuilding" :loading="building" color="primary" size="sm">
-          Сформировать
-        </q-btn>
         <template v-if="boq">
-          <DownloadReportButton label="Скачать" :disable="false"
-            :api-fn="async () => (await BoqApi.buildReport(selectedInspectionId!!)).data" />
+          <DownloadReportButton
+            label="Скачать"
+            :disable="false"
+            :api-fn="async () => (await BoqApi.buildReport(selectedInspectionId!!)).data"
+          />
         </template>
       </div>
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td key="name" :props="props" @click="navigateLocation(props.row)">
-          <div class="text-accent" style="cursor: pointer;">
+          <div class="text-accent" style="cursor: pointer">
             {{ props.row.room.name }} {{ props.row.roomNum }}
           </div>
         </q-td>
@@ -33,31 +39,21 @@
   </q-table>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useBoqService } from '../composables/boq';
-import { useBoqStore } from '../stores/boq-store';
-import { storeToRefs } from 'pinia';
-import { BoqLocation } from '../api/types';
-import { BoqApi } from '../api/boq-api';
-import DownloadReportButton from 'src/components/DownloadReportButton.vue';
-import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
+import { useBoqStore } from '../stores/boq-store'
+import { storeToRefs } from 'pinia'
+import { BoqLocation } from '../api/types'
+import { BoqApi } from '../api/boq-api'
+import DownloadReportButton from 'src/components/DownloadReportButton.vue'
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
 
 const emits = defineEmits<{
   navigateLocation: [location: BoqLocation]
 }>()
-const building = ref(false)
-const { buildAndRequestBoq } = useBoqService()
 const { locations, boq } = storeToRefs(useBoqStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const navigateLocation = (location: BoqLocation) => {
   emits('navigateLocation', location)
-}
-
-const onBuilding = async () => {
-  building.value = true
-  await buildAndRequestBoq()
-  building.value = false;
 }
 
 const columns = [
@@ -84,7 +80,6 @@ const columns = [
     field: 'perimeter',
     label: 'Периметр',
     align: 'left' as const,
-  }
+  },
 ]
-
 </script>

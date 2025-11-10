@@ -23,6 +23,7 @@ import { useSelectedInspection } from 'src/features/inspection/composables/selec
 import { storeToRefs } from 'pinia'
 import { useInspectionSpotStore } from '../../store/inspection-spot-store'
 import { buildInspectionSpotOptions } from '../../composables/inspection-spot'
+import { useExpertiseTypeService } from 'src/features/case/composables/expertise-type'
 
 const structElemStore = useStructElemStore()
 const materialStore = useMaterialStore()
@@ -43,8 +44,9 @@ const plusNull = (items: LookupOption[]) => {
 const spotOptions = computed(() => plusNull(buildInspectionSpotOptions(inspectionSpots.value!)))
 const structElemOptions = computed(() => plusNull(structElemStore.items))
 const materialOptions = computed(() => plusNull(materialStore.items))
+const { photoDocTypes } = useExpertiseTypeService()
 
-type PhotoDocTypeOption = PhotoDocType | null
+type PhotoDocTypeOption = string | null
 
 const typeOptions: { key: PhotoDocTypeOption; name: string }[] = [
   {
@@ -52,14 +54,22 @@ const typeOptions: { key: PhotoDocTypeOption; name: string }[] = [
     name: noValueText,
   },
   {
+    key: 'GENERAL_VIEW',
+    name: 'Общий вид',
+  },
+  {
     key: 'DEFECT',
     name: 'Дефект',
   },
   {
-    key: 'GENERAL_VIEW',
-    name: 'Общий вид',
+    key: 'FINISHING',
+    name: 'Отделка',
   },
-]
+  {
+    key: 'MOVABLE',
+    name: 'Движемое имущество',
+  }
+].filter(item => _.concat(photoDocTypes(), null).includes(item.key))
 
 const selectedTypes = ref<PhotoDocTypeOption[]>([])
 const selectedStructElems = ref<LookupOption[]>([])

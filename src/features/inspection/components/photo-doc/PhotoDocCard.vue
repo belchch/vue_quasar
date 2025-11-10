@@ -41,7 +41,7 @@
         >
           <q-list>
             <q-item
-              v-for="item in ['DEFECT', 'GENERAL_VIEW', 'MOVABLE']"
+              v-for="item in photoDocTypes()"
               :key="item!!"
               clickable
               v-close-popup
@@ -78,14 +78,22 @@
           </q-list>
         </q-btn-dropdown>
       </div>
-
       <DefectInfo
         v-if="photoDoc.type == 'DEFECT'"
         :defect-info="photoDoc.defectInfo"
         @changeDefectInfo="onChangeDefectInfo"
         :photo-doc-id="photoDoc.id!!"
       />
-      <MovableInfo :photo-doc="photoDoc" v-if="photoDoc.type == 'MOVABLE'" />
+      <MovableInfo
+        :photo-doc-id="photoDoc.id!"
+        :movable-info="photoDoc.movableInfo"
+        v-if="photoDoc.type == 'MOVABLE'"
+      />    
+      <FinishingInfo
+        :photo-doc-id="photoDoc.id!"
+        :finishing-info="photoDoc.finishingInfo"
+        v-if="photoDoc.type == 'FINISHING'"
+      />
     </q-card-section>
 
     <div
@@ -230,8 +238,11 @@ import { useInspectionSpotStore } from '../../store/inspection-spot-store'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from 'src/features/user/stores/user-store'
 import MovableInfo from './MovableInfo.vue'
+import FinishingInfo from './FinishingInfo.vue'
+import { useExpertiseTypeService } from 'src/features/case/composables/expertise-type'
 
 const unionStore = usePhotoDocsUnionStore()
+const { photoDocTypes } = useExpertiseTypeService()
 const { hasPermission } = useUserStore()
 const $q = useQuasar()
 

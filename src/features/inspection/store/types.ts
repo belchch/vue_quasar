@@ -24,6 +24,7 @@ export type PhotoDoc = {
   type?: PhotoDocType
   defectInfo?: PhotoDocDefectInfo
   movableInfo?: PhotoDocMovableInfo
+  finishingInfo?: PhotoDocFinishingInfo
   photographable?: Photographable
 }
 
@@ -56,6 +57,12 @@ export type PhotoDocMovableInfo = {
   floodPropertyDamage: FloodDamage | undefined
 }
 
+export type PhotoDocFinishingInfo = {
+  floodFinishingDamage?: FloodDamage | undefined
+  structElem?: StructElem | undefined,
+  material?: Material | undefined
+}
+
 export type PhotoDocMovable = {
   name: string | undefined
   width: number | undefined
@@ -63,7 +70,7 @@ export type PhotoDocMovable = {
   height: number | undefined
 }
 
-export type PhotoDocType = 'DEFECT' | 'GENERAL_VIEW' | 'MOVABLE'
+export type PhotoDocType = 'DEFECT' | 'GENERAL_VIEW' | 'MOVABLE' | 'FINISHING'
 
 export const photographableDesc = (item: Photographable) => {
   switch (item.entityType) {
@@ -89,7 +96,9 @@ export const photoDocTypeDesc = (type?: PhotoDocType) => {
     case 'GENERAL_VIEW':
       return 'Общий вид'
     case 'MOVABLE':
-      return 'Движемое имущество'
+      return 'Движимое имущество'
+    case 'FINISHING':
+      return 'Отделка'
     default:
       return undefined
   }

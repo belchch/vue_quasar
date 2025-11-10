@@ -1,20 +1,19 @@
 <template>
-  <movable-info-dialog :photo-doc="photoDoc" v-model="editDialog" />
+  <movable-info-dialog
+    :movable-info="movableInfo"
+    :photo-doc-id="photoDocId"
+    v-model="editDialog"
+  />
   <q-separator class="q-mb-xs q-mt-md" />
   <q-card flat>
     <div class="row items-center text-grey-8">
       <q-icon name="chair" class="q-ml-sm text-grey-8" />
-      <div class="text-caption text-grey-8">
-        &nbsp;&nbsp;&nbsp;{{ photoDoc?.movableInfo?.movable?.name }}
-      </div>
+      <div class="text-caption text-grey-8">&nbsp;&nbsp;&nbsp;{{ movableInfo?.movable?.name }}</div>
       <q-space />
       <q-btn square icon="edit" color="secondary" size="xs" outline @click="editDialog = true" />
     </div>
     <div class="text-caption text-grey-8">
-      {{ getMeasurement(photoDoc?.movableInfo?.movable) }}
-      <!-- <q-chip square ext-color="white" size="sm" color="blue-1" text-color="blue-7" clickable>
-        {{ getMeasurement(photoDoc?.movableInfo?.movable) }}
-      </q-chip> -->
+      {{ getMeasurement(movableInfo?.movable) }}
     </div>
     <q-select
       class="q-mt-sm"
@@ -37,37 +36,35 @@
   </q-card>
 </template>
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia'
 import { useFloodDamageStore } from 'src/features/lookup/flood-damage/flood-damage-store'
 import { FloodDamage } from 'src/features/lookup/flood-damage/types'
-import { useMovableStore } from 'src/features/measurement/stores/movable-store'
 import { useSelectedInspection } from 'src/features/inspection/composables/selected-inspection'
 import { computed, ref } from 'vue'
-import { PhotoDocMovable, PhotoDocMovableInfo, PhotoDoc } from '../../store/types'
+import { PhotoDocMovable, PhotoDocMovableInfo } from '../../store/types'
 import MovableInfoDialog from './MovableInfoDialog.vue'
 
 const props = defineProps<{
-  photoDoc: PhotoDoc | undefined
+  photoDocId: number
+  movableInfo: PhotoDocMovableInfo | undefined
 }>()
-const { updatePhotoDoc } = useSelectedInspection()
+const { updatePhotoDocMovableInfo } = useSelectedInspection()
 const floodDamageStore = useFloodDamageStore()
 
 const editDialog = ref(false)
-const movable = ref<PhotoDocMovable | undefined>(props.photoDoc?.movableInfo?.movable)
-const floodDamage = ref<FloodDamage | undefined>(props.photoDoc?.movableInfo?.floodPropertyDamage)
+const movable = ref<PhotoDocMovable | undefined>(props.movableInfo?.movable)
+const floodDamage = ref<FloodDamage | undefined>(props.movableInfo?.floodPropertyDamage)
 const update = async () => {
-  const clone = { ...props.photoDoc }
-  if (!clone.movableInfo)
-    clone['movableInfo'] = {
-      movable: undefined,
-      floodPropertyDamage: undefined,
-    }
-  clone.movableInfo.floodPropertyDamage = floodDamage.value
-  await updatePhotoDoc(clone as PhotoDoc)
+  const updatedMovableInfo = {
+    ...props.movableInfo,
+    floodPropertyDamage: floodDamage.value,
+    movable: props.movableInfo?.movable,
+  }
+  await updatePhotoDocMovableInfo(props.photoDocId, updatedMovableInfo)
+  await Promise.resolve()
 }
 const getMeasurement = (movable: PhotoDocMovable | undefined) => {
   if (movable) {
-    return `${movable.width} x ${movable.height} x ${movable.length}`
+    return `${movable.width} x ${movable.length} x ${movable.height}`
   } else {
     return '-'
   }
@@ -85,11 +82,4 @@ const filterFloodDamage = (val: any, update: any) => {
     floodDamageFilter.value = val
   })
 }
-// const openDialog = () => {
-//   emits('openDialogClick')
-// }
-// const emits = defineEmits<{
-//   changeMovableInfo: [movableInfo: PhotoDocMovableInfo]
-//   openDialogClick: []
-// }>()
 </script>

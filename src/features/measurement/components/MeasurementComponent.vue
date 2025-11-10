@@ -7,8 +7,9 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="measurements">
+        <MeasurementsTableMobile v-if="$q.screen.lt.sm" />
         <q-table
-          v-if="allRoomMeasurements"
+          v-if="$q.screen.gt.xs && allRoomMeasurements"
           :rows="allRoomMeasurements"
           :columns="columns"
           :row-key="(row) => `${row.room.id}_${row.roomNum | 0}`"
@@ -20,7 +21,12 @@
           separator="cell"
         >
           <template v-slot:top>
-            <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
+            <div class="row q-gutter-md">
+              <q-btn @click="onBuildingBoq" :loading="buildingBoq" color="primary" size="sm">
+                Сформировать ВОР
+              </q-btn>
+              <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
+            </div>
           </template>
           <template v-slot:body="props">
             <q-tr :props="props">
@@ -157,6 +163,15 @@
                       :can-edit="hasPermission(['measurement.update'])"
                     />
                     <FixedAssetsTable
+                      fixedType="COLUMN"
+                      title="Колонны"
+                      :room-id="props.row.room.id"
+                      :room-num="props.row.roomNum"
+                      :can-edit="hasPermission(['measurement.update'])"
+                    />
+                    <FixedAssetsTable
+                      fixedType="STAIRWAY"
+                      title="Лестницы"
                       :room-id="props.row.room.id"
                       :room-num="props.row.roomNum"
                       :can-edit="hasPermission(['measurement.update'])"
@@ -193,18 +208,20 @@ import CeilSectionsTable from './CeilSectionsTable.vue'
 import FloorSectionsTable from './FloorSectionsTable.vue'
 import WallSectionsTable from './WallSectionsTable.vue'
 import FixedAssetsTable from './FixedAssetsTable.vue'
+import MeasurementsTableMobile from './mobile-measurement/MeasurementsTableMobile.vue'
+import { useQuasar } from 'quasar'
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
-import { useMeasurementService } from '../composables/measurement'
 const { hasPermission } = useUserStore()
 import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
+import { useBoqService } from '../../boq/composables/boq'
 
-const {
-  requestCeilSectionMeasurements,
-  requestFloorSectionMeasurements,
-  requestWallSectionMeasurements,
-} = useMeasurementService()
-
+const { buildAndRequestBoq } = useBoqService()
+const onBuildingBoq = async () => {
+  buildingBoq.value = true
+  await buildAndRequestBoq()
+  buildingBoq.value = false
+}
 const buildDocx = async () => {
   const response = await RoomMeasurementApi.buildDocx(selectedInspectionId.value!!)
   return response.data
@@ -217,6 +234,7 @@ const getLocationName = (row: RoomMeasurement) => {
   }
 }
 const openingStore = useOpeningStore()
+const buildingBoq = ref(false)
 const tab = ref('measurements')
 const columns = [
   {
