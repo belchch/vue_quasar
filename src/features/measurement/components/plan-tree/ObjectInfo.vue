@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-blue-grey">Движимое имущество</div>
+    <div class="text-blue-grey">{{ labelBlock }}</div>
     <div class="text-h6">{{ selectedNode['label'] || '-' }}</div>
     <div class="q-pa-md row items-start q-gutter-md">
       <card-item title="Длина" :item-value="selectedNode.rawData.length" />
@@ -11,9 +11,7 @@
     </div>
     <div class="text-h6">Фотографии</div>
     <div class="q-pa-md">
-      <div v-if="selectedNode.rawData.photos.length == 0">
-        Фотографии отсутствуют
-      </div>
+      <div v-if="selectedNode.rawData.photos.length == 0">Фотографии отсутствуют</div>
       <q-list v-else bordered separator>
         <q-item v-for="photo in selectedNode.rawData.photos" :key="photo.fileName">
           <q-item-section>
@@ -24,31 +22,13 @@
     </div>
   </div>
 </template>
-      <!--
-      {
-      "type": "string",
-      "length": 0.1,
-      "width": 0.1,
-      "heightFromFloor": 0.1,
-      "height": 0.1,
-      "perimeter": 0.1,
-      "area": 0.1,
-      "hasCustomShape": true,
-      "comment": "string",
-      "photos": [
-        {
-        "fileName": "string"
-        }
-      ]
-      } -->
 <script setup lang="ts">
 import CardItem from './CardItem.vue'
 
-defineProps<{
+const { selectedNode, labelBlock = 'Движимое имущество' } = defineProps<{
   selectedNode: any
+  labelBlock?: string
 }>()
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
