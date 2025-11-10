@@ -83,6 +83,7 @@ import { useRateStore } from 'src/features/lookup/rate/rate-store'
 import { useRawMaterialStore } from 'src/features/lookup/raw-material/raw-material-store'
 import { useQuasar } from 'quasar'
 import { ref } from 'vue'
+import { update } from 'lodash'
 const $q = useQuasar()
 const rateStore = useRateStore()
 const { sources = [], material } = defineProps<{
@@ -110,7 +111,10 @@ const backupFieldValue = (row: Sources, fieldName: FieldName) => {
   }
   fieldsOriginal.value[row.id] = backup
 }
-
+const toRequest = (updatedMaterial: any) => {
+  updatedMaterial.rates = updatedMaterial.rates.map((rate: any) => rate.id)
+  return updatedMaterial
+}
 const restoreFieldValue = (row: Sources, fieldName: FieldName) => {
   const backup = fieldsOriginal.value[row.id]
   if (!backup) return
@@ -124,7 +128,8 @@ const restoreFieldValue = (row: Sources, fieldName: FieldName) => {
 
 const submit = async (row: Sources, fieldName: FieldName) => {
   try {
-    const updatedMaterial = { ...material }
+    let updatedMaterial = { ...material }
+    updatedMaterial = toRequest(updatedMaterial)
 
     await materialStore.update(material.id, updatedMaterial)
   } catch (e) {
@@ -133,11 +138,12 @@ const submit = async (row: Sources, fieldName: FieldName) => {
   }
 }
 const submitAdd = async () => {
-  const updatedMaterial = { ...material }
+  let updatedMaterial = { ...material }
   updatedMaterial.sources.push({
     url: url.value,
     price: price.value,
   })
+  updatedMaterial = toRequest(updatedMaterial)
   try {
     await materialStore.update(updatedMaterial.id, updatedMaterial)
     url.value = ''
@@ -154,8 +160,8 @@ const confirmDelete = (row: any) => {
     cancel: true,
     persistent: true,
   }).onOk(async () => {
-    const updatedMaterial = { ...material }
-    console.log(row)
+    let updatedMaterial = { ...material }
+    updatedMaterial = toRequest(updatedMaterial)
     updatedMaterial.sources = material.sources.filter((item: any) => item.id !== row.id)
     await materialStore.update(updatedMaterial.id, updatedMaterial)
     $q.notify({ type: 'positive', message: 'Запись удалена' })
