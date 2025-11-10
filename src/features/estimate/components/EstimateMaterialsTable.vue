@@ -86,6 +86,12 @@ const estimateStore = useEstimateStore()
 .sticky-header-table thead tr:first-child th {
   top: 0;
 }
+.sticky-header-table td:nth-child(4) {
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+  min-width: 150px;
+}
 
 tbody {
   scroll-margin-top: 48px;
