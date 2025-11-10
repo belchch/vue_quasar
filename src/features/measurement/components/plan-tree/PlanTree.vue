@@ -88,23 +88,34 @@
             <template v-slot:header-movable-item="prop">
               <PlanTreeNode
                 label="Объект"
-                :name="ObjectName(true, prop.node.rawData.comment)"
+                :name="movabelName(prop.node.rawData.comment)"
                 backoff-name="Без названия"
                 @edit="editObject(prop.node)"
               />
             </template>
             <template v-slot:header-notmovable-objects>
               <q-item-section>
-                <q-item-label>Конструктив</q-item-label>
+                <q-item-label>Колонны</q-item-label>
               </q-item-section>
             </template>
             <template v-slot:header-notmovable-item="prop">
               <PlanTreeNode
                 label="Объект"
-                :name="ObjectName(false, prop.node.rawData.comment, prop.node.rawData.materialId)"
-                :backoff-name="
-                  fixedObjectBackOffName(prop.node.rawData.comment, prop.node.rawData.materialId)
-                "
+                :name="movabelName(prop.node.rawData.comment)"
+                backoff-name="Без названия"
+                @edit="editObject(prop.node)"
+              />
+            </template>
+            <template v-slot:header-stairways>
+              <q-item-section>
+                <q-item-label>Лестницы</q-item-label>
+              </q-item-section>
+            </template>
+            <template v-slot:header-stairway-item="prop">
+              <PlanTreeNode
+                label="Лестница"
+                :name="movabelName(prop.node.rawData.comment)"
+                backoff-name="Без названия"
                 @edit="editObject(prop.node)"
               />
             </template>
@@ -209,7 +220,11 @@
             <ObjectInfo :selected-node="selectedNode" />
           </q-tab-panel>
           <q-tab-panel name="notmovable-item">
-            <ObjectInfo :selected-node="selectedNode" />
+            <ObjectInfo :selected-node="selectedNode" label-block="Колонна" />
+          </q-tab-panel>
+          <!-- Лестницы -->
+          <q-tab-panel name="stairway-item">
+            <ObjectInfo :selected-node="selectedNode" label-block="Лестница" />
           </q-tab-panel>
         </q-tab-panels>
       </template>
@@ -294,6 +309,10 @@ const fixedObjectBackOffName = (comment: string, materialId: number | null = nul
   if (!materialId && !comment) return ''
   const materialName = materialId ? materialLookupName(materialId) : ''
   return comment ? comment : materialName ? materialName : ''
+}
+const movabelName = (comment: string) => {
+  if (!comment) return undefined
+  return comment
 }
 
 const treePlan = ref()

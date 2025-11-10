@@ -1,9 +1,8 @@
-import { storeToRefs } from "pinia"
-import { useInspectionsStore } from "src/features/inspection/store/inspection-store"
-import { usePlanTreeStore } from "../stores/plan-tree-store"
-import { tpcMeasurementApi } from "../api/tpc-measurement-api"
-import { Room, TreeItem, Wall, Walls } from "../stores/types"
-
+import { storeToRefs } from 'pinia'
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
+import { usePlanTreeStore } from '../stores/plan-tree-store'
+import { tpcMeasurementApi } from '../api/tpc-measurement-api'
+import { Room, TreeItem, Wall, Walls } from '../stores/types'
 
 export const usePlanTreeService = () => {
   const { selectedInspectionId } = storeToRefs(useInspectionsStore())
@@ -16,10 +15,10 @@ export const usePlanTreeService = () => {
   }
 
   const setWallMaterial = (roomNodeId: number, materialId: number | undefined) => {
-
     const room: any = treeData.value.find((item: any) => item.id == roomNodeId)
 
-    room?.children.filter((child: any) => child.type == 'wall')
+    room?.children
+      .filter((child: any) => child.type == 'wall')
       ?.forEach((child: any) => {
         child.rawData.materialId = materialId
       })
@@ -32,13 +31,12 @@ export const usePlanTreeService = () => {
   return {
     savePlanTree,
     setWallMaterial,
-    requestPlanTree
+    requestPlanTree,
   }
 }
 
 const transformPlanJson = (planJson: any): object[] => {
-  let globalIndex = 0;
-
+  let globalIndex = 0
 
   const createRoom = (room: any) => {
     const roomNodeId = globalIndex++
@@ -49,51 +47,65 @@ const transformPlanJson = (planJson: any): object[] => {
       type: 'room',
       label: room.comment,
       rawData: room,
-      children: []
-    };
+      children: [],
+    }
     const walls: Walls = {
       id: globalIndex++,
       header: 'root-walls',
       type: 'root-walls',
       label: `Стены`,
       rawData: room.walls,
-      children: []
+      children: [],
     }
-    const movabelObjects: TreeItem = {
+    const movableObjects: TreeItem = {
       id: globalIndex++,
       header: 'movable-objects',
       type: 'movable-objects',
       label: `Перемещаемые объекты`,
       rawData: room.objects || [],
-      children: []
+      children: [],
     }
 
-    const notMovabelObjects: TreeItem = {
+    const notMovableObjects: TreeItem = {
       id: globalIndex++,
       header: 'notmovable-objects',
       type: 'notmovable-objects',
       label: `Конструкции`,
       rawData: room.objects || [],
-      children: []
+      children: [],
     }
 
-    const transformedWalls = createWalls(roomNodeId, room.walls);
-    const rootFloor = transformRoomFloor(room.floor);
-    const rootCeiling = transformRoomCeiling(room.ceiling);
-    resultRoom.children.push(rootFloor);
-    resultRoom.children.push(rootCeiling);
-    const treeMovableObjects = transformMovableObjects(room.objects);
-    const treeNotMovableObjects = transformNotMovableObjects(room.objects);
+    const stairwayObjects: TreeItem = {
+      id: globalIndex++,
+      header: 'stairways',
+      type: 'stairways',
+      label: `Лестницы`,
+      rawData: room.objects || [],
+      children: [],
+    }
+
+    const transformedWalls = createWalls(roomNodeId, room.walls)
+    const rootFloor = transformRoomFloor(room.floor)
+    const rootCeiling = transformRoomCeiling(room.ceiling)
+    resultRoom.children.push(rootFloor)
+    resultRoom.children.push(rootCeiling)
+    const treeMovableObjects = transformMovableObjects(room.objects)
+    const treeNotMovableObjects = transformNotMovableObjects(room.objects)
+    const treeStairwayObjects = transformStairwayObjects(room.objects)
     if (treeMovableObjects.length > 0) {
-      movabelObjects.children.push(...treeMovableObjects);
-      resultRoom.children.push(movabelObjects);
+      movableObjects.children.push(...treeMovableObjects)
+      resultRoom.children.push(movableObjects)
     }
-    if(treeNotMovableObjects.length > 0){
-      notMovabelObjects.children.push(...treeNotMovableObjects);
-      resultRoom.children.push(notMovabelObjects);
+    if (treeNotMovableObjects.length > 0) {
+      notMovableObjects.children.push(...treeNotMovableObjects)
+      resultRoom.children.push(notMovableObjects)
     }
-    resultRoom.children.push(...transformedWalls);
-    return resultRoom;
+    if (treeStairwayObjects.length > 0) {
+      stairwayObjects.children.push(...treeStairwayObjects)
+      resultRoom.children.push(stairwayObjects)
+    }
+    resultRoom.children.push(...transformedWalls)
+    return resultRoom
   }
   const createWall = (i: number, wall: any) => {
     return {
@@ -101,11 +113,11 @@ const transformPlanJson = (planJson: any): object[] => {
       type: 'wall',
       label: `Стена-${i + 1} (${wall.comment})`,
       rawData: wall,
-      children: []
+      children: [],
     }
   }
   const createWalls = (roomNodeId: number, walls: any) => {
-    const resultWalls: Wall[] = [];
+    const resultWalls: Wall[] = []
 
     walls.forEach((wall: any, i: number) => {
       const newWall: Wall = {
@@ -116,22 +128,17 @@ const transformPlanJson = (planJson: any): object[] => {
         label: wall.comment,
         rawData: wall,
         roomNodeId,
-        children: []
+        children: [],
       }
-      createOpenings(newWall.children, wall.openings);
-      const wallSections = creatWallSections(wall.sections);
-      if (wallSections.length > 0) newWall.children.push(...wallSections);
-      // const ceil:any = {
-      //   id: globalIndex++,
-      //   label: `Потолок`
-      // }
-      // newWall.children.push(ceil);
-      resultWalls.push(newWall);
-    });
-    return resultWalls;
+      createOpenings(newWall.children, wall.openings)
+      const wallSections = createWallSections(wall.sections)
+      if (wallSections.length > 0) newWall.children.push(...wallSections)
+      resultWalls.push(newWall)
+    })
+    return resultWalls
   }
-  const creatWallSections = (sections: any) => {
-    const result: TreeItem[] = [];
+  const createWallSections = (sections: any) => {
+    const result: TreeItem[] = []
     sections.forEach((section: any) => {
       const newSection: TreeItem = {
         id: globalIndex++,
@@ -139,52 +146,50 @@ const transformPlanJson = (planJson: any): object[] => {
         type: 'wall-section',
         label: section.comment,
         rawData: section,
-        children: []
+        children: [],
       }
-      createOpenings(newSection.children, section.openings);
-      // const openings = transformWallSectionOpenings(sections.openings);
-      // if (openings.length > 0) newSection.children.push(...openings);
-      result.push(newSection);
-    });
-    return result;
+      createOpenings(newSection.children, section.openings)
+      result.push(newSection)
+    })
+    return result
   }
   const transformWallSectionOpenings = (openings: any) => {
-    const result: TreeItem[] = [];
-    if (!openings || openings.length === 0) return [];
-    return result;
+    const result: TreeItem[] = []
+    if (!openings || openings.length === 0) return []
+    return result
   }
   const transformRoomFloor = (floor: any) => {
-    if (!floor) return null;
+    if (!floor) return null
     const result: TreeItem = {
       id: globalIndex++,
       header: 'root-floor',
       type: 'floor',
       label: floor.comment,
       rawData: floor,
-      children: []
+      children: [],
     }
-    const sections = transformFloorSections(floor.sections);
-    if (sections.length > 0) result.children.push(...sections);
-    return result;
+    const sections = transformFloorSections(floor.sections)
+    if (sections.length > 0) result.children.push(...sections)
+    return result
   }
   const transformRoomCeiling = (ceiling: any) => {
-    if (!ceiling) return null;
+    if (!ceiling) return null
     const ceil: TreeItem = {
       id: globalIndex++,
       header: 'root-ceiling',
       type: 'ceiling',
       label: ceiling.comment,
       rawData: ceiling,
-      children: []
-    };
-    const sections = transformCeilingSections(ceiling.sections);
+      children: [],
+    }
+    const sections = transformCeilingSections(ceiling.sections)
     if (sections.length > 0) ceil.children.push(...sections)
-    return ceil;
+    return ceil
   }
   //TODO: Объеденить в один метод, передавать в него тип секции
   const transformFloorSections = (sections: any) => {
-    if (!sections || sections.length === 0) return [];
-    const result: TreeItem[] = [];
+    if (!sections || sections.length === 0) return []
+    const result: TreeItem[] = []
     sections.forEach((section: any) => {
       const sectionNode = {
         id: globalIndex++,
@@ -192,15 +197,15 @@ const transformPlanJson = (planJson: any): object[] => {
         type: 'floor-section',
         label: section.comment,
         rawData: section,
-        children: []
+        children: [],
       }
-      result.push(sectionNode);
-    });
-    return result;
+      result.push(sectionNode)
+    })
+    return result
   }
   const transformCeilingSections = (sections: any) => {
-    if (!sections || sections.length === 0) return [];
-    const result: TreeItem[] = [];
+    if (!sections || sections.length === 0) return []
+    const result: TreeItem[] = []
     sections.forEach((section: any) => {
       const sectionNode = {
         id: globalIndex++,
@@ -208,74 +213,78 @@ const transformPlanJson = (planJson: any): object[] => {
         type: 'ceiling-section',
         label: section.comment,
         rawData: section,
-        children: []
+        children: [],
       }
-      result.push(sectionNode);
-    });
-    return result;
+      result.push(sectionNode)
+    })
+    return result
   }
   const createOpenings = (parent: any[], openings: any[]) => {
-    // let result:PlanOpening[] = [];
     openings.forEach((opening: any, i: number) => {
       parent.push({
         id: globalIndex++,
         header: 'opening',
         type: 'opening',
         label: `${opening.comment}`,
-        rawData: opening
-      });
+        rawData: opening,
+      })
     })
-    // return result;
   }
 
   const transformMovableObjects = (objects: any) => {
-    if (!objects || objects.length === 0) return [];
-    const result: TreeItem[] = [];
-    const filtredObjects = objects.filter((item: any) => {
+    if (!objects || objects.length === 0) return []
+    const filteredObjects = objects.filter((item: any) => {
       return item.movable
     })
-    filtredObjects.forEach((item: any) => {
-      const objectNode: TreeItem = {
-        id: globalIndex++,
-        header: 'movable-item',
-        type: 'movable-item',
-        label: item.comment,
-        rawData: item,
-        children: []
-      }
-      result.push(objectNode);
-    });
-    return result;
+    return objectToTreeItems('movable-item', filteredObjects)
   }
 
   const transformNotMovableObjects = (objects: any) => {
-    if (!objects || objects.length === 0) return [];
+    if (!objects || objects.length === 0) return []
     else {
-      const result: TreeItem[] = [];
-      const filtredObjects = objects.filter((item: any) => {
-        return !item.movable && item.type != 'text';
+      const filteredObjects = objects.filter((item: any) => {
+        return (
+          !item.movable &&
+          item.type.toLowerCase() != 'text' &&
+          item.type.toLowerCase() != 'stairway'
+        )
       })
-    filtredObjects.forEach((item: any) => {
+      return objectToTreeItems('notmovable-item', filteredObjects)
+    }
+  }
+  const objectToTreeItems = (header: string, objectItems: any[]) => {
+    if (!objectItems || objectItems.length === 0) {
+      return []
+    }
+    const result: TreeItem[] = []
+    objectItems.forEach((item: any) => {
       const objectNode: TreeItem = {
         id: globalIndex++,
-        header: 'notmovable-item',
-        type: 'notmovable-item',
+        header: header,
+        type: header,
         label: item.comment,
         rawData: item,
-        children: []
+        children: [],
       }
-      result.push(objectNode);
-    });
-    return result;
+      result.push(objectNode)
+    })
+    return result
   }
-}
+  const transformStairwayObjects = (objects: any) => {
+    if (!objects || objects.length === 0) return []
+    else {
+      const filteredObjects = objects.filter((item: any) => {
+        return item.type.toLowerCase() === 'stairway'
+      })
+      return objectToTreeItems('stairway-item', filteredObjects)
+    }
+  }
 
-  const result: object[] = [];
+  const result: object[] = []
   planJson.forEach((room: any) => {
-    const roomNode = createRoom(room);
+    const roomNode = createRoom(room)
     // createWalls(roomNode.children, room.walls);
-    result.push(roomNode);
-  });
+    result.push(roomNode)
+  })
   return result
 }
-
