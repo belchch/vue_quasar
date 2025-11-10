@@ -6,120 +6,50 @@
     <PlanMaterialDialog v-if="editingNode" v-model="materialDialogOpen" />
     <PlanOpeningDialog v-if="editingNode" v-model="openingDialogOpen" />
     <PlanObjectDialog v-if="editingNode" v-model="objectDialogOpen" />
+    <q-btn
+      v-if="$q.screen.lt.md"
+      outline
+      class="q-mb-md q-mt-md"
+      icon="menu"
+      size="sm"
+      label="Показать дерево"
+      @click="leftDrawerOpen = true"
+    />
+    <q-drawer
+      v-if="$q.screen.lt.md"
+      v-model="leftDrawerOpen"
+      side="left"
+      bordered
+      :width="300"
+      overlay
+      behavior="mobile"
+    >
+      <div class="q-pa-md scroll" style="height: 100vh">
+        <PlanTreeComponent
+          ref="treePlanMobile"
+          :nodes="treeData"
+          :selected="selected"
+          @update:selected="handleNodeSelected"
+          @edit-location="editLocation"
+          @edit-material="editMaterial"
+          @edit-opening="editOpening"
+          @edit-object="editObject"
+        />
+      </div>
+    </q-drawer>
     <q-splitter v-model="splitterModel" style="min-height: 400px">
-      <template v-slot:before>
+      <template v-if="$q.screen.gt.sm" v-slot:before>
         <div class="q-pa-md scroll" style="height: calc(100vh - 280px)">
-          <q-tree
+          <PlanTreeComponent
             ref="treePlan"
-            @update:selected="nodeSelected"
             :nodes="treeData"
-            node-key="id"
-            selected-color="primary"
-            v-model:selected="selected"
-            no-selection-unset
-          >
-            <template v-slot:header-room="prop">
-              <PlanTreeNode
-                label="Помещение"
-                :name="roomLookupName(prop.node.rawData)"
-                :backoff-name="prop.node.label"
-                @edit="editLocation(prop.node)"
-              />
-            </template>
-            <template v-slot:header-wall="prop">
-              <PlanTreeNode
-                :label="`Стена-${prop.node.index}`"
-                :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label"
-                @edit="editMaterial(prop.node)"
-              />
-            </template>
-            <template v-slot:header-opening="prop">
-              <PlanTreeNode
-                :label="openingTypeName(prop.node.rawData.type)"
-                :name="openingFullName(prop.node.rawData.openingId, prop.node.rawData.materialId)"
-                :backoff-name="
-                  openingBackOffName(
-                    prop.node.label,
-                    prop.node.rawData.openingId,
-                    prop.node.rawData.materialId,
-                  )
-                "
-                @edit="editOpening(prop.node)"
-              />
-            </template>
-            <template v-slot:header-wall-section="prop">
-              <PlanTreeNode
-                label="Секция"
-                :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label"
-                @edit="editMaterial(prop.node)"
-              />
-            </template>
-            <template v-slot:header-section="prop">
-              <PlanTreeNode
-                label="Секция"
-                :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label"
-                @edit="editMaterial(prop.node)"
-              />
-            </template>
-            <template v-slot:header-root-ceiling="prop">
-              <PlanTreeNode
-                label="Потолок"
-                :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label"
-                @edit="editMaterial(prop.node)"
-              />
-            </template>
-            <template v-slot:header-root-floor="prop">
-              <PlanTreeNode
-                label="Пол"
-                :name="materialLookupName(prop.node.rawData.materialId)"
-                :backoff-name="prop.node.label"
-                @edit="editMaterial(prop.node)"
-              />
-            </template>
-            <template v-slot:header-movable-objects>
-              <q-item-section>
-                <q-item-label>Движимое имущество</q-item-label>
-              </q-item-section>
-            </template>
-            <template v-slot:header-movable-item="prop">
-              <PlanTreeNode
-                label="Объект"
-                :name="movabelName(prop.node.rawData.comment)"
-                backoff-name="Без названия"
-                @edit="editObject(prop.node)"
-              />
-            </template>
-            <template v-slot:header-notmovable-objects>
-              <q-item-section>
-                <q-item-label>Колонны</q-item-label>
-              </q-item-section>
-            </template>
-            <template v-slot:header-notmovable-item="prop">
-              <PlanTreeNode
-                label="Объект"
-                :name="movabelName(prop.node.rawData.comment)"
-                backoff-name="Без названия"
-                @edit="editObject(prop.node)"
-              />
-            </template>
-            <template v-slot:header-stairways>
-              <q-item-section>
-                <q-item-label>Лестницы</q-item-label>
-              </q-item-section>
-            </template>
-            <template v-slot:header-stairway-item="prop">
-              <PlanTreeNode
-                label="Лестница"
-                :name="movabelName(prop.node.rawData.comment)"
-                backoff-name="Без названия"
-                @edit="editObject(prop.node)"
-              />
-            </template>
-          </q-tree>
+            :selected="selected"
+            @update:selected="handleDesktopNodeSelected"
+            @edit-location="editLocation"
+            @edit-material="editMaterial"
+            @edit-opening="editOpening"
+            @edit-object="editObject"
+          />
         </div>
       </template>
 
@@ -237,7 +167,7 @@ import { storeToRefs } from 'pinia'
 import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
 import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
 import { useSpotStore } from 'src/features/lookup/spot/stores/spot-store'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { usePlanTreeStore } from '../../stores/plan-tree-store'
 import { TreeItem } from '../../stores/types'
 import CeilInfo from './CeilInfo.vue'
@@ -249,73 +179,19 @@ import PlanLocationDialog from './PlanLocationDialog.vue'
 import PlanMaterialDialog from './PlanMaterialDialog.vue'
 import PlanOpeningDialog from './PlanOpeningDialog.vue'
 import PlanTableButton from './PlanTableButton.vue'
-import PlanTreeNode from './PlanTreeNode.vue'
 import WallInfo from './WallInfo.vue'
 import WallSectionInfo from './WallSectionInfo.vue'
 import WallsInfo from './WallsInfo.vue'
 import ObjectInfo from './ObjectInfo.vue'
 import PlanObjectDialog from './PlanObjectDialog.vue'
+import { useQuasar } from 'quasar'
+import PlanTreeComponent from './PlanTreeComponent.vue'
 
+const $q = useQuasar()
 const { treeData, editingNode } = storeToRefs(usePlanTreeStore())
-const spotStore = useSpotStore()
-const materialStore = useMaterialStore()
-const openingStore = useOpeningStore()
-
-const roomLookupName = ({ roomId, roomNum }: { roomId: number; roomNum: number }) => {
-  const spotName = () => spotStore.items.find((item) => item.id == roomId)?.name
-  return roomId ? `${spotName()} ${roomNum != undefined ? ' ' + roomNum : ''}` : ''
-}
-
-const materialLookupName = (materialId: number) => {
-  return materialId != undefined
-    ? materialStore.items.find((item) => item.id == materialId)?.name
-    : undefined
-}
-const openingLookupName = (openingId: number) => {
-  return openingStore.items.find((item) => item.id == openingId)?.name
-}
-
-const openingFullName = (openingId: number, materialId: number) => {
-  const openingName = openingLookupName(openingId)
-  const materialName = materialLookupName(materialId)
-  if (openingName && materialName) return `${openingName} (${materialName})`
-  return undefined
-}
-const openingBackOffName = (label: string, openingId: number, materialId: number) => {
-  const openingName = openingLookupName(openingId)
-  const materialName = materialLookupName(materialId)
-  if (openingName) return label ? `${openingName} (${label})` : `${openingName}`
-  if (materialName) return `${materialName}`
-  return label
-}
-const openingTypeName = (openningType: string) => {
-  if (openningType == 'window') {
-    return 'Окно'
-  } else if (openningType == 'door') {
-    return 'Дверь'
-  } else {
-    return 'Проем'
-  }
-}
-
-const ObjectName = (isMovable: boolean, comment: string, materialId: number | null = null) => {
-  if (isMovable) return comment ? comment : undefined
-  if (!materialId) return undefined
-  const materialName = materialLookupName(materialId)
-  if (!comment || !materialName) return undefined
-  return `${comment} (${materialName})`
-}
-const fixedObjectBackOffName = (comment: string, materialId: number | null = null) => {
-  if (!materialId && !comment) return ''
-  const materialName = materialId ? materialLookupName(materialId) : ''
-  return comment ? comment : materialName ? materialName : ''
-}
-const movabelName = (comment: string) => {
-  if (!comment) return undefined
-  return comment
-}
 
 const treePlan = ref()
+const treePlanMobile = ref()
 const splitterModel = ref(30)
 const selected = ref<number | null>(null)
 const selectedNode = ref<TreeItem | null>(null)
@@ -324,9 +200,21 @@ const locationDialogOpen = ref(false)
 const materialDialogOpen = ref(false)
 const openingDialogOpen = ref(false)
 const objectDialogOpen = ref(false)
+const leftDrawerOpen = ref(false)
 
-const nodeSelected = (node: any) => {
-  const item = treePlan.value.getNodeByKey(node)
+watch(
+  () => $q.screen.lt.md,
+  (isMobile) => {
+    if (isMobile) {
+      splitterModel.value = 0
+    } else {
+      splitterModel.value = 30
+    }
+  },
+  { immediate: true },
+)
+const nodeSelected = async (refTree: any, node: any) => {
+  const item = await refTree.value?.getNodeByKey(node)
   if (!item) {
     selectedNode.value = null
     selectedNodeType.value = ''
@@ -335,7 +223,16 @@ const nodeSelected = (node: any) => {
   selectedNode.value = item
   selectedNodeType.value = item.type
 }
-
+const handleNodeSelected = async (node: any) => {
+  await nodeSelected(treePlanMobile, node)
+  leftDrawerOpen.value = false
+  if ($q.screen.lt.md) {
+    leftDrawerOpen.value = false
+  }
+}
+const handleDesktopNodeSelected = async (node: any) => {
+  await nodeSelected(treePlan, node)
+}
 const editLocation = (node: any) => {
   locationDialogOpen.value = true
   editingNode.value = node
