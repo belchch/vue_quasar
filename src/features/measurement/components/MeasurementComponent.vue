@@ -21,7 +21,12 @@
           separator="cell"
         >
           <template v-slot:top>
-            <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
+            <div class="row q-gutter-md">
+              <q-btn @click="onBuildingBoq" :loading="buildingBoq" color="primary" size="sm">
+                Сформировать ВОР
+              </q-btn>
+              <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
+            </div>
           </template>
           <template v-slot:body="props">
             <q-tr :props="props">
@@ -207,17 +212,16 @@ import MeasurementsTableMobile from './mobile-measurement/MeasurementsTableMobil
 import { useQuasar } from 'quasar'
 const { allRoomMeasurements } = storeToRefs(useMeasurementStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
-import { useMeasurementService } from '../composables/measurement'
 const { hasPermission } = useUserStore()
 import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
+import { useBoqService } from '../../boq/composables/boq'
 
-const $q = useQuasar()
-const {
-  requestCeilSectionMeasurements,
-  requestFloorSectionMeasurements,
-  requestWallSectionMeasurements,
-} = useMeasurementService()
-
+const { buildAndRequestBoq } = useBoqService()
+const onBuildingBoq = async () => {
+  buildingBoq.value = true
+  await buildAndRequestBoq()
+  buildingBoq.value = false
+}
 const buildDocx = async () => {
   const response = await RoomMeasurementApi.buildDocx(selectedInspectionId.value!!)
   return response.data
@@ -230,6 +234,7 @@ const getLocationName = (row: RoomMeasurement) => {
   }
 }
 const openingStore = useOpeningStore()
+const buildingBoq = ref(false)
 const tab = ref('measurements')
 const columns = [
   {
