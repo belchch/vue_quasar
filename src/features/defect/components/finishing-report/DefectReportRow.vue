@@ -1,10 +1,10 @@
 <template>
   <q-card class="row no-wrap" flat>
-    <q-card-section class="row no-wrap full-width">
-      <div :class="`col-9`">
+    <q-card-section class="row full-width" :class="$q.screen.gt.xs ? 'no-wrap' : ''">
+      <div class="col-sm-9 col-xs-12">
         <DefectReportTextItem label="Недостаток" :value="row.defect" />
       </div>
-      <div class="col-3">
+      <div class="col-sm-3 col-xs-12">
         <DefectReportPhotos :use-photo-api="usePhoto" :photos="row.photos" />
       </div>
     </q-card-section>
@@ -16,6 +16,8 @@ import DefectReportTextItem from 'src/features/defect/components/defect-report/D
 import DefectReportPhotos from 'src/features/defect/components/defect-report/DefectReportPhotos.vue'
 import { DefectReportRowModel } from 'src/features/defect/stores/defect-report-types'
 import { useFinishingReportService } from 'src/features/defect/composables/finishing-report-service'
+import { useQuasar } from 'quasar'
+const $q = useQuasar()
 
 const props = defineProps<{
   row: DefectReportRowModel

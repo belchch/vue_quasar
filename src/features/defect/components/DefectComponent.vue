@@ -1,11 +1,29 @@
 <template>
-  <q-card class="q-pa-md">
-    <q-tabs v-model="tab" no-caps active-color="primary" align="left">
+  <q-card class="q-pa-md q-pl-xs-none q-pr-xs-none q-pl-sm-md q-pr-sm-md">
+    <q-tabs
+      v-model="tab"
+      no-caps
+      active-color="primary"
+      mobile-arrows
+      shrink
+      outside-arrows
+      align="left"
+    >
       <q-tab v-if="showDefects" label="Дефекты" name="defects" class="defect-tab" />
       <q-tab v-if="showFloods" label="Заливы" name="defects" class="defect-tab" />
-      <q-tab v-if="showTechnicalReport" label="Техническое заключение" name="technicalReport" class="defect-tab" />
+      <q-tab
+        v-if="showTechnicalReport"
+        label="Техническое заключение"
+        name="technicalReport"
+        class="defect-tab"
+      />
       <q-tab v-if="showDefectsReport" label="Отчет" name="defectReport" class="defect-tab" />
-      <q-tab v-if="showMovableReport" label="Движимое имущество" name="defectMovableReport" class="defect-tab" />
+      <q-tab
+        v-if="showMovableReport"
+        label="Движимое имущество"
+        name="defectMovableReport"
+        class="defect-tab"
+      />
       <q-tab v-if="showFinishingReport" label="Отделка" name="finishingReport" class="defect-tab" />
     </q-tabs>
 
@@ -13,8 +31,8 @@
       <q-tab-panel v-if="showDefects" name="defects" class="q-pt-none">
         <DefectContent />
       </q-tab-panel>
-      <q-tab-panel v-if="showFloods" name="defects" class="q-pt-none">        
-        <FloodContent/>
+      <q-tab-panel v-if="showFloods" name="defects" class="q-pt-none">
+        <FloodContent />
       </q-tab-panel>
       <q-tab-panel v-if="showTechnicalReport" name="technicalReport" class="q-pt-none">
         <TechnicalReportContent />
@@ -47,11 +65,10 @@ const {
   showDefectsReport,
   showTechnicalReport,
   showMovableReport,
-  showFinishingReport
+  showFinishingReport,
 } = useExpertiseTypeService()
 
 const tab = ref('defects')
-
 </script>
 <style scoped>
 .defect-tab {
