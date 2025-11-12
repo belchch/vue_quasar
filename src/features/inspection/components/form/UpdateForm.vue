@@ -226,9 +226,9 @@ const expertiseTypOptions = [
     name: 'Залив',
   },
   {
-    id: 'LAND_MANAGEMENT',
-    name: 'Землеустроительная',
-  },
+    id: 'CONSTRUCTION',
+    name: 'Строительно-техническая',
+  }
 ]
 
 const expertiseType = ref<{ id: string; name: string }>(

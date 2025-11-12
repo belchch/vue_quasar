@@ -30,6 +30,7 @@ const caseTypeDesc = () => {
   switch (selectedCase.value?.expertiseType) {
     case 'SHARED_EQUITY': return 'ДДУ';
     case 'FLOOD_DAMAGE': return 'Залив';
+    case 'CONSTRUCTION': return 'Строительно-техническая';
     default: return ''
   }
 }

@@ -226,9 +226,9 @@ const expertiseTypeOptions = ref<{ label: string; value: string }[]>([
     value: 'FLOOD_DAMAGE',
   },
   {
-    label: 'Землеустроительная',
-    value: 'LAND_MANAGEMENT',
-  },
+    label: 'Строительно-техническая',
+    value: 'CONSTRUCTION',
+  }
 ])
 
 const localDate = ref('')
