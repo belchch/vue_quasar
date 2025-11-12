@@ -1,6 +1,6 @@
 <template>
   <div class="q-gutter-md">
-    <div class="row justify-between">
+    <div class="row justify-between q-gutter-y-sm">
       <div>
         <div class="row" v-if="hasPermission(['defectReport.update'])">
           <q-btn
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <q-card flat style="background: #fafafa" class="q-pa-lg root-card">
+    <q-card flat style="background: #fafafa" class="q-pa-xs-none q-pa-sm-lg root-card">
       <q-card-section v-if="finishingReport">
         <draggable
           v-model="finishingReport.spots"
