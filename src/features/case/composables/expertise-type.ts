@@ -9,15 +9,20 @@ export const useExpertiseTypeService = () => {
 
     const photoDocTypes = () => {
         switch(selectedCase?.expertiseType) {
-            case 'SHARED_EQUITY': return sharedEquityPhotoDocTypes;
+            case 'SHARED_EQUITY': return sharedEquityPhotoDocTypes; 
+            case 'CONSTRUCTION': return sharedEquityPhotoDocTypes; 
             case 'FLOOD_DAMAGE': return floodDamagePhotoDocTypes;
             default: return []
         }
     }
 
-    const showDefects = computed(() => selectedCase?.expertiseType == 'SHARED_EQUITY')
-    const showDefectsReport = computed(() => selectedCase?.expertiseType == 'SHARED_EQUITY')
-    const showTechnicalReport = computed(() => selectedCase?.expertiseType == 'SHARED_EQUITY')
+    const checkGroup1 = (value: string | undefined) => {
+        return value == 'SHARED_EQUITY' || value == 'CONSTRUCTION'
+    }
+
+    const showDefects = computed(() => checkGroup1(selectedCase?.expertiseType))
+    const showDefectsReport = computed(() => checkGroup1(selectedCase?.expertiseType))
+    const showTechnicalReport = computed(() => checkGroup1(selectedCase?.expertiseType))
     const showFloods = computed(() => selectedCase?.expertiseType == 'FLOOD_DAMAGE')
     const showMovableReport = computed(() => selectedCase?.expertiseType == 'FLOOD_DAMAGE')
     const showFinishingReport = computed(() => selectedCase?.expertiseType == 'FLOOD_DAMAGE')
