@@ -4,7 +4,7 @@
       <DefectReportPhotosPicker :photos="photosLocal" @togglePhoto="togglePhoto" />
     </div>
     <div class="row q-gutter-sm justify-center">
-      <div v-for="(url, index) in showUrls" :key="index" :class="`col-5`">
+      <div v-for="(url, index) in showUrls" :key="index" :class="`col-sm-5 col-xs-12`">
         <q-img :src="url" />
       </div>
       <div></div>

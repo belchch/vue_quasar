@@ -1,19 +1,13 @@
 <template>
-  <q-drawer
-      side="left"
-      v-model="drawerOpen"
-      show-if-above
-      bordered    
-      :width="250"          
-    >
-      <CaseDrawer @close="drawerOpen = false"/>
-    </q-drawer>    
-    <q-page class="case-page column">
-        <InspectionTitle v-model:drawer-open="drawerOpen"/>
-        <div class="q-pa-sm">
-          <router-view/>           
-        </div>        
-      </q-page>
+  <q-drawer side="left" v-model="drawerOpen" show-if-above bordered :width="250">
+    <CaseDrawer @close="drawerOpen = false" />
+  </q-drawer>
+  <q-page class="case-page column no-wrap">
+    <InspectionTitle v-model:drawer-open="drawerOpen" />
+    <div class="q-pa-sm">
+      <router-view />
+    </div>
+  </q-page>
 </template>
 
 <script setup lang="ts">
