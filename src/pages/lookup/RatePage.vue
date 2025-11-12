@@ -22,6 +22,7 @@
           :rows="rateStore.rates"
           :columns="columns"
           row-key="id"
+          wrap-cells
         >
           <template v-slot:top>
             <div class="table-header row items-center full-width">
@@ -67,9 +68,11 @@
             </q-td>
           </template>
           <template v-slot:body-cell-sources="props">
-            <q-td :props="props">
+            <q-td :props="props" class="break-cell">
               <template v-for="(item, index) in props.value" :key="index">
-                <div>{{ item.url }}</div>
+                <div>
+                  <a :href="item.url" target="_blank">{{ item.url }}</a>
+                </div>
               </template>
               <q-icon name="edit" class="edit-icon" />
             </q-td>
@@ -194,7 +197,7 @@ const openEditRateDialog = (rate: Rate) => {
   openDialog.value = true
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .edit-icon {
   opacity: 0;
   transition: opacity 0.3s;
@@ -212,5 +215,15 @@ td:hover .edit-icon {
 }
 tr:hover .action-btn {
   opacity: 1;
+}
+.break-cell {
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+  min-width: 150px;
+}
+.break-cell > div:not(:last-of-type) {
+  padding-bottom: 4px;
+  margin-bottom: 4px;
 }
 </style>
