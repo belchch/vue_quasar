@@ -7,7 +7,7 @@ export interface Field {
   name: string
   label: string
   type: 'select' | 'text' | 'checkbox' | 'textarea' | 'select-multiple' | 'decimal'
-
+  formatOptionLabel?: (val: any) => string
   required?: boolean
   options?: any[]
   emitValue?: boolean
