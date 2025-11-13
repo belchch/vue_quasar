@@ -17,29 +17,27 @@
                                     <LabeledValue label="Периметр" :value="windowLocal.perimeter" :accent="true" />
                                 </div>
                             </div>
-                        </q-card-section>                    
+                        </q-card-section>
                     </q-card>
                 </div>
-
-                <div style="margin-top: 16px;">
+            </div>
+            <div class="row q-mt-md no-wrap">
+                <div>
                     <MaterialReplacement v-model:material="windowLocal.material"
-                                v-model:replacement="windowLocal.replacement"
-                                v-model:preservation="windowLocal.preservation" :materials="materials"
-                                @update:material="updateWindow(false)"
-                                @update:preservation="updateWindow(false)"
-                                @update:replacement="updateReplacement()" 
-                                replacement-label="Замена окна"
-                                title="Материал и замена"/>
+                        v-model:replacement="windowLocal.replacement" v-model:preservation="windowLocal.preservation"
+                        :materials="materials" @update:material="updateWindow(false)"
+                        @update:preservation="updateWindow(false)" @update:replacement="updateReplacement()"
+                        replacement-label="Замена окна" title="Материал и замена" />
                 </div>
 
-                <div>
-                    <div class="q-mt-md">
+                <div class="q-ml-md">
+                    <div>
                         <q-toggle color="secondary" v-model="windowLocal.hasSlopes" label="Откосы пластик" size="sm"
                             @update:model-value="updateWindow(false)" />
                     </div>
-                    <div class="q-mt-md">
-                        <q-toggle color="secondary" v-model="windowLocal.slopesPainting" label="Окрашивание откосов" size="sm"
-                            @update:model-value="updateWindow(false)" />
+                    <div>
+                        <q-toggle color="secondary" v-model="windowLocal.slopesPainting" label="Окрашивание откосов"
+                            size="sm" @update:model-value="updateWindow(false)" />
                     </div>
                 </div>
             </div>
