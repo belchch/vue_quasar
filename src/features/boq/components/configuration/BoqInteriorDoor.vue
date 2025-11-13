@@ -18,7 +18,7 @@
                                 </div>
                                 <div>
                                     <LabeledValue label="Высота" :value="interiorDoorLocal.height" />
-                                    <LabeledValue label="Периметер" :value="interiorDoorLocal.perimeter" :accent="true"/>
+                                    <LabeledValue label="Периметр" :value="interiorDoorLocal.perimeter" :accent="true"/>
                                 </div>
                             </div>                            
                         </q-card-section>

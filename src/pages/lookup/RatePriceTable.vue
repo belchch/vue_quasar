@@ -123,11 +123,7 @@ const restoreFieldValue = (row: Sources, fieldName: FieldName) => {
 const submit = async (row: Sources, fieldName: FieldName) => {
   try {
     const updatedRate = { ...rate }
-    if (updatedRate.boqWorkParams) {
-      delete updatedRate.boqWorkParams['id']
-      delete updatedRate.boqWorkParams['material']
-    }
-    await rateStore.updateRate(updatedRate)
+    await rateStore.updateRatePrice(updatedRate)
   } catch (e) {
     $q.notify({ type: 'negative', message: 'Не удалось сохранить' })
     restoreFieldValue(row, fieldName)

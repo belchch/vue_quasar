@@ -23,12 +23,20 @@ export const useRateStore = defineStore('rates-store', () => {
     }
   }
   const updateRate = async (rate: Rate) => {
+    const response = await api.put<Rate>(`api/rates/${rate.id}`, rate)
+    updateItemInStore(response.data)
+  }
+  const updateRatePrice = async (rate: Rate) => {
     if (rate.boqWorkParams) {
       delete rate['boqWorkParams']
     }
     const response = await api.put<Rate>(`api/rates/${rate.id}`, rate)
-    const find = rates.value.findIndex((r) => r.id == response.data.id)
-    if (find >= 0) rates.value[find] = { ...response.data }
+    updateItemInStore(response.data)
+  }
+
+  const updateItemInStore = (rate: Rate) => {
+    const find = rates.value.findIndex((r) => r.id == rate.id)
+    if (find >= 0) rates.value[find] = { ...rate }
   }
   const deleteRate = async (id: number) => {
     await api.delete(`api/rates/${id}`)
@@ -49,5 +57,6 @@ export const useRateStore = defineStore('rates-store', () => {
     deleteRate,
     createRate,
     updateRate,
+    updateRatePrice,
   }
 })

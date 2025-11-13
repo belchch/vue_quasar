@@ -10,7 +10,7 @@ const replacement = defineModel<boolean>('replacement', { required: true })
 const preservation = defineModel<boolean>('preservation', { required: true })
 
 const props =  withDefaults(defineProps<{
-  replacementLabel?: string,
+  replacementLabel?: string | undefined,
   preservationLabel?: string | undefined
 }>(), {
   replacementLabel: 'Замена',

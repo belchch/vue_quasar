@@ -1,7 +1,7 @@
 <template>
     <div style="position: relative;">
         <div class="text-caption q-ma-sm text-accent">Окно {{ index + 1 }}</div>
-        <q-card-section>            
+        <q-card-section>
             <div class="row q-gutter-x-lg q-mt-md">
                 <div>
                     <q-card bordered flat style="width: 400px;">
@@ -10,28 +10,36 @@
                             <div class="row q-gutter-xl">
                                 <div>
                                     <LabeledValue label="Ширина" :value="windowLocal.width" />
-                                    <LabeledValue label="Площадь" :value="windowLocal.area" :accent="true"/>
+                                    <LabeledValue label="Площадь" :value="windowLocal.area" :accent="true" />
                                 </div>
                                 <div>
                                     <LabeledValue label="Высота" :value="windowLocal.height" />
-                                    <LabeledValue label="Периметер" :value="windowLocal.perimeter" :accent="true"/>
+                                    <LabeledValue label="Периметр" :value="windowLocal.perimeter" :accent="true" />
                                 </div>
-                            </div>       
-                        </q-card-section>
+                            </div>
+                        </q-card-section>                    
                     </q-card>
                 </div>
 
-                <div>
-                    <div>
-                        <ReplacementToggles v-model:replacement="windowLocal.replacement"
-                            v-model:preservation="windowLocal.preservation" replacement-label="Замена окна"
-                            @update:replacement="updateReplacement()"
-                            @update:preservation="updateWindow(false)" />
-                    </div>
+                <div style="margin-top: 16px;">
+                    <MaterialReplacement v-model:material="windowLocal.material"
+                                v-model:replacement="windowLocal.replacement"
+                                v-model:preservation="windowLocal.preservation" :materials="materials"
+                                @update:material="updateWindow(false)"
+                                @update:preservation="updateWindow(false)"
+                                @update:replacement="updateReplacement()" 
+                                replacement-label="Замена окна"
+                                title="Материал и замена"/>
+                </div>
 
+                <div>
                     <div class="q-mt-md">
-                        <q-toggle color="secondary" v-model="windowLocal.hasSlopes" label="Откосы пластик"
-                            size="sm" @update:model-value="updateWindow(false)" />
+                        <q-toggle color="secondary" v-model="windowLocal.hasSlopes" label="Откосы пластик" size="sm"
+                            @update:model-value="updateWindow(false)" />
+                    </div>
+                    <div class="q-mt-md">
+                        <q-toggle color="secondary" v-model="windowLocal.slopesPainting" label="Окрашивание откосов" size="sm"
+                            @update:model-value="updateWindow(false)" />
                     </div>
                 </div>
             </div>
@@ -45,8 +53,11 @@ import { BoqWindowModel, toWindowUpdateRequest } from '../../api/window/types';
 import { useBoqWorkService } from '../../composables/boq-work';
 import LabeledValue from './common/LabeledValue.vue';
 import ReplacementToggles from './common/ReplacementToggles.vue';
+import MaterialReplacement from './common/MaterialReplacement.vue';
 
 const { requestWorks } = useBoqWorkService()
+
+const materials = computed(() => windowLocal.value.structElems.flatMap(elem => elem.materials))
 
 const props = defineProps<{
     index: number,

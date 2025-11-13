@@ -99,6 +99,8 @@ export type BoqWindow = {
   hasSlopes: boolean | null
   replacement: boolean | null
   preservation: boolean | null
+  slopesPainting: boolean | null
+  material?: Material | null
   dimension: DimensionType
 }
 
