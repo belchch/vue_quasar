@@ -9,8 +9,12 @@
         :options="materialStore.items" option-value="id" option-label="name" map-options label="Материал" />
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
-      <q-toggle toggle-indeterminate v-model="params.hasSlopes" label="Наличие откосов" />
+      <q-toggle toggle-indeterminate v-model="params.hasSlopes" label="Откосы пластик" />
       <span v-if="params.hasSlopes === null" class="text-blue-grey text-caption"> Не используется</span>
+    </q-card-section>
+    <q-card-section class="q-pt-none q-pb-none">
+      <q-toggle toggle-indeterminate v-model="params.slopesPainting" label="Окашивание откосов" />
+      <span v-if="params.replacement === null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
       <q-toggle toggle-indeterminate v-model="params.replacement" label="Замена окна" />
@@ -19,7 +23,7 @@
     <q-card-section class="q-pt-none">
       <q-toggle toggle-indeterminate v-model="params.preservation" label="Замена окна с сохранением" />
       <span v-if="params.preservation === null" class="text-blue-grey text-caption"> Не используется</span>    
-    </q-card-section>  
+    </q-card-section>   
   </div>
 </template>
 
