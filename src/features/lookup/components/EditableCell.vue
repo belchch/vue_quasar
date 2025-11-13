@@ -16,7 +16,7 @@
                 :id="field.name"
                 :model-value="editRow[field.name]"
                 @update:model-value="(newVal) => (editRow[field.name] = newVal)"
-                :options="field.options"
+                :options="getOptions(field)"
                 option-value="id"
                 :option-label="field.formatOptionLabel ? field.formatOptionLabel : 'name'"
                 :label="field.label"
@@ -25,9 +25,10 @@
                 dense
                 :emit-value="field.emitValue"
                 outlined
+                @filter="(val: string, update: any) => filterOption(val, update, field)"
                 hide-selected
                 fill-input
-                behavior="dialog"
+                :behavior="field.behavior ? field.behavior : 'default'"
                 use-input
               />
               <q-select
@@ -99,6 +100,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Field } from '../base/store/types'
+import { update } from 'lodash'
 
 const props = defineProps<{
   value: any
@@ -108,6 +110,27 @@ const props = defineProps<{
   noEdit?: boolean
 }>()
 const formRef = ref()
+
+const filteredOptions = ref<Record<string, any[]>>({})
+
+const getOptions = (field: Field) => {
+  return filteredOptions.value[field.name] || field.options || []
+}
+
+const filterOption = (val: string, update: any, field: Field) => {
+  update(() => {
+    if (val === '') {
+      filteredOptions.value[field.name] = field.options || []
+    } else {
+      const needle = val.toLowerCase()
+      filteredOptions.value[field.name] = (field.options || []).filter(
+        (option: any) =>
+          option.name?.toLowerCase().includes(needle) ||
+          option.label?.toLowerCase().includes(needle),
+      )
+    }
+  })
+}
 
 const emit = defineEmits(['update'])
 

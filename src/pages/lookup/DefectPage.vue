@@ -107,6 +107,7 @@ const formFields = computed((): Field[] => [
     required: true,
     options: standardStore.items,
     formatOptionLabel: formatStandard,
+    behavior: 'dialog',
     selectValueField: 'name',
   },
   {
