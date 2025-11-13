@@ -14,7 +14,7 @@
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
       <q-toggle toggle-indeterminate v-model="params.slopesPainting" label="Окашивание откосов" />
-      <span v-if="params.replacement === null" class="text-blue-grey text-caption"> Не используется</span>
+      <span v-if="params.slopesPainting === null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
       <q-toggle toggle-indeterminate v-model="params.replacement" label="Замена окна" />
