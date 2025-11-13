@@ -150,6 +150,8 @@ const defaultWindowParams: BoqWindow = {
   replacement: null,
   preservation: null,
   dimension: 'AREA',
+  slopesPainting: false,
+  material: null
 }
 const defaultWallSectionParams: BoqWallSection = {
   material: null,
@@ -323,6 +325,8 @@ async function onSave() {
         replacement: windowParams.value.replacement,
         preservation: windowParams.value.preservation,
         dimension: windowParams.value.dimension,
+        slopesPainting: windowParams.value.slopesPainting,
+        materialId: windowParams.value.material?.id || null
       }
       break
     case 'WALL_SECTION':

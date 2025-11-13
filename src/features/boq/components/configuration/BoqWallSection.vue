@@ -18,7 +18,7 @@
                 </div>
             <div class="row q-gutter-x-lg q-mt-md">                
                 <MaterialReplacement v-model:material="wallSectionLocal.material" v-model:replacement="wallSectionLocal.replacement"
-                    v-model:preservation="wallSectionLocal.painting" :materials="materials" @update:material="updateWallSection(false)"
+                    v-model:preservation="wallSectionLocal.painting" :materials="materials" @update:material="updateWallSection(false)"                    
                     @update:preservation="updateWallSection(false)" @update:replacement="updateReplacement()" preservation-label="С окраской"/>
             </div>
         </q-card-section>

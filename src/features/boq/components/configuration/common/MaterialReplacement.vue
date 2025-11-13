@@ -1,9 +1,10 @@
 <template>
     <div>
         <q-card bordered flat style="width: 400px;">
-            <div class="text-caption q-ma-sm">Материал</div>
+            <div class="text-caption q-ma-sm">{{ title || 'Материал' }}</div>
             <div class="q-ma-md">
-                <ReplacementToggles v-model:replacement="replacement" v-model:preservation="preservation" :preservation-label="preservationLabel"/>
+                <ReplacementToggles v-model:replacement="replacement" v-model:preservation="preservation"
+                    :preservation-label="preservationLabel" :replacement-label="replacementLabel" />
                 <q-select v-model="material" :options="materials" option-label="name" option-value="id" dense />
             </div>
         </q-card>
@@ -20,6 +21,8 @@ const material = defineModel<Material>('material')
 
 defineProps<{
     materials: Material[],
-    preservationLabel?: string
+    preservationLabel?: string,
+    replacementLabel?: string,
+    title?: string
 }>()
 </script>
