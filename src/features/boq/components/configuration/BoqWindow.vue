@@ -94,6 +94,8 @@ const updateReplacement = async () => {
 }
 
 const updateWindow = async (updateVolume: boolean) => {
+    console.log("update")
+
     const response = await BoqWindowApi.updateWindow(
         windowLocal.value.id,
         toWindowUpdateRequest(windowLocal.value),

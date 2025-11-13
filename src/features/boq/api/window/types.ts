@@ -29,7 +29,7 @@ export type BoqWindowUpdateRequest = {
 export const toWindowUpdateRequest = (window: BoqWindowModel): BoqWindowUpdateRequest => {
     return {
         id: window.id,
-        materialId: window.material.id,
+        materialId: window.material?.id,
         slopesPainting: window.slopesPainting,
         width: window.width,
         height: window.height,
