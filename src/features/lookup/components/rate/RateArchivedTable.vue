@@ -1,8 +1,7 @@
 <template>
   <div>
     <q-table
-      ref="table"
-      title="Архивные записи"
+      ref="tableRate"
       v-model:pagination="pagination"
       :filter="filter"
       separator="cell"
@@ -12,8 +11,8 @@
       :rows="archivedRecords"
       :columns="columns"
       row-key="id"
-      wrap-cells
-      :loading="storeRawMaterial.loading"
+      title="Архивные записи"
+      :loading="rateStore.loading"
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
@@ -51,16 +50,7 @@
       <template v-slot:body-cell-sources="props">
         <q-td :props="props">
           <template v-for="(item, index) in props.value" :key="index">
-            <div>
-              <a :href="item.url" target="_blank">{{ item.url }}</a>
-            </div>
-          </template>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-price="props">
-        <q-td :props="props">
-          <template v-for="(item, index) in props.row.sources" :key="index">
-            <div>{{ item.price }}</div>
+            <div>{{ item.url }}</div>
           </template>
         </q-td>
       </template>
@@ -73,36 +63,20 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRateStore } from 'src/features/lookup/rate/rate-store'
+import { Rate, UnitOfMeasureEnum, ParamsTypeEnum } from 'src/features/lookup/rate/types'
+import { useUserStore } from 'src/features/user/stores/user-store'
 import { useQuasar } from 'quasar'
-import { UnitOfMeasureEnum } from 'src/features/lookup/rate/types'
-import { RawMaterial } from '../../raw-material/types'
-import { useRawMaterialStore } from '../../raw-material/raw-material-store'
 const $q = useQuasar()
-const table = ref()
+const tableRate = ref()
+const rateStore = useRateStore()
+const { hasPermission } = useUserStore()
 const filter = ref('')
-const storeRawMaterial = useRawMaterialStore()
-
 const archivedRecords = computed(() => {
-  return storeRawMaterial.rawMaterials.filter((item) => {
-    return item.isArchived
+  return rateStore.rates.filter((rate) => {
+    return rate.isArchived
   })
 })
-
-const confirmRestore = (row: any) => {
-  $q.dialog({
-    title: 'Подтверждение',
-    message: `Восстановить запись?`,
-    cancel: true,
-  }).onOk(async () => {
-    try {
-      await storeRawMaterial.restoreItem(row.id)
-      $q.notify({ type: 'positive', message: 'Запись восстановлена' })
-    } catch (error) {
-      $q.notify({ type: 'negative', message: 'Ошибка при восстановлении записи' })
-    }
-  })
-}
-
 const columns = [
   {
     name: 'name',
@@ -113,8 +87,8 @@ const columns = [
   },
   {
     name: 'unitOfMeasure',
-    field: (row: RawMaterial) => UnitOfMeasureEnum[row.unitOfMeasure],
-    label: 'Ед.изм.',
+    field: (row: Rate) => UnitOfMeasureEnum[row.unitOfMeasure],
+    label: 'Ед.измерения',
     align: 'left' as const,
     sortable: true,
   },
@@ -126,9 +100,12 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'works',
-    field: (row: RawMaterial) => row.rates.length,
-    label: 'Работ',
+    name: 'paramsType',
+    field: (row: Rate) => {
+      if (!row.boqWorkParamsType) return '-'
+      return ParamsTypeEnum[row.boqWorkParamsType]
+    },
+    label: 'Тип',
     align: 'left' as const,
     sortable: true,
   },
@@ -140,9 +117,9 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'price',
-    field: 'price',
-    label: 'Стоимость',
+    name: 'averagePrice',
+    field: 'averagePrice',
+    label: 'Средняя цена',
     align: 'left' as const,
     sortable: true,
   },
@@ -160,35 +137,31 @@ const pagination = ref({
   rowsPerPage: 15,
 })
 const pagesNumber = computed(() => {
-  if (table?.value?.filteredSortedRows)
-    return Math.ceil(table.value.filteredSortedRows.length / pagination.value.rowsPerPage)
-  return Math.ceil(storeRawMaterial.rawMaterials.length / pagination.value.rowsPerPage)
+  if (tableRate?.value?.filteredSortedRows)
+    return Math.ceil(tableRate.value.filteredSortedRows.length / pagination.value.rowsPerPage)
+  return Math.ceil(rateStore.rates.length / pagination.value.rowsPerPage)
 })
+const confirmRestore = (row: any) => {
+  $q.dialog({
+    title: 'Подтверждение',
+    message: `Восстановить запись?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await rateStore.restoreRate(row.id)
+      $q.notify({ type: 'positive', message: 'Запись восстановлена' })
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при восстановлении записи' })
+    }
+  })
+}
 </script>
 
 <style scoped>
-.edit-icon {
-  opacity: 0;
-  transition: opacity 0.3s;
-  margin: -3px 0 0 10px;
-  position: absolute;
-  top: 4px;
-  right: 4px;
-}
-
-td:hover {
-  cursor: pointer;
-}
-
-td:hover .edit-icon {
-  opacity: 0.5;
-}
-
 .action-btn {
   opacity: 0;
   transition: opacity 0.3s;
 }
-
 tr:hover .action-btn {
   opacity: 1;
 }

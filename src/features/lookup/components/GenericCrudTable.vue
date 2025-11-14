@@ -151,7 +151,7 @@
               flat
               round
               color="primary"
-              icon="unarchive"
+              icon="settings_backup_restore"
               @click.stop="confirmRestore(props.row)"
               v-if="editPermission"
             >
