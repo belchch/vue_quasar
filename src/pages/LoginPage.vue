@@ -6,7 +6,7 @@
           <img src="~assets/logo.svg">
         </q-avatar>
       </div> -->
-      <div class="text-center q-mt-lg text-grey-8 text-h5">ЭПСЕ Экспертиза</div>
+      <div class="text-center q-mt-lg text-grey-8 text-h5">ЭПСЭ Экспертизы</div>
     </q-card-section>
 
     <q-card-section class="q-px-lg">
