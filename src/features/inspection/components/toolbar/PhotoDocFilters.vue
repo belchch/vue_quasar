@@ -67,7 +67,7 @@ const typeOptions: { key: PhotoDocTypeOption; name: string }[] = [
   },
   {
     key: 'MOVABLE',
-    name: 'Движемое имущество',
+    name: 'Движимое имущество',
   }
 ].filter(item => _.concat(photoDocTypes(), null).includes(item.key))
 
