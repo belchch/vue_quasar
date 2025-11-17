@@ -1,33 +1,32 @@
 <template>
   <div>
-    <RawMaterialDialog :raw-material="editedItem" v-model="openDialog" />
+    <RateDialogForm v-model="openDialog" :rate="editedRate" />
     <q-table
-      ref="table"
+      ref="tableRate"
       v-model:pagination="pagination"
       :filter="filter"
       separator="cell"
       hide-pagination
       flat
       bordered
-      :rows="actualRecords"
+      :rows="actualRates"
       :columns="columns"
       row-key="id"
-      wrap-cells
-      :loading="storeRawMaterial.loading"
+      :loading="rateStore.loading"
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
       </template>
       <template v-slot:top>
         <div class="table-header row items-center full-width">
-          <div class="q-table__title">Стройматериалы</div>
+          <div class="q-table__title">Работы</div>
           <q-btn
             class="q-ma-md"
             size="sm"
             icon="add"
             label="Добавить"
             color="primary"
-            @click="openNewDialog"
+            @click="openNewRateDialog"
           />
           <q-checkbox
             @update:model-value="handleArchiveToggle"
@@ -63,25 +62,15 @@
         </q-td>
       </template>
       <template v-slot:body-cell="props">
-        <q-td :props="props" @click="openEditDialog(props.row)" :key="props.col.name">
+        <q-td :props="props" @click="openEditRateDialog(props.row)" :key="props.col.name">
           {{ props.value }}
           <q-icon name="edit" class="edit-icon" />
         </q-td>
       </template>
       <template v-slot:body-cell-sources="props">
-        <q-td class="break-cell" :props="props" @click="openEditDialog(props.row)">
+        <q-td :props="props">
           <template v-for="(item, index) in props.value" :key="index">
-            <div>
-              <a :href="item.url" target="_blank">{{ item.url }}</a>
-            </div>
-          </template>
-          <q-icon name="edit" class="edit-icon" />
-        </q-td>
-      </template>
-      <template v-slot:body-cell-price="props">
-        <q-td :props="props" @click="openEditDialog(props.row)">
-          <template v-for="(item, index) in props.row.sources" :key="index">
-            <div>{{ item.price }}</div>
+            <div>{{ item.url }}</div>
           </template>
           <q-icon name="edit" class="edit-icon" />
         </q-td>
@@ -90,63 +79,26 @@
     <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
       <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
     </div>
-    <RawMaterialArchivedTable v-if="showArchived" class="q-mt-md" />
+    <RateArchivedTable v-if="showArchived" class="q-mt-md" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRateStore } from 'src/features/lookup/rate/rate-store'
+import { Rate, UnitOfMeasureEnum, ParamsTypeEnum } from 'src/features/lookup/rate/types'
+import { useUserStore } from 'src/features/user/stores/user-store'
 import { useQuasar } from 'quasar'
-import { UnitOfMeasureEnum, UnitOfMeasureType } from 'src/features/lookup/rate/types'
-import { RawMaterial } from '../../raw-material/types'
-import { useRawMaterialStore } from '../../raw-material/raw-material-store'
-import RawMaterialDialog from './RawMaterialDialog.vue'
-import RawMaterialArchivedTable from './RawMaterialArchivedTable.vue'
+import RateDialogForm from 'src/features/lookup/components/RateDialogForm.vue'
+import RateArchivedTable from './RateArchivedTable.vue'
 const $q = useQuasar()
-const table = ref()
-const filter = ref('')
-const storeRawMaterial = useRawMaterialStore()
+const tableRate = ref()
+const rateStore = useRateStore()
+const { hasPermission } = useUserStore()
 const openDialog = ref(false)
+const editedRate = ref<Rate | null>(null)
+const filter = ref('')
 const showArchived = ref(false)
-const defaultNewObject: RawMaterial = {
-  name: '',
-  unitOfMeasure: 'PIECE',
-  factor: 0,
-  sources: [],
-  rates: [],
-}
-const actualRecords = computed(() => {
-  return storeRawMaterial.rawMaterials.filter((item) => {
-    return !item.isArchived
-  })
-})
-const editedItem = ref<RawMaterial>({ ...defaultNewObject })
-
-const confirmDelete = (row: any) => {
-  $q.dialog({
-    title: 'Подтвердите удаление',
-    message: `Вы действительно хотите удалить запись?`,
-    cancel: true,
-  }).onOk(async () => {
-    try {
-      await storeRawMaterial.remove(row.id)
-      $q.notify({ type: 'positive', message: 'Успешно удалено' })
-    } catch (error) {
-      $q.notify({ type: 'negative', message: 'Ошибка при удалении' })
-    }
-  })
-}
-
-const openNewDialog = () => {
-  editedItem.value = Object.assign({}, defaultNewObject)
-  openDialog.value = true
-}
-
-const openEditDialog = (row: RawMaterial) => {
-  editedItem.value = Object.assign({}, row)
-  openDialog.value = true
-}
-
 const columns = [
   {
     name: 'name',
@@ -157,8 +109,8 @@ const columns = [
   },
   {
     name: 'unitOfMeasure',
-    field: (row: RawMaterial) => UnitOfMeasureEnum[row.unitOfMeasure],
-    label: 'Ед.изм.',
+    field: (row: Rate) => UnitOfMeasureEnum[row.unitOfMeasure],
+    label: 'Ед.измерения',
     align: 'left' as const,
     sortable: true,
   },
@@ -170,9 +122,12 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'works',
-    field: (row: RawMaterial) => row.rates.length,
-    label: 'Работ',
+    name: 'paramsType',
+    field: (row: Rate) => {
+      if (!row.boqWorkParamsType) return '-'
+      return ParamsTypeEnum[row.boqWorkParamsType]
+    },
+    label: 'Тип',
     align: 'left' as const,
     sortable: true,
   },
@@ -184,9 +139,9 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'price',
-    field: 'price',
-    label: 'Стоимость',
+    name: 'averagePrice',
+    field: 'averagePrice',
+    label: 'Средняя цена',
     align: 'left' as const,
     sortable: true,
   },
@@ -204,50 +159,61 @@ const pagination = ref({
   rowsPerPage: 15,
 })
 const pagesNumber = computed(() => {
-  if (table?.value?.filteredSortedRows)
-    return Math.ceil(table.value.filteredSortedRows.length / pagination.value.rowsPerPage)
-  return Math.ceil(storeRawMaterial.rawMaterials.length / pagination.value.rowsPerPage)
+  if (tableRate?.value?.filteredSortedRows)
+    return Math.ceil(tableRate.value.filteredSortedRows.length / pagination.value.rowsPerPage)
+  return Math.ceil(rateStore.rates.length / pagination.value.rowsPerPage)
 })
-
-const handleArchiveToggle = async (val: boolean) => {
-  await storeRawMaterial.requestLookup(val)
+const confirmDelete = (row: any) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить работу?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await rateStore.deleteRate(row.id)
+      if (showArchived.value) {
+        await rateStore.requestLookup(true)
+      }
+      $q.notify({ type: 'positive', message: 'Успешно удалено' })
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' })
+    }
+  })
 }
+const openNewRateDialog = () => {
+  editedRate.value = null
+  openDialog.value = true
+}
+const openEditRateDialog = (rate: Rate) => {
+  editedRate.value = rate
+  openDialog.value = true
+}
+const handleArchiveToggle = async (val: boolean) => {
+  await rateStore.requestLookup(val)
+}
+
+const actualRates = computed(() => {
+  return rateStore.rates.filter((rate) => !rate.isArchived)
+})
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .edit-icon {
   opacity: 0;
   transition: opacity 0.3s;
   margin: -3px 0 0 10px;
-  position: absolute;
-  top: 4px;
-  right: 4px;
 }
-
 td:hover {
   cursor: pointer;
 }
-
 td:hover .edit-icon {
   opacity: 0.5;
 }
-
 .action-btn {
   opacity: 0;
   transition: opacity 0.3s;
 }
-
 tr:hover .action-btn {
   opacity: 1;
-}
-.break-cell {
-  word-break: break-all;
-  word-wrap: break-word;
-  white-space: normal;
-  min-width: 150px;
-}
-.break-cell > div:not(:last-of-type) {
-  padding-bottom: 4px;
-  margin-bottom: 4px;
 }
 </style>

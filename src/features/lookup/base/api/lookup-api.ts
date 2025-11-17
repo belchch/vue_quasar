@@ -1,8 +1,8 @@
 import { api } from 'boot/axios'
 
 export const lookupApi = <Response, Request>(lookupName: string) => ({
-  async getAllItems() {
-    return api.get<Response[]>(`/api/${lookupName}`)
+  async getAllItems(withArchived = false) {
+    return api.get<Response[]>(`/api/${lookupName}`, { params: { all: withArchived } })
   },
 
   async updateItem(id: number, item: Request | Response) {
@@ -15,5 +15,8 @@ export const lookupApi = <Response, Request>(lookupName: string) => ({
 
   async deleteItem(id: number) {
     return api.delete(`/api/${lookupName}/${id}`)
+  },
+  async restoreItem(id: number) {
+    return api.put(`/api/${lookupName}/${id}/restore`)
   },
 })
