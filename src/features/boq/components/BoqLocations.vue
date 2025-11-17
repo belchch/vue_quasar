@@ -8,12 +8,19 @@
     separator="cell"
   >
     <template v-slot:top>
-      <div class="row q-gutter-md">
+      <div class="row q-gutter-md full-width justify-between">
         <template v-if="boq">
           <DownloadReportButton
             label="Скачать"
             :disable="false"
             :api-fn="async () => (await BoqApi.buildReport(selectedInspectionId!!)).data"
+          />
+          <q-btn
+            v-if="$q.screen.lt.md"
+            outline
+            icon-right="menu"
+            label="Работы"
+            @click="openDrawer"
           />
         </template>
       </div>
@@ -48,12 +55,16 @@ import { useInspectionsStore } from 'src/features/inspection/store/inspection-st
 
 const emits = defineEmits<{
   navigateLocation: [location: BoqLocation]
+  openDrawer: []
 }>()
 const { locations, boq } = storeToRefs(useBoqStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const navigateLocation = (location: BoqLocation) => {
   emits('navigateLocation', location)
+}
+const openDrawer = () => {
+  emits('openDrawer')
 }
 
 const columns = [
