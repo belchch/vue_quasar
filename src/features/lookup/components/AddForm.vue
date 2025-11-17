@@ -7,9 +7,9 @@
           :id="field.name"
           :model-value="formData[field.name]"
           @update:model-value="(newVal) => (formData[field.name] = newVal)"
-          :options="field.options"
+          :options="getOptions(field)"
           option-value="id"
-          option-label="name"
+          :option-label="field.formatOptionLabel ? field.formatOptionLabel : 'name'"
           :label="field.label"
           class="fill-stretch"
           style="min-width: 120px"
@@ -17,6 +17,11 @@
           dense
           emit-value2
           outlined
+          @filter="(val: string, update: any) => filterOption(val, update, field)"
+          hide-selected
+          fill-input
+          :behavior="field.behavior ? field.behavior : 'default'"
+          use-input
         />
         <q-select
           v-else-if="field.type === 'select-multiple'"
@@ -59,7 +64,7 @@
         <q-input
           v-else
           :required="field.required"
-          :key="field.name"
+          :key="`${field.name}_${index}`"
           v-model="formData[field.name]"
           style="min-width: 120px"
           :label="field.label"
@@ -101,6 +106,27 @@ const resetForm = () => {
 defineExpose({
   resetForm,
 })
+
+const filteredOptions = ref<Record<string, any[]>>({})
+
+const getOptions = (field: Field) => {
+  return filteredOptions.value[field.name] || field.options || []
+}
+
+const filterOption = (val: string, update: any, field: Field) => {
+  update(() => {
+    if (val === '') {
+      filteredOptions.value[field.name] = field.options || []
+    } else {
+      const needle = val.toLowerCase()
+      filteredOptions.value[field.name] = (field.options || []).filter(
+        (option: any) =>
+          option.name?.toLowerCase().includes(needle) ||
+          option.label?.toLowerCase().includes(needle),
+      )
+    }
+  })
+}
 
 const emit = defineEmits(['submit'])
 
