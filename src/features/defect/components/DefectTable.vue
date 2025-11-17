@@ -25,7 +25,7 @@
           />
         </q-td>
         <q-td key="location" :props="props">
-          {{ props.row.spot?.name }}
+          {{ spotDesc(props.row) }}
         </q-td>
         <q-td key="technicalReport" :props="props">
           {{ props.row.trRow?.description }}
@@ -87,6 +87,7 @@ const rows = computed<TableRow[]>(() => {
   return props.defects.map((defect) => ({
     rowKey: defect.id!!,
     spot: defect.spot,
+    spotNum: defect.spotNum,
     defect: defect.defectInfo!!,
     trRow: findTrRow(defect.defectInfo!!),
     photos: defect.urls,
@@ -95,10 +96,14 @@ const rows = computed<TableRow[]>(() => {
       .filter(item => showTechnicalReport.value || (!item.trRow || item.defect.defect) )
 })
 
+const spotDesc = (row: TableRow) => {
+  return `${row.spot?.name || ''} ${row.spotNum || ''}`
+}
+
 const columns = [
   {
     name: 'location',
-    field: (row: TableRow) => row.spot?.name,
+    field: (row: TableRow) => spotDesc(row),
     label: 'Локация',
     sortable: true,
     align: 'left' as const,
@@ -133,6 +138,7 @@ const columns = [
 type TableRow = {
   rowKey: number
   spot: Spot | undefined
+  spotNum: number | undefined
   defect: PhotoDocDefectInfo
   trRow: TechnicalReportRow | undefined
 }

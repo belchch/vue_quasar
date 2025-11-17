@@ -2,7 +2,7 @@
   <q-card flat>
     <q-card-section>
       <div class="text-h6">Все дефекты</div>
-      <div class="text-body2">Таблица заливов движемого имущества и отделки</div>
+      <div class="text-body2">Таблица заливов движимого имущества и отделки</div>
     </q-card-section>
     <q-card-section>
       <FloodTable :defects="defects"/>

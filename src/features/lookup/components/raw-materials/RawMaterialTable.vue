@@ -69,7 +69,7 @@
         </q-td>
       </template>
       <template v-slot:body-cell-sources="props">
-        <q-td :props="props" @click="openEditDialog(props.row)">
+        <q-td class="break-cell" :props="props" @click="openEditDialog(props.row)">
           <template v-for="(item, index) in props.value" :key="index">
             <div>
               <a :href="item.url" target="_blank">{{ item.url }}</a>
@@ -214,7 +214,7 @@ const handleArchiveToggle = async (val: boolean) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .edit-icon {
   opacity: 0;
   transition: opacity 0.3s;
@@ -239,5 +239,15 @@ td:hover .edit-icon {
 
 tr:hover .action-btn {
   opacity: 1;
+}
+.break-cell {
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+  min-width: 150px;
+}
+.break-cell > div:not(:last-of-type) {
+  padding-bottom: 4px;
+  margin-bottom: 4px;
 }
 </style>
