@@ -17,6 +17,6 @@ export const lookupApi = <Response, Request>(lookupName: string) => ({
     return api.delete(`/api/${lookupName}/${id}`)
   },
   async restoreItem(id: number) {
-    return api.post(`/api/${lookupName}/${id}`)
+    return api.put(`/api/${lookupName}/${id}/restore`)
   },
 })

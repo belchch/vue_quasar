@@ -96,6 +96,7 @@ const confirmRestore = (row: any) => {
   }).onOk(async () => {
     try {
       await storeRawMaterial.restoreItem(row.id)
+      await storeRawMaterial.requestLookup(true)
       $q.notify({ type: 'positive', message: 'Запись восстановлена' })
     } catch (error) {
       $q.notify({ type: 'negative', message: 'Ошибка при восстановлении записи' })

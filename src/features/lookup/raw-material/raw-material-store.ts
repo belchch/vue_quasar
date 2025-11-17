@@ -35,9 +35,7 @@ export const useRawMaterialStore = defineStore('raw-materials-store', () => {
   }
 
   const restoreItem = async (id: number) => {
-    const response = await api.restoreItem(id)
-    const find = rawMaterials.value.findIndex((r) => r.id == response.data.id)
-    if (find >= 0) rawMaterials.value[find] = { ...response.data }
+    await api.restoreItem(id)
   }
 
   return {

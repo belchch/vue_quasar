@@ -49,7 +49,7 @@
             size="sm"
             v-model="isNeedArchived"
             val="sm"
-            label="Показать архивные записи"
+            label="Архивные записи"
           />
           <q-space />
           <q-input outlined dense debounce="300" color="primary" v-model="filter">

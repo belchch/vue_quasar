@@ -45,8 +45,7 @@ export const useRateStore = defineStore('rates-store', () => {
     })
   }
   const restoreRate = async (id: number) => {
-    const response = await api.post(`api/rates/${id}`)
-    updateItemInStore(response.data)
+    await api.put(`api/rates/${id}/restore`)
   }
   const groupedByType = computed(() => {
     const grouped = _.groupBy(rates.value, 'boqWorkParamsType')
