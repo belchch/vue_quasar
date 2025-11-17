@@ -1,15 +1,15 @@
 <template>
   <div>
-    <RawMaterialDialog :raw-material="editedItem" v-model="openDialog" />
     <q-table
       ref="table"
+      title="Архивные записи"
       v-model:pagination="pagination"
       :filter="filter"
       separator="cell"
       hide-pagination
       flat
       bordered
-      :rows="actualRecords"
+      :rows="archivedRecords"
       :columns="columns"
       row-key="id"
       wrap-cells
@@ -18,31 +18,12 @@
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
       </template>
-      <template v-slot:top>
-        <div class="table-header row items-center full-width">
-          <div class="q-table__title">Стройматериалы</div>
-          <q-btn
-            class="q-ma-md"
-            size="sm"
-            icon="add"
-            label="Добавить"
-            color="primary"
-            @click="openNewDialog"
-          />
-          <q-checkbox
-            @update:model-value="handleArchiveToggle"
-            size="sm"
-            v-model="showArchived"
-            val="sm"
-            label="Архивные записи"
-          />
-          <q-space />
-          <q-input outlined dense debounce="300" color="primary" v-model="filter">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
+      <template v-slot:top-right>
+        <q-input outlined dense debounce="300" color="primary" v-model="filter">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
       </template>
       <template v-slot:header-cell-actions>
         <q-th style="width: 82px; border-left: 0"></q-th>
@@ -54,97 +35,73 @@
             size="sm"
             flat
             round
-            color="negative"
-            icon="delete"
-            @click.stop="confirmDelete(props.row)"
+            color="primary"
+            icon="settings_backup_restore"
+            @click.stop="confirmRestore(props.row)"
           >
-            <q-tooltip anchor="top middle" self="bottom middle"> Удалить </q-tooltip>
+            <q-tooltip anchor="top middle" self="bottom middle"> Восстановить запись </q-tooltip>
           </q-btn>
         </q-td>
       </template>
       <template v-slot:body-cell="props">
-        <q-td :props="props" @click="openEditDialog(props.row)" :key="props.col.name">
+        <q-td :props="props" :key="props.col.name">
           {{ props.value }}
-          <q-icon name="edit" class="edit-icon" />
         </q-td>
       </template>
       <template v-slot:body-cell-sources="props">
-        <q-td class="break-cell" :props="props" @click="openEditDialog(props.row)">
+        <q-td :props="props">
           <template v-for="(item, index) in props.value" :key="index">
             <div>
               <a :href="item.url" target="_blank">{{ item.url }}</a>
             </div>
           </template>
-          <q-icon name="edit" class="edit-icon" />
         </q-td>
       </template>
       <template v-slot:body-cell-price="props">
-        <q-td :props="props" @click="openEditDialog(props.row)">
+        <q-td :props="props">
           <template v-for="(item, index) in props.row.sources" :key="index">
             <div>{{ item.price }}</div>
           </template>
-          <q-icon name="edit" class="edit-icon" />
         </q-td>
       </template>
     </q-table>
     <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
       <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
     </div>
-    <RawMaterialArchivedTable v-if="showArchived" class="q-mt-md" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { UnitOfMeasureEnum, UnitOfMeasureType } from 'src/features/lookup/rate/types'
+import { UnitOfMeasureEnum } from 'src/features/lookup/rate/types'
 import { RawMaterial } from '../../raw-material/types'
 import { useRawMaterialStore } from '../../raw-material/raw-material-store'
-import RawMaterialDialog from './RawMaterialDialog.vue'
-import RawMaterialArchivedTable from './RawMaterialArchivedTable.vue'
 const $q = useQuasar()
 const table = ref()
 const filter = ref('')
 const storeRawMaterial = useRawMaterialStore()
-const openDialog = ref(false)
-const showArchived = ref(false)
-const defaultNewObject: RawMaterial = {
-  name: '',
-  unitOfMeasure: 'PIECE',
-  factor: 0,
-  sources: [],
-  rates: [],
-}
-const actualRecords = computed(() => {
+
+const archivedRecords = computed(() => {
   return storeRawMaterial.rawMaterials.filter((item) => {
-    return !item.isArchived
+    return item.isArchived
   })
 })
-const editedItem = ref<RawMaterial>({ ...defaultNewObject })
 
-const confirmDelete = (row: any) => {
+const confirmRestore = (row: any) => {
   $q.dialog({
-    title: 'Подтвердите удаление',
-    message: `Вы действительно хотите удалить запись?`,
+    title: 'Подтверждение',
+    message: `Восстановить запись?`,
     cancel: true,
   }).onOk(async () => {
     try {
-      await storeRawMaterial.remove(row.id)
-      $q.notify({ type: 'positive', message: 'Успешно удалено' })
+      await storeRawMaterial.restoreItem(row.id)
+      await storeRawMaterial.requestLookup(true)
+      $q.notify({ type: 'positive', message: 'Запись восстановлена' })
     } catch (error) {
-      $q.notify({ type: 'negative', message: 'Ошибка при удалении' })
+      $q.notify({ type: 'negative', message: 'Ошибка при восстановлении записи' })
     }
   })
-}
-
-const openNewDialog = () => {
-  editedItem.value = Object.assign({}, defaultNewObject)
-  openDialog.value = true
-}
-
-const openEditDialog = (row: RawMaterial) => {
-  editedItem.value = Object.assign({}, row)
-  openDialog.value = true
 }
 
 const columns = [
@@ -208,13 +165,9 @@ const pagesNumber = computed(() => {
     return Math.ceil(table.value.filteredSortedRows.length / pagination.value.rowsPerPage)
   return Math.ceil(storeRawMaterial.rawMaterials.length / pagination.value.rowsPerPage)
 })
-
-const handleArchiveToggle = async (val: boolean) => {
-  await storeRawMaterial.requestLookup(val)
-}
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .edit-icon {
   opacity: 0;
   transition: opacity 0.3s;
@@ -239,15 +192,5 @@ td:hover .edit-icon {
 
 tr:hover .action-btn {
   opacity: 1;
-}
-.break-cell {
-  word-break: break-all;
-  word-wrap: break-word;
-  white-space: normal;
-  min-width: 150px;
-}
-.break-cell > div:not(:last-of-type) {
-  padding-bottom: 4px;
-  margin-bottom: 4px;
 }
 </style>

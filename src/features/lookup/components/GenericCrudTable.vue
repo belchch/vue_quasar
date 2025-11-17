@@ -1,80 +1,175 @@
 <template>
-    <div class="q-pa-md">
-        <q-inner-loading :showing="loading">
-            <q-spinner size="50px" color="primary" />
-        </q-inner-loading>
-        <div v-if="visibleColumns.length > 0" class="q-mb-md">
-            <template v-for="(column, index) in processedColumns" :key="index">
-                <q-toggle v-if="column.name != 'actions'" :key="column.name" v-model="localVisibleColumns"
-                    :val="column.name" :label="column.label" />
-            </template>
-
-        </div>
-        <q-table v-if="!loading"
-            ref="tableRef"
-            wrap-cells
-            flat
-            bordered
-            :title="title"
-            :rows="rows"
-            :columns="processedColumns"
-            row-key="id"
-            v-model:pagination="pagination"
-            hide-pagination
-            no-data-label="Нет данных"
-            :filter="filter"
-            :filter-method="customFilter"
-            separator="cell"
-            :visible-columns="localVisibleColumns">
-            <template v-slot:top>
-                <div class="table-header row items-center full-width">
-                    <div class="q-table__title">{{ title }}</div>
-                    <q-btn :color="showForm ? 'secondary' : 'primary'" :icon="showForm ? 'close' : 'add'"
-                        :label="showForm ? 'Скрыть' : addButtonLabel" @click="showForm = !showForm" size="sm" v-if="addPermission" />
-                    <q-space />
-                    <q-input outlined dense debounce="300" color="primary" v-model="filter">
-                        <template v-slot:append>
-                            <q-icon name="search" />
-                        </template>
-                    </q-input>
-                </div>
-
-                <template v-if="showForm">
-                    <AddForm ref="addFormRef" :fields="formFields" @submit="handleAdd" @cancel="showForm = false"
-                        :class="addForm.classname" />
-                </template>
-            </template>
-
-            <template v-slot:body-cell="props">
-                <q-td :props="props" :key="props.col.name">
-                    <template v-if="!props.col.editable">
-                        {{ props.value }}
-                    </template>
-                    <template v-else-if="props.col.classes === 'view-checkbox'">
-                        <q-checkbox v-if="props.value" v-model="props.value" readonly color="secondary" />
-                    </template>
-                    <template v-else>
-                        <EditableCell ref="editFormRef" :value="props.value" :row="props.row" @close="() => { }"
-                            :editable-fields="formFields" @update22="() => console.log('update22')"
-                            @update="(newValue) => handleUpdateRow(props.row, newValue)" :no-edit="!editPermission" />
-                    </template>
-                </q-td>
-            </template>
-
-            <template v-slot:header-cell-actions>
-                <q-th style="width: 82px;border-left: 0"></q-th>
-            </template>
-            <template v-slot:body-cell-actions="props">
-                <q-td style="border-left: 0">
-                    <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
-                        @click.stop="confirmDelete(props.row)" v-if="editPermission" />
-                </q-td>
-            </template>
-        </q-table>
-        <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
-            <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
-        </div>
+  <div class="q-pa-md">
+    <q-inner-loading :showing="loading">
+      <q-spinner size="50px" color="primary" />
+    </q-inner-loading>
+    <div v-if="visibleColumns.length > 0" class="q-mb-md">
+      <template v-for="(column, index) in processedColumns" :key="index">
+        <q-toggle
+          v-if="column.name != 'actions'"
+          :key="column.name"
+          v-model="localVisibleColumns"
+          :val="column.name"
+          :label="column.label"
+        />
+      </template>
     </div>
+    <q-table
+      v-if="!loading"
+      ref="tableRef"
+      wrap-cells
+      flat
+      bordered
+      :title="title"
+      :rows="actualRecords"
+      :columns="processedColumns"
+      row-key="id"
+      v-model:pagination="pagination"
+      hide-pagination
+      no-data-label="Нет данных"
+      :filter="filter"
+      :filter-method="customFilter"
+      separator="cell"
+      :visible-columns="localVisibleColumns"
+    >
+      <template v-slot:top>
+        <div class="table-header row items-center full-width">
+          <div class="q-table__title">{{ title }}</div>
+          <q-btn
+            :color="showForm ? 'secondary' : 'primary'"
+            :icon="showForm ? 'close' : 'add'"
+            :label="showForm ? 'Скрыть' : addButtonLabel"
+            @click="showForm = !showForm"
+            size="sm"
+            v-if="addPermission"
+          />
+          <q-checkbox
+            v-if="archiveToggle"
+            @update:model-value="handleArchiveToggle"
+            size="sm"
+            v-model="isNeedArchived"
+            val="sm"
+            label="Архивные записи"
+          />
+          <q-space />
+          <q-input outlined dense debounce="300" color="primary" v-model="filter">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+
+        <template v-if="showForm">
+          <AddForm
+            ref="addFormRef"
+            :fields="formFields"
+            @submit="handleAdd"
+            @cancel="showForm = false"
+            :class="addForm.classname"
+          />
+        </template>
+      </template>
+
+      <template v-slot:body-cell="props">
+        <q-td :props="props" :key="props.col.name">
+          <template v-if="!props.col.editable">
+            {{ props.value }}
+          </template>
+          <template v-else-if="props.col.classes === 'view-checkbox'">
+            <q-checkbox v-if="props.value" v-model="props.value" readonly color="secondary" />
+          </template>
+          <template v-else>
+            <EditableCell
+              ref="editFormRef"
+              :value="props.value"
+              :row="props.row"
+              @close="() => {}"
+              :editable-fields="formFields"
+              @update22="() => console.log('update22')"
+              @update="(newValue) => handleUpdateRow(props.row, newValue)"
+              :no-edit="!editPermission"
+            />
+          </template>
+        </q-td>
+      </template>
+
+      <template v-slot:header-cell-actions>
+        <q-th style="width: 82px; border-left: 0"></q-th>
+      </template>
+      <template v-slot:body-cell-actions="props">
+        <q-td style="border-left: 0">
+          <q-btn
+            class="action-btn"
+            size="sm"
+            flat
+            round
+            color="negative"
+            icon="delete"
+            @click.stop="confirmDelete(props.row)"
+            v-if="editPermission"
+          />
+        </q-td>
+      </template>
+    </q-table>
+    <div v-if="pagesNumber > 1 && !loading" class="row justify-center q-mt-md">
+      <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
+    </div>
+    <div v-if="archiveToggle && isNeedArchived" class="q-mt-md">
+      <q-table
+        v-if="!loading"
+        ref="tableArchiveRef"
+        wrap-cells
+        flat
+        bordered
+        title="Архивные записи"
+        :rows="archivedRecords"
+        :columns="processedColumns"
+        row-key="id"
+        hide-pagination
+        no-data-label="Нет данных"
+        separator="cell"
+        :visible-columns="localVisibleColumns"
+        v-model:pagination="paginationArchived"
+        :filter="filterArchived"
+        :filter-method="customFilter"
+      >
+        <template v-slot:top-right>
+          <q-input outlined dense debounce="300" color="primary" v-model="filterArchived">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </template>
+        <template v-slot:header-cell-actions>
+          <q-th style="width: 82px; border-left: 0"></q-th>
+        </template>
+        <template v-slot:body-cell-actions="props">
+          <q-td style="border-left: 0">
+            <q-btn
+              class="action-btn"
+              size="sm"
+              flat
+              round
+              color="primary"
+              icon="settings_backup_restore"
+              @click.stop="confirmRestore(props.row)"
+              v-if="editPermission"
+            >
+              <q-tooltip anchor="top middle" self="bottom middle"> Восстановить запись </q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
+      </q-table>
+      <div v-if="pagesNumberArchived > 1 && !loading" class="row justify-center q-mt-md">
+        <q-pagination
+          v-model="paginationArchived.page"
+          color="grey-8"
+          :max="pagesNumberArchived"
+          size="md"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -86,257 +181,312 @@ import { Field } from '../base/store/types'
 import { add } from 'lodash'
 
 interface TableColumn {
-    name: string
-    label: string
-    field: string | ((row: any) => any)
-    required?: boolean
-    align?: 'left' | 'center' | 'right'
-    sortable?: boolean
-    sort?: (a: any, b: any, rowA: any, rowB: any) => number
-    format?: (val: any, row: any) => any
-    style?: string | ((row: any) => string)
-    classes?: string | ((row: any) => string)
-    headerStyle?: string
-    headerClasses?: string
-    editable?: boolean
-    type?: string
+  name: string
+  label: string
+  field: string | ((row: any) => any)
+  required?: boolean
+  align?: 'left' | 'center' | 'right'
+  sortable?: boolean
+  sort?: (a: any, b: any, rowA: any, rowB: any) => number
+  format?: (val: any, row: any) => any
+  style?: string | ((row: any) => string)
+  classes?: string | ((row: any) => string)
+  headerStyle?: string
+  headerClasses?: string
+  editable?: boolean
+  type?: string
 }
 const props = defineProps({
-    title: {
-        type: String,
-        required: true
-    },
-    columns: {
-        type: Array as PropType<TableColumn[]>,
-        required: true,
-        validator: (cols: TableColumn[]) => cols.every(c => 'name' in c && 'label' in c)
-    },
-    visibleColumns: {
-        type: Array as PropType<string[]>,
-        default: () => []
-    },
-    items: {
-        type: Array,
-        required: true
-    },
-    formFields: {
-        type: Array as PropType<Field[]>,
-        required: true
-    },
-    store: {
-        type: Object,
-        required: true
-    },
-    addButtonLabel: {
-        type: String,
-        default: 'Добавить'
-    },
-    autoLoad: {
-        type: Boolean,
-        default: true
-    },
-    addForm: {
-        type: Object,
-        default: () => ({})
-    },
-    editPermission: {
-        type: Boolean,
-        default: true
-    },
-    addPermission: {
-        type: Boolean,
-        default: true
-    }
+  title: {
+    type: String,
+    required: true,
+  },
+  columns: {
+    type: Array as PropType<TableColumn[]>,
+    required: true,
+    validator: (cols: TableColumn[]) => cols.every((c) => 'name' in c && 'label' in c),
+  },
+  visibleColumns: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
+  items: {
+    type: Array,
+    required: true,
+  },
+  formFields: {
+    type: Array as PropType<Field[]>,
+    required: true,
+  },
+  store: {
+    type: Object,
+    required: true,
+  },
+  addButtonLabel: {
+    type: String,
+    default: 'Добавить',
+  },
+  autoLoad: {
+    type: Boolean,
+    default: true,
+  },
+  addForm: {
+    type: Object,
+    default: () => ({}),
+  },
+  editPermission: {
+    type: Boolean,
+    default: true,
+  },
+  addPermission: {
+    type: Boolean,
+    default: true,
+  },
+  archiveToggle: {
+    type: Boolean,
+    default: true,
+  },
+})
 
-});
-
-const loading = ref(false);
-const rows = ref<any[]>([]);
-const tableRef = ref();
+const loading = ref(false)
+const rows = ref<any[]>([])
+const tableRef = ref()
+const tableArchiveRef = ref()
 
 // Автоматическая загрузка при изменении store
 watchEffect(async () => {
-    if (props.autoLoad && props.store) {
-        loading.value = true;
-        try {
-            await props.store.requestLookup();
-            rows.value = [...props.store.items];
-        } finally {
-            loading.value = false;
-        }
+  if (props.autoLoad && props.store) {
+    loading.value = true
+    try {
+      await props.store.requestLookup()
+      rows.value = [...props.store.items]
+    } finally {
+      loading.value = false
     }
-});
+  }
+})
 
-const emit = defineEmits(['add', 'update', 'delete']);
+const emit = defineEmits(['add', 'update', 'delete'])
 
-const $q = useQuasar();
-const filter = ref('');
-const showForm = ref(false);
+const $q = useQuasar()
+const filter = ref('')
+const showForm = ref(false)
+const isNeedArchived = ref(false)
+const filterArchived = ref('')
 
 const pagination = ref({
-    sortBy: 'desc',
-    descending: false,
-    page: 1,
-    rowsPerPage: 15
-    // rowsNumber: xx if getting data from a server
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 15,
+  // rowsNumber: xx if getting data from a server
+})
+const paginationArchived = ref({
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 15,
+  // rowsNumber: xx if getting data from a server
 })
 const pagesNumber = computed(() => Math.ceil(filtredRowsCount.value / pagination.value.rowsPerPage))
 
 const filtredRowsCount = computed(() => {
-  if (tableRef?.value?.filteredSortedRows) return tableRef.value.filteredSortedRows.length;
-  return rows.value.length;
+  if (tableRef?.value?.filteredSortedRows) return tableRef.value.filteredSortedRows.length
+  return actualRecords.value.length
 })
 
-const customFilter = (rowsTable: readonly any[], terms: string, cols: readonly any[], cellValue:any) => {
-  const lowerTerms = terms ? terms.toLowerCase().trim() : '';
-  const strArr = lowerTerms.split(' ');
-  return rowsTable.filter(row =>
-    cols.some(col => {
-      const val = cellValue(col, row)?.toString().toLowerCase() || '';
-      for(const term of strArr){
-        if(val.includes(term.trim())) return true
+const pagesNumberArchived = computed(() =>
+  Math.ceil(filteredArchivedRowsCount.value / paginationArchived.value.rowsPerPage),
+)
+const filteredArchivedRowsCount = computed(() => {
+  if (tableArchiveRef?.value?.filteredSortedRows)
+    return tableArchiveRef.value.filteredSortedRows.length
+  return actualRecords.value.length
+})
+const customFilter = (
+  rowsTable: readonly any[],
+  terms: string,
+  cols: readonly any[],
+  cellValue: any,
+) => {
+  const lowerTerms = terms ? terms.toLowerCase().trim() : ''
+  const strArr = lowerTerms.split(' ')
+  return rowsTable.filter((row) =>
+    cols.some((col) => {
+      const val = cellValue(col, row)?.toString().toLowerCase() || ''
+      for (const term of strArr) {
+        if (val.includes(term.trim())) return true
       }
-      return false;
-    })
+      return false
+    }),
   )
 }
 
 const processedColumns = computed<TableColumn[]>(() => [
-    ...props.columns.map(col => ({
-        name: col.name,
-        label: col.label,
-        field: col.field || col.name, // Если field не указан, используем name
-        align: col.align || 'left',
-        sortable: col.sortable !== false,
-        // Добавляем остальные обязательные поля с дефолтными значениями
-        required: col.required || false,
-        format: col.format || ((val: any) => val),
-        style: col.style || '',
-        classes: col.classes || '',
-        headerStyle: col.headerStyle || '',
-        headerClasses: col.headerClasses || '',
-        editable: col.editable || true,
-    })),
-    {
-        name: 'actions',
-        label: '',
-        field: 'actions',
-        align: 'right',
-        sortable: false,
-        required: false
-    }
+  ...props.columns.map((col) => ({
+    name: col.name,
+    label: col.label,
+    field: col.field || col.name, // Если field не указан, используем name
+    align: col.align || 'left',
+    sortable: col.sortable !== false,
+    // Добавляем остальные обязательные поля с дефолтными значениями
+    required: col.required || false,
+    format: col.format || ((val: any) => val),
+    style: col.style || '',
+    classes: col.classes || '',
+    headerStyle: col.headerStyle || '',
+    headerClasses: col.headerClasses || '',
+    editable: col.editable || true,
+  })),
+  {
+    name: 'actions',
+    label: '',
+    field: 'actions',
+    align: 'right',
+    sortable: false,
+    required: false,
+  },
 ])
 const localVisibleColumns = ref(
-    props.visibleColumns.length > 0 ? props.visibleColumns : processedColumns.value.map((col) => col.name)
+  props.visibleColumns.length > 0
+    ? props.visibleColumns
+    : processedColumns.value.map((col) => col.name),
 )
-// const localVisibleColumns = ref(() => {
-//     return props.visibleColumns.length > 0 ? props.visibleColumns : processedColumns.value.map((col) => col.name)
-// })
+const actualRecords = computed(() => {
+  return rows.value.filter((item: any) => !item.isArchived)
+})
+
+const archivedRecords = computed(() => {
+  return props.store.items.filter((item: any) => item.isArchived)
+})
+
 watch(
-    () => props.store.items,
-    (newItems) => {
-        rows.value = [...newItems]
-    },
-    { deep: true }
+  () => props.store.items,
+  (newItems) => {
+    rows.value = [...newItems]
+  },
+  { deep: true },
 )
 const addFormRef = ref()
 const editFormRef = ref()
 const handleAdd = async (formData: Record<string, any>) => {
-    console.log('formData', formData);
-    try {
-        await props.store.addItem(formData);
-        showForm.value = false;
-        addFormRef.value?.resetForm()
-        $q.notify({ type: 'positive', message: 'Успешно добавлено' });
-    } catch (error) {
-        $q.notify({ type: 'negative', message: 'Ошибка при добавлении' });
-    }
-};
+  console.log('formData', formData)
+  try {
+    await props.store.addItem(formData, isNeedArchived.value)
+    showForm.value = false
+    addFormRef.value?.resetForm()
+    $q.notify({ type: 'positive', message: 'Успешно добавлено' })
+  } catch (error) {
+    $q.notify({ type: 'negative', message: 'Ошибка при добавлении' })
+  }
+}
 
-const handleUpdateRow = async (row: { id: number }, { newValue, onSuccess }: { newValue: any, onSuccess: () => void }) => {
-    try {
-        await props.store.updateItem(row.id, newValue);
-        // editFormRef.value?.close()
-        $q.notify({ type: 'positive', message: 'Данные обновлены' });
-        onSuccess()
-    } catch (error) {
-        $q.notify({ type: 'negative', message: 'Ошибка обновления' });
-    }
-};
+const handleUpdateRow = async (
+  row: { id: number },
+  { newValue, onSuccess }: { newValue: any; onSuccess: () => void },
+) => {
+  try {
+    await props.store.updateItem(row.id, newValue, isNeedArchived.value)
+    // editFormRef.value?.close()
+    $q.notify({ type: 'positive', message: 'Данные обновлены' })
+    onSuccess()
+  } catch (error) {
+    $q.notify({ type: 'negative', message: 'Ошибка обновления' })
+  }
+}
 
-const confirmDelete = (row: { id: number, name: string }) => {
-    $q.dialog({
-        title: 'Подтвердите удаление',
-        message: `Вы действительно хотите удалить ${row.name}?`,
-        cancel: true,
-    }).onOk(async () => {
-        try {
-            await props.store.deleteItem(row.id);
-            $q.notify({ type: 'positive', message: 'Успешно удалено' });
-        } catch (error) {
-            $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
-        }
-    });
-};
+const confirmDelete = (row: { id: number; name: string }) => {
+  $q.dialog({
+    title: 'Подтвердите удаление',
+    message: `Вы действительно хотите удалить ${row.name}?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await props.store.deleteItem(row.id, isNeedArchived.value)
+      $q.notify({ type: 'positive', message: 'Успешно удалено' })
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' })
+    }
+  })
+}
+
+const confirmRestore = (row: { id: number; name: string }) => {
+  $q.dialog({
+    title: 'Подтверждение',
+    message: `Восстановить запись?`,
+    cancel: true,
+  }).onOk(async () => {
+    try {
+      await props.store.restoreItem(row.id, isNeedArchived.value)
+      $q.notify({ type: 'positive', message: 'Запись успешно восстановлена' })
+    } catch (error) {
+      $q.notify({ type: 'negative', message: 'Ошибка при восстановлении' })
+    }
+  })
+}
+
+const handleArchiveToggle = async (val: boolean) => {
+  await props.store.requestLookup(val)
+  rows.value = [...props.store.items]
+}
 </script>
 <style scoped lang="scss">
 .content {
-    padding-left: 300px;
+  padding-left: 300px;
 }
 
 .left-menu {
-    width: 300px;
-    transform: translateX(0px);
-    top: 81px;
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    background-color: #fff;
-    color: #697a8d !important;
+  width: 300px;
+  transform: translateX(0px);
+  top: 81px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: #fff;
+  color: #697a8d !important;
 }
 
 .navigation-item {
-    border-radius: 5px;
-    min-height: 44px !important;
-
+  border-radius: 5px;
+  min-height: 44px !important;
 }
 
 .table-header {
-    gap: 40px;
+  gap: 40px;
 }
 
 .action-btn {
-    opacity: 0;
-    transition: .25s ease-in-out;
+  opacity: 0;
+  transition: 0.25s ease-in-out;
 }
 
 .q-table tr:hover .action-btn {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* Ограничение максимальной ширины ячеек */
 .q-table td {
-    max-width: 400px !important;
-    /* Или любое другое значение */
-    //white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  max-width: 400px !important;
+  /* Или любое другое значение */
+  //white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Показывать полный текст при наведении */
 .hoverable:hover {
-    white-space: normal;
-    overflow: visible;
-    position: relative;
-    z-index: 100;
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  white-space: normal;
+  overflow: visible;
+  position: relative;
+  z-index: 100;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 </style>
 <style>
 .popup-edit {
-    width: 300px !important;
-    min-width: 0 !important;
+  width: 300px !important;
+  min-width: 0 !important;
 }
 </style>

@@ -8,9 +8,9 @@ export const useRateStore = defineStore('rates-store', () => {
   const rates = ref<Rate[]>([])
   const loading = ref<boolean>(true)
 
-  const requestLookup = async () => {
+  const requestLookup = async (withArchived: boolean = false) => {
     loading.value = true
-    const response = await api.get<Rate[]>('api/rates')
+    const response = await api.get<Rate[]>('api/rates', { params: { all: withArchived } })
     if (response.status === 200) {
       rates.value = response.data
     }
@@ -43,7 +43,9 @@ export const useRateStore = defineStore('rates-store', () => {
     rates.value = rates.value.filter((rate) => {
       return rate.id != id
     })
-    // await requestLookup();
+  }
+  const restoreRate = async (id: number) => {
+    await api.put(`api/rates/${id}/restore`)
   }
   const groupedByType = computed(() => {
     const grouped = _.groupBy(rates.value, 'boqWorkParamsType')
@@ -58,5 +60,6 @@ export const useRateStore = defineStore('rates-store', () => {
     createRate,
     updateRate,
     updateRatePrice,
+    restoreRate,
   }
 })

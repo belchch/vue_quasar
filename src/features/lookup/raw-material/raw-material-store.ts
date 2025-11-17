@@ -8,9 +8,9 @@ export const useRawMaterialStore = defineStore('raw-materials-store', () => {
   const api = lookupApi<RawMaterial, RawMaterialUpdateRequest>('raw-materials')
   const loading = ref<boolean>(true)
 
-  const requestLookup = async () => {
+  const requestLookup = async (withArchived: boolean = false) => {
     loading.value = true
-    const response = await api.getAllItems()
+    const response = await api.getAllItems(withArchived)
     if (response.status === 200) {
       rawMaterials.value = response.data
     }
@@ -34,6 +34,10 @@ export const useRawMaterialStore = defineStore('raw-materials-store', () => {
     })
   }
 
+  const restoreItem = async (id: number) => {
+    await api.restoreItem(id)
+  }
+
   return {
     rawMaterials,
     loading,
@@ -41,5 +45,6 @@ export const useRawMaterialStore = defineStore('raw-materials-store', () => {
     create,
     update,
     remove,
+    restoreItem,
   }
 })

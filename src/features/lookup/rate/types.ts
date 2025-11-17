@@ -22,6 +22,7 @@ export type Rate = {
   factor?: number | null
   sources?: RateSources[]
   averagePrice?: number
+  isArchived?: boolean
 }
 
 export type RateSources = {
