@@ -48,6 +48,7 @@ export type ParamsType = keyof typeof ParamsTypeEnum
 export enum DimensionEnum {
   AREA = 'Площадь',
   PERIMETER = 'Периметр',
+  SLOPES_AREA = 'Площадь откосов'
 }
 export type DimensionType = keyof typeof DimensionEnum
 export enum DoorTypeEnum {
