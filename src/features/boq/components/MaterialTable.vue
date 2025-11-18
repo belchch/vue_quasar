@@ -22,7 +22,7 @@
         </q-td>
         <q-td key="name" :props="props">
           {{ props.row.rawMaterial.name }}
-          <div class="text-caption text-grey-8">{{ props.row.work.rate.name }}</div>
+          <div class="text-caption text-grey-8">{{ props.row.work?.rate?.name }}</div>
         </q-td>
         <q-td key="unitOfMeasure" :props="props">
           {{ uomDescription(props.row.rawMaterial.unitOfMeasure) }}
@@ -32,7 +32,7 @@
           <q-icon name="edit" class="edit-icon" />
         </q-td>
         <q-td key="location" :props="props">
-          {{ locationName(props.row.work) }}
+          {{ props.row.work && locationName(props.row.work) }}
         </q-td>
       </q-tr>
     </template>
