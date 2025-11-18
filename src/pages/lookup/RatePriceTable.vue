@@ -136,7 +136,7 @@ const submitAdd = async () => {
     price: price.value,
   })
   try {
-    await rateStore.updateRate(newRate)
+    await rateStore.updateRatePrice(newRate)
     url.value = ''
     price.value = 0
     $q.notify({ type: 'positive', message: 'Запись добавлена' })
@@ -153,7 +153,7 @@ const confirmDelete = (row: any) => {
   }).onOk(async () => {
     const newRate = { ...rate }
     newRate.sources = newRate.sources.filter((item: any) => item.id !== row.id)
-    await rateStore.updateRate(newRate)
+    await rateStore.updateRatePrice(newRate)
     $q.notify({ type: 'positive', message: 'Запись удалена' })
   })
 }
