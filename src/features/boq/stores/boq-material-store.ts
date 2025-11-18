@@ -1,11 +1,13 @@
-import { defineStore } from "pinia"
-import { BoqRawMaterial } from "../api/types"
-import { ref } from "vue"
+import { defineStore } from 'pinia'
+import { BoqRawMaterial } from '../api/types'
+import { ref } from 'vue'
 
 export const useBoqMaterialStore = defineStore('boq-material', () => {
-    const materials = ref<BoqRawMaterial[]>([])
+  const materials = ref<BoqRawMaterial[]>([])
+  const fetchingMaterials = ref(false)
 
-    return {
-        materials
-    }
+  return {
+    materials,
+    fetchingMaterials,
+  }
 })

@@ -6,7 +6,11 @@
     wrap-cells
     :pagination="{ rowsPerPage: 20 }"
     separator="cell"
+    :loading="fetchingLocations"
   >
+    <template v-slot:loading>
+      <q-inner-loading showing color="primary" />
+    </template>
     <template v-slot:top>
       <div class="row q-gutter-md full-width justify-between">
         <template v-if="boq">
@@ -57,7 +61,7 @@ const emits = defineEmits<{
   navigateLocation: [location: BoqLocation]
   openDrawer: []
 }>()
-const { locations, boq } = storeToRefs(useBoqStore())
+const { locations, boq, initialized, fetchingLocations } = storeToRefs(useBoqStore())
 const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
 const navigateLocation = (location: BoqLocation) => {
