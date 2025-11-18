@@ -1,5 +1,64 @@
 <template>
   <div>
+    <q-dialog v-model="dialogMultiAdd">
+      <q-card style="width: 100%; max-width: 600px">
+        <q-card-section class="row items-center">
+          <div class="text-h6">Вставка из Excel</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-checkbox v-model="replacedWorks" label="Заменить текущие записи" />
+          <div class="text-subtitle1 q-mb-sm">
+            Вставьте данные из Excel (две колонки: URL и цена)
+          </div>
+          <q-input
+            outlined
+            dense
+            v-model="pasteData"
+            type="textarea"
+            @paste="handlePaste"
+            autogrow
+          />
+          <!-- Список вставленных строк -->
+          <div v-if="parsedData.length > 0" class="q-mt-md">
+            <div class="text-subtitle2 q-mb-sm">Будут добавлены:</div>
+            <q-list bordered separator class="rounded-borders">
+              <q-item v-for="(item, index) in parsedData" :key="index" class="q-pa-sm">
+                <q-item-section>
+                  <div class="row items-center">
+                    <div class="col-8 text-caption break-text">URL: {{ item.url }}</div>
+                    <div class="col-3 text-caption q-pl-md">Цена: {{ item.price }}</div>
+                    <div class="col-1">
+                      <q-btn
+                        icon="clear"
+                        size="xs"
+                        flat
+                        dense
+                        @click="removeParsedItem(index)"
+                        color="negative"
+                      />
+                    </div>
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Отмена" v-close-popup />
+          <q-btn
+            flat
+            label="Применить"
+            color="primary"
+            v-close-popup
+            @click="applyMultiAdd"
+            :disabled="parsedData.length === 0"
+            :loading="loadingDialogBtn"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-table
       :rows="sources"
       :columns="columns"
@@ -28,6 +87,17 @@
           <q-td style="text-align: center" auto-width>
             <q-btn @click="submitAdd" color="accent" dense size="sm" flat icon="add">
               <q-tooltip anchor="top middle" self="bottom middle"> Добавить </q-tooltip>
+            </q-btn>
+            <q-btn
+              @click="openMultiAddDialog"
+              color="accent"
+              dense
+              size="sm"
+              flat
+              icon="library_add"
+              class="q-ml-sm"
+            >
+              <q-tooltip anchor="top middle" self="bottom middle"> Вставка из Excel </q-tooltip>
             </q-btn>
           </q-td>
         </q-tr>
@@ -99,6 +169,11 @@ type FieldBackup = {
 const url = ref('')
 const price = ref(0)
 const materialStore = useRawMaterialStore()
+const dialogMultiAdd = ref(false)
+const pasteData = ref('')
+const parsedData = ref<Array<{ url: string; price: number }>>([])
+const replacedWorks = ref(true)
+const loadingDialogBtn = ref(false)
 
 const fieldsOriginal = ref<Record<number, FieldBackup>>({})
 
@@ -167,6 +242,89 @@ const confirmDelete = (row: any) => {
     $q.notify({ type: 'positive', message: 'Запись удалена' })
   })
 }
+
+const openMultiAddDialog = () => {
+  clearParsedData()
+  loadingDialogBtn.value = false
+  dialogMultiAdd.value = true
+}
+const parseExcelData = (clipboardData: string): Array<{ url: string; price: number }> => {
+  const result: Array<{ url: string; price: number }> = []
+  const rows = clipboardData.split(/\r\n|\n|\r/)
+
+  for (const row of rows) {
+    if (!row.trim()) continue
+    const columns = row.split(/\t| {2,}/)
+
+    if (columns.length >= 2) {
+      const url = columns[0]?.trim()
+      const priceStr = columns[1]?.trim().replace(/,/g, '.') || ''
+      const price = parseFloat(priceStr)
+      if (url && !isNaN(price)) {
+        result.push({ url, price })
+      }
+    }
+  }
+
+  return result
+}
+const handlePaste = (event: ClipboardEvent) => {
+  const clipboardData = event.clipboardData?.getData('text')
+  if (clipboardData) {
+    parsedData.value = parseExcelData(clipboardData)
+
+    if (parsedData.value.length === 0) {
+      $q.notify({
+        type: 'warning',
+        message: 'Не удалось распознать данные. Убедитесь, что вставляете две колонки: URL и цена.',
+        timeout: 3000,
+      })
+    }
+  }
+}
+
+const removeParsedItem = (index: number) => {
+  parsedData.value.splice(index, 1)
+}
+
+const clearParsedData = () => {
+  parsedData.value = []
+  pasteData.value = ''
+}
+
+const applyMultiAdd = async () => {
+  if (parsedData.value.length === 0) return
+
+  try {
+    loadingDialogBtn.value = true
+    let updatedMaterial = { ...material }
+
+    if (replacedWorks.value) updatedMaterial.sources = []
+    for (const item of parsedData.value) {
+      updatedMaterial.sources.push({
+        url: item.url,
+        price: item.price,
+      })
+    }
+    updatedMaterial = toRequest(updatedMaterial)
+    await materialStore.update(updatedMaterial.id, updatedMaterial)
+
+    $q.notify({
+      type: 'positive',
+      message: `Добавлено ${parsedData.value.length} записи`,
+    })
+
+    dialogMultiAdd.value = false
+    clearParsedData()
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: 'Ошибка при массовом добавлении',
+    })
+  } finally {
+    loadingDialogBtn.value = false
+  }
+}
 const columns = [
   {
     name: 'url',
@@ -186,4 +344,10 @@ const columns = [
 ]
 </script>
 
-<style scoped></style>
+<style scoped>
+.break-text {
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: normal;
+}
+</style>
