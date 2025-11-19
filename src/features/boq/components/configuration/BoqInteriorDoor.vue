@@ -21,8 +21,8 @@
                                     <LabeledValue label="Периметр" :value="interiorDoorLocal.perimeter" :accent="true"/>
                                 </div>
                                 <div>
-                                    <LabeledValue label="Ширина откоса" :value="interiorDoor.slopesWidth" />
-                                    <LabeledValue label="Площадь откоса" :value="interiorDoor.slopesArea" :accent="true" />                                
+                                    <LabeledValue label="Ширина наличника" :value="interiorDoor.slopesWidth" />
+                                    <LabeledValue label="Площадь наличника" :value="interiorDoor.slopesArea" :accent="true" />                                
                                 </div>
                             </div>                            
                         </q-card-section>
