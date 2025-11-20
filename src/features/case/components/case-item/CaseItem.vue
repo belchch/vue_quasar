@@ -55,8 +55,11 @@
           </div>
         </q-card-section>
         <q-card-section
-          class="q-pa-none column-sm row-xs justify-center items-center col-sm col-md col-lg col-xl col-xs-12 content-sm-end justify-xs-between"
+          class="q-pa-none column-sm row-xs justify-center items-center col-sm col-md col-lg col-xl col-xs-12 content-sm-end justify-xs-between items-md-end"
         >
+          <q-chip square size="sm" class="text-center q-mr-none bg-blue-2">
+            {{ ExpertiseTypeEnum[props.case.expertiseType] }}
+          </q-chip>
           <q-chip square size="sm" class="text-center q-mr-none" :class="daysRemainingStyle">
             осталось {{ daysRemaining }} дней
           </q-chip>
@@ -95,7 +98,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import CaseItemInfo from 'src/features/case/components/case-item/CaseItemInfo.vue'
-import { Case } from 'src/features/case/stores/types'
+import { Case, ExpertiseTypeEnum } from 'src/features/case/stores/types'
 import dayjs from 'dayjs'
 import _ from 'lodash'
 
