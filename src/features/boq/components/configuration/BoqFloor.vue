@@ -1,5 +1,5 @@
 <template>
-    <div>    
+    <div>
         <div class="row justify-between">
             <q-card-section>
                 <BaseboardReplacement title="Напольный плинтус" length-hint="Длина напольного плинтуса"
@@ -15,15 +15,17 @@
         </div>
         <SectionLayout :sections="floorLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">
-                <div class="q-gutter-md" style="width: 400px;">                    
-                    <LabeledValue 
-                        label="Площадь"
-                        :value="section.area"
-                        :accent="true"
-                    />
+                <div class="q-gutter-md" style="width: 400px;">
+                    <LabeledValue label="Площадь" :value="section.area" :accent="true" />
 
-                    <q-toggle color="secondary" v-model="section.screedLeveling" label="Выравнивание стяжки"
-                        @update:model-value="updateFloorSection(section as BoqFloorSectionModel, false)" />
+                    <div>
+                        <q-toggle color="secondary" v-model="section.screedLeveling" label="Выравнивание стяжки"
+                            @update:model-value="updateFloorSection(section as BoqFloorSectionModel, false)" />
+
+                        <q-toggle color="secondary" v-model="section.antisepticTreatment"
+                            label="Антисептическая обработка"
+                            @update:model-value="updateFloorSection(section as BoqFloorSectionModel, false)" />
+                    </div>
                 </div>
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"
@@ -68,7 +70,7 @@ const addSection = async () => {
 const deleteSection = async (id: number) => {
     await BoqFloorApi.deleteFloorSection(id)
     await requestWorks()
-    floorLocal.value.sections = floorLocal.value.sections.filter(item => item.id != id)    
+    floorLocal.value.sections = floorLocal.value.sections.filter(item => item.id != id)
 }
 
 const updateBaseboardReplacement = async () => {
@@ -93,7 +95,6 @@ const baseboardLengthAsPerimeter = async () => {
 }
 
 const updateFloorSection = async (floorSection: BoqFloorSectionModel, updateVolume: boolean) => {
-    console.log('update', updateVolume)
     await BoqFloorApi.updateFloorSection(floorSection.id, toFloorSectionUpdateRequest(floorSection), updateVolume)
     await requestWorks()
 }

@@ -16,7 +16,8 @@ export type BoqFloorSectionModel = {
     area: number,
     materialReplacement: boolean,
     materialPreservation: boolean,
-    screedLeveling: boolean
+    screedLeveling: boolean,
+    antisepticTreatment: boolean
 }
 
 export type BoqFloorUpdateRequest = {
@@ -32,6 +33,7 @@ export type BoqFloorSectionUpdateRequest = {
     area: number,
     materialReplacement: boolean,
     materialPreservation: boolean,
+    antisepticTreatment: boolean,
     screedLeveling: boolean
 }
 
@@ -51,6 +53,7 @@ export const toFloorSectionUpdateRequest = (floorSection: BoqFloorSectionModel):
         area: floorSection.area,
         materialReplacement: floorSection.materialReplacement,
         materialPreservation: floorSection.materialPreservation,
-        screedLeveling: floorSection.screedLeveling
+        screedLeveling: floorSection.screedLeveling,
+        antisepticTreatment: floorSection.antisepticTreatment
     }
 }

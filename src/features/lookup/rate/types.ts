@@ -60,6 +60,7 @@ export interface BoqSectionBase {
   material?: Material | null
   materialReplacement: boolean | null
   materialPreservation: boolean | null
+  antisepticTreatment: boolean | null
 }
 export interface BoqSectionBaseUpdateRequest {
   materialId: number | undefined | null
@@ -78,6 +79,7 @@ export type BoqFloor = {
 
 export interface BoqFloorSectionUpdateRequest extends BoqSectionBaseUpdateRequest {
   screedLeveling?: boolean | undefined | null
+  antisepticTreatment?: boolean | undefined | null
 }
 
 export type BoqCeil = {
@@ -112,6 +114,7 @@ export type BoqWallSection = {
   replacement: boolean | null
   painting: boolean | null
   plaster: boolean | null
+  antisepticTreatment: boolean | null
 }
 export type BoqWallSectionUpdateReuest = {
   materialId?: number | null

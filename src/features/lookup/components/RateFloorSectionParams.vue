@@ -17,6 +17,10 @@
       <q-toggle toggle-indeterminate v-model="params.screedLeveling" label="Выравнивание стяжки" />
       <span v-if="params.screedLeveling===null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
+    <q-card-section class="q-pt-none q-pb-none">
+      <q-toggle toggle-indeterminate v-model="params.antisepticTreatment" label="Антисептическая обработка" />
+      <span v-if="params.antisepticTreatment===null" class="text-blue-grey text-caption"> Не используется</span>
+    </q-card-section>
   </div>
 </template>
 

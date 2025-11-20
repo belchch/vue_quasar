@@ -5,9 +5,8 @@
                 <BaseboardReplacement title="Потолочный плинтус" length-hint="Длина потолочного плинтуса"
                     v-model:replacement="ceilLocal.moldingReplacement"
                     v-model:preservation="ceilLocal.moldingPreservation" v-model:length="ceilLocal.moldingLength"
-                    @update:replacement="updateBaseboardReplacement"
-                    @update:preservation="updateCeil(ceilLocal, false)" @update:length="updateCeil(ceilLocal, true)"
-                    @fill-length="moldingLengthAsPerimeter" />
+                    @update:replacement="updateBaseboardReplacement" @update:preservation="updateCeil(ceilLocal, false)"
+                    @update:length="updateCeil(ceilLocal, true)" @fill-length="moldingLengthAsPerimeter" />
             </q-card-section>
             <div>
                 <PhotoGallery :urls="ceilPhotos" />
@@ -16,11 +15,11 @@
         <SectionLayout :sections="ceilLocal.sections" @add-section="addSection" @remove-section="deleteSection">
             <template v-slot="{ section }">
                 <div class="q-gutter-md" style="width: 400px;">
-                    <LabeledValue
-                        label="Площадь"
-                        :value="section.area"
-                        :accent="true"
-                    />
+                    <LabeledValue label="Площадь" :value="section.area" :accent="true" />
+
+
+                    <q-toggle color="secondary" v-model="section.antisepticTreatment" label="Антисептическая обработка"
+                        @update:model-value="updateCeilSection(section as BoqCeilSectionModel, false)" />
                 </div>
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"

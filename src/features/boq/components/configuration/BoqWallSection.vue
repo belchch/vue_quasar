@@ -1,25 +1,24 @@
 <template>
     <div style="position: relative;">
         <div class="text-caption q-ma-sm text-accent">Секция {{ index + 1 }}</div>
-        
+
         <q-card-section>
-            <!-- <q-input type="number" v-model.number="wallSectionLocal.area" label="Полщадь секции" style="width: 180px;"
-                    @update:model-value="updateWallSection(true)" /> -->
+            <LabeledValue label="Площадь" :value="wallSection.area" :accent="true" />
 
-                <LabeledValue
-                    label="Площадь"
-                    :value="wallSection.area"
-                    :accent="true"
-                />
-
-                <div class="q-mt-md">
-                    <q-toggle color="secondary" v-model="wallSectionLocal.plaster" label="Штукатурка" size="sm"
-                        @update:model-value="updateWallSection(false)" />
-                </div>
-            <div class="row q-gutter-x-lg q-mt-md">                
-                <MaterialReplacement v-model:material="wallSectionLocal.material" v-model:replacement="wallSectionLocal.replacement"
-                    v-model:preservation="wallSectionLocal.painting" :materials="materials" @update:material="updateWallSection(false)"                    
-                    @update:preservation="updateWallSection(false)" @update:replacement="updateReplacement()" preservation-label="С окраской"/>
+            <div class="q-mt-md">
+                <q-toggle color="secondary" v-model="wallSectionLocal.plaster" label="Штукатурка"
+                    @update:model-value="updateWallSection(false)" />
+            </div>
+            <div>
+                <q-toggle color="secondary" v-model="wallSectionLocal.antisepticTreatment" label="Антисептическая обработка"
+                    @update:model-value="updateWallSection(false)" />
+            </div>
+            <div class="row q-gutter-x-lg q-mt-md">
+                <MaterialReplacement v-model:material="wallSectionLocal.material"
+                    v-model:replacement="wallSectionLocal.replacement" v-model:preservation="wallSectionLocal.painting"
+                    :materials="materials" @update:material="updateWallSection(false)"
+                    @update:preservation="updateWallSection(false)" @update:replacement="updateReplacement()"
+                    preservation-label="С окраской" />
             </div>
         </q-card-section>
     </div>
@@ -54,7 +53,7 @@ const updateReplacement = async () => {
         wallSectionLocal.value.painting = false
     }
 
-   await updateWallSection(false)
+    await updateWallSection(false)
 }
 
 const updateWallSection = async (updateVolume: boolean) => {

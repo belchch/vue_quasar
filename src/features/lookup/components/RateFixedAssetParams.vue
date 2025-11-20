@@ -21,12 +21,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { BoqWallSection } from 'src/features/lookup/rate/types';
-import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
-import { Material } from 'src/features/lookup/material/stores/types'
+import { useMaterialStore } from 'src/features/lookup/material/stores/material-store';
+import { Material } from 'src/features/lookup/material/stores/types';
+import { BoqFixedAssetParams } from 'src/features/lookup/rate/types';
+import { onMounted, ref } from 'vue';
 const materialStore = useMaterialStore()
-const params = defineModel<BoqWallSection>({ required: true });
+const params = defineModel<BoqFixedAssetParams>({ required: true });
 const materialID = ref<Material | null>(null)
 
 function changeMaterial(val:Material){

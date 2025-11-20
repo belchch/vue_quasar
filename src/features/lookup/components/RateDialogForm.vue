@@ -131,11 +131,13 @@ const defaultFloorSectionParams: BoqFloorSection = {
   materialReplacement: null,
   materialPreservation: null,
   screedLeveling: null,
+  antisepticTreatment: null
 }
 const defaultCeilSectionParams: BoqSectionBase = {
   material: null,
   materialReplacement: null,
   materialPreservation: null,
+  antisepticTreatment: null
 }
 const defaultDoorParams: BoqDoor = {
   type: 'INTERIOR',
@@ -158,6 +160,7 @@ const defaultWallSectionParams: BoqWallSection = {
   replacement: null,
   painting: null,
   plaster: null,
+  antisepticTreatment: null
 }
 
 const defaultFixedAssetParams: BoqFixedAssetParams = {
@@ -177,6 +180,7 @@ const floorSectionParamsUpdate = ref<BoqFloorSectionUpdateRequest>({
   materialReplacement: null,
   materialPreservation: null,
   screedLeveling: null,
+  antisepticTreatment: null
 })
 
 const fixedAssetParams = ref<BoqFixedAssetParams>({ ...defaultFixedAssetParams })
@@ -294,6 +298,7 @@ async function onSave() {
       floorSectionParamsUpdate.value.materialPreservation =
         floorSectionParams.value.materialPreservation
       floorSectionParamsUpdate.value.screedLeveling = floorSectionParams.value.screedLeveling
+      floorSectionParamsUpdate.value.antisepticTreatment = floorSectionParams.value.antisepticTreatment
       if (floorSectionParams.value.material) {
         floorSectionParamsUpdate.value.materialId = floorSectionParams.value.material.id
       } else {
@@ -307,6 +312,7 @@ async function onSave() {
         materialPreservation: ceilSectionParams.value.materialPreservation,
         materialReplacement: ceilSectionParams.value.materialReplacement,
         materialId: ceilSectionParams.value.material?.id || null,
+        antisepticTreatment: ceilSectionParams.value.antisepticTreatment
       }
       break
     case 'DOOR':
@@ -335,6 +341,7 @@ async function onSave() {
         replacement: wallSectionParams.value.replacement,
         painting: wallSectionParams.value.painting,
         plaster: wallSectionParams.value.plaster,
+        antisepticTreatment: wallSectionParams.value.antisepticTreatment
       }
       break
     case 'FIXED_ASSET':
