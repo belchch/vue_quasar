@@ -6,6 +6,8 @@ export type BoqWindowModel = {
     width: number,
     height: number,
     area: number,
+    slopesWidth: number,
+    slopesArea: number,
     perimeter: number,
     hasSlopes: boolean,
     replacement: boolean,

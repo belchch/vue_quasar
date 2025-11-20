@@ -15,7 +15,8 @@ export type BoqCeilSectionModel = {
     material: Material,
     area: number,
     materialReplacement: boolean,
-    materialPreservation: boolean
+    materialPreservation: boolean,
+    antisepticTreatment: boolean
 }
 
 export type BoqCeilUpdateRequest = {
@@ -30,7 +31,8 @@ export type BoqCeilSectionUpdateRequest = {
     materialId?: number | undefined,
     area: number,
     materialReplacement: boolean,
-    materialPreservation: boolean
+    materialPreservation: boolean,
+    antisepticTreatment: boolean
 }
 
 export const toCeilUpdateRequest = (boqCeil: BoqCeilModel): BoqCeilUpdateRequest => {
@@ -48,6 +50,7 @@ export const toCeilSectionUpdateRequest = (ceilSection: BoqCeilSectionModel): Bo
         materialId: ceilSection.material.id,
         area: ceilSection.area,
         materialReplacement: ceilSection.materialReplacement,
-        materialPreservation: ceilSection.materialPreservation        
+        materialPreservation: ceilSection.materialPreservation,
+        antisepticTreatment: ceilSection.antisepticTreatment        
     }
 }

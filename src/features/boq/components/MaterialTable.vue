@@ -9,7 +9,11 @@
     selection="multiple"
     :pagination="{ rowsPerPage: 20 }"
     separator="cell"
+    :loading="fetchingMaterials"
   >
+    <template v-slot:loading>
+      <q-inner-loading showing color="primary" />
+    </template>
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td>
@@ -22,7 +26,7 @@
         </q-td>
         <q-td key="name" :props="props">
           {{ props.row.rawMaterial.name }}
-          <div class="text-caption text-grey-8">{{ props.row.work.rate.name }}</div>
+          <div class="text-caption text-grey-8">{{ props.row.work?.rate?.name }}</div>
         </q-td>
         <q-td key="unitOfMeasure" :props="props">
           {{ uomDescription(props.row.rawMaterial.unitOfMeasure) }}
@@ -32,7 +36,7 @@
           <q-icon name="edit" class="edit-icon" />
         </q-td>
         <q-td key="location" :props="props">
-          {{ locationName(props.row.work) }}
+          {{ props.row.work && locationName(props.row.work) }}
         </q-td>
       </q-tr>
     </template>
@@ -57,7 +61,7 @@ import { useMaterialStore } from 'src/features/lookup/material/stores/material-s
 import { storeToRefs } from 'pinia'
 import { useBoqMaterialStore } from '../stores/boq-material-store'
 const { updateMaterial, requestMaterials } = useBoqRawMaterialService()
-const { materials } = storeToRefs(useBoqMaterialStore())
+const { materials, fetchingMaterials } = storeToRefs(useBoqMaterialStore())
 
 const setDisabledAll = (value: boolean) => {
   materials.value.forEach(async (item) => {

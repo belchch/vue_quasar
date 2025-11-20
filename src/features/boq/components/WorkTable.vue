@@ -8,7 +8,11 @@
     :selection="editable ? 'multiple' : 'none'"
     :pagination="{ rowsPerPage: 20 }"
     separator="cell"
+    :loading="fetchingWorks"
   >
+    <template v-slot:loading>
+      <q-inner-loading showing color="primary" />
+    </template>
     <template v-if="$slots['additional-top']" v-slot:top>
       <slot name="additional-top"></slot>
     </template>
@@ -64,6 +68,7 @@ const props = defineProps<{
   works: BoqWork[]
   editable: boolean
   showLocation: boolean
+  fetchingWorks: boolean
 }>()
 
 const setDisabledAll = (value: boolean) => {

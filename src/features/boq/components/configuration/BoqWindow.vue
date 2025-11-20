@@ -4,17 +4,21 @@
         <q-card-section>
             <div class="row q-gutter-x-lg q-mt-md">
                 <div>
-                    <q-card bordered flat style="width: 400px;">
+                    <q-card bordered flat style="width: 500px;">
                         <div class="text-caption q-ma-sm">Размеры</div>
                         <q-card-section class="q-pt-none">
                             <div class="row q-gutter-xl">
                                 <div>
                                     <LabeledValue label="Ширина" :value="windowLocal.width" />
-                                    <LabeledValue label="Площадь" :value="windowLocal.area" :accent="true" />
+                                    <LabeledValue label="Площадь" :value="windowLocal.area" :accent="true" />                                    
                                 </div>
                                 <div>
                                     <LabeledValue label="Высота" :value="windowLocal.height" />
-                                    <LabeledValue label="Периметр" :value="windowLocal.perimeter" :accent="true" />
+                                    <LabeledValue label="Периметр" :value="windowLocal.perimeter" :accent="true" />                                
+                                </div>
+                                <div>
+                                    <LabeledValue label="Ширина откоса" :value="windowLocal.slopesWidth" />
+                                    <LabeledValue label="Площадь откоса" :value="windowLocal.slopesArea" :accent="true" />                                
                                 </div>
                             </div>
                         </q-card-section>

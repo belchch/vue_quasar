@@ -39,7 +39,7 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Отмена" color="primary" v-close-popup />
-          <q-btn flat label="Добавить" color="primary" v-close-popup @click="addNewRate" />
+          <q-btn flat label="Применить" color="primary" v-close-popup @click="addNewRate" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -79,14 +79,14 @@
 import { ref } from 'vue'
 import { Rate, UnitOfMeasureEnum, ParamsTypeEnum } from 'src/features/lookup/rate/types'
 import { useRateStore } from 'src/features/lookup/rate/rate-store'
-import _ from 'lodash'
+import _, { slice } from 'lodash'
 const rateStore = useRateStore()
 const rates = defineModel<Rate[]>('rates', { required: true })
 const linkWorksDialog = ref(false)
 const selectedRates = ref<Rate[]>([])
 const filter = ref('')
 const addNewRate = () => {
-  rates.value = _.union(rates.value, selectedRates.value)
+  rates.value = selectedRates.value
 }
 const remove = (row: Rate) => {
   rates.value = rates.value.filter((item) => item !== row)
@@ -94,7 +94,7 @@ const remove = (row: Rate) => {
 const openLinkRatesDialog = () => {
   if (rates.value.length > 0) {
     selectedRates.value = rates.value
-  }
+  } else selectedRates.value = []
   linkWorksDialog.value = true
 }
 const columns = [

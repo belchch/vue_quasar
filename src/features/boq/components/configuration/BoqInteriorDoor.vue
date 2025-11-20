@@ -6,9 +6,9 @@
                 <q-select v-model="interiorDoorLocal.type" :options="doorTypeOptions" dense emit-value map-options
                     @update:model-value="updateInteriorDoor(true)" />
             </div>
-            <div class="row q-gutter-x-lg q-mt-md">
+            <div class="q-gutter-lg q-mt-md">
                 <div>
-                    <q-card bordered flat style="width: 400px;">
+                    <q-card bordered flat style="width: 500px;">
                         <div class="text-caption q-ma-sm">Размеры</div>
                         <q-card-section class="q-pt-none">
                             <div class="row q-gutter-xl">
@@ -19,6 +19,10 @@
                                 <div>
                                     <LabeledValue label="Высота" :value="interiorDoorLocal.height" />
                                     <LabeledValue label="Периметр" :value="interiorDoorLocal.perimeter" :accent="true"/>
+                                </div>
+                                <div>
+                                    <LabeledValue label="Ширина наличника" :value="interiorDoor.slopesWidth" />
+                                    <LabeledValue label="Площадь наличника" :value="interiorDoor.slopesArea" :accent="true" />                                
                                 </div>
                             </div>                            
                         </q-card-section>

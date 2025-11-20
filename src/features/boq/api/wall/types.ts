@@ -8,7 +8,8 @@ export type BoqWallSectionModel = {
     replacement: boolean,
     painting: boolean,
     plaster: boolean,
-    structElems: StructElem[]
+    structElems: StructElem[],
+    antisepticTreatment: boolean
 }
 
 export type BoqWallSectionUpdateRequest = {
@@ -17,7 +18,8 @@ export type BoqWallSectionUpdateRequest = {
     material: Material,
     replacement: boolean,
     painting: boolean,
-    plaster: boolean
+    plaster: boolean,
+    antisepticTreatment: boolean
 }
 
 export const toWallSectionUpdateRequest = (wallSection: BoqWallSectionModel): BoqWallSectionUpdateRequest => {
@@ -27,6 +29,7 @@ export const toWallSectionUpdateRequest = (wallSection: BoqWallSectionModel): Bo
         material: wallSection.material,
         replacement: wallSection.replacement,
         painting: wallSection.painting,
-        plaster: wallSection.plaster
+        plaster: wallSection.plaster,
+        antisepticTreatment: wallSection.antisepticTreatment
     }
 }
