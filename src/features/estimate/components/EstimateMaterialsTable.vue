@@ -1,5 +1,14 @@
 <template>
-  <div>
+  <div class="relative-position">
+    <div
+      v-if="estimateStore.estimateLoading"
+      class="absolute-full flex flex-top justify-center z-top"
+      style="background-color: rgba(255, 255, 255, 0.8)"
+    >
+      <div class="q-mt-lg" style="text-align: center">
+        <q-spinner size="3em" color="primary" />
+      </div>
+    </div>
     <q-markup-table flat bordered wrap-cells separator="cell" class="sticky-header-table" dense>
       <thead>
         <tr>

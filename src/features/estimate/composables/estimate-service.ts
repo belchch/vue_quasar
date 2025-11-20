@@ -4,16 +4,18 @@ import { useInspectionsStore } from 'src/features/inspection/store/inspection-st
 import { EstimateApi } from '../api/estimate-api'
 
 export const useEstimateService = () => {
-  const { estimateWorks, estimateMaterials } = storeToRefs(useEstimateStore())
+  const { estimateWorks, estimateMaterials, estimateLoading } = storeToRefs(useEstimateStore())
   const { selectedInspectionId } = storeToRefs(useInspectionsStore())
 
   const getEstimate = async () => {
+    estimateLoading.value = true
     const response = await EstimateApi.getEstimate(selectedInspectionId.value!!)
     estimateWorks.value = response.data
     const responseEstimateMaterials = await EstimateApi.getEstimateMaterial(
       selectedInspectionId.value!!,
     )
     estimateMaterials.value = responseEstimateMaterials.data
+    estimateLoading.value = false
   }
   return {
     getEstimate,
