@@ -9,7 +9,11 @@
     selection="multiple"
     :pagination="{ rowsPerPage: 20 }"
     separator="cell"
+    :loading="fetchingMaterials"
   >
+    <template v-slot:loading>
+      <q-inner-loading showing color="primary" />
+    </template>
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td>
@@ -57,7 +61,7 @@ import { useMaterialStore } from 'src/features/lookup/material/stores/material-s
 import { storeToRefs } from 'pinia'
 import { useBoqMaterialStore } from '../stores/boq-material-store'
 const { updateMaterial, requestMaterials } = useBoqRawMaterialService()
-const { materials } = storeToRefs(useBoqMaterialStore())
+const { materials, fetchingMaterials } = storeToRefs(useBoqMaterialStore())
 
 const setDisabledAll = (value: boolean) => {
   materials.value.forEach(async (item) => {

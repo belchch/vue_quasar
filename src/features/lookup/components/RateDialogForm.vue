@@ -6,82 +6,89 @@
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
-      <div class="row">
-        <div class="col">
-          <q-card-section class="q-pt-none">
-            <div class="q-mb-sm text-subtitle1">Общие параметры</div>
-            <div class="text-caption text-grey-8 q-mb-md">
-              Средняя цена: <span class="text-black">{{ rate?.averagePrice || '-' }}</span>
-            </div>
-            <q-input outlined dense v-model="formData.name" label="Наименование" />
-          </q-card-section>
-          <q-card-section class="q-pt-none">
-            <q-select
-              dense
-              outlined
-              v-model="formData.unitOfMeasure"
-              :options="unitOfMeasureOptions"
-              option-value="value"
-              option-label="label"
-              emit-value
-              map-options
-              label="Еденицы измерени"
+      <q-form @submit="onSave">
+        <div class="row">
+          <div class="col">
+            <q-card-section class="q-pt-none">
+              <div class="q-mb-sm text-subtitle1">Общие параметры</div>
+              <div class="text-caption text-grey-8 q-mb-md">
+                Средняя цена: <span class="text-black">{{ rate?.averagePrice || '-' }}</span>
+              </div>
+              <q-input
+                outlined
+                dense
+                v-model="formData.name"
+                label="Наименование"
+                :rules="[(val) => !!val || 'Обязательное поле']"
+              />
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+              <q-select
+                dense
+                outlined
+                v-model="formData.unitOfMeasure"
+                :options="unitOfMeasureOptions"
+                option-value="value"
+                option-label="label"
+                emit-value
+                map-options
+                label="Еденицы измерени"
+              />
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+              <q-input
+                outlined
+                dense
+                v-model="formData.factor"
+                label="Коэффициент"
+                :rules="[numberOrEmptyRule]"
+              />
+            </q-card-section>
+          </div>
+          <div class="col">
+            <q-card-section class="q-pt-none">
+              <div class="q-mb-md text-subtitle1">Параметры ВОР</div>
+              <q-select
+                dense
+                outlined
+                v-model="formData.boqWorkParamsType"
+                :options="typeParamsOptions"
+                option-value="value"
+                option-label="label"
+                emit-value
+                map-options
+                label="Тип"
+              />
+            </q-card-section>
+            <rate-floor-params v-if="formData.boqWorkParamsType == 'FLOOR'" v-model="floorParams" />
+            <rate-floor-section-params
+              v-if="formData.boqWorkParamsType == 'FLOOR_SECTION'"
+              v-model="floorSectionParams"
             />
-          </q-card-section>
-          <q-card-section class="q-pt-none">
-            <q-input
-              outlined
-              dense
-              v-model="formData.factor"
-              label="Коэффициент"
-              :rules="[numberOrEmptyRule]"
+            <rate-ceil-params v-if="formData.boqWorkParamsType == 'CEIL'" v-model="ceilParams" />
+            <rate-ceil-section-params
+              v-if="formData.boqWorkParamsType == 'CEIL_SECTION'"
+              v-model="ceilSectionParams"
             />
-          </q-card-section>
+            <rate-door-params v-if="formData.boqWorkParamsType == 'DOOR'" v-model="doorParams" />
+            <rate-window-params
+              v-if="formData.boqWorkParamsType == 'WINDOW'"
+              v-model="windowParams"
+            />
+            <rate-wall-section-params
+              v-if="formData.boqWorkParamsType == 'WALL_SECTION'"
+              v-model="wallSectionParams"
+            />
+            <rate-fixed-asset-params
+              v-if="formData.boqWorkParamsType == 'FIXED_ASSET'"
+              v-model="fixedAssetParams"
+            />
+          </div>
         </div>
-        <div class="col">
-          <q-card-section class="q-pt-none">
-            <div class="q-mb-md text-subtitle1">Параметры ВОР</div>
-            <q-select
-              @update:model-value="changeParamsType"
-              dense
-              outlined
-              v-model="formData.boqWorkParamsType"
-              :options="typeParamsOptions"
-              option-value="value"
-              option-label="label"
-              emit-value
-              map-options
-              label="Тип"
-            />
-          </q-card-section>
-          <rate-floor-params v-if="formData.boqWorkParamsType == 'FLOOR'" v-model="floorParams" />
-          <rate-floor-section-params
-            v-if="formData.boqWorkParamsType == 'FLOOR_SECTION'"
-            v-model="floorSectionParams"
-          />
-          <rate-ceil-params v-if="formData.boqWorkParamsType == 'CEIL'" v-model="ceilParams" />
-          <rate-ceil-section-params
-            v-if="formData.boqWorkParamsType == 'CEIL_SECTION'"
-            v-model="ceilSectionParams"
-          />
-          <rate-door-params v-if="formData.boqWorkParamsType == 'DOOR'" v-model="doorParams" />
-          <rate-window-params
-            v-if="formData.boqWorkParamsType == 'WINDOW'"
-            v-model="windowParams"
-          />
-          <rate-wall-section-params
-            v-if="formData.boqWorkParamsType == 'WALL_SECTION'"
-            v-model="wallSectionParams"
-          />
-          <rate-fixed-asset-params
-            v-if="formData.boqWorkParamsType == 'FIXED_ASSET'"
-            v-model="fixedAssetParams"
-          />
-        </div>
-      </div>
-      <q-card-actions align="right">
-        <q-btn flat label="Сохранить" color="primary" :loading="loading" @click="onSave" />
-      </q-card-actions>
+        <q-card-actions align="right">
+          <q-btn flat label="Сохранить" color="primary" :loading="loading" type="submit" />
+        </q-card-actions>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
@@ -153,7 +160,7 @@ const defaultWindowParams: BoqWindow = {
   preservation: null,
   dimension: 'AREA',
   slopesPainting: false,
-  material: null
+  material: null,
 }
 const defaultWallSectionParams: BoqWallSection = {
   material: null,
@@ -191,10 +198,18 @@ const unitOfMeasureOptions = computed(() => {
     label: UnitOfMeasureEnum[key as UnitOfMeasureType],
   }))
 })
+
+const toNumberOrNull = (val: any) => {
+  if (val === '' || val === null || val === undefined) {
+    return null
+  } else {
+    return Number(val.toString().replace(',', '.'))
+  }
+}
 const numberOrEmptyRule = (val: any) => {
-  console.log(val)
-  if (val === '' || val === null || val === undefined) return true
-  return !isNaN(Number(val)) || 'Введите число или оставьте поле пустым'
+  const num = toNumberOrNull(val)
+  if (num === null) return true
+  return !isNaN(num) || 'Введите число или оставьте поле пустым'
 }
 const typeParamsOptions = computed(() => {
   const options: any = Object.keys(ParamsTypeEnum).map((key) => ({
@@ -271,14 +286,9 @@ watch(
   },
   { immediate: true },
 )
-function changeParamsType(v: any) {
-  console.log(v)
-  // if(v){
-  //   formData.value.paramsType = v;
-  // }
-}
+
 async function onSave() {
-  if (!formData.value.factor) delete formData.value.factor
+  formData.value.factor = toNumberOrNull(formData.value.factor)
   switch (formData.value.boqWorkParamsType) {
     case 'FLOOR':
       formData.value.boqWorkParams = floorParams.value
@@ -305,7 +315,6 @@ async function onSave() {
         floorSectionParamsUpdate.value.materialId = null
       }
       formData.value.boqWorkParams = { ...floorSectionParamsUpdate.value }
-      // console.log(formData.value.boqWorkParams)
       break
     case 'CEIL_SECTION':
       formData.value.boqWorkParams = {
@@ -332,7 +341,7 @@ async function onSave() {
         preservation: windowParams.value.preservation,
         dimension: windowParams.value.dimension,
         slopesPainting: windowParams.value.slopesPainting,
-        materialId: windowParams.value.material?.id || null
+        materialId: windowParams.value.material?.id || null,
       }
       break
     case 'WALL_SECTION':
@@ -370,7 +379,6 @@ async function onSave() {
       loading.value = false
       openModal.value = false
     }
-    // console.log(formData.value);
   }
 }
 </script>

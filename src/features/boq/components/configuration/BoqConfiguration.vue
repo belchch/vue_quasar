@@ -46,7 +46,13 @@
       </q-card>
     </div>
     <div class="col-4" v-if="$q.screen.gt.sm">
-      <WorkTable :works="locationWorks" :editable="true" :show-location="false" :flat="false" />
+      <WorkTable
+        :fetchingWorks="fetchingWorks"
+        :works="locationWorks"
+        :editable="true"
+        :show-location="false"
+        :flat="false"
+      />
     </div>
     <q-drawer
       v-if="$q.screen.lt.md"
@@ -57,7 +63,13 @@
       overlay
       behavior="mobile"
     >
-      <WorkTable :works="locationWorks" :editable="true" :show-location="false" :flat="false" />
+      <WorkTable
+        :fetchingWorks="fetchingWorks"
+        :works="locationWorks"
+        :editable="true"
+        :show-location="false"
+        :flat="false"
+      />
     </q-drawer>
   </div>
 </template>
@@ -77,7 +89,7 @@ import BoqFixedAssets from './BoqFixedAssets.vue'
 import { FixedAssetType } from '../../api/fixed-asset/types'
 
 const { location } = storeToRefs(useBoqLocationStore())
-const { works } = storeToRefs(useBoqWorkStore())
+const { works, fetchingWorks } = storeToRefs(useBoqWorkStore())
 
 const currentTab = ref<string>('floor')
 
