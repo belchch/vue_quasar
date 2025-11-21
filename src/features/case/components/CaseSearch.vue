@@ -1,5 +1,26 @@
 <template>
+  <q-btn-dropdown
+    flat
+    :label="listView ? 'Список' : 'Календарь'"
+    :icon="listView ? 'o_view_agenda' : 'calendar_today'"
+    size="sm"
+    class="q-pl-sm q-ml-lg q-mb-lg"
+  >
+    <q-list>
+      <q-item clickable v-close-popup @click="changeView()" :class="listView ? 'active' : ''">
+        <q-item-section>
+          <q-item-label>Список</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-item clickable v-close-popup @click="changeView()" :class="!listView ? 'active' : ''">
+        <q-item-section>
+          <q-item-label>Календарь</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </q-btn-dropdown>
   <div
+    v-if="listView"
     class="row list-wrapper no-wrap q-gutter-md-lg q-gutter-lg-lg q-gutter-xl-lg q-pr-xs-md q-pl-xs-md q-pr-sm-md q-pl-sm-md q-pl-lg-lg q-pt-md-md q-pt-lg-md q-pt-xl-md q-gutter-sm-x-none"
   >
     <div class="col-sm-12 col-md-7 col-xs">
@@ -36,6 +57,7 @@
       <CaseFilter />
     </div>
   </div>
+  <CasesCalendar v-else class="q-px-md" />
   <q-dialog v-model="createDialogOpen" style="width: 100%">
     <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
       <q-card-section>
@@ -165,6 +187,7 @@ import _ from 'lodash'
 import { useCases } from 'src/features/case/composables/case'
 import CaseListSkeleton from './CaseListSkeleton.vue'
 import CaseFilterPanelMobile from './case-filter/CaseFilterPanelMobile.vue'
+import CasesCalendar from 'src/features/calendar/CasesCalendar.vue'
 
 const { createCase, isLoading } = useCases()
 
@@ -183,6 +206,16 @@ onMounted(async () => {
 })
 const openFilter = ref(false)
 const createDialogOpen = ref(false)
+
+const listView = ref(true)
+
+const changeView = () => {
+  if (listView.value) {
+    listView.value = false
+  } else {
+    listView.value = true
+  }
+}
 
 const createForm = ref<CreateFormType>({
   number: '',
@@ -228,7 +261,7 @@ const expertiseTypeOptions = ref<{ label: string; value: string }[]>([
   {
     label: 'Строительно-техническая',
     value: 'CONSTRUCTION',
-  }
+  },
 ])
 
 const localDate = ref('')
