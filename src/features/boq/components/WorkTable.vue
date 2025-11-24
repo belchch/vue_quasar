@@ -1,30 +1,25 @@
 <template>
-  <q-table
-    :rows="works"
-    :columns="columns"
-    :row-key="(row) => row.id"
-    wrap-cells
-    :bordered="false"
-    :selection="editable ? 'multiple' : 'none'"
-    :pagination="{ rowsPerPage: 20 }"
-    separator="cell"
-    :loading="fetchingWorks"
-  >
+  <q-table :rows="filteredWorks" :columns="columns" :row-key="(row) => row.id" wrap-cells :bordered="false"
+    :selection="editable ? 'multiple' : 'none'" :pagination="{ rowsPerPage: 20 }" separator="cell"
+    :loading="fetchingWorks">
     <template v-slot:loading>
       <q-inner-loading showing color="primary" />
     </template>
-    <template v-if="$slots['additional-top']" v-slot:top>
-      <slot name="additional-top"></slot>
+    <template v-slot:top>
+      <div class="row justify-between" style="width: 100%;">        
+        <slot name="additional-top"></slot>
+        <q-input v-model="search" outlined type="search" dense class="col q-ml-md">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td v-if="editable">
-          <q-toggle
-            :model-value="!props.row.disabled"
-            @update:model-value="(val: boolean) => setWorkDisabled(props.row, !val)"
-            size="xs"
-            color="secondary"
-          />
+          <q-toggle :model-value="!props.row.disabled"
+            @update:model-value="(val: boolean) => setWorkDisabled(props.row, !val)" size="xs" color="secondary" />
         </q-td>
         <q-td key="name" :props="props">
           {{ props.row.rate.name }}
@@ -46,22 +41,19 @@
     </template>
 
     <template v-slot:header-selection>
-      <q-toggle
-        :model-value="disableAllValue()"
-        @update:model-value="(val: boolean) => setDisabledAll(!val)"
-        size="xs"
-        color="secondary"
-      />
+      <q-toggle :model-value="disableAllValue()" @update:model-value="(val: boolean) => setDisabledAll(!val)" size="xs"
+        color="secondary" />
     </template>
   </q-table>
 </template>
 <script lang="ts" setup>
 import { uomDescription } from 'src/features/rate/stores/types'
-import { BoqWork } from '../api/types'
+import { BoqWork, WorkMountType } from '../api/types'
 import WorkCellEditor from './WorkCellEditor.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useBoqWorkService } from '../composables/boq-work'
 import { useEstimateService } from 'src/features/estimate/composables/estimate-service'
+import { ParamsType } from 'src/features/lookup/rate/types'
 const { updateWork } = useBoqWorkService()
 const estimateService = useEstimateService()
 const props = defineProps<{
@@ -69,7 +61,24 @@ const props = defineProps<{
   editable: boolean
   showLocation: boolean
   fetchingWorks: boolean
+  workParamsType?: ParamsType[]
 }>()
+
+const search = ref<string>()
+
+const filteredWorks = computed(() => {
+  let result = props.works
+
+  if (props.workParamsType) {
+    result = result.filter(item => props.workParamsType?.includes(item.rate.boqWorkParamsType))
+  }
+
+  if (search.value) {
+    result = result.filter(item => item.rate.name.toLowerCase().includes(search.value!.toLocaleLowerCase()))
+  }
+
+  return result
+})
 
 const setDisabledAll = (value: boolean) => {
   props.works.forEach(async (item) => {
@@ -115,14 +124,14 @@ const columns = [
 ].concat(
   props.showLocation
     ? [
-        {
-          name: 'location',
-          field: (row: BoqWork) => locationName(row),
-          label: 'Локация',
-          align: 'left' as const,
-          sortable: true,
-        },
-      ]
+      {
+        name: 'location',
+        field: (row: BoqWork) => locationName(row),
+        label: 'Локация',
+        align: 'left' as const,
+        sortable: true,
+      },
+    ]
     : [],
 )
 </script>
