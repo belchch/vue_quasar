@@ -32,7 +32,7 @@
           </q-item-label>
         </q-card-section>
         <!-- full-width -->
-        <q-card-section class="q-pa-none column justify-center">
+        <q-card-section class="q-pa-none column justify-end">
           <div class="row q-px-xs-none q-px-sm-sm q-px-md-md q-px-lg-lg no-wrap justify-center">
             <q-avatar square size="md" :class="inspectionStageStyle" icon="photo_camera">
               <q-tooltip>Осмотр</q-tooltip>
@@ -57,12 +57,14 @@
         <q-card-section
           class="q-pa-none column-sm row-xs justify-center items-center col-sm col-md col-lg col-xl col-xs-12 content-sm-end justify-xs-between items-md-end"
         >
-          <q-chip square size="sm" class="text-center q-mr-none bg-blue-2">
-            {{ ExpertiseTypeEnum[props.case.expertiseType] }}
-          </q-chip>
-          <q-chip square size="sm" class="text-center q-mr-none" :class="daysRemainingStyle">
-            осталось {{ daysRemaining }} дней
-          </q-chip>
+          <div>
+            <q-chip square size="sm" class="text-center q-mr-none bg-blue-2">
+              {{ ExpertiseTypeEnum[props.case.expertiseType] }}
+            </q-chip>
+            <q-chip square size="sm" class="text-center q-mr-none" :class="daysRemainingStyle">
+              осталось {{ daysRemaining }} дней
+            </q-chip>
+          </div>
           <div class="text-grey-7 text-caption text-no-wrap q-mt-xs text-left row items-center">
             <q-icon name="event" color="accent" class="q-mr-xs" />
             {{ deadline.format('DD-MM-YYYY') }}
