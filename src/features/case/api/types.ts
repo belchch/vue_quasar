@@ -67,4 +67,7 @@ export type CaseUpdateRequest = {
   contactPhone?: string | undefined
   contactEmail?: string | undefined
   inspectionObjectType?: InspectionObjectType
+  secondInspectionDate?: string | undefined
+  courtDate?: string | undefined
+  secondCourtDate?: string | undefined
 }
