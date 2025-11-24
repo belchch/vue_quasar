@@ -5,8 +5,10 @@
                 <BaseboardReplacement title="Потолочный плинтус" length-hint="Длина потолочного плинтуса"
                     v-model:replacement="ceilLocal.moldingReplacement"
                     v-model:preservation="ceilLocal.moldingPreservation" v-model:length="ceilLocal.moldingLength"
+                    v-model:material="ceilLocal.moldingMaterial" :materials="materials"
                     @update:replacement="updateBaseboardReplacement" @update:preservation="updateCeil(ceilLocal, false)"
-                    @update:length="updateCeil(ceilLocal, true)" @fill-length="moldingLengthAsPerimeter" />
+                    @update:material="updateCeil(ceilLocal, false)" @update:length="updateCeil(ceilLocal, true)"
+                    @fill-length="moldingLengthAsPerimeter" />
             </q-card-section>
             <div>
                 <PhotoGallery :urls="ceilPhotos" />
