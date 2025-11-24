@@ -26,6 +26,13 @@
         v-model="selectedPriorities"
       />
     </div>
+    <q-card-section class="q-pb-xs">
+      <ListFilter
+        v-model="selectedExpertiseType"
+        :options="expertiseTypeOptions"
+        label="Вид экспертизы"
+      />
+    </q-card-section>
     <q-card-section class="q-pb-none q-px-none q-ma-none full-width">
       <q-separator />
       <q-card-section class="row justify-between2">
@@ -94,7 +101,12 @@ import { judgeName } from 'src/features/lookup/judge/stores/types'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
 import ListFilter from 'src/features/case/components/case-filter/ListFilter.vue'
 import OptionGroupFilter from 'src/features/case/components/case-filter/OptionGroupFilter.vue'
-import { CasePriority, CaseStatus } from 'src/features/case/stores/types'
+import {
+  CasePriority,
+  CaseStatus,
+  ExpertiseTypeEnum,
+  ExpertiseType,
+} from 'src/features/case/stores/types'
 import dayjs from 'dayjs'
 import { useCasesStore } from 'src/features/case/stores/case-store'
 import { wordDeclension } from 'src/support/word-declension'
@@ -152,6 +164,10 @@ type NumberOption = {
   value: number
 }
 
+type StringOption = {
+  label: string
+  value: string
+}
 const search = ref<string>()
 const selectedCourts = ref<NumberOption[]>([])
 const selectedCompanies = ref<NumberOption[]>([])
@@ -166,6 +182,7 @@ const selectedPriorities = ref<{ [key: number]: CasePriority }>([])
 const dateDefaultValue = { from: '', to: '' }
 const createdAt = ref<DateRange>(dateDefaultValue)
 const deadline = ref<DateRange>(dateDefaultValue)
+const selectedExpertiseType = ref<StringOption[]>([])
 
 type DateRange = {
   from: string | undefined
@@ -201,6 +218,7 @@ const applyFilters = async () => {
     expertId: numberOptionValues(selectedExperts),
     managerId: numberOptionValues(selectedManagers),
     headId: numberOptionValues(selectedHeads),
+    expertiseType: selectedExpertiseType.value.map((option) => option.value) as ExpertiseType[],
   })
 }
 
@@ -229,6 +247,11 @@ onMounted(async () => {
     value: u,
   }))
 })
+
+const expertiseTypeOptions = Object.entries(ExpertiseTypeEnum).map(([value, label]) => ({
+  label,
+  value,
+}))
 </script>
 
 <style lang="scss" scoped>
