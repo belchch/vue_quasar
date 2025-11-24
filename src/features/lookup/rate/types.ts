@@ -18,6 +18,8 @@ export type Rate = {
     | BoqWallSectionUpdateReuest
     | BoqFixedAssetParams
     | BoqFixedAssetParamsUpdateRequest
+    | BoqFloorUpdateRequest
+    | BoqCeilUpdateRequest
     | null
   factor?: number | null
   sources?: RateSources[]
@@ -75,6 +77,14 @@ export type BoqFloor = {
   id?: number
   baseboardReplacement: boolean | null
   baseboardPreservation: boolean | null
+  baseboardMaterial: Material | null
+}
+
+
+export type BoqFloorUpdateRequest = {
+  baseboardReplacement: boolean | null
+  baseboardPreservation: boolean | null
+  baseboardMaterialId: number | null | undefined
 }
 
 export interface BoqFloorSectionUpdateRequest extends BoqSectionBaseUpdateRequest {
@@ -86,6 +96,14 @@ export type BoqCeil = {
   id?: number
   moldingReplacement: boolean | null
   moldingPreservation: boolean | null
+  moldingMaterial: Material | null
+}
+
+export type BoqCeilUpdateRequest = {
+  id?: number
+  moldingReplacement: boolean | null
+  moldingPreservation: boolean | null
+  moldingMaterialId: number | null | undefined
 }
 
 export type BoqDoor = {

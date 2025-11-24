@@ -5,7 +5,8 @@
                 <BaseboardReplacement title="Напольный плинтус" length-hint="Длина напольного плинтуса"
                     v-model:replacement="floorLocal.baseboardReplacement"
                     v-model:preservation="floorLocal.baseboardPreservation" v-model:length="floorLocal.baseboardLength"
-                    @update:replacement="updateBaseboardReplacement"
+                    v-model:material="floorLocal.baseboardMaterial" :materials="materials"                    
+                    @update:replacement="updateBaseboardReplacement" @update:material="updateFloor(floorLocal, false)"
                     @update:preservation="updateFloor(floorLocal, false)" @update:length="updateFloor(floorLocal, true)"
                     @fill-length="baseboardLengthAsPerimeter" />
             </q-card-section>

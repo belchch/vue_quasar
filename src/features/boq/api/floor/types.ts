@@ -6,6 +6,7 @@ export type BoqFloorModel = {
     baseboardLength: number,
     baseboardReplacement: boolean,
     baseboardPreservation: boolean,
+    baseboardMaterial?: Material,
     sections: BoqFloorSectionModel[],
     structElems: StructElem[]
 }
@@ -24,7 +25,8 @@ export type BoqFloorUpdateRequest = {
     id: number,
     baseboardLength: number,
     baseboardReplacement: boolean,
-    baseboardPreservation: boolean
+    baseboardPreservation: boolean,
+    baseboardMaterialId: number | undefined
 }
 
 export type BoqFloorSectionUpdateRequest = {
@@ -42,7 +44,8 @@ export const toFloorUpdateRequest = (boqFloor: BoqFloorModel): BoqFloorUpdateReq
         id: boqFloor.id,
         baseboardLength: boqFloor.baseboardLength,
         baseboardReplacement: boqFloor.baseboardReplacement,
-        baseboardPreservation: boqFloor.baseboardPreservation
+        baseboardPreservation: boqFloor.baseboardPreservation,
+        baseboardMaterialId: boqFloor.baseboardMaterial?.id
     }
 }
 

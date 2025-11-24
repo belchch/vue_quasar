@@ -214,10 +214,12 @@ const formData = ref<Rate>({ ...defautObj })
 const defaultFloorParams: BoqFloor = {
   baseboardReplacement: null,
   baseboardPreservation: null,
+  baseboardMaterial: null
 }
 const defaultCeilParams: BoqCeil = {
   moldingPreservation: null,
   moldingReplacement: null,
+  moldingMaterial: null
 }
 const floorParams = ref<BoqFloor>(defaultFloorParams)
 const ceilParams = ref<BoqCeil>({ ...defaultCeilParams })
@@ -281,15 +283,17 @@ async function onSave() {
   if (!formData.value.factor) delete formData.value.factor
   switch (formData.value.boqWorkParamsType) {
     case 'FLOOR':
-      formData.value.boqWorkParams = floorParams.value
-      if (formData.value.boqWorkParams['id']) {
-        delete formData.value.boqWorkParams.id
+      formData.value.boqWorkParams = {
+        baseboardPreservation: floorParams.value.baseboardPreservation,
+        baseboardReplacement: floorParams.value.baseboardReplacement,
+        baseboardMaterialId: floorParams.value.baseboardMaterial?.id,        
       }
       break
     case 'CEIL':
-      formData.value.boqWorkParams = ceilParams.value
-      if (formData.value.boqWorkParams['id']) {
-        delete formData.value.boqWorkParams.id
+      formData.value.boqWorkParams = {
+        moldingReplacement: ceilParams.value.moldingReplacement,
+        moldingPreservation: ceilParams.value.moldingPreservation,
+        moldingMaterialId: ceilParams.value.moldingMaterial?.id,        
       }
       break
     case 'FLOOR_SECTION':
