@@ -28,12 +28,12 @@
       </template>
       <template #body-cell-material="props">
         <q-td :props="props">
-          {{ props.row.material?.name }}
           <SectionMaterialCellEditor
             :api-fn="updateFixedAssetMeasurement"
             field="materialId"
             :row="props.row"
             :value="props.row.material?.id as string"
+            :materialName="props.row.material?.name"
           />
         </q-td>
       </template>

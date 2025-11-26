@@ -1,98 +1,150 @@
 <template>
   <div v-if="rows.length > 0">
     <div class="text-subtitle1 q-mb-sm">Проемы</div>
-    <q-table :rows="rows" :columns="columns" :row-key="row => row.id" wrap-cells flat bordered
-      :pagination="{ rowsPerPage: 0 }" separator="cell" hide-pagination class="opening-table">
+    <q-table
+      :rows="rows"
+      :columns="columns"
+      :row-key="(row) => row.id"
+      wrap-cells
+      flat
+      bordered
+      :pagination="{ rowsPerPage: 0 }"
+      separator="cell"
+      hide-pagination
+      class="opening-table"
+    >
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="opening" :props="props">
-            {{ props.row.opening.name }}
-            <SectionOpeningCellEditor :api-fn="updateOpeningMeasurement" :value="props.row.opening?.id"
-              :row="props.row" />
+            <SectionOpeningCellEditor
+              :api-fn="updateOpeningMeasurement"
+              :value="props.row.opening?.id"
+              :row="props.row"
+              :name="props.row.opening.name"
+            />
           </q-td>
           <q-td key="material" :props="props">
-            {{ props.row.material?.name }}
-            <SectionMaterialCellEditor :api-fn="updateOpeningMeasurement" :value="props.row.material?.id"
-              :row="props.row" />
+            <SectionMaterialCellEditor
+              :api-fn="updateOpeningMeasurement"
+              :value="props.row.material?.id"
+              :row="props.row"
+              :materialName="props.row.material?.name"
+            />
           </q-td>
           <q-td key="width">
-            <SectionCellEditor :api-fn="updateOpeningMeasurement" field="width" :row="props.row"
-              :value="props.row.width" />
+            <SectionCellEditor
+              :api-fn="updateOpeningMeasurement"
+              field="width"
+              :row="props.row"
+              :value="props.row.width"
+            />
           </q-td>
           <q-td key="height" :props="props">
-            <SectionCellEditor :api-fn="updateOpeningMeasurement" field="height" :row="props.row"
-              :value="props.row.height" />
+            <SectionCellEditor
+              :api-fn="updateOpeningMeasurement"
+              field="height"
+              :row="props.row"
+              :value="props.row.height"
+            />
           </q-td>
           <q-td key="area" :props="props">
             {{ props.row.area }}
           </q-td>
           <q-td key="hasTrims" :props="props">
-            {{ props.row.hasTrims ? 'Да' : 'Нет' }}
-            <SectionBoolCellEditor :api-fn="updateOpeningMeasurement" field="hasTrims" :row="props.row"
-              :value="props.row.hasTrims" />
+            <SectionBoolCellEditor
+              :api-fn="updateOpeningMeasurement"
+              field="hasTrims"
+              :row="props.row"
+              :value="props.row.hasTrims"
+              :text="props.row.hasTrims ? 'Да' : 'Нет'"
+            />
           </q-td>
           <q-td key="trimWidth" :props="props">
-            <SectionCellEditor :api-fn="updateOpeningMeasurement" field="trimWidth" :row="props.row"
-              :value="props.row.trimWidth" />
+            <SectionCellEditor
+              :api-fn="updateOpeningMeasurement"
+              field="trimWidth"
+              :row="props.row"
+              :value="props.row.trimWidth"
+            />
           </q-td>
           <q-td key="actions" :props="props">
-            <q-btn class="action-btn" v-if="props.row.photoUrls.length" size="sm" flat round color="primary"
-              icon="o_image" @click.stop="openPhotos(props.row.photoUrls)">
+            <q-btn
+              class="action-btn"
+              v-if="props.row.photoUrls.length"
+              size="sm"
+              flat
+              round
+              color="primary"
+              icon="o_image"
+              @click.stop="openPhotos(props.row.photoUrls)"
+            >
               <q-tooltip anchor="top middle" self="bottom middle">
                 Посмотреть фотографии
               </q-tooltip>
             </q-btn>
-            <q-btn v-if="canEdit" icon="delete" @click="() => deleteRow(props.row.id)" size="sm" flat round
-              color="negative" />
+            <q-btn
+              v-if="canEdit"
+              icon="delete"
+              @click="() => deleteRow(props.row.id)"
+              size="sm"
+              flat
+              round
+              color="negative"
+            />
           </q-td>
         </q-tr>
       </template>
     </q-table>
     <light-box-image :images="photos" v-model="showLightbox" />
   </div>
-
 </template>
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { useMeasurementStore } from '../stores/measurement-store';
-import { OpeningMeasurement } from '../stores/types';
-import { computed, ref } from 'vue';
-import { useMeasurementService } from '../composables/measurement';
+import { storeToRefs } from 'pinia'
+import { useMeasurementStore } from '../stores/measurement-store'
+import { OpeningMeasurement } from '../stores/types'
+import { computed, ref } from 'vue'
+import { useMeasurementService } from '../composables/measurement'
 import LightBoxImage from 'src/components/LightBoxImage.vue'
-import { useQuasar } from 'quasar';
+import { useQuasar } from 'quasar'
 import SectionMaterialCellEditor from './SectionMaterialCellEditor.vue'
 import SectionCellEditor from './SectionCellEditor.vue'
 import SectionOpeningCellEditor from './SectionOpeningCellEditor.vue'
 import SectionBoolCellEditor from './SectionBoolCellEditor.vue'
 
-const $q = useQuasar();
+const $q = useQuasar()
 const { openingMeasurements } = storeToRefs(useMeasurementStore())
 const { deleteOpeningMeasurement, updateOpeningMeasurement } = useMeasurementService()
 
 const photos = ref<string[]>([])
-const showLightbox = ref(false);
+const showLightbox = ref(false)
 const openPhotos = (urls: string[]) => {
-  photos.value = urls;
-  showLightbox.value = true;
+  photos.value = urls
+  showLightbox.value = true
 }
 
-const { roomId, roomNum, canEdit = true } = defineProps<{
-  roomId: number,
-  roomNum?: number | undefined | null,
+const {
+  roomId,
+  roomNum,
+  canEdit = true,
+} = defineProps<{
+  roomId: number
+  roomNum?: number | undefined | null
   canEdit?: boolean
 }>()
 
 const rows = computed(() => {
-  return openingMeasurements.value?.filter(item => {
-    if (item.room.id == roomId) {
-      if (roomNum) return _isRightLocation(item);
-      else return (item.roomNum == null || item.roomNum == 1);
-    }
-  }) || []
+  return (
+    openingMeasurements.value?.filter((item) => {
+      if (item.room.id == roomId) {
+        if (roomNum) return _isRightLocation(item)
+        else return item.roomNum == null || item.roomNum == 1
+      }
+    }) || []
+  )
 })
 const _isRightLocation = (oItem: OpeningMeasurement) => {
-  if (oItem.roomNum == roomNum) return true;
-  if (roomNum == 1) return oItem.roomNum == null;
+  if (oItem.roomNum == roomNum) return true
+  if (roomNum == 1) return oItem.roomNum == null
 }
 const deleteRow = (id: number) => {
   $q.dialog({
@@ -102,11 +154,11 @@ const deleteRow = (id: number) => {
   }).onOk(async () => {
     try {
       await deleteOpeningMeasurement(id)
-      $q.notify({ type: 'positive', message: 'Успешно удалено' });
+      $q.notify({ type: 'positive', message: 'Успешно удалено' })
     } catch (error) {
-      $q.notify({ type: 'negative', message: 'Ошибка при удалении' });
+      $q.notify({ type: 'negative', message: 'Ошибка при удалении' })
     }
-  });
+  })
 }
 
 const columns = [
@@ -156,7 +208,7 @@ const columns = [
     name: 'actions',
     field: '',
     label: '',
-    align: 'right' as const
-  }
+    align: 'right' as const,
+  },
 ]
 </script>
