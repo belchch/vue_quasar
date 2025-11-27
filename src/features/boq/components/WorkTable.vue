@@ -29,7 +29,7 @@
         </q-td>
         <q-td key="volume" :class="editable ? 'ceil-edit' : ''">
           <template v-if="editable">
-            <WorkCellEditor field="volume" :row="props.row" :value="props.row.volume" />
+            <WorkCellEditor field="volume" :row="props.row" :value="props.row.volume" :original-value="props.row.calculatedVolume"/>
             <q-icon name="edit" class="edit-icon" />
           </template>
           <div v-else>{{ props.row.volume }}</div>
@@ -83,7 +83,7 @@ const filteredWorks = computed(() => {
 const setDisabledAll = (value: boolean) => {
   props.works.forEach(async (item) => {
     item.disabled = value
-    await updateWork(item)
+    await updateWork(item, false)
   })
 }
 
@@ -93,7 +93,7 @@ const disableAllValue = () => {
 
 const setWorkDisabled = async (work: BoqWork, disabled: boolean) => {
   work.disabled = disabled
-  await updateWork(work)
+  await updateWork(work, false)
   await estimateService.getEstimate()
 }
 

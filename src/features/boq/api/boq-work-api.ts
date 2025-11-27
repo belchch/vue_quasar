@@ -19,7 +19,11 @@ export const BoqWorkApi = {
         })
     },
 
-    updateWork: (id: number, request: BoqWorkUpdateRequest) => {
-        return api.put<BoqWork>(`/api/boq/works/${id}`, request)
+    updateWork: (id: number, request: BoqWorkUpdateRequest, changeValue: boolean) => {
+        return api.put<BoqWork>(`/api/boq/works/${id}`, request, {
+            params: {
+                changeValue
+            }
+        })
     }
 }
