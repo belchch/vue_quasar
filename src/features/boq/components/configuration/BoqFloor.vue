@@ -5,7 +5,7 @@
                 <BaseboardReplacement title="Напольный плинтус" length-hint="Длина напольного плинтуса"
                     v-model:replacement="floorLocal.baseboardReplacement"
                     v-model:preservation="floorLocal.baseboardPreservation" v-model:length="floorLocal.baseboardLength"
-                    v-model:material="floorLocal.baseboardMaterial" :materials="materials"                    
+                    v-model:material="floorLocal.baseboardMaterial" :materials="floorMaterials"                    
                     @update:replacement="updateBaseboardReplacement" @update:material="updateFloor(floorLocal, false)"
                     @update:preservation="updateFloor(floorLocal, false)" @update:length="updateFloor(floorLocal, true)"
                     @fill-length="baseboardLengthAsPerimeter" />
@@ -31,7 +31,7 @@
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"
                         v-model:preservation="section.materialPreservation" v-model:material="section.material"
-                        :materials="materials"
+                        :materials="floorSectionMaterials"
                         @update:replacement="(val: boolean) => updateFloorSectionMaterialReplacement(section as BoqFloorSectionModel, val)"
                         @update:preservation="updateFloorSection(section as BoqFloorSectionModel, false)"
                         @update:material="updateFloorSection(section as BoqFloorSectionModel, false)" />
@@ -45,7 +45,7 @@ import MaterialReplacement from './common/MaterialReplacement.vue';
 import BaseboardReplacement from './common/BaseboardReplacement.vue';
 import { storeToRefs } from 'pinia';
 import { Material } from 'src/features/lookup/material/stores/types';
-import { onUnmounted, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { BoqFloorApi } from '../../api/floor/boq-floor-api';
 import { BoqFloorModel, BoqFloorSectionModel, toFloorSectionUpdateRequest, toFloorUpdateRequest } from '../../api/floor/types';
 import { useBoqWorkService } from '../../composables/boq-work';
@@ -53,6 +53,7 @@ import { useBoqLocationStore } from '../../stores/boq-location-store';
 import PhotoGallery from './common/PhotoGallery.vue';
 import SectionLayout from './common/SectionLayout.vue';
 import LabeledValue from './common/LabeledValue.vue';
+import { BoqSection } from 'src/features/lookup/struct-elem/stores/types';
 
 const { floorPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
@@ -105,7 +106,13 @@ const updateFloor = async (floor: BoqFloorModel, updateVolume: boolean) => {
     await requestWorks()
 }
 
-const materials = ref<Material[]>(props.floor.structElems.flatMap(item => item.materials))
+const materials = (boqSection: BoqSection) => {
+    return props.floor.structElems.filter(item => item.boqSection == boqSection).flatMap(item => item.materials)
+}
+
+const floorMaterials = ref<Material[]>(materials('FLOOR'))
+const floorSectionMaterials = ref<Material[]>(materials('FLOOR_SECTION'))
+
 </script>
 <style scoped>
 .photo {

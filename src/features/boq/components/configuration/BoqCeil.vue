@@ -5,7 +5,7 @@
                 <BaseboardReplacement title="Потолочный плинтус" length-hint="Длина потолочного плинтуса"
                     v-model:replacement="ceilLocal.moldingReplacement"
                     v-model:preservation="ceilLocal.moldingPreservation" v-model:length="ceilLocal.moldingLength"
-                    v-model:material="ceilLocal.moldingMaterial" :materials="materials"
+                    v-model:material="ceilLocal.moldingMaterial" :materials="ceilMaterials"
                     @update:replacement="updateBaseboardReplacement" @update:preservation="updateCeil(ceilLocal, false)"
                     @update:material="updateCeil(ceilLocal, false)" @update:length="updateCeil(ceilLocal, true)"
                     @fill-length="moldingLengthAsPerimeter" />
@@ -26,7 +26,7 @@
                 <div>
                     <MaterialReplacement v-model:replacement="section.materialReplacement"
                         v-model:preservation="section.materialPreservation" v-model:material="section.material"
-                        :materials="materials"
+                        :materials="ceilSectionMaterials"
                         @update:replacement="(val: boolean) => updateCeilSectionMaterialReplacement(section as BoqCeilSectionModel, val)"
                         @update:preservation="updateCeilSection(section as BoqCeilSectionModel, false)"
                         @update:material="updateCeilSection(section as BoqCeilSectionModel, false)" />
@@ -48,6 +48,7 @@ import { useBoqLocationStore } from '../../stores/boq-location-store';
 import PhotoGallery from './common/PhotoGallery.vue';
 import SectionLayout from './common/SectionLayout.vue';
 import LabeledValue from './common/LabeledValue.vue';
+import { BoqSection } from 'src/features/lookup/struct-elem/stores/types';
 
 const { ceilPhotos, location } = storeToRefs(useBoqLocationStore())
 const { requestWorks } = useBoqWorkService()
@@ -99,7 +100,12 @@ const updateCeil = async (ceil: BoqCeilModel, updateVolume: boolean) => {
     await requestWorks()
 }
 
-const materials = ref<Material[]>(props.ceil.structElems.flatMap(item => item.materials))
+const materials = (boqSection: BoqSection) => {
+    return props.ceil.structElems.filter(item => item.boqSection == boqSection).flatMap(item => item.materials)
+}
+
+const ceilMaterials = ref<Material[]>(materials('CEIL'))
+const ceilSectionMaterials = ref<Material[]>(materials('CEIL_SECTION'))
 </script>
 <style scoped>
 .photo {
