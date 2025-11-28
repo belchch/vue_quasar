@@ -29,6 +29,9 @@ export type Case = {
   customer?: string | undefined
   inspectionStartAt?: string | undefined
   inspectionEndAt?: string | undefined
+  secondInspectionDate: string | undefined
+  courtDate: string | undefined
+  secondCourtDate: string | undefined
   numberOfVolumes?: number | undefined
   expertiseType: ExpertiseType
   courtCaseNum?: string | undefined
