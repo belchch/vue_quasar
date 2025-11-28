@@ -32,7 +32,7 @@
           {{ uomDescription(props.row.rawMaterial.unitOfMeasure) }}
         </q-td>
         <q-td key="volume" class="ceil-edit">
-          <MaterialCellEditor field="volume" :row="props.row" :value="props.row.volume" />
+          <MaterialCellEditor field="volume" :row="props.row" :value="props.row.volume" :original-value="props.row.calculatedVolume"/>
           <q-icon name="edit" class="edit-icon" />
         </q-td>
         <q-td key="location" :props="props">

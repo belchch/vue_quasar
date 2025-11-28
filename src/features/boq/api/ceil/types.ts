@@ -6,6 +6,7 @@ export type BoqCeilModel = {
     moldingLength: number,
     moldingReplacement: boolean,
     moldingPreservation: boolean,
+    moldingMaterial?: Material,
     sections: BoqCeilSectionModel[],
     structElems: StructElem[]
 }
@@ -23,7 +24,8 @@ export type BoqCeilUpdateRequest = {
     id: number,
     moldingLength: number,
     moldingReplacement: boolean,
-    moldingPreservation: boolean
+    moldingPreservation: boolean,
+    moldingMaterialId: number | undefined
 }
 
 export type BoqCeilSectionUpdateRequest = {
@@ -40,7 +42,8 @@ export const toCeilUpdateRequest = (boqCeil: BoqCeilModel): BoqCeilUpdateRequest
         id: boqCeil.id,
         moldingLength: boqCeil.moldingLength,
         moldingReplacement: boqCeil.moldingReplacement,
-        moldingPreservation: boqCeil.moldingPreservation
+        moldingPreservation: boqCeil.moldingPreservation,
+        moldingMaterialId: boqCeil.moldingMaterial?.id
     }
 }
 

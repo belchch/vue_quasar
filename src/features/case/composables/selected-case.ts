@@ -1,18 +1,17 @@
-import { storeToRefs } from "pinia";
-import { CaseApi } from "src/features/case/api/case-api";
-import { useSelectedCaseStore } from "src/features/case/stores/selected-case-store";
-import { useFlawStore } from "src/features/defect/flaw/stores/flaw-store";
-import { useInspections } from "src/features/inspection/composables/inspection";
-import { useInspectionSpotStore } from "src/features/inspection/store/inspection-spot-store";
-import { useInspectionsStore } from "src/features/inspection/store/inspection-store";
-import { useCompanyStore } from "src/features/lookup/company/stores/compay-store";
-import { useMaterialStore } from "src/features/lookup/material/stores/material-store";
-import { useSpotStore } from "src/features/lookup/spot/stores/spot-store";
-import { useStandardStore } from "src/features/lookup/standard/stores/standard-store";
-import { useStructElemStore } from "src/features/lookup/struct-elem/stores/struct-elem-store";
-import { CaseUpdateRequest } from "../api/types";
-import { Case } from "../stores/types";
-
+import { storeToRefs } from 'pinia'
+import { CaseApi } from 'src/features/case/api/case-api'
+import { useSelectedCaseStore } from 'src/features/case/stores/selected-case-store'
+import { useFlawStore } from 'src/features/defect/flaw/stores/flaw-store'
+import { useInspections } from 'src/features/inspection/composables/inspection'
+import { useInspectionSpotStore } from 'src/features/inspection/store/inspection-spot-store'
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
+import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
+import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
+import { useSpotStore } from 'src/features/lookup/spot/stores/spot-store'
+import { useStandardStore } from 'src/features/lookup/standard/stores/standard-store'
+import { useStructElemStore } from 'src/features/lookup/struct-elem/stores/struct-elem-store'
+import { CaseUpdateRequest } from '../api/types'
+import { Case } from '../stores/types'
 
 export const useSelectedCaseService = () => {
   const { selectedCase, caseLoaded } = storeToRefs(useSelectedCaseStore())
@@ -76,7 +75,7 @@ const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {
     createdAt: data.createdAt,
     deadline: data.deadline,
     expertId: data.expert?.id,
-    expertIds: data.experts?.map(expert => expert.id!),
+    expertIds: data.experts?.map((expert) => expert.id!),
     inspectorId: data.inspector?.id,
     managerId: data.manager?.id,
     headId: data.head?.id,
@@ -91,6 +90,9 @@ const caseToUpdateRequest = (data: Case): CaseUpdateRequest => {
     contactPerson: data.contactPerson,
     contactPhone: data.contactPhone,
     contactEmail: data.contactEmail,
-    inspectionObjectType: data.inspectionObjectType!
+    inspectionObjectType: data.inspectionObjectType!,
+    secondInspectionDate: data.secondInspectionDate,
+    courtDate: data.courtDate,
+    secondCourtDate: data.secondCourtDate,
   }
 }

@@ -22,7 +22,7 @@ const props = defineProps<{ locationId: number }>()
 const works = ref<BoqWork[]>()
 
 const updateWork = async (work: BoqWork) => {
-    await BoqWorkApi.updateWork(work.id, toWorkUpdateRequest(work))
+    await BoqWorkApi.updateWork(work.id, toWorkUpdateRequest(work), false)
     await requestWorks()
 }
 
