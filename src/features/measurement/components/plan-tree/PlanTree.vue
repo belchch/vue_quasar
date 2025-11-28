@@ -1,5 +1,5 @@
 <template>
-  <PlanTableButton />
+  <PlanTableButton v-if="hasPermission(['measurement.update'])" />
   <q-card class="q-mt-md" flat>
     <q-separator />
     <PlanLocationDialog v-if="editingNode" v-model="locationDialogOpen" />
@@ -186,6 +186,9 @@ import ObjectInfo from './ObjectInfo.vue'
 import PlanObjectDialog from './PlanObjectDialog.vue'
 import { useQuasar } from 'quasar'
 import PlanTreeComponent from './PlanTreeComponent.vue'
+import { useUserStore } from 'src/features/user/stores/user-store'
+
+const { hasPermission } = useUserStore()
 
 const $q = useQuasar()
 const { treeData, editingNode } = storeToRefs(usePlanTreeStore())

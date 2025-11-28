@@ -1,7 +1,7 @@
 <template>
   <div class="row q-gutter-md2 items-center bg-white q-pa-lg gap-md justify-between">
     <div class="row q-mb-lg2 q-gutter-md2 gap-md">
-      <UploadImage v-if="hasPermission(['inspection.update'])" />
+      <UploadImage v-if="hasPermission(['photoDoc.update'])" />
       <PhotoDocFilters />
     </div>
 
@@ -35,7 +35,7 @@ import UploadImage from './UploadImage.vue'
 import PhotoDocFilters from 'src/features/inspection/components/toolbar/PhotoDocFilters.vue'
 import PthotoDocGroupedBtn from 'src/features/inspection/components/toolbar/PthotoDocGroupedBtn.vue'
 import { useInspectionToolbarStore } from 'src/features/inspection/store/inspection-toolbar-store'
-import { useUserStore } from "src/features/user/stores/user-store";
+import { useUserStore } from 'src/features/user/stores/user-store'
 
 const useToolbar = useInspectionToolbarStore()
 const { hasPermission } = useUserStore()

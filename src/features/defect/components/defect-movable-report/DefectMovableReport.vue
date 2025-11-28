@@ -30,7 +30,11 @@
           class="q-gutter-md"
         >
           <template #item="{ element }">
-            <MovableReportItem :movable="element" class="drag-handle" />
+            <MovableReportItem
+              :movable="element"
+              class="drag-handle"
+              :class="{ 'none-event': !hasPermission(['defectReport.update']) }"
+            />
           </template>
         </draggable>
       </q-card-section>
@@ -79,5 +83,8 @@ const onDragChange = async (e: any) => {
 .root-card {
   overflow-y: scroll;
   height: calc(100vh - 320px);
+}
+.none-event {
+  pointer-events: none;
 }
 </style>

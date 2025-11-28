@@ -2,7 +2,7 @@
   <div class="full-height flex items-center">
     {{ name }}
     <q-popup-edit
-      v-if="canEdit"
+      v-if="canEdit && hasPermission(['measurement.update'])"
       v-model="localValue"
       buttons
       v-slot="scope"
@@ -18,13 +18,16 @@
         label="Проем"
       />
     </q-popup-edit>
-    <q-icon name="edit" class="edit-icon" />
+    <q-icon name="edit" class="edit-icon" v-if="canEdit && hasPermission(['measurement.update'])" />
   </div>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import _ from 'lodash'
 import { useOpeningStore } from 'src/features/lookup/opening/opening-store'
+import { useUserStore } from 'src/features/user/stores/user-store'
+
+const { hasPermission } = useUserStore()
 
 const openingStore = useOpeningStore()
 

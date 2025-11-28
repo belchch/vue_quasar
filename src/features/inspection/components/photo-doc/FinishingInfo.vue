@@ -3,17 +3,53 @@
     <q-separator class="q-mb-xs q-mt-md" />
     <div class="row justify-between">
       <div class="col-5">
-        <q-select class="q-mt-sm" borderless v-model="structElem" :options="structElems.items" label="Поверхность" dense
-        @update:model-value="updateStructElem" option-label="name" option-value="id"/>
+        <q-select
+          class="q-mt-sm"
+          borderless
+          v-model="structElem"
+          :options="structElems.items"
+          label="Поверхность"
+          dense
+          @update:model-value="updateStructElem"
+          option-label="name"
+          option-value="id"
+          :disable="!hasPermission(['photoDoc.update'])"
+        />
       </div>
       <div class="col-5">
-        <q-select class="q-mt-sm" borderless v-model="material" :options="materials.items" label="Материал" dense
-        @update:model-value="updateMaterial" option-label="name" option-value="id"/>
+        <q-select
+          class="q-mt-sm"
+          borderless
+          v-model="material"
+          :options="materials.items"
+          label="Материал"
+          dense
+          @update:model-value="updateMaterial"
+          option-label="name"
+          option-value="id"
+          :disable="!hasPermission(['photoDoc.update'])"
+        />
       </div>
     </div>
-    <q-select class="q-mt-sm" borderless v-model="floodDamage" :options="filteredFloodDamage" label="Дефект" dense
-      @update:model-value="updateFloodFinishingDamage" option-label="name" option-value="id" menu-self="center right"
-      @filter="filterFloodDamage" use-input input-debounce="0" fill-input hide-selected behavior="dialog" />
+    <q-select
+      class="q-mt-sm"
+      borderless
+      v-model="floodDamage"
+      :options="filteredFloodDamage"
+      label="Дефект"
+      dense
+      @update:model-value="updateFloodFinishingDamage"
+      option-label="name"
+      option-value="id"
+      menu-self="center right"
+      @filter="filterFloodDamage"
+      use-input
+      input-debounce="0"
+      fill-input
+      hide-selected
+      behavior="dialog"
+      :disable="!hasPermission(['photoDoc.update'])"
+    />
   </q-card>
 </template>
 <script lang="ts" setup>
@@ -26,6 +62,9 @@ import { useStructElemStore } from 'src/features/lookup/struct-elem/stores/struc
 import { StructElem } from 'src/features/lookup/struct-elem/stores/types'
 import { Material } from 'src/features/lookup/material/stores/types'
 import { useMaterialStore } from 'src/features/lookup/material/stores/material-store'
+import { useUserStore } from 'src/features/user/stores/user-store'
+
+const { hasPermission } = useUserStore()
 
 const props = defineProps<{
   photoDocId: number
@@ -66,7 +105,6 @@ const updateMaterial = async () => {
   await updatePhotoDocFinishingInfo(props.photoDocId, updated)
   await Promise.resolve()
 }
-
 
 const floodDamageFilter = ref<string>('')
 

@@ -3,7 +3,13 @@
     <q-card flat>
       <div class="row justify-between">
         <q-card-section>
-          <q-btn v-if="hasPermission(['generalViewReport.update'])" label="Сформировать отчет" @click="confirmOpen = true" color="primary" :loading="isBuilding"/>
+          <q-btn
+            v-if="hasPermission(['report.update'])"
+            label="Сформировать отчет"
+            @click="confirmOpen = true"
+            color="primary"
+            :loading="isBuilding"
+          />
         </q-card-section>
         <DownloadReportButton label="Скачать" :api-fn="buildDocx" :disable="!generalViewReport" />
       </div>
@@ -21,22 +27,26 @@
       </template>
     </q-splitter>
   </q-card>
-  <GeneralViewFormatConfirmDialog v-model:open="confirmOpen" v-model:format="format" @confirm="buildReport"/>
+  <GeneralViewFormatConfirmDialog
+    v-model:open="confirmOpen"
+    v-model:format="format"
+    @confirm="buildReport"
+  />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
-import GeneralViewGallery from './GeneralViewGallery.vue';
-import GeneralViewReport from './GeneralViewReport.vue';
-import DownloadReportButton from 'src/components/DownloadReportButton.vue';
-import { useGeneralViewReportService } from '../composables/general-view';
-import { useGeneralViewGalleryService } from '../composables/gallery';
-import { storeToRefs } from 'pinia';
-import { useGeneralViewReportStore } from '../store/general-view-store';
-import { GeneralViewReportApi } from '../api/general-view-report-api';
-import { useInspectionsStore } from 'src/features/inspection/store/inspection-store';
-import GeneralViewFormatConfirmDialog from './GeneralViewFormatConfirmDialog.vue';
-import { ReportFormat } from '../api/types';
-import { useUserStore } from "src/features/user/stores/user-store";
+import { ref } from 'vue'
+import GeneralViewGallery from './GeneralViewGallery.vue'
+import GeneralViewReport from './GeneralViewReport.vue'
+import DownloadReportButton from 'src/components/DownloadReportButton.vue'
+import { useGeneralViewReportService } from '../composables/general-view'
+import { useGeneralViewGalleryService } from '../composables/gallery'
+import { storeToRefs } from 'pinia'
+import { useGeneralViewReportStore } from '../store/general-view-store'
+import { GeneralViewReportApi } from '../api/general-view-report-api'
+import { useInspectionsStore } from 'src/features/inspection/store/inspection-store'
+import GeneralViewFormatConfirmDialog from './GeneralViewFormatConfirmDialog.vue'
+import { ReportFormat } from '../api/types'
+import { useUserStore } from 'src/features/user/stores/user-store'
 
 const { buildGeneralViewReport, requestGeneralViewReport } = useGeneralViewReportService()
 const { requestGallery } = useGeneralViewGalleryService()
@@ -71,6 +81,6 @@ const buildReport = async () => {
 }
 
 .report {
-  background: #fafafa
+  background: #fafafa;
 }
 </style>
