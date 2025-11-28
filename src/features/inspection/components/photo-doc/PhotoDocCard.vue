@@ -37,7 +37,7 @@
           color="grey-8"
           flat
           square
-          :disabled="!hasPermission(['inspection.update'])"
+          :disabled="!hasPermission(['photoDoc.update'])"
         >
           <q-list>
             <q-item
@@ -54,7 +54,7 @@
           </q-list>
         </q-btn-dropdown>
         <q-btn-dropdown
-          :disable="!hasPermission(['inspection.update'])"
+          :disable="!hasPermission(['photoDoc.update'])"
           :label="displaySpotName(photoDoc)"
           icon="house"
           size="sm"
@@ -88,7 +88,7 @@
         :photo-doc-id="photoDoc.id!"
         :movable-info="photoDoc.movableInfo"
         v-if="photoDoc.type == 'MOVABLE'"
-      />    
+      />
       <FinishingInfo
         :photo-doc-id="photoDoc.id!"
         :finishing-info="photoDoc.finishingInfo"
@@ -104,7 +104,7 @@
       {{ photographableDesc(photoDoc.photographable) }}
     </div>
 
-    <div v-if="hasPermission(['inspection.update'])">
+    <div v-if="hasPermission(['photoDoc.update'])">
       <template v-if="!unionStore.isUnionMode">
         <div class="hover-controls absolute-top column">
           <q-btn

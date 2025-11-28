@@ -10,7 +10,15 @@
       <q-icon name="chair" class="q-ml-sm text-grey-8" />
       <div class="text-caption text-grey-8">&nbsp;&nbsp;&nbsp;{{ movableInfo?.movable?.name }}</div>
       <q-space />
-      <q-btn square icon="edit" color="secondary" size="xs" outline @click="editDialog = true" />
+      <q-btn
+        v-if="hasPermission(['photoDoc.update'])"
+        square
+        icon="edit"
+        color="secondary"
+        size="xs"
+        outline
+        @click="editDialog = true"
+      />
     </div>
     <div class="text-caption text-grey-8">
       {{ getMeasurement(movableInfo?.movable) }}
@@ -32,6 +40,7 @@
       fill-input
       hide-selected
       behavior="dialog"
+      :disable="!hasPermission(['photoDoc.update'])"
     />
   </q-card>
 </template>
@@ -42,6 +51,9 @@ import { useSelectedInspection } from 'src/features/inspection/composables/selec
 import { computed, ref } from 'vue'
 import { PhotoDocMovable, PhotoDocMovableInfo } from '../../store/types'
 import MovableInfoDialog from './MovableInfoDialog.vue'
+import { useUserStore } from 'src/features/user/stores/user-store'
+
+const { hasPermission } = useUserStore()
 
 const props = defineProps<{
   photoDocId: number

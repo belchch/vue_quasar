@@ -24,7 +24,11 @@
     </div>
 
     <q-card flat style="background: #fafafa" class="q-pa-lg q-pa-xs-none q-pa-sm-lg root-card">
-      <q-card-section v-if="defectReport" class="q-pa-xs-none q-pa-sm-lg">
+      <q-card-section
+        v-if="defectReport"
+        class="q-pa-xs-none q-pa-sm-lg"
+        :class="{ 'none-event': !hasPermission(['defectReport.update']) }"
+      >
         <draggable
           v-model="defectReport.spots"
           item-key="id"
@@ -90,5 +94,8 @@ const onDragChange = async (e: any) => {
 .root-card {
   overflow-y: scroll;
   height: 75vh;
+}
+.none-event {
+  pointer-events: none;
 }
 </style>

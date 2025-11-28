@@ -4,26 +4,27 @@
       <div class="row justify-between">
         <div>
           <div class="text-h6">Техническое заключение</div>
-          <div class="text-body2">Доступно в разделе «Осмотр» для привязки дефектов и фотографий</div>
+          <div class="text-body2">
+            Доступно в разделе «Осмотр» для привязки дефектов и фотографий
+          </div>
         </div>
         <div class="q-gutter-sm">
-          <div class="text-accent text-subtitle2">№ {{technicalReport?.name}}</div>
-          <div class="row justify-end" v-if="hasPermission(['defectReport.update'])">
-            <q-btn label="Удалить" color="negative" size="sm" icon="delete" @click="deleteTechnicalReport"/>
+          <div class="text-accent text-subtitle2">№ {{ technicalReport?.name }}</div>
+          <div class="row justify-end" v-if="hasPermission(['technicalReport.update'])">
+            <q-btn
+              label="Удалить"
+              color="negative"
+              size="sm"
+              icon="delete"
+              @click="deleteTechnicalReport"
+            />
           </div>
         </div>
       </div>
     </q-card-section>
     <q-card-section>
-      <q-table
-        :columns="columns"
-        :rows="rows"
-        @row-click="onEditRow"
-        flat
-        bordered
-        wrap-cells
-      >
-        <template v-if="hasPermission(['defectReport.update'])" v-slot:top-left>
+      <q-table :columns="columns" :rows="rows" @row-click="onEditRow" flat bordered wrap-cells>
+        <template v-if="hasPermission(['technicalReport.update'])" v-slot:top-left>
           <q-btn
             label="Добавить запись"
             class="q-mb-sm"
@@ -34,12 +35,20 @@
           />
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props" :class="{'no-event': !hasPermission(['defectReport.update'])}" @click="onEditRow(props.rowIndex, props.row)" class="cursor-pointer">
+          <q-tr
+            :props="props"
+            :class="{ 'no-event': !hasPermission(['technicalReport.update']) }"
+            @click="onEditRow(props.rowIndex, props.row)"
+            class="cursor-pointer"
+          >
             <q-td key="documented" :props="props">
               {{ props.row.documented }}
             </q-td>
             <q-td key="standard" :props="props">
-              <StandardMissmatch :one="props.row.standard as Standard" :another="findPhotoDocStandard(props.row.id)" />
+              <StandardMissmatch
+                :one="props.row.standard as Standard"
+                :another="findPhotoDocStandard(props.row.id)"
+              />
               {{ `${props.row.standard?.name} ${props.row.standard?.description || ''}` }}
             </q-td>
             <q-td key="onSite" :props="props">
@@ -49,7 +58,14 @@
               {{ props.row.photo?.length }}
             </q-td>
             <q-td key="actions">
-              <q-btn v-if="hasPermission(['defectReport.update'])" icon="delete" flat color="negative" size="sm" @click.stop="deleteRow(props.row)"/>
+              <q-btn
+                v-if="hasPermission(['technicalReport.update'])"
+                icon="delete"
+                flat
+                color="negative"
+                size="sm"
+                @click.stop="deleteRow(props.row)"
+              />
             </q-td>
           </q-tr>
         </template>
@@ -71,11 +87,12 @@ import { storeToRefs } from 'pinia'
 import { useTechnicalReportService } from 'src/features/defect/composables/technical-report'
 import StandardMissmatch from 'src/features/defect/components/StandardMissmatch.vue'
 import { usePhotoDocsStore } from 'src/features/inspection/store/photo-doc-store'
-import {Standard} from "src/features/lookup/standard/stores/types";
-import { useUserStore } from "src/features/user/stores/user-store";
+import { Standard } from 'src/features/lookup/standard/stores/types'
+import { useUserStore } from 'src/features/user/stores/user-store'
 
 const { technicalReport, rowEditorOpen } = storeToRefs(useTechnicalReportStore())
-const { requestTechnicalReport, deleteTechnicalReport, deleteTechnicalReportRow } = useTechnicalReportService()
+const { requestTechnicalReport, deleteTechnicalReport, deleteTechnicalReportRow } =
+  useTechnicalReportService()
 const { hasPermission } = useUserStore()
 const photoDocStore = usePhotoDocsStore()
 
@@ -112,7 +129,7 @@ const rows = computed(
       standard: item.standard,
       onSite: item.photoDoc?.defectInfo?.defect?.template,
       photo: item.photoDoc?.urls,
-      actions: null
+      actions: null,
     })) || [],
 )
 

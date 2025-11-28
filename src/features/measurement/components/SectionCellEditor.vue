@@ -2,7 +2,7 @@
   <div class="full-height flex items-center">
     {{ value }}
     <q-popup-edit
-      v-if="canEdit"
+      v-if="canEdit && hasPermission(['measurement.update'])"
       v-model="localValue"
       buttons
       v-slot="scope"
@@ -11,7 +11,7 @@
       <q-input v-if="type === 'number'" type="number" v-model="scope.value" dense autofocus />
       <q-input v-else type="text" v-model="scope.value" dense autofocus />
     </q-popup-edit>
-    <q-icon name="edit" class="edit-icon" />
+    <q-icon name="edit" class="edit-icon" v-if="canEdit && hasPermission(['measurement.update'])" />
   </div>
 </template>
 <script setup lang="ts">
@@ -24,6 +24,9 @@ import {
   WallSectionMeasurement,
 } from '../stores/types'
 import _ from 'lodash'
+import { useUserStore } from 'src/features/user/stores/user-store'
+
+const { hasPermission } = useUserStore()
 
 type RowsType =
   | FloorSectionMeasurement
