@@ -23,6 +23,13 @@
         </q-td>
         <q-td key="name" :props="props">
           {{ props.row.rate.name }}
+          <div class="text-caption text-grey-8">
+            {{
+              props.row.rawMaterials
+                ?.map((material: BoqRawMaterial) => material?.rawMaterial?.name)
+                .join(', ') || 'Без материалов'
+            }}
+          </div>
         </q-td>
         <q-td key="unitOfMeasure" :props="props">
           {{ uomDescription(props.row.rate.unitOfMeasure) }}
@@ -48,7 +55,7 @@
 </template>
 <script lang="ts" setup>
 import { uomDescription } from 'src/features/rate/stores/types'
-import { BoqWork, WorkMountType } from '../api/types'
+import { BoqWork, BoqRawMaterial } from '../api/types'
 import WorkCellEditor from './WorkCellEditor.vue'
 import { computed, ref } from 'vue'
 import { useBoqWorkService } from '../composables/boq-work'
