@@ -23,9 +23,8 @@
       :title="title"
       :rows="actualRecords"
       :columns="processedColumns"
+      :pagination="{ rowsPerPage: 15 }"
       row-key="id"
-      v-model:pagination="pagination"
-      hide-pagination
       no-data-label="Нет данных"
       :filter="filter"
       :filter-method="customFilter"
@@ -111,9 +110,6 @@
         </q-td>
       </template>
     </q-table>
-    <div v-if="pagesNumber > 1 && !loading" class="row justify-center q-mt-md">
-      <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
-    </div>
     <div v-if="archiveToggle && isNeedArchived" class="q-mt-md">
       <q-table
         v-if="!loading"
@@ -125,13 +121,13 @@
         :rows="archivedRecords"
         :columns="processedColumns"
         row-key="id"
-        hide-pagination
         no-data-label="Нет данных"
         separator="cell"
         :visible-columns="localVisibleColumns"
-        v-model:pagination="paginationArchived"
         :filter="filterArchived"
         :filter-method="customFilter"
+        :pagination="{ rowsPerPage: 15 }"
+        :loading="loadingArchive"
       >
         <template v-slot:top-right>
           <q-input outlined dense debounce="300" color="primary" v-model="filterArchived">
@@ -160,14 +156,6 @@
           </q-td>
         </template>
       </q-table>
-      <div v-if="pagesNumberArchived > 1 && !loading" class="row justify-center q-mt-md">
-        <q-pagination
-          v-model="paginationArchived.page"
-          color="grey-8"
-          :max="pagesNumberArchived"
-          size="md"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -178,7 +166,6 @@ import { useQuasar } from 'quasar'
 import AddForm from './AddForm.vue'
 import EditableCell from './EditableCell.vue'
 import { Field } from '../base/store/types'
-import { add } from 'lodash'
 
 interface TableColumn {
   name: string
@@ -273,36 +260,7 @@ const filter = ref('')
 const showForm = ref(false)
 const isNeedArchived = ref(false)
 const filterArchived = ref('')
-
-const pagination = ref({
-  sortBy: 'desc',
-  descending: false,
-  page: 1,
-  rowsPerPage: 15,
-  // rowsNumber: xx if getting data from a server
-})
-const paginationArchived = ref({
-  sortBy: 'desc',
-  descending: false,
-  page: 1,
-  rowsPerPage: 15,
-  // rowsNumber: xx if getting data from a server
-})
-const pagesNumber = computed(() => Math.ceil(filtredRowsCount.value / pagination.value.rowsPerPage))
-
-const filtredRowsCount = computed(() => {
-  if (tableRef?.value?.filteredSortedRows) return tableRef.value.filteredSortedRows.length
-  return actualRecords.value.length
-})
-
-const pagesNumberArchived = computed(() =>
-  Math.ceil(filteredArchivedRowsCount.value / paginationArchived.value.rowsPerPage),
-)
-const filteredArchivedRowsCount = computed(() => {
-  if (tableArchiveRef?.value?.filteredSortedRows)
-    return tableArchiveRef.value.filteredSortedRows.length
-  return actualRecords.value.length
-})
+const loadingArchive = ref(false)
 const customFilter = (
   rowsTable: readonly any[],
   terms: string,
@@ -370,7 +328,6 @@ watch(
 const addFormRef = ref()
 const editFormRef = ref()
 const handleAdd = async (formData: Record<string, any>) => {
-  console.log('formData', formData)
   try {
     await props.store.addItem(formData, isNeedArchived.value)
     showForm.value = false
@@ -426,8 +383,10 @@ const confirmRestore = (row: { id: number; name: string }) => {
 }
 
 const handleArchiveToggle = async (val: boolean) => {
+  loadingArchive.value = true
   await props.store.requestLookup(val)
   rows.value = [...props.store.items]
+  loadingArchive.value = false
 }
 </script>
 <style scoped lang="scss">
