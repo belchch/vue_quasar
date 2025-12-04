@@ -12,6 +12,7 @@ export type RawMaterial = {
   rates: Rate[]
   sources: RawMaterialSources[]
   isArchived?: boolean
+  canSale: boolean
 }
 
 export type RawMaterialUpdateRequest = {
@@ -20,4 +21,5 @@ export type RawMaterialUpdateRequest = {
   unitOfMeasure?: UnitOfMeasureType
   rates: number[]
   sources?: RawMaterialSources[]
+  canSale?: boolean
 }
