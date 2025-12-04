@@ -86,6 +86,15 @@
           <q-icon name="edit" class="edit-icon" />
         </q-td>
       </template>
+      <template v-slot:body-cell-canSale="props">
+        <q-td :props="props" @click="openEditDialog(props.row)">
+          <div v-if="props.row.canSale">
+            <q-icon name="check" color="teal" size="2em" />
+          </div>
+          <div v-else><q-icon name="remove" size="2em" /></div>
+          <q-icon name="edit" class="edit-icon" />
+        </q-td>
+      </template>
     </q-table>
     <div v-if="pagesNumber > 1" class="row justify-center q-mt-md">
       <q-pagination v-model="pagination.page" color="grey-8" :max="pagesNumber" size="md" />
@@ -114,6 +123,7 @@ const defaultNewObject: RawMaterial = {
   factor: 0,
   sources: [],
   rates: [],
+  canSale: false,
 }
 const actualRecords = computed(() => {
   return storeRawMaterial.rawMaterials.filter((item) => {
@@ -169,6 +179,14 @@ const columns = [
     align: 'left' as const,
     sortable: true,
   },
+  {
+    name: 'canSale',
+    field: 'canSale',
+    label: 'Можно продать',
+    align: 'left' as const,
+    sortable: true,
+  },
+
   {
     name: 'works',
     field: (row: RawMaterial) => row.rates.length,
