@@ -176,6 +176,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/lookup/FloodPropertyDamagePage.vue'),
         name: 'lookup.flood_damages',
       },
+      {
+        path: 'consumer_price_index',
+        component: () => import('pages/lookup/ConsumerPriceIndexPage.vue'),
+        name: 'lookup.consumer_price_index',
+      },
     ],
     meta: { requiredAuth: true },
   },
