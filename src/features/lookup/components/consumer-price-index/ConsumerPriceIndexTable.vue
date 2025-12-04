@@ -77,7 +77,7 @@ const handleEdit = (item: ConsumerPriceIndexItem) => {
 
 const columns = [
   { name: 'year', label: 'Год', field: 'year', sortable: true },
-  { name: '1', label: 'Янв.', field: '1', sortable: true },
+  { name: '1', label: 'янв.', field: '1', sortable: true },
   { name: '2', label: 'февр.', field: '2', sortable: true },
   { name: '3', label: 'март', field: '3', sortable: true },
   { name: '4', label: 'апр.', field: '4', sortable: true },

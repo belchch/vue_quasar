@@ -32,13 +32,7 @@
         </q-card-section>
         <q-card-section class="q-pt-none">
           <div class="q-mb-sm text-subtitle1">Значение</div>
-          <q-input
-            outlined
-            dense
-            v-model.number="objectForm.value"
-            label="Коэффициент"
-            :rules="[numberOrEmptyRule]"
-          />
+          <q-input outlined dense v-model.number="objectForm.value" :rules="[numberOrEmptyRule]" />
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Отмена" v-close-popup type="reset" />
@@ -56,7 +50,9 @@ import {
   ConsumerPriceIndexItemRequest,
 } from '../../consumer-price-index/types'
 import { useConsumerPriceIndexStore } from '../../consumer-price-index/store'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const cpiStore = useConsumerPriceIndexStore()
 
 type PartialItem = Partial<ConsumerPriceIndexItem>
@@ -126,10 +122,14 @@ const onSubmit = async () => {
   try {
     if (item) {
       await cpiStore.updateItem(item.id, requestItem as ConsumerPriceIndexItemRequest)
+      $q.notify({ type: 'positive', message: 'Изменения сохранены' })
+    } else {
+      await cpiStore.addItem(objectForm.value as ConsumerPriceIndexItemRequest)
+      $q.notify({ type: 'positive', message: 'Запись добавлена' })
     }
-    await cpiStore.addItem(objectForm.value as ConsumerPriceIndexItemRequest)
   } finally {
     processing.value = false
+    onReset()
     open.value = false
   }
 }
