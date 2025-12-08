@@ -49,6 +49,7 @@
         <MenuItem page-name="inspection-gv" />
         <MenuItem page-name="inspection-defects" />
         <MenuItem page-name="inspection-boq" />
+        <MenuItem page-name="salvageable-material" />
         <MenuItem page-name="inspection-documents" />
         <MenuItem page-name="inspection-report" />
         <MenuItem page-name="inspection-settings" />
