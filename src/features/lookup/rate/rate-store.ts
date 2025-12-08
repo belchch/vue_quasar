@@ -44,6 +44,13 @@ export const useRateStore = defineStore('rates-store', () => {
       return rate.id != id
     })
   }
+  const duplicateRate = async (id: number, newName: string) => {
+    await api.post(`api/rates/${id}/duplicate`, {}, {
+      params: {
+        newName
+      }
+    })
+  }
   const restoreRate = async (id: number) => {
     await api.put(`api/rates/${id}/restore`)
   }
@@ -61,5 +68,6 @@ export const useRateStore = defineStore('rates-store', () => {
     updateRate,
     updateRatePrice,
     restoreRate,
+    duplicateRate
   }
 })
