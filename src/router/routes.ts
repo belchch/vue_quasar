@@ -79,6 +79,10 @@ const routes: RouteRecordRaw[] = [
                 ],
               },
               casePage({
+                name: 'salvageable-material',
+                component: () => import('pages/inspection/SalvageablePage.vue'),
+              }),
+              casePage({
                 name: 'inspection-documents',
                 component: () => import('pages/inspection/InspectionDocumentsPage.vue'),
               }),
