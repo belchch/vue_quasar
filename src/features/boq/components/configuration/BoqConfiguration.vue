@@ -52,6 +52,7 @@
         :editable="true"
         :show-location="false"
         :flat="false"
+        :work-params-type="workParamsType"
       />
     </div>
     <q-drawer
@@ -69,13 +70,14 @@
         :editable="true"
         :show-location="false"
         :flat="false"
+        :work-params-type="workParamsType"
       />
     </q-drawer>
   </div>
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ComputedRef, ref } from 'vue'
 import { useBoqLocationStore } from '../../stores/boq-location-store'
 import { useBoqWorkStore } from '../../stores/boq-work-store'
 import WorkTable from '../WorkTable.vue'
@@ -87,11 +89,26 @@ import BoqWallSections from './BoqWallSections.vue'
 import BoqSupportingWorks from './BoqSupportingWorks.vue'
 import BoqFixedAssets from './BoqFixedAssets.vue'
 import { FixedAssetType } from '../../api/fixed-asset/types'
+import { ParamsType } from 'src/features/lookup/rate/types'
 
 const { location } = storeToRefs(useBoqLocationStore())
 const { works, fetchingWorks } = storeToRefs(useBoqWorkStore())
 
 const currentTab = ref<string>('floor')
+
+const workParamsType: ComputedRef<ParamsType[]> = computed(() => {
+  switch(currentTab.value) {
+    case 'floor': return ['FLOOR', 'FLOOR_SECTION']
+    case 'ceil': return ['CEIL', 'CEIL_SECTION']
+    case 'interior-door': return ['DOOR']
+    case 'window': return ['WINDOW']
+    case 'wall': return ['WALL_SECTION']
+    case 'column': return ['FIXED_ASSET']
+    case 'stairway': return ['FIXED_ASSET']
+    case 'supporting': return ['SUPPORTING']
+    default: return []
+  }
+})
 
 const filteredFixedAssets = (type: FixedAssetType) => () => {
   return location.value!!.fixedAssets.filter((item) => item.type == type)

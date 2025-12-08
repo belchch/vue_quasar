@@ -18,7 +18,9 @@ const { hasPermission } = useUserStore()
 
 const boqSectionOptions = [
     {id: 'FLOOR', name: 'Пол'},
+    {id: 'FLOOR_SECTION', name: 'Секция пола'},
     {id: 'CEIL', name: 'Потолок'},
+    {id: 'CEIL_SECTION', name: 'Секция потолка'},
     {id: 'DOOR', name: 'Двери'},
     {id: 'WINDOW', name: 'Окна'},
     {id: 'WALL', name: 'Стены'},

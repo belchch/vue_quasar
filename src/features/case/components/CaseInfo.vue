@@ -225,7 +225,7 @@
                 v-model="selectedCase.status"
                 :options="statusOptions"
                 @update:model-value="onChange"
-                :disable="!hasPermission(['case.update.status'])"
+                :disable="!hasPermission(['case.update'])"
               />
             </div>
             <div class="col-xs-6 col-sm-6 col-md-12">
@@ -241,7 +241,7 @@
                 true-value="HIGH"
                 false-value="LOW"
                 @update:model-value="onChange"
-                :disable="!hasPermission(['case.update.priority'])"
+                :disable="!hasPermission(['case.update'])"
               />
             </div>
           </q-card-section>

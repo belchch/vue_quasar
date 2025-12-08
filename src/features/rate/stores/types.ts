@@ -1,6 +1,9 @@
+import { ParamsType } from "src/features/lookup/rate/types"
+
 export type Rate = {
     id: number,
     name: string,
+    boqWorkParamsType: ParamsType,
     unitOfMeasure: UnitOfMeasure
 }
 

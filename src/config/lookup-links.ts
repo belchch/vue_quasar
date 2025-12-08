@@ -17,4 +17,5 @@ export const menuLinks = [
   { name: 'Работы', route: 'lookup.rates' },
   { name: 'Стройматериалы', route: 'lookup.raw_materials' },
   { name: 'Заливы', route: 'lookup.flood_damages' },
+  { name: 'ИПЦ', route: 'lookup.consumer_price_index' },
 ]

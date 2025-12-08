@@ -32,7 +32,7 @@
           </q-item-label>
         </q-card-section>
         <!-- full-width -->
-        <q-card-section class="q-pa-none column justify-center">
+        <q-card-section class="q-pa-none column justify-end">
           <div class="row q-px-xs-none q-px-sm-sm q-px-md-md q-px-lg-lg no-wrap justify-center">
             <q-avatar square size="md" :class="inspectionStageStyle" icon="photo_camera">
               <q-tooltip>Осмотр</q-tooltip>

@@ -1,40 +1,17 @@
 <template>
   <div>
     <RateDialogForm v-model="openDialog" :rate="editedRate" />
-    <q-table
-      ref="tableRate"
-      v-model:pagination="pagination"
-      :filter="filter"
-      separator="cell"
-      hide-pagination
-      flat
-      bordered
-      :rows="actualRates"
-      :columns="columns"
-      row-key="id"
-      :loading="rateStore.loading"
-    >
+    <q-table ref="tableRate" v-model:pagination="pagination" :filter="filter" separator="cell" hide-pagination flat
+      bordered :rows="actualRates" :columns="columns" row-key="id" :loading="rateStore.loading">
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
       </template>
       <template v-slot:top>
         <div class="table-header row items-center full-width">
           <div class="q-table__title">Работы</div>
-          <q-btn
-            class="q-ma-md"
-            size="sm"
-            icon="add"
-            label="Добавить"
-            color="primary"
-            @click="openNewRateDialog"
-          />
-          <q-checkbox
-            @update:model-value="handleArchiveToggle"
-            size="sm"
-            v-model="showArchived"
-            val="sm"
-            label="Архивные записи"
-          />
+          <q-btn class="q-ma-md" size="sm" icon="add" label="Добавить" color="primary" @click="openNewRateDialog" />
+          <q-checkbox @update:model-value="handleArchiveToggle" size="sm" v-model="showArchived" val="sm"
+            label="Архивные записи" />
           <q-space />
           <q-input outlined dense debounce="300" color="primary" v-model="filter">
             <template v-slot:append>
@@ -48,15 +25,13 @@
       </template>
       <template #body-cell-actions="props">
         <q-td style="border-left: 0" class="text-right">
-          <q-btn
-            class="action-btn"
-            size="sm"
-            flat
-            round
-            color="negative"
-            icon="delete"
-            @click.stop="confirmDelete(props.row)"
-          >
+          <q-btn class="action-btn" size="sm" flat round color="negative" icon="control_point_duplicate"
+            @click.stop="confirmDuplicate(props.row)">
+            <q-tooltip anchor="top middle" self="bottom middle"> Дублировать </q-tooltip>
+          </q-btn>
+
+          <q-btn class="action-btn" size="sm" flat round color="negative" icon="delete"
+            @click.stop="confirmDelete(props.row)">
             <q-tooltip anchor="top middle" self="bottom middle"> Удалить </q-tooltip>
           </q-btn>
         </q-td>
@@ -180,6 +155,23 @@ const confirmDelete = (row: any) => {
     }
   })
 }
+
+const confirmDuplicate = (row: any) => {
+  $q.dialog({
+    title: 'Дублирование работы',
+    message: 'Название работы',
+    prompt: {
+      model: row.name,
+      type: 'text' 
+    },
+    cancel: true,
+    persistent: true
+  }).onOk(async (data: string) => {
+     await rateStore.duplicateRate(row.id, data)
+     await rateStore.requestLookup(true)
+  })
+}
+
 const openNewRateDialog = () => {
   editedRate.value = null
   openDialog.value = true
@@ -203,16 +195,20 @@ const actualRates = computed(() => {
   transition: opacity 0.3s;
   margin: -3px 0 0 10px;
 }
+
 td:hover {
   cursor: pointer;
 }
+
 td:hover .edit-icon {
   opacity: 0.5;
 }
+
 .action-btn {
   opacity: 0;
   transition: opacity 0.3s;
 }
+
 tr:hover .action-btn {
   opacity: 1;
 }

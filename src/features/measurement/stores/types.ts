@@ -27,7 +27,7 @@ export type RoomMeasurement = {
 export type OpeningMeasurement = {
   id: number
   room: Spot
-  roomNum?: number
+  roomNum?: number | null
   inspectionId: number
   material?: Material
   width: number
@@ -42,7 +42,7 @@ export type OpeningMeasurement = {
 export type FloorSectionMeasurement = {
   id: number
   room: Spot
-  roomNum?: number
+  roomNum?: number | null
   material?: Material
   width: number
   length: number
@@ -54,7 +54,7 @@ export type FloorSectionMeasurement = {
 export type SectionMeasurementCreateRequest = {
   inspectionId?: number
   roomId?: number
-  roomNum?: number
+  roomNum?: number | null
   materialId?: number
   width: number
   length?: number
@@ -64,7 +64,7 @@ export type SectionMeasurementCreateRequest = {
 export type CeilSectionMeasurement = {
   id: number
   room: Spot
-  roomNum?: number
+  roomNum?: number | null
   material?: Material
   width: number
   length: number
@@ -76,7 +76,7 @@ export type CeilSectionMeasurement = {
 export type WallSectionMeasurement = {
   id: number
   room: Spot
-  roomNum?: number
+  roomNum?: number | null
   material?: Material
   width: number
   height: number
@@ -98,7 +98,7 @@ export type FixedAssetMeasurement = {
   sources: string[]
   urls: string[]
   room: Spot
-  roomNum?: number
+  roomNum?: number | null
   material: Material | null
   inspectionId: number
   type: FixedType

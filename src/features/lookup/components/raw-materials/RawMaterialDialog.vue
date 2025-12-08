@@ -49,6 +49,15 @@
               </div>
             </div>
             <q-card-section class="q-pt-none">
+              <q-checkbox v-model="formData.canSale">
+                <div>Можно продать</div>
+                <div class="text-blue-grey text-caption">
+                  Используется при расчете годных остатков
+                </div>
+              </q-checkbox>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
               <RawMaterialLinksTable
                 v-model:links="formData.sources"
                 :rows="rawMaterial?.sources || []"
@@ -87,6 +96,7 @@ const defaultObj: RawMaterial = {
   sources: [],
   unitOfMeasure: 'SQUARE_METER',
   factor: null,
+  canSale: false,
 }
 const loading = ref(false)
 

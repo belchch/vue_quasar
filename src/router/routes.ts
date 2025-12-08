@@ -79,6 +79,10 @@ const routes: RouteRecordRaw[] = [
                 ],
               },
               casePage({
+                name: 'salvageable-material',
+                component: () => import('pages/inspection/SalvageablePage.vue'),
+              }),
+              casePage({
                 name: 'inspection-documents',
                 component: () => import('pages/inspection/InspectionDocumentsPage.vue'),
               }),
@@ -175,6 +179,11 @@ const routes: RouteRecordRaw[] = [
         path: 'flood_damages',
         component: () => import('pages/lookup/FloodPropertyDamagePage.vue'),
         name: 'lookup.flood_damages',
+      },
+      {
+        path: 'consumer_price_index',
+        component: () => import('pages/lookup/ConsumerPriceIndexPage.vue'),
+        name: 'lookup.consumer_price_index',
       },
     ],
     meta: { requiredAuth: true },

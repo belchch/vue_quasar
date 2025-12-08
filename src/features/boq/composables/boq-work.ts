@@ -21,8 +21,8 @@ export const useBoqWorkService = () => {
     })
   }
 
-  const updateWork = async (work: BoqWork) => {
-    await BoqWorkApi.updateWork(work.id, toWorkUpdateRequest(work))
+  const updateWork = async (work: BoqWork, changeValue: boolean) => {
+    await BoqWorkApi.updateWork(work.id, toWorkUpdateRequest(work), changeValue)
     await requestWorks()
   }
 

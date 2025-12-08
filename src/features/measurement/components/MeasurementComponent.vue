@@ -22,7 +22,13 @@
         >
           <template v-slot:top>
             <div class="row q-gutter-md">
-              <q-btn @click="onBuildingBoq" :loading="buildingBoq" color="primary" size="sm">
+              <q-btn
+                v-if="hasPermission(['boq.update'])"
+                @click="onBuildingBoq"
+                :loading="buildingBoq"
+                color="primary"
+                size="sm"
+              >
                 Сформировать ВОР
               </q-btn>
               <DownloadReportButton label="Скачать" :disable="false" :api-fn="buildDocx" />
@@ -118,24 +124,28 @@
                       />
                       <!-- Секция пола-->
                       <SectionFloorDialog
+                        v-if="hasPermission(['measurement.update'])"
                         section-type="floor_section"
                         :room="props.row.room"
                         :room-num="props.row.roomNum"
                         btn-text="Секция пола"
                       />
                       <SectionFloorDialog
+                        v-if="hasPermission(['measurement.update'])"
                         section-type="ceil_section"
                         :room="props.row.room"
                         :room-num="props.row.roomNum"
                         btn-text="Секция потолка"
                       />
                       <SectionFloorDialog
+                        v-if="hasPermission(['measurement.update'])"
                         section-type="wall_section"
                         :room="props.row.room"
                         :room-num="props.row.roomNum"
                         btn-text="Секция стены"
                       />
                       <SectionFloorDialog
+                        v-if="hasPermission(['measurement.update'])"
                         section-type="fixed_asset"
                         :room="props.row.room"
                         :room-num="props.row.roomNum"

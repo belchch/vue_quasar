@@ -140,27 +140,7 @@
           </div>
           <div class="row justify-between items-end">
             <div>
-              <div class="text-subtitle1 q-mb-sm">Срок сдачи</div>
-              <q-input dense outlined v-model="localDate" readonly>
-                <q-btn
-                  icon="event"
-                  flat
-                  no-caps
-                  round2
-                  class="bg-grey-3 text-grey-8"
-                  style="margin: 1px -11px"
-                  size="md"
-                >
-                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date color="grey" v-model="localDate" minimal>
-                      <div class="row items-center justify-end q-gutter-sm">
-                        <q-btn label="Отмена" color="primary" flat v-close-popup />
-                        <q-btn label="OK" color="primary" flat @click="setDate" v-close-popup />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-btn>
-              </q-input>
+              <FormDate title="Срок сдачи" v-model="createForm.deadline" />
             </div>
             <div>
               <q-btn label="Сохранить" type="submit" color="primary" />
@@ -187,6 +167,7 @@ import _ from 'lodash'
 import { useCases } from 'src/features/case/composables/case'
 import CaseListSkeleton from './CaseListSkeleton.vue'
 import CaseFilterPanelMobile from './case-filter/CaseFilterPanelMobile.vue'
+import FormDate from 'src/features/inspection/components/form/FormDate.vue'
 import CasesCalendar from 'src/features/calendar/CasesCalendar.vue'
 
 const { createCase, isLoading } = useCases()
@@ -207,16 +188,6 @@ onMounted(async () => {
 const openFilter = ref(false)
 const createDialogOpen = ref(false)
 
-const listView = ref(true)
-
-const changeView = () => {
-  if (listView.value) {
-    listView.value = false
-  } else {
-    listView.value = true
-  }
-}
-
 const createForm = ref<CreateFormType>({
   number: '',
   company: null,
@@ -224,7 +195,7 @@ const createForm = ref<CreateFormType>({
   facilityAddress: '',
   apartment: '',
   expertiseType: null,
-  deadline: dayjs().add(30, 'day').toDate(),
+  deadline: dayjs().add(30, 'day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
 })
 
 type SelectOption = {
@@ -239,7 +210,7 @@ type CreateFormType = {
   expertiseType: { label: string; value: string } | null
   facilityAddress: string
   apartment: string
-  deadline: Date
+  deadline: string
 }
 
 const companyOptions = computed(() =>
@@ -264,12 +235,6 @@ const expertiseTypeOptions = ref<{ label: string; value: string }[]>([
   },
 ])
 
-const localDate = ref('')
-
-const setDate = () => {
-  createForm.value.deadline = new Date(localDate.value)
-}
-
 const resetCreateForm = () => {
   createForm.value = {
     number: '',
@@ -278,7 +243,7 @@ const resetCreateForm = () => {
     expertiseType: null,
     facilityAddress: '',
     apartment: '',
-    deadline: dayjs().add(30, 'day').toDate(),
+    deadline: dayjs().add(30, 'day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
   }
   createDialogOpen.value = false
 }
@@ -294,7 +259,7 @@ const submitCreateForm = async () => {
     companyId: company!!.value,
     expertiseType: expertiseType!!.value,
     regionId: region!!.value,
-    deadline: dayjs(deadline).toISOString(),
+    deadline: deadline,
   })
 
   createDialogOpen.value = false

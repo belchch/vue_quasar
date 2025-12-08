@@ -58,6 +58,7 @@ export type BoqWork = {
   disabled: boolean
   visible: boolean
   mountType: WorkMountType
+  calculatedVolume: number
 }
 
 export type BoqRawMaterial = {
@@ -65,6 +66,7 @@ export type BoqRawMaterial = {
   rawMaterial: RawMaterial
   boqId: number
   volume: number
+  calculatedVolume: number
   disabled: boolean
   visible: boolean
   workId: number

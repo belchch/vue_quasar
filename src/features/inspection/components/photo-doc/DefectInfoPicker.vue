@@ -1,14 +1,32 @@
 <template>
-  <q-btn v-if="hasPermission(['inspection.update'])" square icon="edit" color="secondary" size="xs" outline
-    @click="openDialog" />
+  <q-btn
+    v-if="hasPermission(['photoDoc.update'])"
+    square
+    icon="edit"
+    color="secondary"
+    size="xs"
+    outline
+    @click="openDialog"
+  />
   <q-dialog v-model="open" full-width full-height>
     <q-card class="column full-height q-pa-lg">
       <q-card-section class="row items-center q-pa-none">
-        <q-tabs v-model="tab" dense active-color="primary" indicator-color="primary" align="left" narrow-indicator
-          no-caps>
+        <q-tabs
+          v-model="tab"
+          dense
+          active-color="primary"
+          indicator-color="primary"
+          align="left"
+          narrow-indicator
+          no-caps
+        >
           <q-tab name="defect" label="Дефект" />
           <q-tab name="values" label="Значения шаблона" :disable="!valuesEnabled()" />
-          <q-tab name="technicalReport" label="Техническое заключение" :disable="!technicalReport" />
+          <q-tab
+            name="technicalReport"
+            label="Техническое заключение"
+            :disable="!technicalReport"
+          />
         </q-tabs>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
@@ -18,23 +36,33 @@
           <DefectPickerDefect :defect-info="defectInfo" />
         </q-tab-panel>
         <q-tab-panel name="values">
-          <DefectInfoPickerValues v-model:defect-value="defectValue" v-model:defect-cause="defectCause" />
+          <DefectInfoPickerValues
+            v-model:defect-value="defectValue"
+            v-model:defect-cause="defectCause"
+          />
         </q-tab-panel>
         <q-tab-panel name="technicalReport">
-          <DefectInfoPickerTechnicalReport v-model="technicalReportRow" :photo-doc-id="photoDocId" />
+          <DefectInfoPickerTechnicalReport
+            v-model="technicalReportRow"
+            :photo-doc-id="photoDocId"
+          />
         </q-tab-panel>
       </q-tab-panels>
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Отмена" color="grey-8" v-close-popup />
         <q-btn flat label="ОК" @click="checkAndEmitChangeDefectInfo" />
       </q-card-actions>
-      <q-inner-loading :showing="defectSearchService.isLoading" label="Загрузка..." label-style="font-size: 1.1em" />
+      <q-inner-loading
+        :showing="defectSearchService.isLoading"
+        label="Загрузка..."
+        label-style="font-size: 1.1em"
+      />
     </q-card>
   </q-dialog>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useQuasar } from 'quasar';
+import { useQuasar } from 'quasar'
 import DefectPickerDefect from 'src/features/inspection/components/photo-doc/DefectPickerDefect.vue'
 import { PhotoDocDefectInfo } from 'src/features/inspection/store/types'
 import { useDefectSearch } from 'src/features/inspection/store/defect-search-store'
@@ -44,7 +72,7 @@ import DefectInfoPickerTechnicalReport from 'src/features/inspection/components/
 import { TechnicalReportRow } from 'src/features/defect/stores/types'
 import { useTechnicalReportStore } from 'src/features/defect/stores/technical-report-store'
 import { storeToRefs } from 'pinia'
-import { useUserStore } from 'src/features/user/stores/user-store';
+import { useUserStore } from 'src/features/user/stores/user-store'
 
 const props = defineProps<{
   photoDocId: number
@@ -54,7 +82,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   changeDefectInfo: [defectInfo: PhotoDocDefectInfo]
 }>()
-const $q = useQuasar();
+const $q = useQuasar()
 const { technicalReport } = storeToRefs(useTechnicalReportStore())
 const { hasPermission } = useUserStore()
 
@@ -87,31 +115,30 @@ const openDialog = async () => {
   })
 }
 const checkAndEmitChangeDefectInfo = () => {
-  if (technicalReportRow.value.length==1 &&
-      defectSearchService.response.structElems.length != 1
-  ){
+  if (
+    technicalReportRow.value.length == 1 &&
+    defectSearchService.response.structElems.length != 1
+  ) {
     $q.dialog({
       title: 'Внимание',
       message: 'Для того, чтобы запись попала в отчет необходимо выбрать поверхность',
     }).onOk(() => {
-      tab.value = 'defect';
-    });
-    return;
+      tab.value = 'defect'
+    })
+    return
   }
-  if(technicalReportRow.value.length == 1 && defectSearchService.response.materials.length>1){
+  if (technicalReportRow.value.length == 1 && defectSearchService.response.materials.length > 1) {
     $q.dialog({
       title: 'Внимание',
       message: 'Для того, чтобы запись попала в отчет необходимо выбрать материал',
     }).onOk(() => {
-      tab.value = 'defect';
-    });
-    return;
+      tab.value = 'defect'
+    })
+    return
   }
-  emitChangeDefectInfo();
-
+  emitChangeDefectInfo()
 }
 const emitChangeDefectInfo = () => {
-
   const ifSingle = <T,>(array: T[]) => {
     return array.length == 1 ? array[0] : undefined
   }
@@ -127,7 +154,7 @@ const emitChangeDefectInfo = () => {
     cause: defectCause.value,
     technicalReportRowId: _.first(technicalReportRow.value)?.id,
   }
-  open.value = false;
+  open.value = false
   emit('changeDefectInfo', newDefectInfo)
 }
 </script>
