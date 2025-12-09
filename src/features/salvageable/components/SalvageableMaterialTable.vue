@@ -1,9 +1,5 @@
 <template>
   <div class="q-pa-md">
-    <cpi-select-dialog
-      v-model="openCpiDialog"
-      :item="salvageableMaterialsObject?.consumerPriceIndex || null"
-    />
     <salvageable-material-dialog :item="rowClicked" v-model="editRowDialog" />
     <q-table
       :title="title"
@@ -16,21 +12,36 @@
     >
       <template v-slot:top-left>
         <div class="q-table__title">{{ title }}</div>
-        <q-btn v-if="showUsed" size="sm" color="primary" class="q-ml-md" @click="create"
+        <q-btn v-if="showUsed" size="sm" color="primary" class="q-ml-md" @click="$emit('initClick')"
           >Сформировать</q-btn
         >
       </template>
       <template v-slot:top-right v-if="showUsed">
-        <div @click="openCpiDialog = true" style="position: relative; cursor: pointer">
+        <div
+          @click="$emit('editCpiClick')"
+          style="position: relative; cursor: pointer"
+          class="q-pr-lg"
+        >
           Текущий ИПЦ:
           <span class="text-h5">{{
-            salvageableMaterialsObject?.consumerPriceIndex.value || '-'
+            salvageableMaterialsObject?.consumerPriceIndex?.value || 'Не установлен'
           }}</span>
+          <span v-if="salvageableMaterialsObject?.consumerPriceIndex">
+            ({{ salvageableMaterialsObject?.consumerPriceIndex.year }}.{{
+              salvageableMaterialsObject?.consumerPriceIndex.month
+            }})</span
+          >
           <q-icon name="edit" class="edit-icon" />
         </div>
       </template>
+      <template v-slot:header-cell-action>
+        <!-- <q-th style="width: 82px; border-left: 0"></q-th> -->
+      </template>
+      <template v-slot:header-cell-average="props">
+        <q-th colspan="2"> {{ props.col.label }} </q-th>
+      </template>
       <template v-slot:body-cell-count="props">
-        <q-td :props="props" key="props.col.name">
+        <q-td :props="props" key="props.col.name" style="position: relative">
           {{ props.value }}
           <q-icon v-if="showUsed" name="edit" class="edit-icon" />
         </q-td>
@@ -60,7 +71,7 @@
         </q-td>
       </template>
       <template v-slot:body-cell-action="props">
-        <q-td style="border-left: 0">
+        <q-td style="border-left: 0" auto-width>
           <q-btn
             v-if="showUsed"
             class="action-btn"
@@ -95,12 +106,8 @@ import { SalvageableMaterialType } from 'src/features/salvageable/types'
 import { useSalvageableService } from 'src/features/salvageable/service'
 import { useSalvageableMaterialStore } from 'src/features/salvageable/store'
 import { uomDescription } from 'src/features/rate/stores/types'
-import CpiSelectDialog from './CpiSelectDialog.vue'
 import { useQuasar } from 'quasar'
 import SalvageableMaterialDialog from './SalvageableMaterialDialog.vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
 
 const $q = useQuasar()
 const salvageableService = useSalvageableService()
@@ -109,7 +116,7 @@ const {
   usedSalvageableMaterials,
   unUsedSalvageableMaterials,
   smId,
-  isCreate,
+  isInitialized,
   salvageableMaterialsObject,
 } = storeToRefs(useSalvageableMaterialStore())
 
@@ -118,33 +125,19 @@ const { title, showUsed = true } = defineProps<{
   showUsed?: boolean
 }>()
 
-const openCpiDialog = ref(false)
 const editRowDialog = ref(false)
-const init = async () => {
-  await salvageableService.requestSalvageable()
-  await salvageableService.requestSalvageableMaterials()
-}
-watch(
-  () => route.params.inspectionId,
-  async () => {
-    await init()
-  },
-)
-onMounted(async () => {
-  await init()
-})
 
-const create = async () => {
-  await salvageableService.initSalvageableMaterials()
-  await salvageableService.requestSalvageableMaterials()
-}
+// const create = async () => {
+//   await salvageableService.initSalvageableMaterials()
+//   await salvageableService.requestSalvageableMaterials()
+// }
 
 const showConfirm = (row: SalvageableMaterialType) => {
   const title = showUsed ? 'Подтвердите удаление' : 'Подтвердите восстановление'
-  const text = showUsed ? 'Вы действительно хотите удалить:' : 'Восстановить:'
+  const text = showUsed ? 'Вы действительно хотите удалить' : 'Восстановить'
   $q.dialog({
     title: title,
-    message: `Вы действительно хотите удалить: ${row.rawMaterial.name}?`,
+    message: `${text}: ${row.rawMaterial.name} ?`,
     cancel: true,
   }).onOk(async () => {
     try {
@@ -180,7 +173,6 @@ const columns: QTableColumn<TableRowType>[] = [
   },
   {
     name: 'count',
-    align: 'center' as const,
     label: 'Кол-во',
     field: 'count',
     sortable: true,
@@ -193,9 +185,19 @@ const columns: QTableColumn<TableRowType>[] = [
     },
     sortable: true,
   },
-  { name: 'averagePrice', label: 'Стоимость на дату проведения', field: 'averagePrice' },
-  { name: 'averagePriceCpi', label: 'Средняя стоимость чистая', field: 'averagePriceCpi' },
-  { name: 'averagePriceTotal', label: 'Средняя итого', field: 'averagePriceTotal' },
+  {
+    name: 'averagePrice',
+    label: 'Стоимость на дату проведения',
+    field: 'averagePrice',
+    sortable: true,
+  },
+  {
+    name: 'averagePriceCpi',
+    label: 'Средняя стоимость чистая',
+    field: 'averagePriceCpi',
+    sortable: true,
+  },
+  { name: 'averagePriceTotal', label: 'Средняя итого', field: 'averagePriceTotal', sortable: true },
   {
     name: 'averagePriceCpiInspectionDate',
     label: 'Средняя стоимость с учетом ИПЦ на дату акта',
@@ -207,7 +209,7 @@ const columns: QTableColumn<TableRowType>[] = [
   { name: 'externalWear', label: 'Внешний', field: 'externalWear', sortable: true },
   { name: 'accumulatedWear', label: 'Накопленный', field: 'accumulatedWear', sortable: true },
   {
-    name: 'averagePriceWearInspectionDate',
+    name: 'average',
     label: 'Стоимость с износом на дату проведения',
     field: 'averagePriceWearInspectionDate',
     sortable: true,
@@ -221,6 +223,9 @@ const columns: QTableColumn<TableRowType>[] = [
   opacity: var(--e-opacity-edit-icon);
   transition: opacity 0.3s;
   margin: -3px 0 0 10px;
+  position: absolute;
+  top: 4px;
+  right: 0px;
 }
 .action-btn {
   opacity: 0;

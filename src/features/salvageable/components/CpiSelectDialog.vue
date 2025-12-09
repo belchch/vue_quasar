@@ -12,9 +12,9 @@
           <q-select
             dense
             outlined
-            v-model="objectForm.year"
+            v-model="yearValue"
             :options="yearsOptions"
-            @update:model-value="showIndex"
+            @update:model-value="handleYearChange"
             option-value="value"
             option-label="label"
             emit-value
@@ -26,8 +26,8 @@
           <q-select
             dense
             outlined
-            @update:model-value="showIndex"
-            v-model="objectForm.month"
+            @update:model-value="handleMonthChange"
+            v-model="monthValue"
             :options="monthOptions"
             option-value="value"
             option-label="label"
@@ -51,21 +51,17 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import {
-  ConsumerPriceIndexItem,
-  ConsumerPriceIndexItemRequest,
-} from 'src/features/lookup/consumer-price-index/types'
-import { useSalvageableService } from 'src/features/salvageable/service'
+import { ConsumerPriceIndexItem } from 'src/features/lookup/consumer-price-index/types'
 import { useConsumerPriceIndexStore } from 'src/features/lookup/consumer-price-index/store'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
 const cpiStore = useConsumerPriceIndexStore()
-const salvageableService = useSalvageableService()
-
-type PartialItem = Partial<ConsumerPriceIndexItem>
 
 const open = defineModel<boolean>({ default: false })
+const emit = defineEmits<{
+  selectCpi: [cpi: ConsumerPriceIndexItem]
+}>()
 
 onMounted(async () => {
   await cpiStore.fetchItems()
@@ -75,58 +71,64 @@ const { item = null } = defineProps<{
   item: ConsumerPriceIndexItem | null
 }>()
 
-const titleDialog = ref('')
 const processing = ref(false)
-const defaultObj: PartialItem = {
-  month: 1,
-}
+
 const selectedCpi = ref<ConsumerPriceIndexItem | null>(null)
 const showIndex = () => {
-  if (!objectForm.value.year) return
-  const year = cpiStore.tableRows[objectForm.value.year]
+  if (yearValue.value === undefined || yearValue.value < 0) return
+  const year = cpiStore.tableRows[yearValue.value]
   if (year) {
     Object.values(year).forEach((item) => {
-      if (item.month === objectForm.value.month) {
+      if (item.month === monthValue.value) {
         selectedCpi.value = item
       }
     })
   }
 }
-
-const objectForm = ref<PartialItem>({ ...defaultObj })
-
-if (item) {
-  objectForm.value = { ...item }
+const monthValue = ref(1)
+const yearValue = ref(0)
+const getYearIndex = (year: number) => {
+  if (year) {
+    const yearIndex = cpiStore.tableRows.findIndex((item) => item.year === year)
+    return yearIndex
+  }
+  return -1
 }
 
+const handleYearChange = (newYear: number) => {
+  yearValue.value = newYear
+  showIndex()
+}
+
+const handleMonthChange = (newMonth: number) => {
+  monthValue.value = newMonth
+  showIndex()
+}
 const onShowDialog = () => {
   if (item) {
-    objectForm.value = { ...item }
+    console.log(item)
+    yearValue.value = getYearIndex(item.year)
+    monthValue.value = item.month
     selectedCpi.value = { ...item }
+  } else {
+    if (yearsOptions.value[0]) {
+      yearValue.value = yearsOptions.value[0].value
+      monthValue.value = 1
+    }
   }
   showIndex()
 }
 
-const onReset = () => {
-  objectForm.value = { ...defaultObj }
-}
-const onSubmit = async () => {
-  const requestItem = { ...objectForm.value }
-  processing.value = true
-  try {
-    if (selectedCpi.value) {
-      await salvageableService.setConsumerPriceIndex(selectedCpi.value)
-      $q.notify({ type: 'positive', message: 'Изменения сохранены' })
-    } else {
-      $q.notify({
-        type: 'negative',
-        message: 'Не выбран индекс потребительской цены',
-      })
-    }
-  } finally {
-    processing.value = false
-    onReset()
+const onReset = () => {}
+const onSubmit = () => {
+  if (selectedCpi.value) {
+    emit('selectCpi', selectedCpi.value)
     open.value = false
+  } else {
+    $q.notify({
+      type: 'negative',
+      message: 'Не выбран индекс потребительской цены',
+    })
   }
 }
 
@@ -147,10 +149,6 @@ const monthOptions = months.map((month, index) => ({
   value: index + 1,
   label: month,
 }))
-
-// defineExpose({
-//   open,
-// })
 </script>
 
 <style scoped></style>

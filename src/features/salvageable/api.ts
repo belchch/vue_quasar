@@ -61,11 +61,20 @@ export const SalvageableMaterialApi = {
       throw error
     }
   },
-  async initSalvageableMaterial(boqId: number, smId: number, inspectionId: number) {
+  async initSalvageableMaterial(inspectionId: number, consumerPriceIndexId?: number) {
     try {
-      const result = await api.get<SalvageableMaterialType[]>(`${PATH_API}/init`, {
-        params: { boqId, smId },
-      })
+      const params: any = { inspectionId }
+
+      if (consumerPriceIndexId !== undefined) {
+        params.consumerPriceIndexId = consumerPriceIndexId
+      }
+      const result = await api.post<SalvageableMaterialType[]>(
+        `${PATH_API}/init`,
+        {},
+        {
+          params: params,
+        },
+      )
       return result.data
     } catch (error) {
       console.error('Error initializing salvageable material:', error)
