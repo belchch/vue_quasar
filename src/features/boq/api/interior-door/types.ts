@@ -10,6 +10,7 @@ export type BoqInteriorDoorModel = {
     perimeter: number,
     hasSlopes: boolean,
     trimsReplacement: boolean,
+    trimsPreservation: boolean,
     replacement: boolean,
     preservation: boolean,
     type: DoorType,
@@ -22,6 +23,7 @@ export type BoqInteriorDoorUpdateRequest = {
     height: number,
     hasSlopes: boolean,
     trimsReplacement: boolean,
+    trimsPreservation: boolean,
     replacement: boolean,
     preservation: boolean,
     type: DoorType
@@ -34,6 +36,7 @@ export const toInteriorDoorUpdateRequest = (interiorDoor: BoqInteriorDoorModel):
         height: interiorDoor.height,
         hasSlopes: interiorDoor.hasSlopes,
         trimsReplacement: interiorDoor.trimsReplacement,
+        trimsPreservation: interiorDoor.trimsPreservation,
         replacement: interiorDoor.replacement,
         preservation: interiorDoor.preservation,
         type: interiorDoor.type

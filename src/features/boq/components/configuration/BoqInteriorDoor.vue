@@ -40,6 +40,9 @@
                     <div class="q-mt-md">
                         <q-toggle color="secondary" v-model="interiorDoorLocal.trimsReplacement"
                             label="Замена наличников" size="sm" @update:model-value="updateInteriorDoor(false)" />
+
+                        <q-toggle color="secondary" v-model="interiorDoorLocal.trimsPreservation" :disable="!interiorDoorLocal.trimsReplacement"
+                            label="С сохранением" size="sm" @update:model-value="updateInteriorDoor(false)" />
                     </div>
 
                     <div class="q-mt-md">
@@ -90,6 +93,14 @@ const interiorDoorLocal = ref<BoqInteriorDoorModel>(props.interiorDoor)
 const updateReplacement = async () => {
     if (!interiorDoorLocal.value.replacement) {
         interiorDoorLocal.value.preservation = false
+    }
+
+    await updateInteriorDoor(false)
+}
+
+const updateTrimsReplacement = async () => {
+    if (!interiorDoorLocal.value.trimsReplacement) {
+        interiorDoorLocal.value.trimsPreservation = false
     }
 
     await updateInteriorDoor(false)
