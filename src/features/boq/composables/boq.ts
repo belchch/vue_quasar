@@ -24,6 +24,7 @@ export const useBoqService = () => {
       await requestWorks()
     } else {
       locations.value = []
+      fetchingLocations.value = false
     }
     initialized.value = true
   }
