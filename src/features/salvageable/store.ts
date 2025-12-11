@@ -7,7 +7,7 @@ import {
 import { ref, computed } from 'vue'
 
 export const useSalvageableMaterialStore = defineStore('salvageable-materials-store', () => {
-  const isCreate = ref<boolean>(false)
+  const isInitialized = ref<boolean>(false)
   const salvageableMaterials = ref<SalvageableMaterialType[] | null>(null)
   const smId = ref<number | undefined>(undefined)
   const salvageableMaterialsObject = ref<SalvageableMaterialObjectType | null>(null)
@@ -34,6 +34,6 @@ export const useSalvageableMaterialStore = defineStore('salvageable-materials-st
     usedSalvageableMaterials,
     unUsedSalvageableMaterials,
     smId,
-    isCreate,
+    isInitialized,
   }
 })

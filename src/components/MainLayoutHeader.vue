@@ -39,6 +39,15 @@
           </q-menu>
         </q-item>
         <q-item
+          class="menu-item"
+          clickable
+          v-ripple
+          :class="{ active: isCalendarActive }"
+          :to="{ name: 'calendar' }"
+        >
+          <q-item-section> Календарь</q-item-section>
+        </q-item>
+        <q-item
           v-if="userStore.user?.role == 'ADMIN'"
           class="menu-item"
           clickable
@@ -119,7 +128,9 @@ const isCasesActive = computed(() => {
 const isAdminActive = computed(() => {
   return router.currentRoute.value.path.startsWith('/administration')
 })
-
+const isCalendarActive = computed(() => {
+  return router.currentRoute.value.path.startsWith('/calendar')
+})
 const avatarText = computed(() => {
   return `${userStore.user?.firstName?.charAt(0)}${userStore.user?.lastName?.charAt(0)}`
 })
