@@ -23,24 +23,20 @@ const { navigateInspectionPage } = useNavigate()
 
 const route = useRoute()
 
-const init = () => {
-  requestBoq().catch((error) => {
-    console.error(error)
-  })
-  getEstimate().catch((error) => {
-    console.error(error)
-  })
+const init = async () => {
+  await requestBoq()
+  await getEstimate()
 }
 
 watch(selectedInspectionId, async () => {
   if (route.name != 'boq-summary') {
     await navigateInspectionPage('boq')
   } else {
-    init()
+    await init()
   }
 })
 
-onMounted(() => {
-  init()
+onMounted(async () => {
+  await init()
 })
 </script>
