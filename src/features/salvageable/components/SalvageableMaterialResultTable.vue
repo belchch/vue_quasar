@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md" v-if="isInitialized">
     <q-markup-table wrap-cells separator="cell">
       <thead>
         <tr>
@@ -18,15 +18,15 @@
         </tr>
         <tr>
           <td>-без учета износа</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{ salvageableMaterialsObject?.total1 }}</td>
+          <td>{{ salvageableMaterialsObject?.cost1 }}</td>
+          <td>{{ salvageableMaterialsObject?.sum1 }}</td>
         </tr>
         <tr>
           <td>-с учетом износа</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{ salvageableMaterialsObject?.total2 }}</td>
+          <td>{{ salvageableMaterialsObject?.cost2 }}</td>
+          <td>{{ salvageableMaterialsObject?.sum2 }}</td>
         </tr>
         <tr>
           <td class="text-weight-bold">На дату Акта примема-передачи:</td>
@@ -36,15 +36,15 @@
         </tr>
         <tr>
           <td>-без учета износа</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{ salvageableMaterialsObject?.total3 }}</td>
+          <td>{{ salvageableMaterialsObject?.cost3 }}</td>
+          <td>{{ salvageableMaterialsObject?.sum3 }}</td>
         </tr>
         <tr>
           <td>-с учетом износа</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td title="total4">{{ salvageableMaterialsObject?.total4 }}</td>
+          <td title="cost4">{{ salvageableMaterialsObject?.cost4 }}</td>
+          <td title="sum4">{{ salvageableMaterialsObject?.sum4 }}</td>
         </tr>
       </tbody>
     </q-markup-table>
@@ -54,11 +54,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { QTableColumn } from 'quasar'
 import { SalvageableMaterialType } from 'src/features/salvageable/types'
 import { useSalvageableService } from 'src/features/salvageable/service'
 import { useSalvageableMaterialStore } from 'src/features/salvageable/store'
-import { uomDescription } from 'src/features/rate/stores/types'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
@@ -68,42 +66,13 @@ const {
   usedSalvageableMaterials,
   unUsedSalvageableMaterials,
   smId,
-  isCreate,
+  isInitialized,
   salvageableMaterialsObject,
 } = storeToRefs(useSalvageableMaterialStore())
 
 const { title } = defineProps<{
   title: string
 }>()
-
-onMounted(async () => {
-  const res = await salvageableService.requestSalvageable()
-  await salvageableService.requestSalvageableMaterials()
-})
-
-const columns = [
-  {
-    name: 'date',
-    label: 'Дата расчета',
-    field: 'date',
-    align: 'left' as const,
-    sortable: true,
-  },
-  {
-    name: 'restorePrice',
-    align: 'center' as const,
-    label: 'Стоимость восстановительного ремрнта, руб',
-    field: 'restorePrice',
-    sortable: true,
-  },
-  {
-    name: 'averagePriceTotal',
-    label: 'Стоимость годных остатков, руб',
-    field: 'salvageablePrice',
-    sortable: true,
-  },
-  { name: 'averagePriceTotal', label: 'Общая сумма к возмещению,руб', field: 'averagePriceTotal' },
-]
 </script>
 
 <style scoped>

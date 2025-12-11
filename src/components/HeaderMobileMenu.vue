@@ -8,6 +8,9 @@
         <q-item :to="{ name: menuLinks[0]?.route }" tag="router-link">
           <q-item-section>Справочники</q-item-section>
         </q-item>
+        <q-item clickable :to="{ name: 'calendar' }" tag="router-link">
+          <q-item-section>Календарь</q-item-section>
+        </q-item>
         <q-item :to="{ name: 'admin' }" tag="router-link">
           <q-item-section>Администрирование</q-item-section>
         </q-item>

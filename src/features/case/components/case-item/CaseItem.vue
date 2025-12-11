@@ -57,14 +57,10 @@
         <q-card-section
           class="q-pa-none column-sm row-xs justify-center items-center col-sm col-md col-lg col-xl col-xs-12 content-sm-end justify-xs-between items-md-end"
         >
-          <div>
-            <q-chip square size="sm" class="text-center q-mr-none bg-blue-2">
-              {{ ExpertiseTypeEnum[props.case.expertiseType] }}
-            </q-chip>
-            <q-chip square size="sm" class="text-center q-mr-none" :class="daysRemainingStyle">
-              осталось {{ daysRemaining }} дней
-            </q-chip>
-          </div>
+          <CaseExpertiseTypeChip :expertise-type="props.case.expertiseType" />
+          <q-chip square size="sm" class="text-center q-mr-none" :class="daysRemainingStyle">
+            осталось {{ daysRemaining }} дней
+          </q-chip>
           <div class="text-grey-7 text-caption text-no-wrap q-mt-xs text-left row items-center">
             <q-icon name="event" color="accent" class="q-mr-xs" />
             {{ deadline.format('DD-MM-YYYY') }}
@@ -103,6 +99,7 @@ import CaseItemInfo from 'src/features/case/components/case-item/CaseItemInfo.vu
 import { Case, ExpertiseTypeEnum } from 'src/features/case/stores/types'
 import dayjs from 'dayjs'
 import _ from 'lodash'
+import CaseExpertiseTypeChip from './CaseExpertiseTypeChip.vue'
 
 const expanded = ref(false)
 

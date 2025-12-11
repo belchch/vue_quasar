@@ -25,6 +25,18 @@ export type SalvageableMaterialObjectType = {
   averagePriceTotal: number
   averagePriceWearInspectionDate: number
   averagePriceCpiInspectionDate: number
+  total1: number
+  total2: number
+  total3: number
+  total4: number
+  cost1: number
+  cost2: number
+  cost3: number
+  cost4: number
+  sum1: number
+  sum2: number
+  sum3: number
+  sum4: number
 }
 export type SalvageableMaterialUpdate = Pick<
   SalvageableMaterialType,
