@@ -111,6 +111,7 @@ export type BoqDoor = {
   type: DoorType
   hasSlopes: boolean | null
   trimsReplacement: boolean | null
+  trimsPreservation: boolean | null
   replacement: boolean | null
   preservation: boolean | null
   dimension: DimensionType

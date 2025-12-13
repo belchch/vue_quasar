@@ -17,6 +17,10 @@
       <span v-if="params.trimsReplacement === null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>
     <q-card-section class="q-pt-none q-pb-none">
+      <q-toggle toggle-indeterminate v-model="params.trimsPreservation" label="Замена наличников с сохранением" />
+      <span v-if="params.trimsPreservation === null" class="text-blue-grey text-caption"> Не используется</span>
+    </q-card-section>
+    <q-card-section class="q-pt-none q-pb-none">
       <q-toggle toggle-indeterminate v-model="params.replacement" label="Замена двери" />
       <span v-if="params.replacement === null" class="text-blue-grey text-caption"> Не используется</span>
     </q-card-section>

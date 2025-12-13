@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="openModal">
-    <q-card style="width: 100%; max-width: 850px">
+    <q-card style="width: 100%; max-width: 1000px">
       <q-card-section class="row items-center">
         <div class="text-h6">{{ isEditMode ? 'Редактирование' : 'Добавление' }} работы</div>
         <q-space />
@@ -150,6 +150,7 @@ const defaultDoorParams: BoqDoor = {
   type: 'INTERIOR',
   hasSlopes: null,
   trimsReplacement: null,
+  trimsPreservation: null,
   replacement: null,
   preservation: null,
   dimension: 'AREA',
@@ -333,9 +334,10 @@ async function onSave() {
         type: doorParams.value.type,
         hasSlopes: doorParams.value.hasSlopes,
         trimsReplacement: doorParams.value.trimsReplacement,
+        trimsPreservation: doorParams.value.trimsPreservation,
         replacement: doorParams.value.replacement,
         preservation: doorParams.value.preservation,
-        dimension: doorParams.value.dimension,
+        dimension: doorParams.value.dimension,      
       }
       break
     case 'WINDOW':
