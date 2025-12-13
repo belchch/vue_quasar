@@ -18,7 +18,7 @@
                     v-model:replacement="wallSectionLocal.replacement" v-model:preservation="wallSectionLocal.painting"
                     :materials="materials" @update:material="updateWallSection(false)"
                     @update:preservation="updateWallSection(false)" @update:replacement="updateReplacement()"
-                    preservation-label="С окраской" />
+                    preservation-label="С окраской" :show-preservation="false" />
             </div>
         </q-card-section>
     </div>
