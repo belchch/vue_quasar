@@ -27,7 +27,7 @@ import { buildInspectionSpotOptions } from "src/features/inspection/composables/
 const openModal = defineModel<boolean>({ default: false });
 
 const { inspectionSpots } = storeToRefs(useInspectionSpotStore())
-const { editingNode, treeData} = storeToRefs(usePlanTreeStore())
+const { editingNode, treeData } = storeToRefs(usePlanTreeStore())
 const locationModel = ref<{ label: string, value: string } | undefined>(undefined)
 const { savePlanTree } = usePlanTreeService()
 
@@ -56,12 +56,14 @@ type SpotOption = {
 }
 const optionItems = computed(() => {
   const items: SpotOption[] = [];
-  inspectionSpotOptions.value.forEach((item) => {
-    items.push({
-      label: item.name,
-      value: item.id
+  inspectionSpotOptions.value
+    .filter((item) => item.spot.isRoom)
+    .forEach((item) => {
+      items.push({
+        label: item.name,
+        value: item.id
+      });
     });
-  });
   return items;
 })
 watch(openModal, (newValue) => {
