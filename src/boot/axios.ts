@@ -21,11 +21,11 @@ declare module 'axios' {
 }
 
 const AUTH_HEADER = 'X-Authorization';
-const apiUrl = process.env.VUE_APP_API_URL
+// Quasar+Vite читает переменные окружения через import.meta.env (префикс VITE_).
+// В dev baseURL остаётся пустой — запросы идут по относительному пути /api/...
+// и проксируются devServer-ом (см. quasar.config.ts). Для prod задайте VITE_API_URL в .env.
+const apiUrl = import.meta.env.VITE_API_URL ?? ''
 
-if (!apiUrl) {
-  throw Error('No API_URL environment variable')
-}
 const api = axios.create({
   baseURL: apiUrl,
   paramsSerializer: (params) => {
