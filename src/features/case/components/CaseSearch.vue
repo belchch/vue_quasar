@@ -1,46 +1,62 @@
 <template>
-  <div
-    class="row list-wrapper no-wrap q-gutter-md-lg q-gutter-lg-lg q-gutter-xl-lg q-pr-xs-md q-pl-xs-md q-pr-sm-md q-pl-sm-md q-pl-lg-lg q-pt-md-md q-pt-lg-md q-pt-xl-md q-gutter-sm-x-none"
-  >
-    <div class="col-sm-12 col-md-7 col-xs">
-      <div class="row" style="margin-bottom: 10px; margin-top: -15px">
-        <div class="col">
-          <q-btn
-            v-if="hasPermission(['case.create'])"
-            dense
-            icon="add"
-            @click="createDialogOpen = true"
-            color="primary"
-            label="Создать"
-            class="full-width"
-            style="position: relative; text-transform: none"
-          />
-        </div>
-        <div class="col-auto lt-md">
-          <q-btn
-            color="primary"
-            class="text-capitalize q-ml-md q-px-md"
-            flat
-            icon="tune"
-            @click="openFilter = !openFilter"
-            label="Фильтр"
-            dense
-          />
-        </div>
+  <div class="row q-col-gutter-md cases-layout">
+    <div class="col-12 col-md-7">
+      <div class="row items-center q-mb-md">
+        <q-btn
+          v-if="hasPermission(['case.create'])"
+          unelevated
+          no-caps
+          color="primary"
+          icon="add"
+          label="Создать"
+          @click="createDialogOpen = true"
+        />
+        <q-space />
+        <q-btn
+          class="lt-md"
+          flat
+          no-caps
+          color="primary"
+          icon="tune"
+          label="Фильтр"
+          @click="openFilter = !openFilter"
+        />
       </div>
+
       <CaseFilterPanelMobile v-model:show-card="openFilter" class="lt-md" />
-      <CaseListSkeleton v-if="isLoading" />
+
+      <!-- Состояния списка -->
+      <!-- cases === undefined — ещё не загружалось ни разу: показываем скелетон,
+           чтобы не мигало "пусто" на первом рендере до onMounted -->
+      <CaseListSkeleton v-if="isLoading || cases === undefined" />
+      <ListState
+        v-else-if="loadError"
+        icon="cloud_off"
+        color="negative"
+        title="Не удалось загрузить"
+        :description="loadError"
+        retry
+        @retry="refreshCases"
+      />
+      <ListState
+        v-else-if="!cases?.length"
+        icon="search_off"
+        title="Экспертизы не найдены"
+        description="Попробуйте изменить параметры фильтра или создайте новую экспертизу."
+      />
       <CaseList v-else />
     </div>
+
     <div class="col-5 gt-sm">
       <CaseFilter />
     </div>
   </div>
-  <q-dialog v-model="createDialogOpen" style="width: 100%">
-    <q-card class="q-pa-lg" style="width: 900px; max-width: 100%">
+
+  <q-dialog v-model="createDialogOpen">
+    <q-card class="create-dialog__card">
       <q-card-section>
         <q-form class="q-gutter-sm" @submit="submitCreateForm">
-          <div class="text-h6">Новая экспертиза</div>
+          <div class="text-h6 q-mb-sm">Новая экспертиза</div>
           <div>
             <div class="text-subtitle1 q-mb-sm">Дело (договор)</div>
             <q-input
@@ -54,7 +70,7 @@
           </div>
           <div>
             <div class="text-subtitle1 q-mb-sm">Адрес</div>
-            <div class="row q-mb-sm">
+            <div class="row q-mb-sm q-col-gutter-sm">
               <div class="col">
                 <q-input
                   dense
@@ -65,7 +81,7 @@
                   :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
                 />
               </div>
-              <div class="col-3 q-ml-sm">
+              <div class="col-3">
                 <q-input
                   dense
                   outlined
@@ -91,7 +107,7 @@
             />
           </div>
           <div>
-            <div class="text-subtitle1 q-mb-sm">Организанция</div>
+            <div class="text-subtitle1 q-mb-sm">Организация</div>
             <q-select
               use-input
               dense
@@ -116,13 +132,25 @@
               :rules="[(value) => !_.isEmpty(value) || 'Обязательное поле']"
             />
           </div>
-          <div class="row justify-between items-end">
+          <div class="row justify-between items-end q-mt-sm">
+            <FormDate title="Срок сдачи" v-model="createForm.deadline" />
             <div>
-              <FormDate title="Срок сдачи" v-model="createForm.deadline" />
-            </div>
-            <div>
-              <q-btn label="Сохранить" type="submit" color="primary" />
-              <q-btn label="Отмена" @click="resetCreateForm" color="primary" flat class="q-ml-sm" />
+              <q-btn
+                label="Сохранить"
+                type="submit"
+                color="primary"
+                unelevated
+                no-caps
+                :loading="submitting"
+              />
+              <q-btn
+                label="Отмена"
+                @click="resetCreateForm"
+                color="primary"
+                flat
+                no-caps
+                class="q-ml-sm"
+              />
             </div>
           </div>
         </q-form>
@@ -133,12 +161,16 @@
 <script setup lang="ts">
 import CaseFilter from 'src/features/case/components/case-filter/CaseFilterPanel.vue'
 import CaseList from 'src/features/case/components/CaseList.vue'
+import ListState from 'src/components/ListState.vue'
 import { computed, onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { Notify } from 'quasar'
 import { useCourtStore } from 'src/features/lookup/court/stores/court-store'
 import { useJudgeStore } from 'src/features/lookup/judge/stores/judge-store'
 import { useRegionStore } from 'src/features/lookup/region/stores/region-store'
 import { useCompanyStore } from 'src/features/lookup/company/stores/compay-store'
 import { useUserStore } from 'src/features/user/stores/user-store'
+import { useCasesStore } from 'src/features/case/stores/case-store'
 import dayjs from 'dayjs'
 
 import _ from 'lodash'
@@ -147,7 +179,9 @@ import CaseListSkeleton from './CaseListSkeleton.vue'
 import CaseFilterPanelMobile from './case-filter/CaseFilterPanelMobile.vue'
 import FormDate from 'src/features/inspection/components/form/FormDate.vue'
 
-const { createCase, isLoading } = useCases()
+const { createCase, refreshCases, isLoading, loadError } = useCases()
+const casesStore = useCasesStore()
+const { cases } = storeToRefs(casesStore)
 
 const courtStore = useCourtStore()
 const judgeStore = useJudgeStore()
@@ -156,13 +190,17 @@ const companyStore = useCompanyStore()
 const { hasPermission } = useUserStore()
 
 onMounted(async () => {
-  await courtStore.requestLookup()
-  await judgeStore.requestLookup()
-  await regionStore.requestLookup()
-  await companyStore.requestLookup()
+  await Promise.all([
+    courtStore.requestLookup(),
+    judgeStore.requestLookup(),
+    regionStore.requestLookup(),
+    companyStore.requestLookup(),
+  ])
 })
+
 const openFilter = ref(false)
 const createDialogOpen = ref(false)
+const submitting = ref(false)
 
 const createForm = ref<CreateFormType>({
   number: '',
@@ -196,20 +234,11 @@ const regionOptions = computed(() =>
   regionStore.items.map((item) => ({ label: item.name, value: item.id!! })),
 )
 
-const expertiseTypeOptions = ref<{ label: string; value: string }[]>([
-  {
-    label: 'ДДУ',
-    value: 'SHARED_EQUITY',
-  },
-  {
-    label: 'Залив',
-    value: 'FLOOD_DAMAGE',
-  },
-  {
-    label: 'Строительно-техническая',
-    value: 'CONSTRUCTION',
-  },
-])
+const expertiseTypeOptions = [
+  { label: 'ДДУ', value: 'SHARED_EQUITY' },
+  { label: 'Залив', value: 'FLOOD_DAMAGE' },
+  { label: 'Строительно-техническая', value: 'CONSTRUCTION' },
+]
 
 const resetCreateForm = () => {
   createForm.value = {
@@ -225,25 +254,39 @@ const resetCreateForm = () => {
 }
 
 const submitCreateForm = async () => {
-  const { number, company, region, facilityAddress, apartment, deadline, expertiseType } =
-    createForm.value
+  if (submitting.value) return
+  submitting.value = true
+  try {
+    const { number, company, region, facilityAddress, apartment, deadline, expertiseType } =
+      createForm.value
 
-  await createCase({
-    number: number,
-    facilityAddress: facilityAddress,
-    apartment: apartment,
-    companyId: company!!.value,
-    expertiseType: expertiseType!!.value,
-    regionId: region!!.value,
-    deadline: deadline,
-  })
+    await createCase({
+      number: number,
+      facilityAddress: facilityAddress,
+      apartment: apartment,
+      companyId: company!!.value,
+      expertiseType: expertiseType!!.value,
+      regionId: region!!.value,
+      deadline: deadline,
+    })
 
-  createDialogOpen.value = false
+    Notify.create({ type: 'positive', message: 'Экспертиза создана' })
+    resetCreateForm()
+  } catch {
+    // Ошибка уже показана глобальным перехватчиком axios
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 <style lang="scss" scoped>
-.list-wrapper {
+.cases-layout {
   max-width: 1280px;
-  // margin-inline: auto;
+}
+
+.create-dialog__card {
+  width: 900px;
+  max-width: 90vw;
+  padding: 24px;
 }
 </style>

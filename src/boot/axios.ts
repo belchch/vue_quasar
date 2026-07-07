@@ -17,6 +17,11 @@ declare module 'axios' {
   interface AxiosRequestConfig {
     __isRetryRequest?: boolean;
     __isRefreshTokenRequest?: boolean;
+    // Запрос логина: на 401 НЕ пытаемся обновить токен (обновлять ещё нечего),
+    // ошибку отдаём вызывающему коду для показа в форме.
+    __isLoginRequest?: boolean;
+    // Подавить глобальный Notify об ошибке — обработкой займётся вызывающий код.
+    __skipErrorNotify?: boolean;
   }
 }
 
@@ -87,6 +92,11 @@ export default defineBoot(({ app,router }) => {
     response => response,
     async (error:AxiosError) => {
       const originalRequest = {...error.config} as InternalAxiosRequestConfig;
+      // Ошибка входа (неверные учётные данные): не запускаем поток обновления токена,
+      // прокидываем ошибку наверх, чтобы форма входа показала её сама.
+      if (error.response?.status === 401 && originalRequest?.__isLoginRequest) {
+        return Promise.reject(error)
+      }
       // Токен истек
       if (error.response?.status === 401 && originalRequest){
         if (originalRequest?.__isRefreshTokenRequest) {
@@ -143,10 +153,12 @@ export default defineBoot(({ app,router }) => {
         }
 
       } else {
-        Notify.create({
-          type: 'negative',
-          message: error.message
-        })
+        if (!originalRequest?.__skipErrorNotify) {
+          Notify.create({
+            type: 'negative',
+            message: error.message
+          })
+        }
         throw error
       }
     }

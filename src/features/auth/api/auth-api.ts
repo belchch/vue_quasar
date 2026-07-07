@@ -6,7 +6,14 @@ import { type AxiosRequestConfig } from 'axios'
 
 export const AuthApi = {
   async login(request: CredentialsRequest) {
-    return api.post<Tokens>('/api/auth/login', request);
+    // Флаги, обрабатываемые в boot/axios:
+    //  - __isLoginRequest:   на 401 не запускаем обновление токена
+    //  - __skipErrorNotify:  не показываем глобальный тост — ошибку покажет форма входа
+    const config: AxiosRequestConfig = {
+      __isLoginRequest: true,
+      __skipErrorNotify: true,
+    }
+    return api.post<Tokens>('/api/auth/login', request, config);
   },
 
   async logout(request: LogoutRequest) {

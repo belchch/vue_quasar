@@ -1,5 +1,5 @@
 <template>
-  <q-list class="row list shadow_custom rounded-borders" bordered>
+  <q-list v-if="caseStore.cases?.length" class="row list shadow_custom rounded-borders" bordered>
     <CaseItem
       v-for="item in caseStore.cases"
       :key="item.id!!"

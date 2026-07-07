@@ -1,44 +1,42 @@
 <template>
-  <div class="main_bg">
-    <div class="row flex-center justify-center items-cente" style="height: 100vh;">
+  <div class="login-layout">
+    <div class="login-layout__glow" />
+    <div class="login-layout__content">
       <router-view />
     </div>
   </div>
-  <!-- <q-layout view="HHh Lpr lFf">
-    <q-header elevated>asdf
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header>
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout> -->
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
+<style lang="scss" scoped>
+.login-layout {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f3f3f7 0%, #ece9ff 60%, #f7eef0 100%);
+  overflow: hidden;
 
-<style lang="scss">
-.main_bg {
-  background-color: #f3f3f7;
+  &__glow {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.5;
+    background: radial-gradient(circle, rgba(115, 103, 240, 0.45), transparent 70%);
+    top: -160px;
+    right: -120px;
+    pointer-events: none;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
 }
 </style>

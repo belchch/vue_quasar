@@ -1,5 +1,5 @@
 <template>
-    <q-list class="row q-gutter-y-md list shadow-custom rounded-borders" >
+    <q-list class="row q-gutter-y-md list shadow_custom rounded-borders" >
         <q-card style="height: 105px;" class="full-width q-mt-none" flat v-for="i in 4" :key="i">
             <div class="row justify-between">
                 <div class="q-pl-md">
