@@ -15,11 +15,10 @@ RUN npm ci
 # Копируем исходный код
 COPY . .
 
-# Собираем приложение
-ARG VUE_APP_API_URL
-ENV VUE_APP_API_URL=${VUE_APP_API_URL}
-#RUN npm run build
-RUN echo "VUE_APP_API_URL=${VUE_APP_API_URL}" > .env && npm run build
+# Quasar/Vite reads VITE_* at build time (see src/boot/axios.ts)
+ARG VITE_API_URL=
+ENV VITE_API_URL=${VITE_API_URL}
+RUN echo "VITE_API_URL=${VITE_API_URL}" > .env && npm run build
 
 # Production stage
 FROM nginx:stable-alpine

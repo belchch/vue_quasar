@@ -89,6 +89,10 @@ export default defineConfig((/* ctx */) => {
           pathRewrite: {
             '^/api': '',
           },
+          // Spring не должен видеть чужой Origin, иначе вернёт "Invalid CORS request"
+          headers: {
+            Origin: 'http://localhost:8080',
+          },
         },
       },
       open: true, // opens browser window automatically
