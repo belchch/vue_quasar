@@ -29,18 +29,8 @@ COPY --from=builder /app/dist/spa /usr/share/nginx/html
 # Копируем конфигурацию nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Настраиваем права доступа
-RUN chown -R nginx:nginx /usr/share/nginx/html && \
-    chmod -R 755 /usr/share/nginx/html && \
-    chown -R nginx:nginx /var/cache/nginx && \
-    chown -R nginx:nginx /var/log/nginx && \
-    chown -R nginx:nginx /etc/nginx/conf.d
-
-# Переключаемся на пользователя nginx
-USER nginx
-
-# Открываем порт
+# Открываем порт (mapped to host :80 in docker-compose.prod.yml)
 EXPOSE 8080
 
-# Запускаем nginx
+# Run as root in container so nginx can write /run/nginx.pid
 CMD ["nginx", "-g", "daemon off;"]
